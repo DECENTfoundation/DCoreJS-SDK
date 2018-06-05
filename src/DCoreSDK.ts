@@ -1,9 +1,9 @@
 import { AssetAmount } from "./models/AssetAmount";
 import { ChainObject } from "./models/ChainObject";
 
-import { ContractAPI } from "./ContractAPI";
+import { DCoreAPI } from "./DCoreAPI";
 
-export class DcoreSDK implements ContractAPI {
+export class DCoreSDK implements DCoreAPI {
 
     public getBalance(accountId: ChainObject): Promise<AssetAmount[]> {
         return null;

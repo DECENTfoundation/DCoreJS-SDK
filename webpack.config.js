@@ -1,7 +1,7 @@
 module.exports = {
     mode: "development",
     devtool: "inline-source-map",
-    entry: "./src/DcoreSDK.ts",
+    entry: "./src/DCoreSDK.ts",
     output: {
       filename: "bundle.js"
     },

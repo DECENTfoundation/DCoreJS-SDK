@@ -2,6 +2,7 @@
 import { deserialize, plainToClass, serialize } from "class-transformer";
 import "reflect-metadata";
 import { Account } from "./models/Account";
+import { Asset } from "./models/Asset";
 import { Authority } from "./models/Authority";
 import { PubKey } from "./models/PubKey";
 
@@ -66,15 +67,20 @@ const account = plainToClass(Account,
 // console.log(account.active)
 
 const aa = plainToClass(Authority, {
-    "weight_threshold": 1,
-    "account_auths": [],
-    "key_auths": [
-        [
-            "DCT6MA5TQQ6UbMyMaLPmPXE2Syh5G3ZVhv5SbFedqLPqdFChSeqTz",
-            1
+        "weight_threshold": 1,
+        "account_auths": [],
+        "key_auths": [
+            [
+                "DCT6MA5TQQ6UbMyMaLPmPXE2Syh5G3ZVhv5SbFedqLPqdFChSeqTz",
+                1
+            ]
         ]
-    ]
-}
+    }
 )
 console.log(aa)
 console.log(serialize(aa))
+
+console.log("hello world")
+
+const op = new Asset({symbol: "USB"});
+console.log(op)

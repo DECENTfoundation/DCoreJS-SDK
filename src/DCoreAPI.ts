@@ -1,10 +1,10 @@
-
 import { Account } from "./models/Account";
 import { AssetAmount } from "./models/AssetAmount";
 import { ChainObject } from "./models/ChainObject";
+import { TransactionDetail } from "./models/TransactionDetail";
 import { AccountHistoryOrder } from "./net/models/AccountHistoryOrder";
 
-export interface ContractAPI {
+export abstract class DCoreAPI {
 
     /**
      * get account balance
@@ -12,8 +12,7 @@ export interface ContractAPI {
      * @param accountId object id of the account, 1.2.*
      * @return list of amounts for different assets
      */
-
-    getBalance(accountId: ChainObject): Promise<AssetAmount[]>;
+    public abstract getBalance(accountId: ChainObject): Promise<AssetAmount[]>;
 
     /**
      * get Account object by name
@@ -21,8 +20,7 @@ export interface ContractAPI {
      * @param name the name of the account
      * @return an account if found, ObjectNotFoundException otherwise
      */
-
-    getAccountByName(name: string): Promise<Account>;
+    public abstract getAccountByName(name: string): Promise<Account>;
 
     /**
      * get Account object by id
@@ -30,8 +28,7 @@ export interface ContractAPI {
      * @param accountId object id of the account, 1.2.*
      * @return an account if found, ObjectNotFoundException otherwise
      */
-
-    getAccountById(accountId: ChainObject): Promise<Account>;
+    public abstract getAccountById(accountId: ChainObject): Promise<Account>;
 
     /**
      * search account history
@@ -41,12 +38,11 @@ export interface ContractAPI {
      * @param from object id of the history object to start from, use 0.0.0 to ignore
      * @param limit number of entries, max 100
      */
-
-    searchAccountHistory(
+    public abstract searchAccountHistory(
         accountId: ChainObject,
         order: AccountHistoryOrder = AccountHistoryOrder.TimeDesc,
         from: ChainObject = ChainObject.NONE,
-        limit: Int = 100
+        limit: number = 100
     ): Promise<TransactionDetail[]>;
 
     /**
@@ -58,7 +54,7 @@ export interface ContractAPI {
      * @param limit number of entries, max 100
      */
 
-    searchPurchases(
+    public searchPurchases(
         consumer: ChainObject,
         order: SearchPurchasesOrder = SearchPurchasesOrder.PURCHASED_DESC,
         from: ChainObject = ChainObject.NONE,

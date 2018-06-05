@@ -5,6 +5,7 @@ export class PubKey {
     @Exclude()
     public key: number;
 
+    // @Expose({name : "s", toPlainOnly : true})
     @Expose({ name: "s" })
     get adapter(): string {
         return this.key + ".";
