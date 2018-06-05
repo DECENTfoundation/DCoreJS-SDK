@@ -1,5 +1,5 @@
 import { Expose } from "class-transformer";
-import { BaseOperation } from "./operations/BaseOperation";
+import { BaseOperation } from "./operation/BaseOperation";
 
 export class ProcessedTransaction {
     @Expose({ name: "signatures" })

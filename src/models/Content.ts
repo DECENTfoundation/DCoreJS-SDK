@@ -2,7 +2,7 @@ import { Expose, Type } from "class-transformer";
 import { ChainObject } from "./ChainObject";
 import { PricePerRegion } from "./PricePerRegion";
 
-export class Content<T> {
+export class Content {
     @Type(() => ChainObject)
     @Expose({ name: "id" })
     public id: ChainObject;
@@ -15,7 +15,7 @@ export class Content<T> {
     public price: PricePerRegion;
 
     @Expose({ name: "synopsis" })
-    public synopsis: T;
+    public synopsis: string;
 
     //    @Expose( { name: "status" })
     // public status: string;

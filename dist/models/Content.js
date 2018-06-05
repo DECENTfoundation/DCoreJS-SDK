@@ -30,7 +30,7 @@ __decorate([
 ], Content.prototype, "price", void 0);
 __decorate([
     class_transformer_1.Expose({ name: "synopsis" }),
-    __metadata("design:type", Object)
+    __metadata("design:type", String)
 ], Content.prototype, "synopsis", void 0);
 __decorate([
     class_transformer_1.Expose({ name: "URI" }),
