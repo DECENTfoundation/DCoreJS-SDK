@@ -1,5 +1,4 @@
 export enum ApiGroup {
-    None,
     Login,
     Database = "database",
     History = "history",

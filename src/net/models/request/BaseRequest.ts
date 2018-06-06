@@ -1,4 +1,4 @@
-import { ApiGroup } from "../model/ApiGroup";
+import { ApiGroup } from "../ApiGroup";
 
 export abstract class BaseRequest<T> {
     public apiGroup: ApiGroup;
@@ -9,5 +9,6 @@ export abstract class BaseRequest<T> {
 
     constructor(
         public returnClass?: T,
-    ) { }
+    ) {
+    }
 }
