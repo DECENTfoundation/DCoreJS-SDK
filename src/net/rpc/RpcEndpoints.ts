@@ -1,0 +1,33 @@
+import { RxHR } from "@akanass/rx-http-request";
+import { deserialize, plainToClass, serialize } from "class-transformer";
+import * as _ from "lodash";
+import { Observable } from "rxjs/internal/Observable";
+import { map } from "rxjs/operators";
+import { Account } from "../../models/Account";
+import { NotFoundError } from "../../models/error/NotFoundError";
+import { GetAccountByName } from "../models/request/GetAccountByName";
+import { RpcResponse } from "../models/response/RpcResponse";
+
+export class RpcEndpoints {
+    private baseRequest = RxHR.defaults({
+        baseUrl: "http://stage.decentgo.com:8089/rpc",
+        timeout: 15000,
+    });
+
+    public getAccountByName(request: GetAccountByName): Observable<Account> {
+        return this.baseRequest.post("", { body: serialize(request) }).pipe(
+            map((data) => {
+                if (data.response.statusCode === 200) {
+                    const response = deserialize(RpcResponse, data.response.body);
+                    if (!_.isNil(response.error)) {
+                        throw Error(response.error.message);
+                    }
+                    if (!_.isNil(response.result)) {
+                        return plainToClass(Account, response.result);
+                    }
+                    throw new NotFoundError(request.description());
+                }
+            }),
+        );
+    }
+}
