@@ -1,4 +1,4 @@
-import { Expose, Type } from "class-transformer";
+import { Expose, Transform, Type } from "class-transformer";
 import { Address } from "../crypto/Address";
 import { AssetAmount } from "./AssetAmount";
 import { ChainObject } from "./ChainObject";
@@ -9,6 +9,8 @@ export class Options {
     public memoKey: Address;
 
     @Type(() => ChainObject)
+    @Transform((value: string) => ChainObject.parse(value), { toClassOnly: true })
+    @Transform((value: ChainObject) => value.objectId, { toPlainOnly: true })
     @Expose({ name: "voting_account" })
     public votingAccount: ChainObject;
 

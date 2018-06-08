@@ -1,12 +1,13 @@
 import { Exclude, Expose } from "class-transformer";
+import { ClassType } from "class-transformer/ClassTransformer";
 import { ApiGroup } from "../ApiGroup";
 
 export abstract class BaseRequest<T> {
     @Exclude()
     public apiGroup: ApiGroup;
 
-    // @Exclude()
-    // public returnClass: T;
+    @Exclude()
+    public returnClass: ClassType<T>;
 
     @Expose({ name: "method" })
     public method: string;
@@ -20,10 +21,9 @@ export abstract class BaseRequest<T> {
     @Expose({ name: "id" })
     public id: number = 1;
 
-    // protected constructor(apiGroup: ApiGroup, returnClass: T, method: string, params: any[]) {
-    protected constructor(apiGroup: ApiGroup, method: string, params: any[]) {
+    protected constructor(apiGroup: ApiGroup, returnClass: ClassType<T>, method: string, params: any[]) {
         this.apiGroup = apiGroup;
-        // this.returnClass = returnClass;
+        this.returnClass = returnClass;
         this.method = method;
         this.params = params;
     }

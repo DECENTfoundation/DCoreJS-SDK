@@ -3,9 +3,8 @@ import { deserialize, plainToClass, serialize } from "class-transformer";
 import * as _ from "lodash";
 import { Observable } from "rxjs/internal/Observable";
 import { map } from "rxjs/operators";
-import { Account } from "../../models/Account";
 import { NotFoundError } from "../../models/error/NotFoundError";
-import { GetAccountByName } from "../models/request/GetAccountByName";
+import { BaseRequest } from "../models/request/BaseRequest";
 import { RpcResponse } from "../models/response/RpcResponse";
 
 export class RpcEndpoints {
@@ -14,7 +13,7 @@ export class RpcEndpoints {
         timeout: 15000,
     });
 
-    public getAccountByName(request: GetAccountByName): Observable<Account> {
+    public makeRequest<T>(request: BaseRequest<T>): Observable<T> {
         return this.baseRequest.post("", { body: serialize(request) }).pipe(
             map((data) => {
                 if (data.response.statusCode === 200) {
@@ -23,7 +22,7 @@ export class RpcEndpoints {
                         throw Error(response.error.message);
                     }
                     if (!_.isNil(response.result)) {
-                        return plainToClass(Account, response.result);
+                        return plainToClass(request.returnClass, response.result);
                     }
                     throw new NotFoundError(request.description());
                 }

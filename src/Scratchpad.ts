@@ -4,7 +4,9 @@ import "reflect-metadata";
 import { Account } from "./models/Account";
 import { Asset } from "./models/Asset";
 import { Authority } from "./models/Authority";
+import { ChainObject } from "./models/ChainObject";
 import { PubKey } from "./models/PubKey";
+import { GetAccountById } from "./net/models/request/GetAccountById";
 import { GetAccountByName } from "./net/models/request/GetAccountByName";
 import { RpcEndpoints } from "./net/rpc/RpcEndpoints";
 
@@ -79,10 +81,17 @@ function some() {
     )
 }
 
-
-function rpcTest() {
+function accountByName() {
     const api = new RpcEndpoints();
     api.getAccountByName(new GetAccountByName("u961279ec8b7ae7bd62f304f7c1c3d345")).subscribe(
+        (account) => console.log(account),
+        (err) => console.error(err)
+    )
+}
+
+function accountById() {
+    const api = new RpcEndpoints();
+    api.makeRequest(new GetAccountById(ChainObject.parse("1.2.15"))).subscribe(
         (account) => console.log(account),
         (err) => console.error(err)
     )
@@ -96,4 +105,4 @@ function serialize_account() {
 
 // some();
 // serialize_account()
-rpcTest();
+accountById()
