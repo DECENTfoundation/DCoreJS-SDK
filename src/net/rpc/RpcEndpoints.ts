@@ -13,7 +13,7 @@ export class RpcEndpoints {
         timeout: 15000,
     });
 
-    public makeRequest<T>(request: BaseRequest<T>): Observable<T> {
+    public makeRequest<T>(request: BaseRequest<T>): Observable<T | T[]> {
         return this.baseRequest.post("", { body: serialize(request) }).pipe(
             map((data) => {
                 if (data.response.statusCode === 200) {
@@ -21,7 +21,8 @@ export class RpcEndpoints {
                     if (!_.isNil(response.error)) {
                         throw Error(response.error.message);
                     }
-                    if (!_.isNil(response.result)) {
+                    if (_.isObject(response.result)
+                        && (!_.isArray(response.result) || response.result.filter(Boolean).length > 0)) {
                         return plainToClass(request.returnClass, response.result);
                     }
                     throw new NotFoundError(request.description());
