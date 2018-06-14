@@ -1,7 +1,9 @@
 /* tslint:disable */
 import { deserialize, plainToClass, serialize } from "class-transformer";
 import "reflect-metadata";
-import { Observable } from "rxjs/internal/Observable";
+import { BehaviorSubject } from "rxjs/internal/BehaviorSubject";
+import { Subject } from "rxjs/internal/Subject";
+import { tap } from "rxjs/operators";
 import { Account } from "./models/Account";
 import { Asset } from "./models/Asset";
 import { Authority } from "./models/Authority";
@@ -10,6 +12,9 @@ import { PubKey } from "./models/PubKey";
 import { GetAccountById } from "./net/models/request/GetAccountById";
 import { GetAccountByName } from "./net/models/request/GetAccountByName";
 import { RpcEndpoints } from "./net/rpc/RpcEndpoints";
+import { connect, OnMessage, OnOpen, RxWebSocket } from "./net/ws/RxWebSocket";
+import WebSocket = require("isomorphic-ws");
+import values = require("lodash/fp/values");
 
 function some() {
     const k = new PubKey();
@@ -135,7 +140,25 @@ function serialize_account() {
     console.log(acc.owner.keyAuths)
 }
 
+function websocket() {
+    const rxWs = new RxWebSocket('wss://stage.decentgo.com:8090', (url, protocols) => new WebSocket(url, protocols, { rejectUnauthorized: false }));
+/*
+    rxWs.events
+        .pipe(
+            tap((value) => {
+                // if (value instanceof OnOpen) value.webSocket.send('{"method":"call","params":[1,"login",["",""]],"id":3}')
+                if (value instanceof OnOpen) value.webSocket.close()
+                else if (value instanceof OnMessage) console.log("messsssss");
+            }),
+        )
+        .subscribe((value) => console.log("value: ", value), (error) => console.log(error), () => console.log("complete"))
+*/
+
+    rxWs.makeRequest(new GetAccountByName("u961279ec8b7ae7bd62f304f7c1c3d345")).subscribe();
+}
+
 // some();
 // serialize_account()
-accountById()
+// accountById()
 // accountByName()
+websocket()
