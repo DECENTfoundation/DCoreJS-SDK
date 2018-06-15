@@ -1,9 +1,14 @@
 /* tslint:disable */
 import { deserialize, plainToClass, serialize } from "class-transformer";
 import "reflect-metadata";
+import { create } from "rxjs-spy";
+import { Spy } from "rxjs-spy/spy-interface";
 import { BehaviorSubject } from "rxjs/internal/BehaviorSubject";
+import { Scheduler } from "rxjs/internal/Rx";
+import { async } from "rxjs/internal/scheduler/async";
+import { queue } from "rxjs/internal/scheduler/queue";
 import { Subject } from "rxjs/internal/Subject";
-import { tap } from "rxjs/operators";
+import { mergeMap, observeOn, subscribeOn, tap } from "rxjs/operators";
 import { Account } from "./models/Account";
 import { Asset } from "./models/Asset";
 import { Authority } from "./models/Authority";
@@ -89,7 +94,7 @@ function some() {
 
 function accountByName() {
     const api = new RpcEndpoints();
-    api.makeRequest(new GetAccountByName("u961279ec8b7ae7bd62f304f7c1c3d345")).subscribe(
+    api.request(new GetAccountByName("u961279ec8b7ae7bd62f304f7c1c3d345")).subscribe(
         (account) => console.log(account),
         (err) => console.error(err)
     )
@@ -97,7 +102,7 @@ function accountByName() {
 
 function accountById() {
     const api = new RpcEndpoints();
-    return api.makeRequest(new GetAccountById(ChainObject.parse("1.2.15"))).subscribe(
+    return api.request(new GetAccountById(ChainObject.parse("1.2.15"))).subscribe(
         (account) => console.log(account),
         (err) => console.error(err)
     )
@@ -142,23 +147,22 @@ function serialize_account() {
 
 function websocket() {
     const rxWs = new RxWebSocket('wss://stage.decentgo.com:8090', (url, protocols) => new WebSocket(url, protocols, { rejectUnauthorized: false }));
+    const spy = create();
+    spy.log(/^RxWebSocket_make_\w+/)
+    rxWs.request(new GetAccountByName("u961279ec8b7ae7bd62f304f7c1c3d345"))
+        // .pipe(mergeMap(() => rxWs.request(new GetAccountById(ChainObject.parse("1.2.15")))))
+        .pipe(observeOn(async))
+        .subscribe();
 /*
-    rxWs.events
-        .pipe(
-            tap((value) => {
-                // if (value instanceof OnOpen) value.webSocket.send('{"method":"call","params":[1,"login",["",""]],"id":3}')
-                if (value instanceof OnOpen) value.webSocket.close()
-                else if (value instanceof OnMessage) console.log("messsssss");
-            }),
-        )
-        .subscribe((value) => console.log("value: ", value), (error) => console.log(error), () => console.log("complete"))
+    rxWs.request(new GetAccountById(ChainObject.parse("1.2.15")))
+        .pipe(observeOn(queue))
+        .subscribe();
 */
-
-    rxWs.makeRequest(new GetAccountByName("u961279ec8b7ae7bd62f304f7c1c3d345")).subscribe();
 }
 
 // some();
 // serialize_account()
 // accountById()
 // accountByName()
+// spy.log("RxWebSocket_events")
 websocket()

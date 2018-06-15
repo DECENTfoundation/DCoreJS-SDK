@@ -1,5 +1,5 @@
 export enum ApiGroup {
-    Login,
+    Login = "",
     Database = "database",
     History = "history",
     Broadcast = "network_broadcast",
