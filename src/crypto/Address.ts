@@ -1,6 +1,7 @@
 
 export class Address {
 
+/*
     private static PREFIX: string = "DCT";
 
     constructor(
@@ -13,4 +14,5 @@ export class Address {
     public encode(): string {
         return "";
     }
+*/
 }

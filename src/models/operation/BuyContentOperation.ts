@@ -14,7 +14,7 @@ import { BaseOperation } from "./BaseOperation";
  * @param publicElGamal public el gamal key
  * @param regionCode region code of the consumer
  */
-export class BuyContent extends BaseOperation {
+export class BuyContentOperation extends BaseOperation {
     @Expose({ name: "URI" })
     public uri: string;
 
