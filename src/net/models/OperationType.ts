@@ -1,4 +1,5 @@
 export enum OperationType {
+  Transfer = 0,
   AccountCreate = 1,
   AccountUpdate = 2,
   AssetCreate = 3,
