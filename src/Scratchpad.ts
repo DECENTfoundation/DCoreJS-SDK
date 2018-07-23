@@ -2,24 +2,16 @@
 import { deserialize, plainToClass, serialize } from "class-transformer";
 import "reflect-metadata";
 import { create } from "rxjs-spy";
-import { Spy } from "rxjs-spy/spy-interface";
-import { BehaviorSubject } from "rxjs/internal/BehaviorSubject";
-import { Scheduler } from "rxjs/internal/Rx";
-import { async } from "rxjs/internal/scheduler/async";
-import { queue } from "rxjs/internal/scheduler/queue";
-import { Subject } from "rxjs/internal/Subject";
-import { mergeMap, observeOn, subscribeOn, tap } from "rxjs/operators";
 import { Account } from "./models/Account";
-import { Asset } from "./models/Asset";
 import { Authority } from "./models/Authority";
 import { ChainObject } from "./models/ChainObject";
 import { PubKey } from "./models/PubKey";
+import { GetAccountBalances } from "./net/models/request/GetAccountBalances";
 import { GetAccountById } from "./net/models/request/GetAccountById";
 import { GetAccountByName } from "./net/models/request/GetAccountByName";
 import { RpcEndpoints } from "./net/rpc/RpcEndpoints";
-import { connect, OnMessage, OnOpen, RxWebSocket } from "./net/ws/RxWebSocket";
+import { RxWebSocket } from "./net/ws/RxWebSocket";
 import WebSocket = require("isomorphic-ws");
-import values = require("lodash/fp/values");
 
 function some() {
     const k = new PubKey();
@@ -146,18 +138,21 @@ function serialize_account() {
 }
 
 function websocket() {
-    const rxWs = new RxWebSocket('wss://stage.decentgo.com:8090', (url, protocols) => new WebSocket(url, protocols, { rejectUnauthorized: false }));
+    const rxWs = new RxWebSocket('wss://stagesocket.decentgo.com:8090', (url, protocols) => new WebSocket(url, protocols, { rejectUnauthorized: false }));
     const spy = create();
     spy.log(/^RxWebSocket_make_\w+/)
-    rxWs.request(new GetAccountByName("u961279ec8b7ae7bd62f304f7c1c3d345"))
-        // .pipe(mergeMap(() => rxWs.request(new GetAccountById(ChainObject.parse("1.2.15")))))
-        .pipe(observeOn(async))
-        .subscribe();
-/*
-    rxWs.request(new GetAccountById(ChainObject.parse("1.2.15")))
-        .pipe(observeOn(queue))
-        .subscribe();
-*/
+    /*
+        rxWs.request(new GetAccountByName("u961279ec8b7ae7bd62f304f7c1c3d345"))
+            // .pipe(mergeMap(() => rxWs.request(new GetAccountById(ChainObject.parse("1.2.15")))))
+            .pipe(observeOn(async))
+            .subscribe();
+        rxWs.request(new GetAccountById(ChainObject.parse("1.2.15")))
+            .pipe(observeOn(queue))
+            .subscribe();
+    */
+
+    rxWs.request(new GetAccountBalances(ChainObject.parse("1.2.35"), []))
+        .subscribe()
 }
 
 // some();

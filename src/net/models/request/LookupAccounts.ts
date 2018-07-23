@@ -2,14 +2,16 @@ import { Account } from "../../../models/Account";
 import { ApiGroup } from "../ApiGroup";
 import { BaseRequest } from "./BaseRequest";
 
-export class GetAccountByName extends BaseRequest<Account> {
+// array
+export class LookupAccounts extends BaseRequest<Account> {
     constructor(
-        accountName: string,
+        lookupTerm: string,
+        limit: number,
     ) {
         super(
             ApiGroup.Database,
-            "get_account_by_name",
-            [accountName],
+            "lookup_accounts",
+            [lookupTerm, limit],
             Account,
         );
     }

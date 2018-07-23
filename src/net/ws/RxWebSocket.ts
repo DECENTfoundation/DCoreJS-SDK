@@ -54,7 +54,7 @@ export class RxWebSocket {
             }
         };
         socket.onmessage = (message: MessageEvent) => emitter.next(message.data);
-        socket.onerror = (error: ErrorEvent) => emitter.error(error);
+        socket.onerror = (error: ErrorEvent) => emitter.error(Error(error.message));
     }).pipe(tag("RxWebSocket_events"), publish());
 
     constructor(private url: string, private webSocketFactory: WebSocketFactory = defaultFactory) {
@@ -138,8 +138,7 @@ export class RxWebSocket {
             this.events,
             defer(() => this.webSocket()).pipe(
                 this.checkApiAccess(request),
-                tap((value) => this.send(value[0], serialize(new RequestJson(callId, value[1], request))),
-                ),
+                tap((value) => this.send(value[0], serialize(new RequestJson(callId, value[1], request)))),
             ))
             .pipe(
                 filter((value) => typeof value === "string"),
