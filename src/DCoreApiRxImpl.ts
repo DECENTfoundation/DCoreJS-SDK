@@ -1,6 +1,7 @@
 import isNil = require("lodash/fp/isNil");
 import { Observable } from "rxjs";
 import { concatMap, map } from "rxjs/operators";
+import { Address } from "./crypto/Address";
 import { ECKeyPair } from "./crypto/ECKeyPair";
 import { Account } from "./models/Account";
 import { Asset } from "./models/Asset";
@@ -16,28 +17,38 @@ import { ProcessedTransaction } from "./models/ProcessedTransaction";
 import { Purchase } from "./models/Purchase";
 import { TransactionConfirmation } from "./models/TransactionConfirmation";
 import { TransactionDetail } from "./models/TransactionDetail";
+import { ObjectCheckOf } from "./utils/ObjectCheckOf";
+
+type AccountRef = ChainObject | string | Address;
 
 export abstract class DCoreApiRxImpl {
 
     /**
      * get account balance
      *
-     * @param accountRef account name or object id of the account, 1.2.*
+     * @param account account name, or object id of the account (1.2.*) or account public key
      * @return list of amounts for different assets
      */
-    public getBalance(accountRef: ChainObject | string): Observable<AssetAmount[]>;
+    public getBalance(account: AccountRef): Observable<AssetAmount[]>;
     /**
      * get account balance
      *
-     * @param accountRef account name or object id of the account, 1.2.*
+     * @param account account name, or object id of the account (1.2.*) or account public key
      * @param symbol symbol of the asset eg. DCT
      * @return list of amounts for different assets
      */
-    public getBalance(accountRef: ChainObject | string, symbol: string): Observable<number>;
-    public getBalance(accountRef: ChainObject | string, symbol?: string): Observable<AssetAmount[]> | Observable<number> {
-        const balance = typeof accountRef === "string"
-            ? this.getAccountByName(accountRef).pipe(concatMap((acc) => this.getBalanceInternal(acc.id)))
-            : this.getBalanceInternal(accountRef);
+    public getBalance(account: AccountRef, symbol: string): Observable<number>;
+    public getBalance(account: AccountRef, symbol?: string): Observable<AssetAmount[]> | Observable<number> {
+        let balance: Observable<AssetAmount[]>;
+        if (typeof account === "string") {
+            balance = this.getAccountByName(account).pipe(concatMap((acc) => this.getBalanceInternal(acc.id)));
+        } else if (ObjectCheckOf<ChainObject>(account, "id")) {
+            balance = this.getBalanceInternal(account);
+        } else if (ObjectCheckOf<Address>(account, "")) {
+        //    get key references....
+        } else {
+            throw TypeError("not supported account type: " + account);
+        }
 
         if (!isNil(symbol)) {
             this.lookupAssets([symbol]).pipe(
@@ -75,10 +86,10 @@ export abstract class DCoreApiRxImpl {
     /**
      * get Account object by name
      *
-     * @param name the name of the account
+     * @param accountName the name of the account
      * @return an account if found, [ch.decent.sdk.exception.ObjectNotFoundException] otherwise
      */
-    public abstract getAccountByName(name: string): Observable<Account>;
+    public abstract getAccountByName(accountName: string): Observable<Account>;
 
     /**
      * get Account object by id
@@ -152,7 +163,7 @@ export abstract class DCoreApiRxImpl {
     /**
      * get account history
      *
-     * @param account object id of the account, 1.2.*
+     * @param account account name, or object id of the account (1.2.*) or account public key
      * @param limit number of entries, max 100
      * @param startId id of the history object to start from, use 1.7.0 to ignore
      * @param stopId id of the history object to stop at, use 1.7.0 to ignore
@@ -160,14 +171,23 @@ export abstract class DCoreApiRxImpl {
      * @return list of history operations
      */
     public getAccountHistory(
-        account: ChainObject | string,
+        account: AccountRef,
         limit: number = 100,
         startId: ChainObject = ChainObject.parse("1.7.0"),
         stopId: ChainObject = ChainObject.parse("1.7.0"),
     ): Observable<OperationHistory[]> {
-        return (typeof account === "string")
-            ? this.getAccountByName(account).pipe(concatMap((acc) => this.getAccountHistoryInternal(acc.id, 100, startId, stopId)))
-            : this.getAccountHistoryInternal(account, limit, startId, stopId);
+        let result: Observable<OperationHistory[]>;
+        if (typeof account === "string") {
+            result = this.getAccountByName(account).pipe(concatMap((acc) => this.getAccountHistoryInternal(acc.id, 100, startId, stopId)));
+        } else if (ObjectCheckOf<ChainObject>(account, "id")) {
+            result = this.getAccountHistoryInternal(account, limit, startId, stopId);
+        } else if (ObjectCheckOf<Address>(account, "")) {
+            //    get key references....
+        } else {
+            throw TypeError("not supported account type: " + account);
+        }
+
+        return result;
     }
 
     /**

@@ -1,6 +1,7 @@
 import { Expose, Type } from "class-transformer";
 import { ChainObject } from "./ChainObject";
 import { PricePerRegion } from "./PricePerRegion";
+import { Synopsis } from "./Synopsis";
 
 export class Content {
     @Type(() => ChainObject)
@@ -14,8 +15,9 @@ export class Content {
     @Expose({ name: "price" })
     public price: PricePerRegion;
 
+    @Type(() => Synopsis)
     @Expose({ name: "synopsis" })
-    public synopsis: string;
+    public synopsis: Synopsis;
 
     //    @Expose( { name: "status" })
     // public status: string;
