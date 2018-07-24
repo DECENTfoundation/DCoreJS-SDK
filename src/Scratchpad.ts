@@ -2,7 +2,6 @@
 import { deserialize, plainToClass, serialize } from "class-transformer";
 import "reflect-metadata";
 import { Account } from "./models/Account";
-import { Asset } from "./models/Asset";
 import { Authority } from "./models/Authority";
 import { PubKey } from "./models/PubKey";
 
@@ -63,7 +62,7 @@ const account = plainToClass(Account,
         "top_n_control_flags": 0
     });
 
-// console.log(account)
+console.log(account)
 // console.log(account.active)
 
 const aa = plainToClass(Authority, {
@@ -81,6 +80,3 @@ console.log(aa)
 console.log(serialize(aa))
 
 console.log("hello world")
-
-const op = new Asset({symbol: "USB"});
-console.log(op)

@@ -1,6 +1,6 @@
 import { Expose } from "class-transformer";
-import { OperationType } from "../../net/models/OperationType";
 import { AssetAmount } from "../AssetAmount";
+import { OperationType } from "../OperationType";
 
 export abstract class BaseOperation {
     @Expose({ name: "fee" })

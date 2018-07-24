@@ -1,7 +1,7 @@
 import { Expose } from "class-transformer";
-import { OperationType } from "../../net/models/OperationType";
 import { Authority } from "../Authority";
 import { ChainObject } from "../ChainObject";
+import { OperationType } from "../OperationType";
 import { Options } from "../Options";
 import { BaseOperation } from "./BaseOperation";
 
