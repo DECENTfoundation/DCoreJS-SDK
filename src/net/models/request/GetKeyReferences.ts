@@ -1,10 +1,10 @@
+import { plainToClass } from "class-transformer";
 import { Address } from "../../../crypto/Address";
 import { ChainObject } from "../../../models/ChainObject";
 import { ApiGroup } from "../ApiGroup";
 import { BaseRequest } from "./BaseRequest";
 
-// array of array
-export class GetKeyReferences extends BaseRequest<ChainObject> {
+export class GetKeyReferences extends BaseRequest<ChainObject[][]> {
     constructor(
         addresses: Address[],
     ) {
@@ -12,7 +12,7 @@ export class GetKeyReferences extends BaseRequest<ChainObject> {
             ApiGroup.Database,
             "get_key_references",
             [addresses],
-            ChainObject,
+            (value: object[][]) => value.map((refs: object[]) => plainToClass(ChainObject, refs)),
         );
     }
 }

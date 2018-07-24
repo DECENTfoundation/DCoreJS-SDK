@@ -1,5 +1,5 @@
 import { RxHR } from "@akanass/rx-http-request";
-import { deserialize, plainToClass, serialize } from "class-transformer";
+import { deserialize, serialize } from "class-transformer";
 import * as _ from "lodash";
 import { Observable } from "rxjs/internal/Observable";
 import { map } from "rxjs/operators";
@@ -13,7 +13,7 @@ export class RpcEndpoints {
         timeout: 15000,
     });
 
-    public request<T>(request: BaseRequest<T>): Observable<T | T[]> {
+    public request<T>(request: BaseRequest<T>): Observable<T> {
         return this.baseRequest.post("", { body: serialize(request) }).pipe(
             map((data) => {
                 if (data.response.statusCode === 200) {
@@ -23,7 +23,7 @@ export class RpcEndpoints {
                     }
                     if (_.isObject(response.result)
                         && (!_.isArray(response.result) || response.result.filter(Boolean).length > 0)) {
-                        return plainToClass(request.returnClass, response.result);
+                        return request.transformer(response.result);
                     }
                     throw new NotFoundError(request.description());
                 }

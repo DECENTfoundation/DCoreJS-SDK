@@ -1,11 +1,11 @@
+import { plainToClass } from "class-transformer";
 import * as _ from "lodash";
 import { ChainObject } from "../../../models/ChainObject";
 import { OperationHistory } from "../../../models/OperationHistory";
 import { ApiGroup } from "../ApiGroup";
 import { BaseRequest } from "./BaseRequest";
 
-// array
-export class GetAccountHistory extends BaseRequest<OperationHistory> {
+export class GetAccountHistory extends BaseRequest<OperationHistory[]> {
 
     constructor(
         accountId: ChainObject,
@@ -17,7 +17,7 @@ export class GetAccountHistory extends BaseRequest<OperationHistory> {
             ApiGroup.History,
             "get_account_history",
             [accountId.objectId, stopId.objectId, _.min([0, _.max([limit, 100])]), startId.objectId],
-            OperationHistory,
+            (value: object[]) => plainToClass(OperationHistory, value),
         );
     }
 }

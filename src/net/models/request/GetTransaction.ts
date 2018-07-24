@@ -1,3 +1,4 @@
+import { plainToClass } from "class-transformer";
 import { ProcessedTransaction } from "../../../models/ProcessedTransaction";
 import { ApiGroup } from "../ApiGroup";
 import { BaseRequest } from "./BaseRequest";
@@ -11,7 +12,7 @@ export class GetTransaction extends BaseRequest<ProcessedTransaction> {
             ApiGroup.Database,
             "get_transaction",
             [blockNum, trxInBlock],
-            ProcessedTransaction,
+            (value: object) => plainToClass(ProcessedTransaction, value),
         );
     }
 }

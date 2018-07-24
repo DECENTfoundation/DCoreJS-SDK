@@ -1,9 +1,9 @@
+import { plainToClass } from "class-transformer";
 import { Miner } from "../../../models/Miner";
 import { ApiGroup } from "../ApiGroup";
 import { BaseRequest } from "./BaseRequest";
 
-// array
-export class LookupAccounts extends BaseRequest<Miner> {
+export class LookupMiners extends BaseRequest<Miner[]> {
     constructor(
         lookupTerm: string,
         limit: number,
@@ -12,7 +12,7 @@ export class LookupAccounts extends BaseRequest<Miner> {
             ApiGroup.Database,
             "lookup_miner_accounts",
             [lookupTerm, limit],
-            Miner,
+            (value: object[]) => plainToClass(Miner, value),
         );
     }
 }

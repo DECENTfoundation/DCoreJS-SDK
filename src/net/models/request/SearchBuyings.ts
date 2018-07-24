@@ -1,11 +1,11 @@
+import { plainToClass } from "class-transformer";
 import * as _ from "lodash";
 import { ChainObject } from "../../../models/ChainObject";
 import { Purchase } from "../../../models/Purchase";
 import { ApiGroup } from "../ApiGroup";
 import { BaseRequest } from "./BaseRequest";
 
-// array
-export class SearchBuyings extends BaseRequest<Purchase> {
+export class SearchBuyings extends BaseRequest<Purchase[]> {
 
     constructor(
         consumer: ChainObject,
@@ -18,7 +18,7 @@ export class SearchBuyings extends BaseRequest<Purchase> {
             ApiGroup.Database,
             "get_buying_objects_by_consumer",
             [consumer.objectId, order, startId.objectId, term, _.min([0, _.max([limit, 100])])],
-            Purchase,
+            (value: object[]) => plainToClass(Purchase, value),
         );
     }
 }

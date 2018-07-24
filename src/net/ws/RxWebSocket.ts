@@ -1,4 +1,4 @@
-import { plainToClass, serialize } from "class-transformer";
+import { serialize } from "class-transformer";
 import * as _ from "lodash";
 import { Observable, Subscription } from "rxjs";
 import { tag } from "rxjs-spy/operators";
@@ -60,7 +60,7 @@ export class RxWebSocket {
     constructor(private url: string, private webSocketFactory: WebSocketFactory = defaultFactory) {
     }
 
-    public request<T>(request: BaseRequest<T>): Observable<T | T[]> {
+    public request<T>(request: BaseRequest<T>): Observable<T> {
         return this.make(request, this.getCallId());
     }
 
@@ -107,6 +107,7 @@ export class RxWebSocket {
     }
 
     private send(ws: WebSocketContract, request: string): void {
+        // tslint:disable-next-line
         console.log(request);
         ws.send(request);
     }
@@ -133,7 +134,8 @@ export class RxWebSocket {
         }
     }
 
-    private make<T>(request: BaseRequest<T>, callId: number): Observable<T | T[]> {
+    private make<T>(request: BaseRequest<T>, callId: number): Observable<T> {
+        // public prepare(request: BaseRequest<any>, callId: number): Observable<any> {
         return merge(
             this.events,
             defer(() => this.webSocket()).pipe(
@@ -147,9 +149,10 @@ export class RxWebSocket {
                 // tag(`RxWebSocket_make_${request.method}`),
                 tap((value: object) => this.checkError(value, callId)),
                 map(this.getIdAndResult),
-                first((value) => ObjectCheckOf<WithCallback>(request, "callbackId") ? request.callbackId === value[0] : callId === value[0]),
-                tap((value) => this.checkEmpty(value[1], request)),
-                map((value: [number, any]) => _.isNil(request.returnClass) ? value[1] as T : plainToClass(request.returnClass, value[1])),
+                first((value: [number, object]) => ObjectCheckOf<WithCallback>(request, "callbackId") ? request.callbackId === value[0] : callId === value[0]),
+                map((value: [number, object]) => value[1]),
+                tap((value) => this.checkEmpty(value, request)),
+                map(request.transformer),
                 tag(`RxWebSocket_make_${request.method}`),
             );
     }

@@ -1,3 +1,4 @@
+import { plainToClass } from "class-transformer";
 import { ChainObject } from "../../../models/ChainObject";
 import { Purchase } from "../../../models/Purchase";
 import { ApiGroup } from "../ApiGroup";
@@ -12,7 +13,7 @@ export class GetBuyingByUri extends BaseRequest<Purchase> {
             ApiGroup.Database,
             "get_buying_by_consumer_URI",
             [consumer, uri],
-            Purchase,
+            (value: object) => plainToClass(Purchase, value),
         );
     }
 }

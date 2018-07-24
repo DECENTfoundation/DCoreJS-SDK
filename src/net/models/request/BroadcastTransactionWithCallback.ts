@@ -1,3 +1,4 @@
+import { plainToClass } from "class-transformer";
 import { Transaction } from "../../../models/Transaction";
 import { TransactionConfirmation } from "../../../models/TransactionConfirmation";
 import { ApiGroup } from "../ApiGroup";
@@ -15,7 +16,7 @@ export class BroadcastTransactionWithCallback extends BaseRequest<TransactionCon
             ApiGroup.Broadcast,
             "broadcast_transaction_with_callback",
             [callbackId, transaction],
-            TransactionConfirmation,
+            (value: object) => plainToClass(TransactionConfirmation, value),
         );
         this.callbackId = callbackId;
     }

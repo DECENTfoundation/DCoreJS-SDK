@@ -3,6 +3,10 @@ import { BaseRequest } from "./BaseRequest";
 
 export class Login extends BaseRequest<boolean> {
     constructor() {
-        super(ApiGroup.Login, "login", ["", ""]);
+        super(
+            ApiGroup.Login,
+            "login",
+            ["", ""],
+        );
     }
 }

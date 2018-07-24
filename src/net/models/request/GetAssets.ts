@@ -1,10 +1,10 @@
+import { plainToClass } from "class-transformer";
 import { Asset } from "../../../models/Asset";
 import { ChainObject } from "../../../models/ChainObject";
 import { ApiGroup } from "../ApiGroup";
 import { BaseRequest } from "./BaseRequest";
 
-// array
-export class GetAssets extends BaseRequest<Asset> {
+export class GetAssets extends BaseRequest<Asset[]> {
     constructor(
         assets: ChainObject[],
     ) {
@@ -12,7 +12,7 @@ export class GetAssets extends BaseRequest<Asset> {
             ApiGroup.Database,
             "get_assets",
             [assets],
-            Asset,
+            (value: object[]) => plainToClass(Asset, value),
         );
     }
 }
