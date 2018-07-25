@@ -26,7 +26,7 @@ export interface WebSocketContract {
     onmessage?: (MessageEvent: any) => any;
     onerror?: (ErrorEvent: any) => any;
 
-    close(): void;
+    close(code?: number, data?: string): void;
 
     send(data: string | ArrayBuffer | Blob): void;
 }
@@ -66,6 +66,14 @@ export class RxWebSocket {
 
     public getCallId(): number {
         return this.callId++;
+    }
+
+    public close() {
+        this.webSocket().subscribe((socket: WebSocketContract) => {
+            socket.close(1000, "closing");
+            socket.onclose({ wasClean: true });
+            socket.onclose = undefined;
+        });
     }
 
     private connect() {

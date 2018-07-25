@@ -7,7 +7,7 @@ import { BaseRequest } from "./BaseRequest";
 export class GetAccountBalances extends BaseRequest<AssetAmount[]> {
     constructor(
         accountId: ChainObject,
-        assets: ChainObject[],
+        assets: ChainObject[] = [],
     ) {
         super(
             ApiGroup.Database,
