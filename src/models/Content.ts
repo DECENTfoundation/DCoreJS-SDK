@@ -1,10 +1,12 @@
-import { Expose, Type } from "class-transformer";
+import { Expose, Transform, Type } from "class-transformer";
 import { ChainObject } from "./ChainObject";
 import { PricePerRegion } from "./PricePerRegion";
 import { Synopsis } from "./Synopsis";
 
 export class Content {
     @Type(() => ChainObject)
+    @Transform((value: string) => ChainObject.parse(value), { toClassOnly: true })
+    @Transform((value: ChainObject) => value.objectId, { toPlainOnly: true })
     @Expose({ name: "id" })
     public id: ChainObject;
 
