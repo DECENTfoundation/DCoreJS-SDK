@@ -1,4 +1,3 @@
-import { plainToClass } from "class-transformer";
 import { Address } from "../../../crypto/Address";
 import { ChainObject } from "../../../models/ChainObject";
 import { ApiGroup } from "../ApiGroup";
@@ -11,8 +10,8 @@ export class GetKeyReferences extends BaseRequest<ChainObject[][]> {
         super(
             ApiGroup.Database,
             "get_key_references",
-            [addresses],
-            (value: object[][]) => value.map((refs: object[]) => plainToClass(ChainObject, refs)),
+            [addresses.map((address) => address.encode())],
+            (values: string[][]) => values.map((refs) => refs.map((id) => ChainObject.parse(id))),
         );
     }
 }

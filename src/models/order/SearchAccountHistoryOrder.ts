@@ -1,4 +1,4 @@
-enum SearchAccountHistoryOrder {
+export enum SearchAccountHistoryOrder {
     TypeAsc = "+type",
     ToAsc = "+to",
     FromAsc = "+from",

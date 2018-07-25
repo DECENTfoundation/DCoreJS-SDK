@@ -12,7 +12,7 @@ export class GetBuyingByUri extends BaseRequest<Purchase> {
         super(
             ApiGroup.Database,
             "get_buying_by_consumer_URI",
-            [consumer, uri],
+            [consumer.objectId, uri],
             (value: object) => plainToClass(Purchase, value),
         );
     }

@@ -1,18 +1,19 @@
-import { plainToClass } from "class-transformer";
-import { Miner } from "../../../models/Miner";
+import * as _ from "lodash";
+import { AccountNameId } from "../../../models/AccountNameId";
+import { ChainObject } from "../../../models/ChainObject";
 import { ApiGroup } from "../ApiGroup";
 import { BaseRequest } from "./BaseRequest";
 
-export class LookupMiners extends BaseRequest<Miner[]> {
+export class LookupMiners extends BaseRequest<AccountNameId[]> {
     constructor(
         lookupTerm: string,
-        limit: number,
+        limit: number = 1000,
     ) {
         super(
             ApiGroup.Database,
             "lookup_miner_accounts",
-            [lookupTerm, limit],
-            (value: object[]) => plainToClass(Miner, value),
+            [lookupTerm, _.max([0, _.min([limit, 1000])])],
+            (value: [string, string]) => value.map(([name, id]) => new AccountNameId(name, ChainObject.parse(id))),
         );
     }
 }

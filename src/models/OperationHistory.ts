@@ -8,6 +8,7 @@ export class OperationHistory {
     @Expose({ name: "id" })
     public id: ChainObject;
 
+    // todo parse operation by type
     @Expose({ name: "op" })
     public op: any;
 
@@ -16,9 +17,6 @@ export class OperationHistory {
 
     @Expose({ name: "block_num" })
     public blockNum: number;
-
-    @Expose({ name: "trx_num" })
-    public trxNum: number;
 
     @Expose({ name: "op_in_trx" })
     public opNum: number;

@@ -2,11 +2,14 @@ import { ApiGroup } from "../ApiGroup";
 import { BaseRequest } from "./BaseRequest";
 
 export class Login extends BaseRequest<boolean> {
-    constructor() {
+    constructor(
+        username: string = "",
+        password: string = "",
+    ) {
         super(
             ApiGroup.Login,
             "login",
-            ["", ""],
+            [username, password],
         );
     }
 }

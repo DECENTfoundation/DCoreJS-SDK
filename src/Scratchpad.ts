@@ -6,6 +6,7 @@ import { Account } from "./models/Account";
 import { Authority } from "./models/Authority";
 import { ChainObject } from "./models/ChainObject";
 import { PubKey } from "./models/PubKey";
+import { ApiGroup } from "./net/models/ApiGroup";
 import { GetAccountById } from "./net/models/request/GetAccountById";
 import { GetAccountByName } from "./net/models/request/GetAccountByName";
 import { RpcEndpoints } from "./net/rpc/RpcEndpoints";

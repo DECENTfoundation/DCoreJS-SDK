@@ -16,7 +16,7 @@ export class GetAccountHistory extends BaseRequest<OperationHistory[]> {
         super(
             ApiGroup.History,
             "get_account_history",
-            [accountId.objectId, stopId.objectId, _.min([0, _.max([limit, 100])]), startId.objectId],
+            [accountId.objectId, stopId.objectId, _.max([0, _.min([limit, 100])]), startId.objectId],
             (value: object[]) => plainToClass(OperationHistory, value),
         );
     }
