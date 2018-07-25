@@ -132,7 +132,7 @@ describe("websocket requests", function() {
             .subscribe((value) => value.should.include.one.instanceOf(Miner), (error) => done(error), () => done());
     });
 
-    // will not work since the transaction is already removed from recent pool
+    // will not work after `expiration: '2018-07-26T11:27:07'` since the transaction will be removed from recent pool
     it("should return recent transaction", (done) => {
         rxWs.request(new GetRecentTransactionById("95914695085f08b84218e39cdea6f910f380e469"))
             .subscribe((value) => value.should.be.instanceOf(ProcessedTransaction), (error) => done(error), () => done());

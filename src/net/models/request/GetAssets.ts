@@ -11,7 +11,7 @@ export class GetAssets extends BaseRequest<Asset[]> {
         super(
             ApiGroup.Database,
             "get_assets",
-            [assets],
+            [assets.map((id) => id.objectId)],
             (value: object[]) => plainToClass(Asset, value),
         );
     }
