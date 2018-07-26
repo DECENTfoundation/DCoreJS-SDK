@@ -3,6 +3,10 @@ import { BaseRequest } from "./BaseRequest";
 
 export class RequestApiAccess extends BaseRequest<number> {
     constructor(api: ApiGroup) {
-        super(ApiGroup.Login, api, []);
+        super(
+            ApiGroup.Login,
+            api,
+            [],
+        );
     }
 }

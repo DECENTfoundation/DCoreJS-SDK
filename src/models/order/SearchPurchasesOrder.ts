@@ -1,4 +1,4 @@
-enum SearchPurchasesOrder {
+export enum SearchPurchasesOrder {
     SizeAsc = "+size",
     PriceAsc = "+price",
     CreatedAsc = "+created",

@@ -8,6 +8,7 @@ export class ProcessedTransaction {
     @Expose({ name: "extensions" })
     public extensions: any[];
 
+    // todo parse operations by type
     @Expose({ name: "operations" })
     public operations: BaseOperation[];
 

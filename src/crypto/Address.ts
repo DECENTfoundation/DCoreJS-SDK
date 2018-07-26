@@ -1,19 +1,26 @@
-
 export class Address {
 
-/*
     private static PREFIX: string = "DCT";
 
-/*
-    constructor(
-        public publicKey: ECPoint,
-        private prefix: string = Address.PREFIX,
-    ) { }
+    private readonly encoded: string;
 
-    public toString(): string { return this.encode(); }
+    constructor(encoded: string) {
+        this.encoded = encoded;
+    }
+
+    public toString(): string {
+        return this.encode();
+    }
 
     public encode(): string {
-        return "";
+        return this.encoded;
     }
-*/
+
+    /*
+        constructor(
+            public publicKey: ECPoint,
+            private prefix: string = Address.PREFIX,
+        ) { }
+
+    */
 }

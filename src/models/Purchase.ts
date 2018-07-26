@@ -1,8 +1,9 @@
-import { Expose, Transform, Type } from "class-transformer";
+import { deserialize, Expose, Transform, Type } from "class-transformer";
 import { AssetAmount } from "./AssetAmount";
 import { ChainObject } from "./ChainObject";
 import { KeyParts } from "./KeyParts";
 import { PubKey } from "./PubKey";
+import { Synopsis } from "./Synopsis";
 
 export class Purchase {
     @Type(() => ChainObject)
@@ -17,8 +18,10 @@ export class Purchase {
     @Expose({ name: "URI" })
     public uri: string;
 
+    @Type(() => Synopsis)
+    @Transform((value: string) => deserialize(Synopsis, value), { toClassOnly: true })
     @Expose({ name: "synopsis" })
-    public synopsisJson: string;
+    public synopsis: Synopsis;
 
     @Type(() => AssetAmount)
     @Expose({ name: "price" })
