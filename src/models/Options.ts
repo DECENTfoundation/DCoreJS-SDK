@@ -2,6 +2,7 @@ import { Expose, Transform, Type } from "class-transformer";
 import { Address } from "../crypto/Address";
 import { AssetAmount } from "./AssetAmount";
 import { ChainObject } from "./ChainObject";
+import { VoteId } from "./VoteId";
 
 export class Options {
     @Type(() => Address)
@@ -17,8 +18,10 @@ export class Options {
     @Expose({ name: "num_miner" })
     public numMiner: number;
 
+    @Type(() => VoteId)
+    @Transform((value: string) => VoteId.parse(value), { toClassOnly: true })
     @Expose({ name: "votes" })
-    public votes: string[];
+    public votes: VoteId[];
 
     @Expose({ name: "extensions" })
     public extensions: any[];

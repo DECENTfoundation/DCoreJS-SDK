@@ -29,6 +29,7 @@
   },
   "devDependencies": {
     "@types/bcrypt": "^1.0.0",
+    "@types/bytebuffer": "^5.0.37",
     "@types/chai": "^4.1.4",
     "@types/chai-things": "0.0.33",
     "@types/crypto-js": "^3.1.39",
@@ -59,6 +60,7 @@
   "dependencies": {
     "@akanass/rx-http-request": "^3.0.0",
     "bcrypt": "^1.0.3",
+    "bytebuffer": "^5.0.1",
     "class-transformer": "^0.1.9",
     "compare-versions": "^3.1.0",
     "crypto-js": "^3.1.9-1",
@@ -71,7 +73,6 @@
     "moment": "^2.21.0",
     "reflect-metadata": "^0.1.12",
     "rxjs": "^6.2.0",
-    "safe-buffer": "^5.1.1",
     "uuid": "^3.2.1",
     "ws": "^5.2.0"
   }

@@ -10,6 +10,7 @@ import { ApiGroup } from "./net/models/ApiGroup";
 import { GetAccountById } from "./net/models/request/GetAccountById";
 import { GetAccountByName } from "./net/models/request/GetAccountByName";
 import { RpcEndpoints } from "./net/rpc/RpcEndpoints";
+import { Serializer } from "./net/serialization/Serializer";
 import { RxWebSocket } from "./net/ws/RxWebSocket";
 import WebSocket = require("isomorphic-ws");
 
@@ -158,9 +159,16 @@ function websocket() {
     //     .subscribe()
 }
 
+function serialize() {
+    const id = [ChainObject.parse("1.2.3")];
+    const serializer = new Serializer();
+    console.log(serializer.serialize(id));
+}
+
 // some();
 // serialize_account()
 // accountById()
 // accountByName()
 // spy.log("RxWebSocket_events")
-websocket();
+// websocket();
+serialize()
