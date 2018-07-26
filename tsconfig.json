@@ -1,29 +1,28 @@
 {
-    "compilerOptions": {
-        "lib": [
-            "es6"
-        ],
-        "target": "es6",
-        "module": "commonjs",
-        "types": [
-            "reflect-metadata",
-            "node"
-        ],
-        "moduleResolution": "node",
-        "emitDecoratorMetadata": true,
-        "experimentalDecorators": true,
-        "sourceMap": true,
-        "noImplicitAny": true,
-        "noUnusedLocals": true,
-        "baseUrl": ".",
-        "outDir": "./dist",
-        "paths": {}
-    },
-    "exclude": [
-        "dist",
-        "webpack",
-        "tslint.json",
-        "**/tests/*",
-        "node_modules"
-    ]
+  "compilerOptions": {
+    "lib": [
+      "es6",
+      "dom"
+    ],
+    "target": "es6",
+    "module": "commonjs",
+    "types": [
+      "reflect-metadata"
+    ],
+    "moduleResolution": "node",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "sourceMap": true,
+    "noImplicitAny": true,
+    "noUnusedLocals": true,
+    "baseUrl": ".",
+    "outDir": "./dist",
+    "paths": {}
+  },
+  "exclude": [
+    "dist",
+    "webpack",
+    "tslint.json",
+    "**/tests/*"
+  ]
 }

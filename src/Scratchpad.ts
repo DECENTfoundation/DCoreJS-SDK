@@ -1,7 +1,14 @@
 /* tslint:disable */
 import { deserialize, plainToClass, serialize } from "class-transformer";
 import "reflect-metadata";
-import { Observable } from "rxjs/internal/Observable";
+import { create } from "rxjs-spy";
+import { Spy } from "rxjs-spy/spy-interface";
+import { BehaviorSubject } from "rxjs/internal/BehaviorSubject";
+import { Scheduler } from "rxjs/internal/Rx";
+import { async } from "rxjs/internal/scheduler/async";
+import { queue } from "rxjs/internal/scheduler/queue";
+import { Subject } from "rxjs/internal/Subject";
+import { mergeMap, observeOn, subscribeOn, tap } from "rxjs/operators";
 import { Account } from "./models/Account";
 import { Asset } from "./models/Asset";
 import { Authority } from "./models/Authority";
@@ -10,6 +17,9 @@ import { PubKey } from "./models/PubKey";
 import { GetAccountById } from "./net/models/request/GetAccountById";
 import { GetAccountByName } from "./net/models/request/GetAccountByName";
 import { RpcEndpoints } from "./net/rpc/RpcEndpoints";
+import { connect, OnMessage, OnOpen, RxWebSocket } from "./net/ws/RxWebSocket";
+import WebSocket = require("isomorphic-ws");
+import values = require("lodash/fp/values");
 
 function some() {
     const k = new PubKey();
@@ -84,7 +94,7 @@ function some() {
 
 function accountByName() {
     const api = new RpcEndpoints();
-    api.makeRequest(new GetAccountByName("u961279ec8b7ae7bd62f304f7c1c3d345")).subscribe(
+    api.request(new GetAccountByName("u961279ec8b7ae7bd62f304f7c1c3d345")).subscribe(
         (account) => console.log(account),
         (err) => console.error(err)
     )
@@ -92,7 +102,7 @@ function accountByName() {
 
 function accountById() {
     const api = new RpcEndpoints();
-    return api.makeRequest(new GetAccountById(ChainObject.parse("1.2.15"))).subscribe(
+    return api.request(new GetAccountById(ChainObject.parse("1.2.15"))).subscribe(
         (account) => console.log(account),
         (err) => console.error(err)
     )
@@ -135,7 +145,24 @@ function serialize_account() {
     console.log(acc.owner.keyAuths)
 }
 
+function websocket() {
+    const rxWs = new RxWebSocket('wss://stage.decentgo.com:8090', (url, protocols) => new WebSocket(url, protocols, { rejectUnauthorized: false }));
+    const spy = create();
+    spy.log(/^RxWebSocket_make_\w+/)
+    rxWs.request(new GetAccountByName("u961279ec8b7ae7bd62f304f7c1c3d345"))
+        // .pipe(mergeMap(() => rxWs.request(new GetAccountById(ChainObject.parse("1.2.15")))))
+        .pipe(observeOn(async))
+        .subscribe();
+/*
+    rxWs.request(new GetAccountById(ChainObject.parse("1.2.15")))
+        .pipe(observeOn(queue))
+        .subscribe();
+*/
+}
+
 // some();
 // serialize_account()
-accountById()
+// accountById()
 // accountByName()
+// spy.log("RxWebSocket_events")
+websocket()

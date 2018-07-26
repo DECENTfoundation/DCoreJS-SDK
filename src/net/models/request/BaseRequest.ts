@@ -7,7 +7,7 @@ export abstract class BaseRequest<T> {
     public apiGroup: ApiGroup;
 
     @Exclude()
-    public returnClass: ClassType<T>;
+    public returnClass?: ClassType<T>;
 
     @Expose({ name: "method" })
     public method: string;
@@ -21,7 +21,7 @@ export abstract class BaseRequest<T> {
     @Expose({ name: "id" })
     public id: number = 1;
 
-    protected constructor(apiGroup: ApiGroup, returnClass: ClassType<T>, method: string, params: any[]) {
+    protected constructor(apiGroup: ApiGroup, method: string, params: any[], returnClass?: ClassType<T>) {
         this.apiGroup = apiGroup;
         this.returnClass = returnClass;
         this.method = method;

@@ -13,7 +13,7 @@ export class RpcEndpoints {
         timeout: 15000,
     });
 
-    public makeRequest<T>(request: BaseRequest<T>): Observable<T | T[]> {
+    public request<T>(request: BaseRequest<T>): Observable<T | T[]> {
         return this.baseRequest.post("", { body: serialize(request) }).pipe(
             map((data) => {
                 if (data.response.statusCode === 200) {
