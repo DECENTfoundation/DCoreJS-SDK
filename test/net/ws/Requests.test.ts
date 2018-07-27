@@ -1,6 +1,5 @@
 import * as chai from "chai";
 import * as chaiThings from "chai-things";
-import "chai/register-should";
 import WebSocket = require("isomorphic-ws");
 import "mocha";
 import "reflect-metadata";

@@ -1,5 +1,4 @@
 import { Exclude, Expose } from "class-transformer";
-import _ = require("lodash");
 
 export class PubKey {
     @Expose({ name: "s" })

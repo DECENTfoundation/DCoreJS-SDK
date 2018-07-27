@@ -27,9 +27,11 @@ export class TransferOperation extends BaseOperation {
     public memo?: Memo;
 
     constructor(from: ChainObject, to: ChainObject, amount: AssetAmount, memo?: Memo, fee?: AssetAmount) {
-        super(OperationType.Transfer);
+        super(OperationType.Transfer2);
         this.from = from;
         this.to = to;
+        this.amount = amount;
         this.memo = memo;
+        this.fee = fee;
     }
 }

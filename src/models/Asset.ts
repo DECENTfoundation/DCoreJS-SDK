@@ -34,4 +34,14 @@ export class Asset {
     @Transform((value: ChainObject) => value.objectId, { toPlainOnly: true })
     @Expose({ name: "dynamic_asset_data_id" })
     public dynamicAssetDataId: ChainObject;
+
+    constructor(id: ChainObject, symbol: string, precision: number, issuer: ChainObject, description: string, options: AssetOptions, dynamicAssetDataId: ChainObject) {
+        this.id = id;
+        this.symbol = symbol;
+        this.precision = precision;
+        this.issuer = issuer;
+        this.description = description;
+        this.options = options;
+        this.dynamicAssetDataId = dynamicAssetDataId;
+    }
 }

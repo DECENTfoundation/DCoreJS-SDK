@@ -39,7 +39,7 @@ export class BaseBuffer {
     }
 
     // tslint:disable:no-bitwise
-    public encode(source: string): string {
+    public encode(source: Buffer): string {
         if (_.isEmpty(source)) {
             return "";
         }
@@ -49,7 +49,7 @@ export class BaseBuffer {
         for (let i = 0; i < source.length; ++i) {
             let carry: number = 0;
 
-            for (let j: number = 0, c: any = source[i]; j < digits.length; ++j) {
+            for (let j: number = 0, c: number = source[i]; j < digits.length; ++j) {
                 c += digits[j] << 8;
                 digits[j] = c % this.base;
                 carry = (c / this.base) | 0;
@@ -122,6 +122,6 @@ export class BaseBuffer {
             return result;
         }
 
-        throw new Error("Non-base' + this.base + ' character");
+        throw new Error("Non-base" + this.base + " character");
     }
 }

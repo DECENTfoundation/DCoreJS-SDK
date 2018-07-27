@@ -13,6 +13,8 @@ import { Miner } from "./models/Miner";
 import { BaseOperation } from "./models/operation/BaseOperation";
 import { OperationHistory } from "./models/OperationHistory";
 import { Options } from "./models/Options";
+import { SearchAccountHistoryOrder } from "./models/order/SearchAccountHistoryOrder";
+import { SearchPurchasesOrder } from "./models/order/SearchPurchasesOrder";
 import { ProcessedTransaction } from "./models/ProcessedTransaction";
 import { Purchase } from "./models/Purchase";
 import { TransactionConfirmation } from "./models/TransactionConfirmation";

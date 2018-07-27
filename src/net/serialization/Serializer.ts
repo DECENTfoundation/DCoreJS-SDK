@@ -6,6 +6,10 @@ import { AuthorityMap } from "../../models/AuthorityMap";
 import { BlockData } from "../../models/BlockData";
 import { ChainObject } from "../../models/ChainObject";
 import { Memo } from "../../models/Memo";
+import { AccountCreateOperation } from "../../models/operation/AccountCreateOperation";
+import { AccountUpdateOperation } from "../../models/operation/AccountUpdateOperation";
+import { BuyContentOperation } from "../../models/operation/BuyContentOperation";
+import { TransferOperation } from "../../models/operation/TransferOperation";
 import { Options } from "../../models/Options";
 import { PubKey } from "../../models/PubKey";
 import { Publishing } from "../../models/Publishing";
@@ -29,17 +33,30 @@ export class Serializer {
         this.adapters.set(Memo.name, this.memoAdapter);
         this.adapters.set(VoteId.name, this.voteAdapter);
         this.adapters.set("boolean", this.booleanAdapter);
-        this.adapters.set(Option.name, this.optionsAdapter);
+        this.adapters.set(Options.name, this.optionsAdapter);
         this.adapters.set(PubKey.name, this.pubKeyAdapter);
         this.adapters.set(Publishing.name, this.publishingAdapter);
         this.adapters.set(BlockData.name, this.blockDataAdapter);
         this.adapters.set(Transaction.name, this.transactionAdapter);
+        this.adapters.set(AccountCreateOperation.name, this.accountCreateOperationAdapter);
+        this.adapters.set(AccountUpdateOperation.name, this.accountUpdateOperationAdapter);
+        this.adapters.set(BuyContentOperation.name, this.buyContentOperationAdapter);
+        this.adapters.set(TransferOperation.name, this.transferOperationAdapter);
     }
 
-    public serialize(obj: any): Buffer {
+    public serialize(obj: any): ByteBuffer {
         const buffer = new ByteBuffer(0, true);
         this.append(buffer, obj);
-        return buffer.buffer;
+        return buffer.compact(0, buffer.offset).reset();
+    }
+
+    private appendOptional(buffer: ByteBuffer, obj?: any) {
+        if (_.isNil(obj)) {
+            buffer.writeByte(0);
+        } else {
+            buffer.writeByte(1);
+            this.append(buffer, obj);
+        }
     }
 
     private append(buffer: ByteBuffer, obj: any) {
@@ -84,17 +101,17 @@ export class Serializer {
 
     private memoAdapter = (buffer: ByteBuffer, obj: Memo) => {
         if (_.isNil(obj.from)) {
-            buffer.writeBytes(Buffer.alloc(33, 0));
+            buffer.append(Buffer.alloc(33, 0));
         } else {
             this.append(buffer, obj.from);
         }
         if (_.isNil(obj.to)) {
-            buffer.writeBytes(Buffer.alloc(33, 0));
+            buffer.append(Buffer.alloc(33, 0));
         } else {
             this.append(buffer, obj.from);
         }
-        buffer.writeInt64(obj.nonce);
-        this.append(buffer, BaseUtils["16"]().decode(obj.message));
+        buffer.writeUint64(obj.nonce);
+        this.append(buffer, BaseUtils["16"].decode(obj.message));
     }
 
     // tslint:disable-next-line:no-bitwise
@@ -133,4 +150,44 @@ export class Serializer {
         this.append(buffer, obj.extensions);
     }
 
+    private accountCreateOperationAdapter = (buffer: ByteBuffer, obj: AccountCreateOperation) => {
+        buffer.writeByte(obj.type);
+        this.append(buffer, obj.fee);
+        this.append(buffer, obj.registrar);
+        this.append(buffer, obj.name);
+        this.append(buffer, obj.owner);
+        this.append(buffer, obj.active);
+        this.append(buffer, obj.options);
+        this.append(buffer, obj.extensions);
+    }
+
+    private accountUpdateOperationAdapter = (buffer: ByteBuffer, obj: AccountUpdateOperation) => {
+        buffer.writeByte(obj.type);
+        this.append(buffer, obj.fee);
+        this.append(buffer, obj.accountId);
+        this.appendOptional(buffer, obj.owner);
+        this.appendOptional(buffer, obj.active);
+        this.appendOptional(buffer, obj.options);
+        this.append(buffer, obj.extensions);
+    }
+
+    private buyContentOperationAdapter = (buffer: ByteBuffer, obj: BuyContentOperation) => {
+        buffer.writeByte(obj.type);
+        this.append(buffer, obj.fee);
+        this.append(buffer, obj.uri);
+        this.append(buffer, obj.consumer);
+        this.append(buffer, obj.price);
+        buffer.writeUint32(obj.regionCode);
+        this.append(buffer, obj.pubKey);
+    }
+
+    private transferOperationAdapter = (buffer: ByteBuffer, obj: TransferOperation) => {
+        buffer.writeByte(obj.type);
+        this.append(buffer, obj.fee);
+        this.append(buffer, obj.from);
+        buffer.append(obj.to.fullBytes);
+        this.append(buffer, obj.amount);
+        this.appendOptional(buffer, obj.memo);
+        this.append(buffer, obj.extensions);
+    }
 }

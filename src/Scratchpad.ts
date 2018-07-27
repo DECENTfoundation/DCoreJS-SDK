@@ -1,7 +1,11 @@
+import * as ByteBuffer from "bytebuffer";
+
 /* tslint:disable */
 import { deserialize, plainToClass, serialize } from "class-transformer";
 import "reflect-metadata";
+import * as Long from "long";
 import { create } from "rxjs-spy";
+import { detectBufferEncoding } from "tslint/lib/utils";
 import { Account } from "./models/Account";
 import { Authority } from "./models/Authority";
 import { ChainObject } from "./models/ChainObject";
@@ -12,6 +16,7 @@ import { GetAccountByName } from "./net/models/request/GetAccountByName";
 import { RpcEndpoints } from "./net/rpc/RpcEndpoints";
 import { Serializer } from "./net/serialization/Serializer";
 import { RxWebSocket } from "./net/ws/RxWebSocket";
+import { BaseUtils } from "./utils/BaseUtils";
 import WebSocket = require("isomorphic-ws");
 
 function some() {
@@ -160,9 +165,22 @@ function websocket() {
 }
 
 function serialize() {
-    const id = [ChainObject.parse("1.2.3")];
-    const serializer = new Serializer();
-    console.log(serializer.serialize(id));
+    const id = ChainObject.parse("1.2.31");
+    // const serializer = new Serializer();
+    const buffer = new ByteBuffer(8, ByteBuffer.LITTLE_ENDIAN);
+    // console.log(serializer.serialize(id.fullInstance));
+    // console.log(id.fullInstance.toNumber());
+    // console.log(buffer.writeUint64(1).mark(buffer.offset).writeUint64(31).reset().skip(6).writeByte(2).writeByte(1));
+    console.log(buffer.writeByte(2, 7).writeByte(1, 6).writeUint64(id.instance)); //.writeByte(2).writeByte(1));
+    // console.log(Long.fromNumber(1).shiftLeft(56).or(Long.fromNumber(2).shiftLeft(48)).or(31));
+    // console.log(Long.fromNumber(1).shiftLeft(56).or(Long.fromNumber(2).shiftLeft(48)).or(31).toString());
+}
+
+function base16() {
+    const hello = "hello world";
+    const bytes = new Buffer(hello);
+    console.log(bytes.toString("hex"))
+    console.log(BaseUtils["16"].encode(bytes))
 }
 
 // some();
@@ -172,3 +190,4 @@ function serialize() {
 // spy.log("RxWebSocket_events")
 // websocket();
 serialize()
+// base16()

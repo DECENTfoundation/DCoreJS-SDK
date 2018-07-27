@@ -1,6 +1,6 @@
 export class Address {
 
-    private static PREFIX: string = "DCT";
+    // private static PREFIX: string = "DCT";
 
     private readonly encoded: string;
 
