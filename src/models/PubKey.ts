@@ -5,13 +5,7 @@ export class PubKey {
     @Exclude()
     public key: string;
 
-/*
-    get adapter(): string {
-        return this.key + ".";
+    constructor(key: string) {
+        this.key = key.endsWith(".") ? key : key.concat(".");
     }
-
-    set adapter(value: string) {
-        this.key = _.parseInt(value.replace(".", ""));
-    }
-*/
 }

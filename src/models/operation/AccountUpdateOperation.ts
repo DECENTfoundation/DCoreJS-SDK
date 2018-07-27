@@ -1,4 +1,5 @@
 import { Expose } from "class-transformer";
+import { AssetAmount } from "../AssetAmount";
 import { Authority } from "../Authority";
 import { ChainObject } from "../ChainObject";
 import { OperationType } from "../OperationType";
@@ -28,11 +29,12 @@ export class AccountUpdateOperation extends BaseOperation {
     @Expose({ name: "options" })
     public options?: Options;
 
-    constructor(accountId: ChainObject, owner?: Authority, active?: Authority, options?: Options) {
+    constructor(accountId: ChainObject, owner?: Authority, active?: Authority, options?: Options, fee?: AssetAmount) {
         super(OperationType.AccountUpdate);
         this.accountId = accountId;
         this.owner = owner;
         this.active = active;
         this.options = options;
+        this.fee = fee;
     }
 }

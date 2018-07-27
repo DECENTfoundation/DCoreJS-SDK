@@ -19,6 +19,8 @@ export class Miner {
     public lastAslot: number;
 
     @Type(() => Address)
+    @Transform((value: string) => Address.parse(value), { toClassOnly: true })
+    @Transform((value: Address) => value.encode(), { toPlainOnly: true })
     @Expose({ name: "signing_key" })
     public signingKey: Address;
 

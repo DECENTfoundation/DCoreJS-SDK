@@ -11,8 +11,14 @@ export class Authority {
     public accountAuths: any[];
 
     @Type(() => AuthorityMap)
-    @Transform((values: Array<[string, number]>) => values.map(([value, weight]) => new AuthorityMap(new Address(value), weight)), { toClassOnly: true })
+    @Transform((values: Array<[string, number]>) => values.map(([value, weight]) => new AuthorityMap(Address.parse(value), weight)), { toClassOnly: true })
     @Transform((values: AuthorityMap[]) => values.map((value) => [value.value, value.weight]), { toPlainOnly: true })
     @Expose({ name: "key_auths" })
     public keyAuths: AuthorityMap[];
+
+    constructor(publicKey: Address) {
+        this.weightThreshold = 1;
+        this.accountAuths = [];
+        this.keyAuths = [new AuthorityMap(publicKey, 1)];
+    }
 }

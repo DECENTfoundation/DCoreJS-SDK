@@ -122,7 +122,7 @@ describe("websocket requests", function() {
     });
 
     it("should return account for key references", (done) => {
-        rxWs.request(new GetKeyReferences([new Address("DCT6MA5TQQ6UbMyMaLPmPXE2Syh5G3ZVhv5SbFedqLPqdFChSeqTz")]))
+        rxWs.request(new GetKeyReferences([Address.parse("DCT6MA5TQQ6UbMyMaLPmPXE2Syh5G3ZVhv5SbFedqLPqdFChSeqTz")]))
             .subscribe((value) => value.should.include.one.include.one.instanceOf(ChainObject), (error) => done(error), () => done());
     });
 

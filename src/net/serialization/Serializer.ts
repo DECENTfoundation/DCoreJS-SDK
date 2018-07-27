@@ -1,5 +1,6 @@
 import * as ByteBuffer from "bytebuffer";
 import * as _ from "lodash";
+import { Address } from "../../crypto/Address";
 import { AssetAmount } from "../../models/AssetAmount";
 import { Authority } from "../../models/Authority";
 import { AuthorityMap } from "../../models/AuthorityMap";
@@ -26,6 +27,7 @@ export class Serializer {
     constructor() {
         this.adapters.set(ChainObject.name, this.chainIdAdapter);
         this.adapters.set("string", this.stringAdapter);
+        this.adapters.set(Address.name, this.addressAdapter);
         this.adapters.set(Authority.name, this.authorityAdapter);
         this.adapters.set(AuthorityMap.name, this.authorityMapAdapter);
         this.adapters.set(AssetAmount.name, this.assetAmountAdapter);
@@ -77,6 +79,8 @@ export class Serializer {
         buffer.writeVarint32(obj.length);
         buffer.writeUTF8String(obj);
     }
+
+    private addressAdapter = (buffer: ByteBuffer, obj: Address) => buffer.append(obj.publicKey.getEncoded(true));
 
     private authorityAdapter = (buffer: ByteBuffer, obj: Authority) => {
         buffer.writeUint32(obj.weightThreshold);

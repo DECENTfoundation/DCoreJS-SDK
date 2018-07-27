@@ -183,11 +183,24 @@ function base16() {
     console.log(BaseUtils["16"].encode(bytes))
 }
 
+function maxNumber() {
+    const buffer = new ByteBuffer();
+    console.log(Number.MAX_SAFE_INTEGER);
+    console.log(Number.MAX_SAFE_INTEGER + 1);
+    console.log(Number.MAX_VALUE.valueOf());
+    console.log(buffer.writeInt64(Number.MAX_SAFE_INTEGER -1))
+    console.log(buffer.reset().writeInt64(Number.MAX_VALUE))
+    console.log(buffer.reset().writeInt64(Number.MAX_SAFE_INTEGER + 1))
+    // console.log(buffer.reset().writeInt64(Number.MAX_SAFE_INTEGER + 1))
+
+}
+
 // some();
 // serialize_account()
 // accountById()
 // accountByName()
 // spy.log("RxWebSocket_events")
 // websocket();
-serialize()
+// serialize()
 // base16()
+maxNumber()
