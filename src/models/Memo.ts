@@ -1,6 +1,6 @@
 import { Expose, Transform, Type } from "class-transformer";
 import { Address } from "../crypto/Address";
-import { BaseUtils } from "../utils/BaseUtils";
+import { Utils } from "../utils/Utils";
 
 export class Memo {
     @Type(() => Address)
@@ -22,6 +22,6 @@ export class Memo {
     public nonce: number = 0;
 
     constructor(message: string) {
-        this.message = "0000" + BaseUtils["16"].encode(new Buffer(message));
+        this.message = "0000" + Utils.Base16.encode(new Buffer(message));
     }
 }

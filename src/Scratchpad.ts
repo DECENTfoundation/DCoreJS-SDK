@@ -1,22 +1,20 @@
 import * as ByteBuffer from "bytebuffer";
-
 /* tslint:disable */
 import { deserialize, plainToClass, serialize } from "class-transformer";
 import "reflect-metadata";
-import * as Long from "long";
 import { create } from "rxjs-spy";
-import { detectBufferEncoding } from "tslint/lib/utils";
+import { Address } from "./crypto/Address";
+import { DumpedPrivateKey } from "./crypto/DumpedPrivateKey";
+import { ECKeyPair } from "./crypto/ECKeyPair";
 import { Account } from "./models/Account";
 import { Authority } from "./models/Authority";
 import { ChainObject } from "./models/ChainObject";
 import { PubKey } from "./models/PubKey";
-import { ApiGroup } from "./net/models/ApiGroup";
 import { GetAccountById } from "./net/models/request/GetAccountById";
 import { GetAccountByName } from "./net/models/request/GetAccountByName";
 import { RpcEndpoints } from "./net/rpc/RpcEndpoints";
-import { Serializer } from "./net/serialization/Serializer";
 import { RxWebSocket } from "./net/ws/RxWebSocket";
-import { BaseUtils } from "./utils/BaseUtils";
+import { Utils } from "./utils/Utils";
 import WebSocket = require("isomorphic-ws");
 
 function some() {
@@ -164,7 +162,7 @@ function websocket() {
     //     .subscribe()
 }
 
-function serialize() {
+function serialization() {
     const id = ChainObject.parse("1.2.31");
     // const serializer = new Serializer();
     const buffer = new ByteBuffer(8, ByteBuffer.LITTLE_ENDIAN);
@@ -179,8 +177,8 @@ function serialize() {
 function base16() {
     const hello = "hello world";
     const bytes = new Buffer(hello);
-    console.log(bytes.toString("hex"))
-    console.log(BaseUtils["16"].encode(bytes))
+    console.log(bytes.toString("hex"));
+    console.log(Utils.Base16.encode(bytes));
 }
 
 function maxNumber() {
@@ -188,11 +186,18 @@ function maxNumber() {
     console.log(Number.MAX_SAFE_INTEGER);
     console.log(Number.MAX_SAFE_INTEGER + 1);
     console.log(Number.MAX_VALUE.valueOf());
-    console.log(buffer.writeInt64(Number.MAX_SAFE_INTEGER -1))
-    console.log(buffer.reset().writeInt64(Number.MAX_VALUE))
-    console.log(buffer.reset().writeInt64(Number.MAX_SAFE_INTEGER + 1))
+    console.log(buffer.writeInt64(Number.MAX_SAFE_INTEGER - 1));
+    console.log(buffer.reset().writeInt64(Number.MAX_VALUE));
+    console.log(buffer.reset().writeInt64(Number.MAX_SAFE_INTEGER + 1));
     // console.log(buffer.reset().writeInt64(Number.MAX_SAFE_INTEGER + 1))
 
+}
+
+function wif() {
+    const pkey = "5JVHeRffGsKGyDf7T9i9dBbzVHQrYprYeaBQo2VCSytj7BxpMCq";
+    const kp = ECKeyPair.parseWif(pkey);
+    console.log(kp.privateKey.toString());
+    console.log(new Address(kp.publicKey).encoded);
 }
 
 // some();
@@ -203,4 +208,5 @@ function maxNumber() {
 // websocket();
 // serialize()
 // base16()
-maxNumber()
+// maxNumber()
+wif();

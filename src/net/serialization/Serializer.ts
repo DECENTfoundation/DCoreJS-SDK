@@ -16,7 +16,7 @@ import { PubKey } from "../../models/PubKey";
 import { Publishing } from "../../models/Publishing";
 import { Transaction } from "../../models/Transaction";
 import { VoteId } from "../../models/VoteId";
-import { BaseUtils } from "../../utils/BaseUtils";
+import { Utils } from "../../utils/Utils";
 
 type Adapter<T> = (buffer: ByteBuffer, obj: T) => void;
 
@@ -115,7 +115,7 @@ export class Serializer {
             this.append(buffer, obj.from);
         }
         buffer.writeUint64(obj.nonce);
-        this.append(buffer, BaseUtils["16"].decode(obj.message));
+        this.append(buffer, Utils.Base16.decode(obj.message));
     }
 
     // tslint:disable-next-line:no-bitwise
