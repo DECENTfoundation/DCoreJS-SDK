@@ -1,7 +1,11 @@
-import { Expose } from "class-transformer";
+import { Exclude, Expose } from "class-transformer";
+import { BlockData } from "./BlockData";
 import { BaseOperation } from "./operation/BaseOperation";
 
 export class Transaction {
+    @Exclude()
+    public blockData: BlockData;
+
     @Expose({ name: "operations" })
     public operations: BaseOperation[];
 

@@ -36,5 +36,6 @@ export class BuyContentOperation extends BaseOperation {
         this.consumer = consumer;
         this.price = price;
         this.pubKey = pubKey;
+        this.fee = new AssetAmount(0);
     }
 }

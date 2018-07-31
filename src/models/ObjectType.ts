@@ -1,50 +1,70 @@
-export type ObjectType = string;
-/*  {
-    Null = "0.0.*", // ordinal = 0, type = 0, space = any
-    Base = "0.1.1",
-    Account = "0.2.1",
-    Asset = "0.3.1",
-    Miner = "0.4.1",
-    Custom = "0.5.1",
-    Proposal = "0.6.1",
-    OperationHistory = "0.7.1",
-    WithdrawPermission = "0.8.1",
-    VestingBalance = "0.9.1", // ordinal = 10, type 0
+export class ObjectType {
+    public static Null = new ObjectType(1, 0);
+    public static Base = new ObjectType(1, 1);
+    public static Account = new ObjectType(1, 2);
+    public static Asset = new ObjectType(1, 3);
+    public static Miner = new ObjectType(1, 4);
+    public static Custom = new ObjectType(1, 5);
+    public static Proposal = new ObjectType(1, 6);
+    public static OperationHistory = new ObjectType(1, 7);
+    public static WithdrawPermission = new ObjectType(1, 8);
+    public static VestingBalance = new ObjectType(1, 9);
 
-    //  enum impl_object_type, space = 2
-    GlobalProperty = "10.0.2",
-    // dcore/libraries/chain/include/graphene/chain/protocol/types.hpp
-    //  enum object_type, space = 1
-    NULL_OBJECT, // ordinal = 0, type = 0, space = any
-    BASE_OBJECT,
-    ACCOUNT_OBJECT,
-    ASSET_OBJECT,
-    MINER_OBJECT,
-    CUSTOM_OBJECT, //5
-    PROPOSAL_OBJECT,
-    OPERATION_HISTORY_OBJECT,
-    WITHDRAW_PERMISSION_OBJECT,
-    VESTING_BALANCE_OBJECT,
+    public static GlobalPropertyObject = new ObjectType(2, 0);
+    public static DynamicGlobalPropertyObject = new ObjectType(2, 1);
+    public static ReservedObject = new ObjectType(2, 2);
+    public static AssetDynamicData = new ObjectType(2, 3);
+    public static AccountBalanceObject = new ObjectType(2, 4);
+    public static AccountStatisticsObject = new ObjectType(2, 5);
+    public static TransactionObject = new ObjectType(2, 6);
+    public static BlockSummaryObject = new ObjectType(2, 7);
+    public static AccountTransactionHistoryObject = new ObjectType(2, 8);
+    public static ChainPropertyObject = new ObjectType(2, 9);
+    public static MinerScheduleObject = new ObjectType(2, 10);
+    public static BudgetRecordObject = new ObjectType(2, 11);
+    public static BuyingObject = new ObjectType(2, 12);
+    public static ContentObject = new ObjectType(2, 13);
+    public static PublisherObject = new ObjectType(2, 14);
+    public static SubscriptionObject = new ObjectType(2, 15);
+    public static SeedingStatisticsObject = new ObjectType(2, 16);
+    public static TransactionDetailObject = new ObjectType(2, 17);
+    public static MessagingObject = new ObjectType(2, 18);
 
-    //  enum impl_object_type, space = 2
-    GLOBAL_PROPERTY_OBJECT, // ordinal = 10, type 0
-    DYNAMIC_GLOBAL_PROPERTY_OBJECT,
-    RESERVED_OBJECT,
-    ASSET_DYNAMIC_DATA,
-    ACCOUNT_BALANCE_OBJECT,
-    ACCOUNT_STATISTICS_OBJECT, //5
-    TRANSACTION_OBJECT,
-    BLOCK_SUMMARY_OBJECT,
-    ACCOUNT_TRANSACTION_HISTORY_OBJECT,
-    CHAIN_PROPERTY_OBJECT,
-    MINER_SCHEDULE_OBJECT, //10
-    BUDGET_RECORD_OBJECT,
-    BUYING_OBJECT,
-    CONTENT_OBJECT,
-    PUBLISHER_OBJECT,
-    SUBSCRIPTION_OBJECT, //15
-    SEEDING_STATISTICS_OBJECT,
-    TRANSACTION_DETAIL_OBJECT,
-    MESSAGING_OBJECT;
+    public static types = [
+        [],
+        [
+            ObjectType.Null,
+            ObjectType.Base,
+            ObjectType.Account,
+            ObjectType.Asset,
+            ObjectType.Miner,
+            ObjectType.Custom,
+            ObjectType.Proposal,
+            ObjectType.OperationHistory,
+            ObjectType.WithdrawPermission,
+            ObjectType.VestingBalance,
+        ], [
+            ObjectType.GlobalPropertyObject,
+            ObjectType.DynamicGlobalPropertyObject,
+            ObjectType.ReservedObject,
+            ObjectType.AssetDynamicData,
+            ObjectType.AccountBalanceObject,
+            ObjectType.AccountStatisticsObject,
+            ObjectType.TransactionObject,
+            ObjectType.BlockSummaryObject,
+            ObjectType.AccountTransactionHistoryObject,
+            ObjectType.ChainPropertyObject,
+            ObjectType.MinerScheduleObject,
+            ObjectType.BudgetRecordObject,
+            ObjectType.BuyingObject,
+            ObjectType.ContentObject,
+            ObjectType.PublisherObject,
+            ObjectType.SubscriptionObject,
+            ObjectType.SeedingStatisticsObject,
+            ObjectType.TransactionDetailObject,
+            ObjectType.MessagingObject,
+        ]];
+
+    private constructor(public space: number, public type: number) {
+    }
 }
- */

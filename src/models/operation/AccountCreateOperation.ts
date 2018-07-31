@@ -1,4 +1,6 @@
 import { Expose } from "class-transformer";
+import { Address } from "../../crypto/Address";
+import { AssetAmount } from "../AssetAmount";
 import { Authority } from "../Authority";
 import { ChainObject } from "../ChainObject";
 import { OperationType } from "../OperationType";
@@ -30,12 +32,13 @@ export class AccountCreateOperation extends BaseOperation {
     @Expose({ name: "options" })
     public options: Options;
 
-    constructor(registrar: ChainObject, name: string, owner: Authority, active: Authority, options: Options) {
+    constructor(registrar: ChainObject, name: string, publicKey: Address, fee?: AssetAmount) {
         super(OperationType.AccountCreate);
         this.registrar = registrar;
         this.name = name;
-        this.owner = owner;
-        this.active = active;
-        this.options = options;
+        this.owner = new Authority(publicKey);
+        this.active = new Authority(publicKey);
+        this.options = new Options(publicKey);
+        this.fee = fee;
     }
 }
