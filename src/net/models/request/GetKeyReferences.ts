@@ -10,7 +10,7 @@ export class GetKeyReferences extends BaseRequest<ChainObject[][]> {
         super(
             ApiGroup.Database,
             "get_key_references",
-            [addresses.map((address) => address.encode())],
+            [addresses.map((address) => address.encoded)],
             (values: string[][]) => values.map((refs) => refs.map((id) => ChainObject.parse(id))),
         );
     }

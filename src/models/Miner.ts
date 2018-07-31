@@ -20,7 +20,7 @@ export class Miner {
 
     @Type(() => Address)
     @Transform((value: string) => Address.parse(value), { toClassOnly: true })
-    @Transform((value: Address) => value.encode(), { toPlainOnly: true })
+    @Transform((value: Address) => value.encoded, { toPlainOnly: true })
     @Expose({ name: "signing_key" })
     public signingKey: Address;
 

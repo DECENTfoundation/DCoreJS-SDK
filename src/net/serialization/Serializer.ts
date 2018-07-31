@@ -80,7 +80,7 @@ export class Serializer {
         buffer.writeUTF8String(obj);
     }
 
-    private addressAdapter = (buffer: ByteBuffer, obj: Address) => buffer.append(obj.publicKey.getEncoded(true));
+    private addressAdapter = (buffer: ByteBuffer, obj: Address) => buffer.append(obj.publicKey);
 
     private authorityAdapter = (buffer: ByteBuffer, obj: Authority) => {
         buffer.writeUint32(obj.weightThreshold);
@@ -112,7 +112,7 @@ export class Serializer {
         if (_.isNil(obj.to)) {
             buffer.append(Buffer.alloc(33, 0));
         } else {
-            this.append(buffer, obj.from);
+            this.append(buffer, obj.to);
         }
         buffer.writeUint64(obj.nonce);
         this.append(buffer, Utils.Base16.decode(obj.message));
@@ -145,7 +145,7 @@ export class Serializer {
     private blockDataAdapter = (buffer: ByteBuffer, obj: BlockData) => {
         buffer.writeUint16(obj.refBlockNum);
         buffer.writeUint32(obj.refBlockPrefix);
-        buffer.writeUint32(obj.expiration);
+        buffer.writeUint32(obj.expiration.unix());
     }
 
     private transactionAdapter = (buffer: ByteBuffer, obj: Transaction) => {
