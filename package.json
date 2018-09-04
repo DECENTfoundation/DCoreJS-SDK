@@ -1,6 +1,6 @@
 {
   "name": "dcorejs-sdk",
-  "version": "0.9.0",
+  "version": "0.9.1",
   "homepage": "http://decent.ch",
   "description": "DcoreJS SDK.",
   "main": "./dist/index.js",
@@ -24,10 +24,11 @@
   "scripts": {
     "start": "sh ./scripts/start.sh",
     "build": "sh ./scripts/build.sh",
+    "build:tsc": "sh ./scripts/build_tsc.sh",
     "clean": "sh ./scripts/clean.sh",
     "lint": "sh ./scripts/lint.sh",
     "test": "mocha -r ts-node/register test/**/*.test.ts",
-    "postinstall": "npm run build"
+    "postinstall": "npm run build:tsc"
   },
   "devDependencies": {
     "@types/base-x": "^1.0.29",
