@@ -1,4 +1,3 @@
-npm run lint \
-&& rm -rf dist \
+rm -rf dist \
 && mkdir dist \
 && tsc
