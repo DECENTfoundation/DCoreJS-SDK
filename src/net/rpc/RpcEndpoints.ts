@@ -19,7 +19,7 @@ export class RpcEndpoints {
                 if (data.response.statusCode === 200) {
                     const response = deserialize(RpcResponse, data.response.body);
                     if (!_.isNil(response.error)) {
-                        throw Error(response.error.message);
+                        throw new Error(response.error.message);
                     }
                     if (_.isObject(response.result)
                         && (!_.isArray(response.result) || response.result.filter(Boolean).length > 0)) {
