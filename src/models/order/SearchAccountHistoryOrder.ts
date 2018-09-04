@@ -1,16 +1,16 @@
-export enum AccountHistoryOrder {
+export enum SearchAccountHistoryOrder {
     TypeAsc = "+type",
-    TypeDesc = "-type",
     ToAsc = "+to",
-    ToDesc = "-to",
     FromAsc = "+from",
-    FromDesc = "-from",
     PriceAsc = "+price",
-    PriceDesc = "-price",
     FeeAsc = "+fee",
-    FeeDesc = "-fee",
     DescriptionAsc = "+description",
-    DescriptionDesc = "-description",
     TimeAsc = "+time",
+    TypeDesc = "-type",
+    ToDesc = "-to",
+    FromDesc = "-from",
+    PriceDesc = "-price",
+    FeeDesc = "-fee",
+    DescriptionDesc = "-description",
     TimeDesc = "-time",
 }

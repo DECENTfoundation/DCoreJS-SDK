@@ -1,15 +1,17 @@
 import * as _ from "lodash";
+import { Moment } from "moment";
+import { DynamicGlobalProperties } from "./DynamicGlobalProperties";
 
 export class BlockData {
 
     public refBlockNum: number;
     public refBlockPrefix: number;
-    public expiration: number;
+    public expiration: Moment;
 
-    constructor(headBlockNumber: number, headBlockId: string, expiration: number) {
+    constructor(props: DynamicGlobalProperties) {
         // tslint:disable-next-line:no-bitwise
-        this.refBlockNum = (headBlockNumber & 0xFFFF);
-        this.refBlockPrefix = _.parseInt(headBlockId.substring(8, 16).match(/.{1,2}/g).reverse().join(""));
-        this.expiration = expiration;
+        this.refBlockNum = (props.headBlockNumber & 0xFFFF);
+        this.refBlockPrefix = _.parseInt(props.headBlockId.substring(8, 16).match(/.{1,2}/g).reverse().join(""), 16);
+        this.expiration = props.time;
     }
 }

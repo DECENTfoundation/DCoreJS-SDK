@@ -1,6 +1,5 @@
-
-import { Expose } from "class-transformer";
-
+import { Expose, Transform, Type } from "class-transformer";
+import { Address } from "../crypto/Address";
 import { AuthorityMap } from "./AuthorityMap";
 
 export class Authority {
@@ -9,8 +8,17 @@ export class Authority {
     public weightThreshold: number;
 
     @Expose({ name: "account_auths" })
-    public accountAuths: AuthorityMap[];
+    public accountAuths: any[];
 
+    @Type(() => AuthorityMap)
+    @Transform((values: Array<[string, number]>) => values.map(([value, weight]) => new AuthorityMap(Address.parse(value), weight)), { toClassOnly: true })
+    @Transform((values: AuthorityMap[]) => values.map((value) => [value.value, value.weight]), { toPlainOnly: true })
     @Expose({ name: "key_auths" })
     public keyAuths: AuthorityMap[];
+
+    constructor(publicKey: Address) {
+        this.weightThreshold = 1;
+        this.accountAuths = [];
+        this.keyAuths = [new AuthorityMap(publicKey, 1)];
+    }
 }
