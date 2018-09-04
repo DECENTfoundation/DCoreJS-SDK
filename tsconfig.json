@@ -23,6 +23,8 @@
     "dist",
     "webpack",
     "tslint.json",
-    "**/tests/*"
+    "**/test/*",
+    "**/tests/*",
+    "src/Scratchpad.ts"
   ]
 }
