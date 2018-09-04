@@ -1,4 +1,6 @@
-import { Expose } from "class-transformer";
+import { Expose, Transform } from "class-transformer";
+import { Moment } from "moment";
+import * as moment from "moment";
 import { BaseOperation } from "./operation/BaseOperation";
 
 export class ProcessedTransaction {
@@ -13,7 +15,8 @@ export class ProcessedTransaction {
     public operations: BaseOperation[];
 
     @Expose({ name: "expiration" })
-    public expiration: Date;
+    @Transform((value: string) => moment.utc(value), { toClassOnly: true })
+    public expiration: Moment;
 
     @Expose({ name: "ref_block_num" })
     public refBlockNum: number;

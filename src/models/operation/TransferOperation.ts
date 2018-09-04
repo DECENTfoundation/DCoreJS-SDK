@@ -1,4 +1,4 @@
-import { Expose } from "class-transformer";
+import { Expose, Transform, Type } from "class-transformer";
 import { AssetAmount } from "../AssetAmount";
 import { ChainObject } from "../ChainObject";
 import { Memo } from "../Memo";
@@ -14,15 +14,24 @@ import { BaseOperation } from "./BaseOperation";
  * @param memo optional string note
  */
 export class TransferOperation extends BaseOperation {
+
+    @Type(() => ChainObject)
+    @Transform((value: string) => ChainObject.parse(value), { toClassOnly: true })
+    @Transform((value: ChainObject) => value.objectId, { toPlainOnly: true })
     @Expose({ name: "from" })
     public from: ChainObject;
 
+    @Type(() => ChainObject)
+    @Transform((value: string) => ChainObject.parse(value), { toClassOnly: true })
+    @Transform((value: ChainObject) => value.objectId, { toPlainOnly: true })
     @Expose({ name: "to" })
     public to: ChainObject;
 
+    @Type(() => AssetAmount)
     @Expose({ name: "amount" })
     public amount: AssetAmount;
 
+    @Type(() => Memo)
     @Expose({ name: "memo" })
     public memo?: Memo;
 

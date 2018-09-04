@@ -1,11 +1,12 @@
 import { Expose, Transform, Type } from "class-transformer";
+import * as moment from "moment";
+import { Moment } from "moment";
 import { ChainObject } from "./ChainObject";
 
 export class DynamicGlobalProperties {
 
     @Type(() => ChainObject)
     @Transform((value: string) => ChainObject.parse(value), { toClassOnly: true })
-    @Transform((value: ChainObject) => value.objectId, { toPlainOnly: true })
     @Expose({ name: "id" })
     public id: ChainObject;
 
@@ -15,23 +16,22 @@ export class DynamicGlobalProperties {
     @Expose({ name: "head_block_id" })
     public headBlockId: string;
 
-    @Type(() => Date)
     @Expose({ name: "time" })
-    public time: Date;
+    @Transform((value: string) => moment.utc(value), { toClassOnly: true })
+    public time: Moment;
 
     @Type(() => ChainObject)
     @Transform((value: string) => ChainObject.parse(value), { toClassOnly: true })
-    @Transform((value: ChainObject) => value.objectId, { toPlainOnly: true })
     @Expose({ name: "current_miner" })
     public currentMiner: ChainObject;
 
-    @Type(() => Date)
     @Expose({ name: "next_maintenance_time" })
-    public nextMaintenanceTime: Date;
+    @Transform((value: string) => moment.utc(value), { toClassOnly: true })
+    public nextMaintenanceTime: Moment;
 
-    @Type(() => Date)
     @Expose({ name: "last_budget_time" })
-    public lastBudgetTime: Date;
+    @Transform((value: string) => moment.utc(value), { toClassOnly: true })
+    public lastBudgetTime: Moment;
 
     @Expose({ name: "unspent_fee_budget" })
     public unspentFeeBudget: number;
