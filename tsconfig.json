@@ -26,5 +26,8 @@
     "**/test/*",
     "**/tests/*",
     "src/Scratchpad.ts"
+  ],
+  "include": [
+    "src/**/*",
   ]
 }
