@@ -1,5 +1,6 @@
 import * as ByteBuffer from "bytebuffer";
 import * as _ from "lodash";
+import * as Long from "long";
 import { Address } from "../../crypto/Address";
 import { AssetAmount } from "../../models/AssetAmount";
 import { Authority } from "../../models/Authority";
@@ -30,6 +31,7 @@ export class Serializer {
         this.adapters.set(Address.name, this.addressAdapter);
         this.adapters.set(Authority.name, this.authorityAdapter);
         this.adapters.set(AuthorityMap.name, this.authorityMapAdapter);
+        this.adapters.set(Long.name, this.longAdapter);
         this.adapters.set(AssetAmount.name, this.assetAmountAdapter);
         this.adapters.set(Buffer.name, this.bufferAdapter);
         this.adapters.set(Memo.name, this.memoAdapter);
@@ -93,9 +95,12 @@ export class Serializer {
         buffer.writeUint16(obj.weight);
     }
 
+    private longAdapter = (buffer: ByteBuffer, obj: Long) => {
+        obj.toBytesLE().forEach((b) => buffer.writeByte(b));
+    }
+
     private assetAmountAdapter = (buffer: ByteBuffer, obj: AssetAmount) => {
-        // fixme will fail on instaceof Long
-        buffer.writeInt64(obj.amount.toString());
+        this.append(buffer, obj.amount);
         this.append(buffer, obj.assetId);
     }
 

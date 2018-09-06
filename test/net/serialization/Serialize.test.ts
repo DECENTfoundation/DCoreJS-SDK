@@ -30,7 +30,7 @@ describe("serialization test suite", () => {
             ChainObject.parse("1.2.30"),
             ChainObject.parse("1.2.31"),
             new AssetAmount(10000000),
-            new Memo("hello memo"),
+            Memo.create("hello memo"),
             new AssetAmount(5000),
         );
 

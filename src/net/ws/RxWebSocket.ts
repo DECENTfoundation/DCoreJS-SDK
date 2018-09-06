@@ -176,6 +176,7 @@ export class RxWebSocket {
                 tag(`RxWebSocket_make_${request.method}_value`),
                 tap((value: object) => this.checkError(value, callId)),
                 map(this.getIdAndResult),
+            ).pipe(
                 first((value: [number, object]) => ObjectCheckOf<WithCallback>(request, "callbackId") ? request.callbackId === value[0] : callId === value[0]),
                 map((value: [number, object]) => value[1]),
                 tap((value) => this.checkEmpty(value, request)),
