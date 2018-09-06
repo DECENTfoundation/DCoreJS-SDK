@@ -27,8 +27,7 @@
     "build:tsc": "sh ./scripts/build_tsc.sh",
     "clean": "sh ./scripts/clean.sh",
     "lint": "sh ./scripts/lint.sh",
-    "test": "mocha -r ts-node/register test/**/*.test.ts",
-    "postinstall": "npm run build:tsc"
+    "test": "mocha -r ts-node/register test/**/*.test.ts"
   },
   "devDependencies": {
     "@types/base-x": "^1.0.29",
