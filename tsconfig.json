@@ -10,6 +10,7 @@
       "node"
     ],
     "declaration": true,
+    "declarationDir": "./types",
     "moduleResolution": "node",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,

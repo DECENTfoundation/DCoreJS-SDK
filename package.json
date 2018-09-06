@@ -4,7 +4,7 @@
   "homepage": "http://decent.ch",
   "description": "DcoreJS SDK.",
   "main": "./dist/index.js",
-  "types": "./dist/index.d.ts",
+  "types": "./dist/types/index.d.ts",
   "keywords": [
     "sdk",
     "dcore"
@@ -32,7 +32,7 @@
     "clean": "sh ./scripts/clean.sh",
     "lint": "sh ./scripts/lint.sh",
     "test": "mocha -r ts-node/register test/**/*.test.ts",
-    "postinstall": "rimraf dist && tsc"
+    "postinstall": "rimraf dist && npm run build"
   },
   "devDependencies": {
     "@types/base-x": "^1.0.29",
