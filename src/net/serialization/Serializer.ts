@@ -1,6 +1,5 @@
 import * as ByteBuffer from "bytebuffer";
 import * as _ from "lodash";
-import * as Long from "long";
 import { Address } from "../../crypto/Address";
 import { AssetAmount } from "../../models/AssetAmount";
 import { Authority } from "../../models/Authority";

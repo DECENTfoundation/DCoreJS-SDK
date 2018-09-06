@@ -28,6 +28,7 @@ export class RpcEndpoints {
                         && (!_.isArray(response.result) || response.result.filter(Boolean).length > 0)) {
                         return request.transformer(response.result);
                     }
+                    // fixme fails for plain type requests eg. string
                     throw new NotFoundError(request.description());
                 }
             }),

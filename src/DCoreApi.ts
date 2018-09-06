@@ -16,19 +16,19 @@ import { DCoreSdk } from "./DCoreSdk";
 
 export class DCoreApi {
     public account: AccountApi = new AccountApi(this.core);
-    public asset: AssetApi;
-    public authority: AuthorityApi;
-    public balance: BalanceApi;
-    public block: BlockApi;
-    public broadcast: BroadcastApi;
-    public content: ContentApi;
-    public general: GeneralApi;
-    public history: HistoryApi;
-    public mining: MiningApi;
-    public purchase: PurchaseApi;
-    public seeder: SeedersApi;
-    public subscription: SubscriptionApi;
-    public transaction: TransactionApi;
+    public asset: AssetApi = new AssetApi(this.core);
+    public authority: AuthorityApi = new AuthorityApi();
+    public balance: BalanceApi = new BalanceApi(this.core, this);
+    public block: BlockApi = new BlockApi();
+    public broadcast: BroadcastApi = new BroadcastApi();
+    public content: ContentApi = new ContentApi(this.core);
+    public general: GeneralApi = new GeneralApi();
+    public history: HistoryApi = new HistoryApi(this.core);
+    public mining: MiningApi = new MiningApi(this.core);
+    public purchase: PurchaseApi = new PurchaseApi(this.core);
+    public seeder: SeedersApi = new SeedersApi();
+    public subscription: SubscriptionApi = new SubscriptionApi();
+    public transaction: TransactionApi = new TransactionApi(this.core);
 
     constructor(private core: DCoreSdk) {
     }

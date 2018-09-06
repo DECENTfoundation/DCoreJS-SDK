@@ -13,7 +13,7 @@ import { ObjectCheckOf } from "../utils/ObjectCheckOf";
 
 export class BalanceApi {
 
-    protected constructor(private core: DCoreSdk, private api: DCoreApi) {
+    constructor(private core: DCoreSdk, private api: DCoreApi) {
     }
 
     /**
