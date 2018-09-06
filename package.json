@@ -1,6 +1,6 @@
 {
   "name": "dcorejs-sdk",
-  "version": "0.9.6",
+  "version": "0.9.7",
   "homepage": "http://decent.ch",
   "description": "DcoreJS SDK.",
   "main": "./dist/index.js",
@@ -28,7 +28,7 @@
     "clean": "sh ./scripts/clean.sh",
     "lint": "sh ./scripts/lint.sh",
     "test": "mocha -r ts-node/register test/**/*.test.ts",
-    "postinstall": "npm run build:tsc"
+    "postinstall": "rimraf dist && tsc"
   },
   "devDependencies": {
     "@types/base-x": "^1.0.29",
@@ -50,6 +50,7 @@
     "nodemon": "^1.17.5",
     "pre-commit": "^1.2.2",
     "reflect-metadata": "^0.1.12",
+    "rimraf": "^2.6.2",
     "rxjs-spy": "^7.0.2",
     "ts-loader": "^4.2.0",
     "ts-node": "^4.1.0",
