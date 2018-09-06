@@ -6,9 +6,7 @@ import { PubKey } from "./PubKey";
 import { Synopsis } from "./Synopsis";
 
 export class Purchase {
-    @Type(() => ChainObject)
     @Transform((value: string) => ChainObject.parse(value), { toClassOnly: true })
-    @Transform((value: ChainObject) => value.objectId, { toPlainOnly: true })
     @Expose({ name: "id" })
     public id: ChainObject;
 
@@ -35,9 +33,7 @@ export class Purchase {
     @Expose({ name: "paid_price_after_exchange" })
     public priceAfter: AssetAmount;
 
-    @Type(() => ChainObject)
-    @Transform((value: string) => ChainObject.parse(value), { toClassOnly: true })
-    @Transform((value: ChainObject) => value.objectId, { toPlainOnly: true })
+    @Transform((value: string[]) => value.map((id) => ChainObject.parse(id)), { toClassOnly: true })
     @Expose({ name: "seeders_answered" })
     public seedersAnswered: ChainObject[];
 

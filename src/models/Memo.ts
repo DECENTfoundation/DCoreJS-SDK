@@ -24,9 +24,9 @@ export class Memo {
     public message: string;
 
     @Expose({ name: "nonce" })
-    public nonce: number = 0;
+    public nonce: number;
 
-    constructor(message: string, from?: Address, to?: Address, nonce?: number) {
+    private constructor(message: string, from?: Address, to?: Address, nonce: number = 0) {
         this.from = from;
         this.to = to;
         this.message = message;

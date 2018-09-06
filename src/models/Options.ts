@@ -46,7 +46,7 @@ export class Options {
         this.votes = [];
         this.extensions = [];
         this.allowSubscription = false;
-        this.pricePerSubscribe = new AssetAmount(0);
+        this.pricePerSubscribe = new AssetAmount();
         this.subscriptionPeriod = 0;
     }
 }

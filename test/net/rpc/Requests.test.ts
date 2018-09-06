@@ -1,6 +1,5 @@
 import * as chai from "chai";
 import * as chaiThings from "chai-things";
-import WebSocket = require("isomorphic-ws");
 import "mocha";
 import "reflect-metadata";
 import { create } from "rxjs-spy";
@@ -45,93 +44,92 @@ import { LookupMiners } from "../../../src/net/models/request/LookupMiners";
 import { RequestApiAccess } from "../../../src/net/models/request/RequestApiAccess";
 import { SearchAccountHistory } from "../../../src/net/models/request/SearchAccountHistory";
 import { SearchBuyings } from "../../../src/net/models/request/SearchBuyings";
-import { RxWebSocket } from "../../../src/net/ws/RxWebSocket";
+import { RpcEndpoints } from "../../../src/net/rpc/RpcEndpoints";
 
 chai.should();
 chai.use(chaiThings);
 
-describe("websocket requests", function() {
-    let rxWs: RxWebSocket;
+describe("http requests", function() {
+    let rpc: RpcEndpoints;
     let spy: Spy;
 
     this.timeout(15000);
 
     beforeEach(() => {
         spy = create();
-        spy.log(/^RxWebSocket_make_\w+/);
-        rxWs = new RxWebSocket(() => new WebSocket("wss://stagesocket.decentgo.com:8090", { rejectUnauthorized: false }));
+        spy.log(/^RpcEndpoints_\w+/);
+        rpc = new RpcEndpoints({ baseUrl: "https://stagesocket.decentgo.com:8090/rpc", timeout: 15000, rejectUnauthorized: false });
     });
 
     afterEach(() => {
-        rxWs.close();
         spy.teardown();
     });
 
     after(() => wtf.dump());
 
     it("should return asset balances for the account", (done) => {
-        rxWs.request(new GetAccountBalances(ChainObject.parse("1.2.35")))
+        rpc.request(new GetAccountBalances(ChainObject.parse("1.2.35")))
             .subscribe((value) => value.should.all.be.instanceOf(AssetAmount), (error) => done(error), () => done());
     });
 
     it("should return account by id", (done) => {
-        rxWs.request(new GetAccountById([ChainObject.parse("1.2.35")]))
+        rpc.request(new GetAccountById([ChainObject.parse("1.2.35")]))
             .subscribe((value) => value.should.include.one.instanceOf(Account), (error) => done(error), () => done());
     });
 
     it("should return account by name", (done) => {
-        rxWs.request(new GetAccountByName("u3a7b78084e7d3956442d5a4d439dad51"))
+        rpc.request(new GetAccountByName("u3a7b78084e7d3956442d5a4d439dad51"))
             .subscribe((value) => value.should.be.instanceOf(Account), (error) => done(error), () => done());
     });
 
     it("should return account history by name", (done) => {
-        rxWs.request(new GetAccountHistory(ChainObject.parse("1.2.35"), ChainObject.parse("1.7.35")))
+        rpc.request(new GetAccountHistory(ChainObject.parse("1.2.35"), ChainObject.parse("1.7.35")))
             .subscribe((value) => value.should.all.instanceOf(OperationHistory), (error) => done(error), () => done());
     });
 
     it("should return assets", (done) => {
-        rxWs.request(new GetAssets([ChainObject.parse("1.3.54")]))
+        rpc.request(new GetAssets([ChainObject.parse("1.3.54")]))
             .subscribe((value) => value.should.include.one.instanceOf(Asset), (error) => done(error), () => done());
     });
 
     it("should return purchase by URI", (done) => {
-        rxWs.request(new GetBuyingByUri(ChainObject.parse("1.2.35"), "http://alax.io/?scheme=alax%3A%2F%2F1%2F1&version=b711dc9b-3627-4f37-93f3-6f6f3137bcca"))
+        rpc.request(new GetBuyingByUri(ChainObject.parse("1.2.35"), "http://alax.io/?scheme=alax%3A%2F%2F1%2F1&version=b711dc9b-3627-4f37-93f3-6f6f3137bcca"))
             .subscribe((value) => value.should.be.instanceOf(Purchase), (error) => done(error), () => done());
     });
 
     it("should return chain id", (done) => {
-        rxWs.request(new GetChainId())
+        rpc.request(new GetChainId())
             .subscribe((value) => value.should.be.a("string"), (error) => done(error), () => done());
     });
 
     it("should return content by id", (done) => {
-        rxWs.request(new GetContentById(ChainObject.parse("2.13.74")))
+        rpc.request(new GetContentById(ChainObject.parse("2.13.74")))
             .subscribe((value) => value.should.include.one.instanceOf(Content), (error) => done(error), () => done());
     });
 
     it("should return content by URI", (done) => {
-        rxWs.request(new GetContentByUri("http://alax.io/?scheme=alax%3A%2F%2F1%2F1&version=b711dc9b-3627-4f37-93f3-6f6f3137bcca"))
+        rpc.request(new GetContentByUri("http://alax.io/?scheme=alax%3A%2F%2F1%2F1&version=b711dc9b-3627-4f37-93f3-6f6f3137bcca"))
             .subscribe((value) => value.should.instanceOf(Content), (error) => done(error), () => done());
     });
 
     it("should return dynamic global properties", (done) => {
-        rxWs.request(new GetDynamicGlobalProps())
+        rpc.request(new GetDynamicGlobalProps())
             .subscribe((value) => value.should.be.instanceOf(DynamicGlobalProperties), (error) => done(error), () => done());
     });
 
     it("should return account for key references", (done) => {
-        rxWs.request(new GetKeyReferences([Address.parse("DCT6MA5TQQ6UbMyMaLPmPXE2Syh5G3ZVhv5SbFedqLPqdFChSeqTz")]))
+        rpc.request(new GetKeyReferences([Address.parse("DCT6MA5TQQ6UbMyMaLPmPXE2Syh5G3ZVhv5SbFedqLPqdFChSeqTz")]))
             .subscribe((value) => value.should.include.one.include.one.instanceOf(ChainObject), (error) => done(error), () => done());
     });
 
     it("should return miner accounts", (done) => {
-        rxWs.request(new GetMiners([ChainObject.parse("1.4.1")]))
+        rpc.request(new GetMiners([ChainObject.parse("1.4.1")]))
             .subscribe((value) => value.should.include.one.instanceOf(Miner), (error) => done(error), () => done());
     });
 
     // will not work after `expiration: '2018-07-26T11:27:07'` since the transaction will be removed from recent pool
     it("should return recent transaction", (done) => {
-        rxWs.request(new GetRecentTransactionById("95914695085f08b84218e39cdea6f910f380e469"))
+        rpc.request(new GetRecentTransactionById("95914695085f08b84218e39cdea6f910f380e469"))
         // .subscribe((value) => value.should.be.instanceOf(ProcessedTransaction), (error) => done(error), () => done());
             .subscribe(undefined, (error) => {
                 error.should.be.instanceOf(NotFoundError);
@@ -140,47 +138,47 @@ describe("websocket requests", function() {
     });
 
     it("should return required fees for operation type", (done) => {
-        rxWs.request(new GetRequiredFees([new EmptyOperation(OperationType.Transfer)]))
+        rpc.request(new GetRequiredFees([new EmptyOperation(OperationType.Transfer)]))
             .subscribe((value) => value.should.include.one.instanceOf(AssetAmount), (error) => done(error), () => done());
     });
 
     it("should return transaction", (done) => {
-        rxWs.request(new GetTransaction(1370282, 0))
+        rpc.request(new GetTransaction(1370282, 0))
             .subscribe((value) => value.should.be.instanceOf(ProcessedTransaction), (error) => done(error), () => done());
     });
 
     it("should login", (done) => {
-        rxWs.request(new Login())
+        rpc.request(new Login())
             .subscribe((value) => value.should.be.true, (error) => done(error), () => done());
     });
 
     it("should return accounts by name lookup", (done) => {
-        rxWs.request(new LookupAccounts("alx-customer"))
+        rpc.request(new LookupAccounts("alx-customer"))
             .subscribe((value) => value.should.all.be.instanceOf(AccountNameId), (error) => done(error), () => done());
     });
 
     it("should return assets by name lookup", (done) => {
-        rxWs.request(new LookupAssetSymbols(["ALXT", "ALAT"]))
+        rpc.request(new LookupAssetSymbols(["ALXT", "ALAT"]))
             .subscribe((value) => value.should.all.be.instanceOf(Asset), (error) => done(error), () => done());
     });
 
     it("should return miners by name lookup", (done) => {
-        rxWs.request(new LookupMiners(""))
+        rpc.request(new LookupMiners(""))
             .subscribe((value) => value.should.all.be.instanceOf(AccountNameId), (error) => done(error), () => done());
     });
 
     it("should request api access", (done) => {
-        rxWs.request(new RequestApiAccess(ApiGroup.Database))
+        rpc.request(new RequestApiAccess(ApiGroup.Database))
             .subscribe((value) => value.should.be.a("number"), (error) => done(error), () => done());
     });
 
     it("should return history by search", (done) => {
-        rxWs.request(new SearchAccountHistory(ChainObject.parse("1.2.35")))
+        rpc.request(new SearchAccountHistory(ChainObject.parse("1.2.35")))
             .subscribe((value) => value.should.all.be.instanceOf(TransactionDetail), (error) => done(error), () => done());
     });
 
     it("should return purchases by search", (done) => {
-        rxWs.request(new SearchBuyings(ChainObject.parse("1.2.35"), ""))
+        rpc.request(new SearchBuyings(ChainObject.parse("1.2.35"), ""))
             .subscribe((value) => value.should.all.be.instanceOf(Purchase), (error) => done(error), () => done());
     });
 
