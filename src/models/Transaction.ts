@@ -36,7 +36,7 @@ export class Transaction {
         this.operations = ops;
         this.refBlockNum = this.blockData.refBlockNum;
         this.refBlockPrefix = this.blockData.refBlockPrefix;
-        this.expiration = this.blockData.expiration.add(30, "second");
+        this.expiration = this.blockData.expiration.add(DCoreSdk.transactionExpiration);
     }
 
     public sign(key: ECKeyPair): Transaction {

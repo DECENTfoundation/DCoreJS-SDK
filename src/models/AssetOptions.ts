@@ -16,10 +16,13 @@ export class AssetOptions {
     @Expose({ name: "extensions" })
     public extensions: any[];
 
-    constructor(maxSupply: number = 0, exchangeRate: ExchangeRate = new ExchangeRate(), exchangeable: boolean = false, extensions: any[] = []) {
-        this.maxSupply = maxSupply;
-        this.exchangeRate = exchangeRate;
-        this.exchangeable = exchangeable;
-        this.extensions = extensions;
-    }
+    // create DCT
+    /*
+        constructor(id: ChainObject) {
+            this.maxSupply = 7319777577456900;
+            this.exchangeRate = new ExchangeRate(id);
+            this.exchangeable = false;
+            this.extensions = [];
+        }
+    */
 }

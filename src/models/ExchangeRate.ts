@@ -11,8 +11,11 @@ export class ExchangeRate {
     @Expose({ name: "quote" })
     public quote: AssetAmount;
 
-    constructor(base: AssetAmount = new AssetAmount(1), quote: AssetAmount = new AssetAmount(1)) {
-        this.base = base;
-        this.quote = quote;
-    }
+    // create DCT
+    /*
+        constructor(assetId: ChainObject) {
+            this.base = new AssetAmount(Long.ONE, assetId);
+            this.quote = new AssetAmount(Long.ONE, assetId);
+        }
+    */
 }

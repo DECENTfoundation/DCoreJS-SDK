@@ -20,20 +20,35 @@ import { WsResult } from "../models/response/WsResult";
 import { WsResultNotice } from "../models/response/WsResultNotice";
 import { RequestJson } from "./RequestJson";
 
+export interface CloseEvent {
+    wasClean: boolean;
+    code: number;
+    reason: string;
+}
+
+export interface MessageEvent {
+    data: any;
+    type: string;
+}
+
+export interface ErrorEvent {
+    error: any;
+    message: string;
+    type: string;
+}
+
 export interface WebSocketContract {
-    onopen?: (OpenEvent: any) => any;
-    onclose?: (CloseEvent: any) => any;
-    onmessage?: (MessageEvent: any) => any;
-    onerror?: (ErrorEvent: any) => any;
+    onopen?: (event: any) => void;
+    onclose?: (closeEvent: CloseEvent) => void;
+    onmessage?: (messageEvent: MessageEvent) => void;
+    onerror?: (errorEvent: ErrorEvent) => void;
 
     close(code?: number, data?: string): void;
 
-    send(data: string | ArrayBuffer | Blob): void;
+    send(data: any): void;
 }
 
-export type WebSocketFactory = (url: string, protocols?: string | string[]) => WebSocketContract;
-
-const defaultFactory = (url: string, protocol?: string): WebSocketContract => new WebSocket(url, protocol);
+export type WebSocketFactory = () => WebSocketContract;
 
 export class RxWebSocket {
     private callId = 0;
@@ -41,7 +56,7 @@ export class RxWebSocket {
     private subscriptions = new Subscription();
     private webSocketAsync?: AsyncSubject<WebSocketContract> = null;
     private events = Observable.create((emitter: Subscriber<string>) => {
-        const socket = this.webSocketFactory(this.url);
+        const socket = this.webSocketFactory();
         socket.onopen = () => {
             this.webSocketAsync.next(socket);
             this.webSocketAsync.complete();
@@ -57,7 +72,11 @@ export class RxWebSocket {
         socket.onerror = (error: ErrorEvent) => emitter.error(Error(error.message));
     }).pipe(tag("RxWebSocket_events"), publish());
 
-    constructor(private url: string, private webSocketFactory: WebSocketFactory = defaultFactory) {
+    constructor(private webSocketFactory: WebSocketFactory) {
+    }
+
+    public isConnected(): boolean {
+        return !this.subscriptions.closed;
     }
 
     public request<T>(request: BaseRequest<T>): Observable<T> {
@@ -71,7 +90,7 @@ export class RxWebSocket {
     public close() {
         this.webSocket().subscribe((socket: WebSocketContract) => {
             socket.close(1000, "closing");
-            socket.onclose({ wasClean: true });
+            socket.onclose({ wasClean: true, code: 1000, reason: "self close" });
             socket.onclose = undefined;
         });
     }
@@ -154,7 +173,7 @@ export class RxWebSocket {
                 filter((value) => typeof value === "string"),
                 // tag(`RxWebSocket_make_${request.method}_plain`),
                 map((value: string) => JSON.parse(value)),
-                // tag(`RxWebSocket_make_${request.method}`),
+                tag(`RxWebSocket_make_${request.method}_value`),
                 tap((value: object) => this.checkError(value, callId)),
                 map(this.getIdAndResult),
                 first((value: [number, object]) => ObjectCheckOf<WithCallback>(request, "callbackId") ? request.callbackId === value[0] : callId === value[0]),

@@ -4,11 +4,11 @@ import { GetObjects } from "./GetObjects";
 
 export class GetAccountById extends GetObjects<Account> {
     constructor(
-        accountId: ChainObject,
+        accountIds: ChainObject[],
     ) {
         super(
             Account,
-            [accountId],
+            accountIds,
         );
     }
 }
