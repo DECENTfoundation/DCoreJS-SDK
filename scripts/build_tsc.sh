@@ -1,4 +1,4 @@
+#！/bin/bash -
 npm run lint \
-&& rm -rf dist \
-&& mkdir dist \
+&& npm run clean \
 && tsc
