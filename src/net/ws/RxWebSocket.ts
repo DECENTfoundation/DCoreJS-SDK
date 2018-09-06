@@ -8,7 +8,9 @@ import { defer } from "rxjs/internal/observable/defer";
 import { merge } from "rxjs/internal/observable/merge";
 import { scalar } from "rxjs/internal/observable/scalar";
 import { OperatorFunction } from "rxjs/internal/types";
-import { filter, first, flatMap, map, publish, tap } from "rxjs/operators";
+import { combineAll, filter, first, flatMap, map, publish, tap } from "rxjs/operators";
+import { Logger } from "winston";
+import * as winston from "winston";
 import { NotFoundError } from "../../models/error/NotFoundError";
 import { ObjectCheckOf } from "../../utils/ObjectCheckOf";
 import { ApiGroup } from "../models/ApiGroup";
@@ -135,7 +137,7 @@ export class RxWebSocket {
 
     private send(ws: WebSocketContract, request: string): void {
         // tslint:disable-next-line
-        console.log(request);
+        this.logger.info(request);
         ws.send(request);
     }
 

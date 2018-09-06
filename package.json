@@ -31,7 +31,7 @@
     "build:tsc": "sh ./scripts/build_tsc.sh",
     "clean": "sh ./scripts/clean.sh",
     "lint": "sh ./scripts/lint.sh",
-    "test": "mocha -r ts-node/register test/**/*.test.ts",
+    "test": "mocha",
     "postinstall": "rimraf dist && npm run build"
   },
   "devDependencies": {
@@ -75,8 +75,8 @@
     "lodash": "^4.17.5",
     "long": "~3",
     "moment": "^2.22.2",
-    "rxjs": "^6.2.0",
     "reflect-metadata": "^0.1.12",
+    "rxjs": "^6.2.0",
     "secp256k1": "^3.5.0"
   }
 }
