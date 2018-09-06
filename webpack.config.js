@@ -13,7 +13,7 @@ module.exports = {
   target: "node",
   resolve: {
     // Add `.ts` and `.tsx` as a resolvable extension.
-    extensions: [".ts", ".ts", ".js"]
+    extensions: [".ts", ".js"]
   },
   module: {
     rules: [
