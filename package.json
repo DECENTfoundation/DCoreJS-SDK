@@ -21,6 +21,10 @@
   "pre-commit": [
     "lint"
   ],
+  "repository": {
+    "type": "git",
+    "url": "ssh://git@bitbucket.org/DECENTGroup/dcorejs-sdk.git"
+  },
   "scripts": {
     "start": "sh ./scripts/start.sh",
     "build": "sh ./scripts/build.sh",
@@ -37,7 +41,6 @@
     "@types/chai-things": "0.0.33",
     "@types/lodash": "^4.14.102",
     "@types/mocha": "^2.2.48",
-    "@types/moment": "^2.13.0",
     "@types/node": "^8.0.29",
     "@types/secp256k1": "^3.5.0",
     "@types/ws": "^5.1.2",
@@ -49,7 +52,6 @@
     "mocha-typescript": "^1.1.17",
     "nodemon": "^1.17.5",
     "pre-commit": "^1.2.2",
-    "reflect-metadata": "^0.1.12",
     "rimraf": "^2.6.2",
     "rxjs-spy": "^7.0.2",
     "ts-loader": "^4.2.0",
@@ -74,6 +76,7 @@
     "long": "~3",
     "moment": "^2.22.2",
     "rxjs": "^6.2.0",
+    "reflect-metadata": "^0.1.12",
     "secp256k1": "^3.5.0"
   }
 }
