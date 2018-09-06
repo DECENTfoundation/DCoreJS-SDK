@@ -1,6 +1,7 @@
 import * as chai from "chai";
 import * as WebSocket from "isomorphic-ws";
 import { suite, test, timeout } from "mocha-typescript";
+import "reflect-metadata";
 import { create } from "rxjs-spy";
 import { Spy } from "rxjs-spy/spy-interface";
 import { flatMap, map } from "rxjs/operators";
@@ -32,10 +33,7 @@ class OperationsTest {
     public before() {
         this.spy = create();
         this.spy.log(/^RxWebSocket_make_\w+/);
-        this.rxWs = new RxWebSocket(
-            "wss://stagesocket.decentgo.com:8090",
-            (url, protocols) => new WebSocket(url, protocols, { rejectUnauthorized: false }),
-        );
+        this.rxWs = new RxWebSocket(() => new WebSocket("wss://stagesocket.decentgo.com:8090", { rejectUnauthorized: false }));
     }
 
     public after() {

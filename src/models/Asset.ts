@@ -35,13 +35,16 @@ export class Asset {
     @Expose({ name: "dynamic_asset_data_id" })
     public dynamicAssetDataId: ChainObject;
 
-    constructor(id: ChainObject, symbol: string, precision: number, issuer: ChainObject, description: string, options: AssetOptions, dynamicAssetDataId: ChainObject) {
-        this.id = id;
-        this.symbol = symbol;
-        this.precision = precision;
-        this.issuer = issuer;
-        this.description = description;
-        this.options = options;
-        this.dynamicAssetDataId = dynamicAssetDataId;
-    }
+    // create DCT
+    /*
+        constructor(id: ChainObject) {
+            this.id = id;
+            this.symbol = "DCT";
+            this.precision = 8;
+            this.issuer = ChainObject.parse("1.2.1");
+            this.description = "";
+            this.options = new AssetOptions(id);
+            this.dynamicAssetDataId = ChainObject.parse("2.3.0");
+        }
+    */
 }

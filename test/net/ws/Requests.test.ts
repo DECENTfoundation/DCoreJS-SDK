@@ -14,6 +14,7 @@ import { AssetAmount } from "../../../src/models/AssetAmount";
 import { ChainObject } from "../../../src/models/ChainObject";
 import { Content } from "../../../src/models/Content";
 import { DynamicGlobalProperties } from "../../../src/models/DynamicGlobalProperties";
+import { NotFoundError } from "../../../src/models/error/NotFoundError";
 import { Miner } from "../../../src/models/Miner";
 import { EmptyOperation } from "../../../src/models/operation/EmptyOperation";
 import { OperationHistory } from "../../../src/models/OperationHistory";
@@ -58,10 +59,7 @@ describe("websocket requests", function() {
     beforeEach(() => {
         spy = create();
         spy.log(/^RxWebSocket_make_\w+/);
-        rxWs = new RxWebSocket(
-            "wss://stagesocket.decentgo.com:8090",
-            (url, protocols) => new WebSocket(url, protocols, { rejectUnauthorized: false }),
-        );
+        rxWs = new RxWebSocket(() => new WebSocket("wss://stagesocket.decentgo.com:8090", { rejectUnauthorized: false }));
     });
 
     afterEach(() => {
@@ -77,7 +75,7 @@ describe("websocket requests", function() {
     });
 
     it("should return account by id", (done) => {
-        rxWs.request(new GetAccountById(ChainObject.parse("1.2.35")))
+        rxWs.request(new GetAccountById([ChainObject.parse("1.2.35")]))
             .subscribe((value) => value.should.include.one.instanceOf(Account), (error) => done(error), () => done());
     });
 
@@ -134,7 +132,11 @@ describe("websocket requests", function() {
     // will not work after `expiration: '2018-07-26T11:27:07'` since the transaction will be removed from recent pool
     it("should return recent transaction", (done) => {
         rxWs.request(new GetRecentTransactionById("95914695085f08b84218e39cdea6f910f380e469"))
-            .subscribe((value) => value.should.be.instanceOf(ProcessedTransaction), (error) => done(error), () => done());
+        // .subscribe((value) => value.should.be.instanceOf(ProcessedTransaction), (error) => done(error), () => done());
+            .subscribe(undefined, (error) => {
+                error.should.be.instanceOf(NotFoundError);
+                done();
+            }, () => done());
     });
 
     it("should return required fees for operation type", (done) => {

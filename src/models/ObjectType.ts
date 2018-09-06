@@ -1,3 +1,5 @@
+import { ChainObject } from "./ChainObject";
+
 export class ObjectType {
     public static Null = new ObjectType(1, 0);
     public static Base = new ObjectType(1, 1);
@@ -66,5 +68,9 @@ export class ObjectType {
         ]];
 
     private constructor(public space: number, public type: number) {
+    }
+
+    public genericId(): ChainObject {
+        return new ChainObject(this);
     }
 }

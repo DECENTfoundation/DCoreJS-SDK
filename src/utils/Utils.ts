@@ -1,7 +1,7 @@
 import * as BaseX from "base-x";
 import { createHash } from "crypto";
 
-export function requireThrow(value: boolean, lazyMessage: () => string) {
+export function assertThrow(value: boolean, lazyMessage: () => string) {
     if (!value) {
         throw TypeError(lazyMessage());
     }

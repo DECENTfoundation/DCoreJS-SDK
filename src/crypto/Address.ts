@@ -1,6 +1,6 @@
 import { Exclude } from "class-transformer";
 import * as _ from "lodash/fp";
-import { requireThrow, Utils } from "../utils/Utils";
+import { assertThrow, Utils } from "../utils/Utils";
 
 export class Address {
 
@@ -15,7 +15,7 @@ export class Address {
         const key = decoded.slice(0, decoded.length - 4);
         const cks = decoded.slice(decoded.length - 4, decoded.length);
         const cksActual = Utils.ripemd160(key).slice(0, 4);
-        requireThrow(_.isEqual(cks, cksActual), () => "checksum not valid for:" + address);
+        assertThrow(_.isEqual(cks, cksActual), () => "checksum not valid for:" + address);
         return key;
     }
 

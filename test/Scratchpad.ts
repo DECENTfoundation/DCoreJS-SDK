@@ -1,30 +1,23 @@
-import * as ByteBuffer from "bytebuffer";
 /* tslint:disable */
-import { deserialize, plainToClass, serialize } from "class-transformer";
+import * as ByteBuffer from "bytebuffer";
+import { plainToClass } from "class-transformer";
 import "reflect-metadata";
+import * as Long from "long";
 import { create } from "rxjs-spy";
-import { Address } from "./crypto/Address";
-import { DumpedPrivateKey } from "./crypto/DumpedPrivateKey";
-import { ECKeyPair } from "./crypto/ECKeyPair";
-import { Account } from "./models/Account";
-import { Authority } from "./models/Authority";
-import { ChainObject } from "./models/ChainObject";
-import { PubKey } from "./models/PubKey";
-import { GetAccountById } from "./net/models/request/GetAccountById";
-import { GetAccountByName } from "./net/models/request/GetAccountByName";
-import { RpcEndpoints } from "./net/rpc/RpcEndpoints";
-import { RxWebSocket } from "./net/ws/RxWebSocket";
-import { Utils } from "./utils/Utils";
+import { Address } from "../src/crypto/Address";
+import { ECKeyPair } from "../src/crypto/ECKeyPair";
+import { DCoreSdk } from "../src/DCoreSdk";
+import { Account } from "../src/models/Account";
+import { Authority } from "../src/models/Authority";
+import { ChainObject } from "../src/models/ChainObject";
+import { GetAccountById } from "../src/net/models/request/GetAccountById";
+import { GetAccountByName } from "../src/net/models/request/GetAccountByName";
+import { RpcEndpoints } from "../src/net/rpc/RpcEndpoints";
+import { RxWebSocket } from "../src/net/ws/RxWebSocket";
+import { Utils } from "../src/utils/Utils";
 import WebSocket = require("isomorphic-ws");
 
 function some() {
-    const k = new PubKey();
-    k.key = 13456;
-    console.log(serialize(k));
-    console.log(k);
-    const kk = deserialize(PubKey, "{ \"s\": \"13213546.\" }");
-    console.log(kk);
-
     const account = plainToClass(Account,
         {
             "id": "1.2.34",
@@ -89,7 +82,7 @@ function some() {
 }
 
 function accountByName() {
-    const api = new RpcEndpoints();
+    const api = new RpcEndpoints({ baseUrl: "https://stagesocket.decentgo.com:8090/rpc", timeout: 15000, rejectUnauthorized: false });
     api.request(new GetAccountByName("u961279ec8b7ae7bd62f304f7c1c3d345")).subscribe(
         (account) => console.log(account),
         (err) => console.error(err)
@@ -97,8 +90,8 @@ function accountByName() {
 }
 
 function accountById() {
-    const api = new RpcEndpoints();
-    return api.request(new GetAccountById(ChainObject.parse("1.2.15"))).subscribe(
+    const api = new RpcEndpoints({ baseUrl: "https://stagesocket.decentgo.com:8090/rpc", timeout: 15000, rejectUnauthorized: false });
+    return api.request(new GetAccountById([ChainObject.parse("1.2.15")])).subscribe(
         (account) => console.log(account),
         (err) => console.error(err)
     );
@@ -142,7 +135,7 @@ function serialize_account() {
 }
 
 function websocket() {
-    const rxWs = new RxWebSocket('wss://stagesocket.decentgo.com:8090', (url, protocols) => new WebSocket(url, protocols, { rejectUnauthorized: false }));
+    const rxWs = new RxWebSocket(() => new WebSocket("wss://stagesocket.decentgo.com:8090", { rejectUnauthorized: false }));
     const spy = create();
     spy.log(/^RxWebSocket_make_\w+/);
 
@@ -184,11 +177,12 @@ function base16() {
 function maxNumber() {
     const buffer = new ByteBuffer();
     console.log(Number.MAX_SAFE_INTEGER);
-    console.log(Number.MAX_SAFE_INTEGER + 1);
+    console.log(Number.MAX_SAFE_INTEGER + 10);
     console.log(Number.MAX_VALUE.valueOf());
     console.log(buffer.writeInt64(Number.MAX_SAFE_INTEGER - 1));
     console.log(buffer.reset().writeInt64(Number.MAX_VALUE));
     console.log(buffer.reset().writeInt64(Number.MAX_SAFE_INTEGER + 1));
+    console.log(buffer.reset().writeInt64(Number.MAX_SAFE_INTEGER + 10));
     // console.log(buffer.reset().writeInt64(Number.MAX_SAFE_INTEGER + 1))
 
 }
@@ -200,6 +194,30 @@ function wif() {
     console.log(new Address(kp.publicKey).encoded);
 }
 
+function dcoreSdk() {
+    const apiWs = DCoreSdk.createForWebSocket(
+        () => new WebSocket("wss://stagesocket.decentgo.com:8090", { rejectUnauthorized: false })
+    );
+    const apiRpc = DCoreSdk.createForHttp(
+        { baseUrl: "https://stagesocket.decentgo.com:8090/rpc", timeout: 15000, rejectUnauthorized: false }
+    );
+    const spy = create();
+    // spy.log(/^API_\w+/);
+    spy.log();
+    apiWs.asset.getAssets([ChainObject.parse("1.3.1000")]).subscribe();
+    apiRpc.asset.getAssets([ChainObject.parse("1.3.1000")]).subscribe();
+}
+
+function instanceChecks() {
+    const bb = ByteBuffer.allocate(10);
+    let l = Long.fromValue(1);
+    console.log(l)
+    bb.writeUint64(l);
+    // console.log(l instanceof Long);
+    // l = Long.fromValue(10);
+    // console.log(l instanceof Long)
+}
+
 // some();
 // serialize_account()
 // accountById()
@@ -208,5 +226,7 @@ function wif() {
 // websocket();
 // serialize()
 // base16()
-// maxNumber()
-wif();
+// maxNumber();
+// wif();
+// dcoreSdk();
+instanceChecks();

@@ -1,7 +1,8 @@
 import { plainToClass } from "class-transformer";
 import * as _ from "lodash";
 import { ChainObject } from "../../../models/ChainObject";
-import { SearchAccountHistoryOrder } from "../../../models/order/SearchAccountHistoryOrder";
+import { ObjectType } from "../../../models/ObjectType";
+import { SearchPurchasesOrder } from "../../../models/order/SearchPurchasesOrder";
 import { Purchase } from "../../../models/Purchase";
 import { ApiGroup } from "../ApiGroup";
 import { BaseRequest } from "./BaseRequest";
@@ -11,8 +12,8 @@ export class SearchBuyings extends BaseRequest<Purchase[]> {
     constructor(
         consumer: ChainObject,
         term: string,
-        order: SearchAccountHistoryOrder = SearchAccountHistoryOrder.TimeDesc,
-        startId: ChainObject = ChainObject.parse("1.7.0"),
+        order: SearchPurchasesOrder = SearchPurchasesOrder.PurchasedDesc,
+        startId: ChainObject = ObjectType.Null.genericId(),
         limit: number = 100,
     ) {
         super(

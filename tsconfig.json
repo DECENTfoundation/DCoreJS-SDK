@@ -1,8 +1,7 @@
 {
   "compilerOptions": {
     "lib": [
-      "es6",
-      "dom"
+      "es6"
     ],
     "target": "es6",
     "module": "commonjs",
@@ -24,10 +23,10 @@
     "webpack",
     "tslint.json",
     "**/test/*",
-    "**/tests/*",
-    "src/Scratchpad.ts"
+    "**/tests/*"
   ],
   "include": [
     "src/**/*",
+    "dom.workaround.d.ts"
   ]
 }

@@ -1,5 +1,6 @@
 import * as ByteBuffer from "bytebuffer";
 import * as _ from "lodash";
+import * as Long from "long";
 import { Address } from "../../crypto/Address";
 import { AssetAmount } from "../../models/AssetAmount";
 import { Authority } from "../../models/Authority";
@@ -94,7 +95,8 @@ export class Serializer {
     }
 
     private assetAmountAdapter = (buffer: ByteBuffer, obj: AssetAmount) => {
-        buffer.writeInt64(obj.amount);
+        // fixme will fail on instaceof Long
+        buffer.writeInt64(obj.amount.toString());
         this.append(buffer, obj.assetId);
     }
 

@@ -1,6 +1,8 @@
-import { RxHR } from "@akanass/rx-http-request";
+import { RxHR, RxHttpRequest } from "@akanass/rx-http-request";
 import { deserialize, serialize } from "class-transformer";
 import * as _ from "lodash";
+import { CoreOptions } from "request";
+import { tag } from "rxjs-spy/operators";
 import { Observable } from "rxjs/internal/Observable";
 import { map } from "rxjs/operators";
 import { NotFoundError } from "../../models/error/NotFoundError";
@@ -8,10 +10,11 @@ import { BaseRequest } from "../models/request/BaseRequest";
 import { RpcResponse } from "../models/response/RpcResponse";
 
 export class RpcEndpoints {
-    private baseRequest = RxHR.defaults({
-        baseUrl: "http://stage.decentgo.com:8089/rpc",
-        timeout: 15000,
-    });
+    private baseRequest: RxHttpRequest;
+
+    constructor(options: CoreOptions) {
+        this.baseRequest = RxHR.defaults(options);
+    }
 
     public request<T>(request: BaseRequest<T>): Observable<T> {
         return this.baseRequest.post("", { body: serialize(request) }).pipe(
@@ -28,6 +31,7 @@ export class RpcEndpoints {
                     throw new NotFoundError(request.description());
                 }
             }),
+            tag("RpcEndpoints_request"),
         );
     }
 }

@@ -1,17 +1,17 @@
 import * as _ from "lodash/fp";
 import { publicKeyCreate, sign } from "secp256k1";
-import { requireThrow, Utils } from "../utils/Utils";
+import { assertThrow, Utils } from "../utils/Utils";
 
 export class ECKeyPair {
 
     public static parseWif(base58: string): ECKeyPair {
         let data = new Buffer(Utils.Base58.decode(base58));
-        requireThrow(data.length > 4, () => "input too short");
+        assertThrow(data.length > 4, () => "input too short");
         const checksum = data.slice(data.length - 4, data.length);
         data = data.slice(0, data.length - 4);
-        requireThrow(data[0] === this.VERSION, () => `${data[0]} is not a valid private key version byte`);
+        assertThrow(data[0] === this.VERSION, () => `${data[0]} is not a valid private key version byte`);
         const actualChecksum = Utils.hashTwice256(data).slice(0, 4);
-        requireThrow(_.isEqual(actualChecksum, checksum), () => "checksum not valid");
+        assertThrow(_.isEqual(actualChecksum, checksum), () => "checksum not valid");
         // drop version byte
         data = data.slice(1, data.length);
         // check compressed byte and drop if true
