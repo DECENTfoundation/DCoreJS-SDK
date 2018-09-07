@@ -1,7 +1,7 @@
 import * as chai from "chai";
 import { deserialize, plainToClass } from "class-transformer";
 import "mocha";
-import { slow, suite, test, timeout } from "mocha-typescript";
+import { suite, test } from "mocha-typescript";
 import * as moment from "moment";
 import "reflect-metadata";
 import { Address } from "../../../src/crypto/Address";
@@ -23,6 +23,7 @@ chai.should();
 
 // tslint:disable:max-line-length
 @suite("serialization test suite")
+// @ts-ignore
 class SerializeTest {
     private serializer = new Serializer();
 
@@ -76,6 +77,7 @@ class SerializeTest {
         const expected = "0220a1070000000000002200000102c03f8e840c1699fd7808c2bb858e249c688c5be8acf0a0c1c484ab0cfb27f0a803000002000500000008000000000000000000000000000000000000";
         const raw = {
             allow_subscription: false,
+            // @ts-ignore
             extensions: [],
             memo_key: "DCT6MA5TQQ6UbMyMaLPmPXE2Syh5G3ZVhv5SbFedqLPqdFChSeqTz",
             num_miner: 0,

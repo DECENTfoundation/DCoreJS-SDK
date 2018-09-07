@@ -1,6 +1,6 @@
 import * as chai from "chai";
 import "mocha";
-import { suite, test, timeout } from "mocha-typescript";
+import { suite, test } from "mocha-typescript";
 import "reflect-metadata";
 import { Address } from "../../src/crypto/Address";
 import { ECKeyPair } from "../../src/crypto/ECKeyPair";
@@ -8,6 +8,7 @@ import { ECKeyPair } from "../../src/crypto/ECKeyPair";
 chai.should();
 
 @suite("crypto tests")
+// @ts-ignore
 class CryptoTest {
 
     @test

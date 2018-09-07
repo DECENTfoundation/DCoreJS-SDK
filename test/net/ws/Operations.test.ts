@@ -5,7 +5,6 @@ import "reflect-metadata";
 import { create } from "rxjs-spy";
 import { Spy } from "rxjs-spy/spy-interface";
 import { flatMap, map } from "rxjs/operators";
-import * as wtf from "wtfnode";
 import { ECKeyPair } from "../../../src/crypto/ECKeyPair";
 import { AssetAmount } from "../../../src/models/AssetAmount";
 import { BlockData } from "../../../src/models/BlockData";
@@ -20,6 +19,7 @@ import { RxWebSocket } from "../../../src/net/ws/RxWebSocket";
 chai.should();
 
 @suite("blockchain based operations", timeout(20000))
+// @ts-ignore
 class OperationsTest {
     public static after() {
         // wtf.dump();
