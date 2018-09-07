@@ -5,12 +5,7 @@
     ],
     "target": "es6",
     "module": "commonjs",
-    "types": [
-      "reflect-metadata",
-      "node"
-    ],
     "declaration": true,
-    "declarationDir": "./types",
     "moduleResolution": "node",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,

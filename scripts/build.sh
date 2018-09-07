@@ -1,2 +1,3 @@
-#！/bin/bash -
-npm run clean && webpack --env=production
+npm run lint \
+&& npm run clean \
+&& tsc

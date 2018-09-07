@@ -5,7 +5,6 @@ import { suite, test, timeout } from "mocha-typescript";
 import "reflect-metadata";
 import { create } from "rxjs-spy";
 import { Spy } from "rxjs-spy/spy-interface";
-import * as wtf from "wtfnode";
 import { Address } from "../../../src/crypto/Address";
 import { Account } from "../../../src/models/Account";
 import { AccountNameId } from "../../../src/models/AccountNameId";
@@ -51,6 +50,7 @@ chai.should();
 chai.use(chaiThings);
 
 @suite("http requests", timeout(20000))
+// @ts-ignore
 class HttpRequestTest {
     public static after() {
         // wtf.dump();
