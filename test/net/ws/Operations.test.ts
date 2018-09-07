@@ -22,7 +22,7 @@ chai.should();
 @suite("blockchain based operations", timeout(20000))
 class OperationsTest {
     public static after() {
-        wtf.dump();
+        // wtf.dump();
     }
 
     private static KEY = ECKeyPair.parseWif("5Jd7zdvxXYNdUfnEXt5XokrE3zwJSs734yQ36a1YaqioRTGGLtn");
@@ -32,7 +32,7 @@ class OperationsTest {
 
     public before() {
         this.spy = create();
-        this.spy.log(/^RxWebSocket_make_\w+/);
+        // this.spy.log(/^RxWebSocket_\w+/);
         this.rxWs = new RxWebSocket(() => new WebSocket("wss://stagesocket.decentgo.com:8090", { rejectUnauthorized: false }));
     }
 
@@ -46,7 +46,7 @@ class OperationsTest {
         const op = new TransferOperation(
             ChainObject.parse("1.2.34"),
             ChainObject.parse("1.2.35"),
-            new AssetAmount(100000),
+            new AssetAmount(1),
             // new Memo("hello world"),
             null,
             new AssetAmount(500000),
