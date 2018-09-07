@@ -1,3 +1,5 @@
+import { ApiGroup } from "../../net/models/ApiGroup";
+
 /**
  * Object not found error
  */

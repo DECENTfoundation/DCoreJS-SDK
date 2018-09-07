@@ -208,7 +208,7 @@ function dcoreSdk() {
     apiRpc.asset.getAssets([ChainObject.parse("1.3.1000")]).subscribe();
 }
 
-@test function instanceChecks() {
+function instanceChecks() {
     const bb = ByteBuffer.allocate(10);
     let l = Long.fromValue(1);
     console.log(l)
