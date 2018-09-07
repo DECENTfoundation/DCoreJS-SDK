@@ -8,7 +8,7 @@
     "types": [
       "reflect-metadata",
       "node",
-      "long",
+      "long"
     ],
     "declaration": true,
     "moduleResolution": "node",
