@@ -5,10 +5,6 @@
     ],
     "target": "es6",
     "module": "commonjs",
-    "types": [
-      "reflect-metadata",
-      "node"
-    ],
     "declaration": true,
     "moduleResolution": "node",
     "emitDecoratorMetadata": true,
