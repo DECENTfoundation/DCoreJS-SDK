@@ -1,2 +1,3 @@
-npm run clean \
+npm run lint \
+&& npm run clean \
 && tsc
