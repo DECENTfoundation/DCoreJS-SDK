@@ -15,8 +15,8 @@
   },
   "license": "MIT",
   "engines": {
-    "node": "8.4.0",
-    "npm": "5.3.0"
+    "node": "9.5.0",
+    "npm": "5.6.0"
   },
   "pre-commit": [
     "lint"
@@ -26,13 +26,11 @@
     "url": "ssh://git@bitbucket.org/DECENTGroup/dcorejs-sdk.git"
   },
   "scripts": {
-    "start": "sh ./scripts/start.sh",
     "build": "sh ./scripts/build.sh",
-    "build:tsc": "sh ./scripts/build_tsc.sh",
     "clean": "sh ./scripts/clean.sh",
     "lint": "sh ./scripts/lint.sh",
-    "test": "mocha",
-    "postinstall": "rimraf dist && npm run build"
+    "test": "sh ./scripts/test.sh",
+    "postinstall": "npm run build"
   },
   "devDependencies": {
     "@types/base-x": "^1.0.29",
