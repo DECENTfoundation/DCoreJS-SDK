@@ -5,9 +5,7 @@
     ],
     "target": "es6",
     "module": "commonjs",
-    "types": [
-      "reflect-metadata"
-    ],
+    "declaration": true,
     "moduleResolution": "node",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
@@ -22,8 +20,7 @@
     "dist",
     "webpack",
     "tslint.json",
-    "**/test/*",
-    "**/tests/*"
+    "**/test/*"
   ],
   "include": [
     "src/**/*",

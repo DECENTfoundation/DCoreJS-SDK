@@ -228,5 +228,5 @@ function instanceChecks() {
 // base16()
 // maxNumber();
 // wif();
-// dcoreSdk();
-instanceChecks();
+dcoreSdk();
+// instanceChecks();

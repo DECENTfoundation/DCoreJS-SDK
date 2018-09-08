@@ -5,7 +5,6 @@ import "reflect-metadata";
 import { create } from "rxjs-spy";
 import { Spy } from "rxjs-spy/spy-interface";
 import { flatMap, map } from "rxjs/operators";
-import * as wtf from "wtfnode";
 import { ECKeyPair } from "../../../src/crypto/ECKeyPair";
 import { AssetAmount } from "../../../src/models/AssetAmount";
 import { BlockData } from "../../../src/models/BlockData";
@@ -20,9 +19,10 @@ import { RxWebSocket } from "../../../src/net/ws/RxWebSocket";
 chai.should();
 
 @suite("blockchain based operations", timeout(20000))
+// @ts-ignore
 class OperationsTest {
     public static after() {
-        wtf.dump();
+        // wtf.dump();
     }
 
     private static KEY = ECKeyPair.parseWif("5Jd7zdvxXYNdUfnEXt5XokrE3zwJSs734yQ36a1YaqioRTGGLtn");
@@ -32,7 +32,7 @@ class OperationsTest {
 
     public before() {
         this.spy = create();
-        this.spy.log(/^RxWebSocket_make_\w+/);
+        // this.spy.log(/^RxWebSocket_\w+/);
         this.rxWs = new RxWebSocket(() => new WebSocket("wss://stagesocket.decentgo.com:8090", { rejectUnauthorized: false }));
     }
 
@@ -46,7 +46,7 @@ class OperationsTest {
         const op = new TransferOperation(
             ChainObject.parse("1.2.34"),
             ChainObject.parse("1.2.35"),
-            new AssetAmount(100000),
+            new AssetAmount(1),
             // new Memo("hello world"),
             null,
             new AssetAmount(500000),
