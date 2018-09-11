@@ -1,20 +1,25 @@
 import * as ByteBuffer from "bytebuffer";
 import * as _ from "lodash";
 import * as Long from "long";
+import { Moment } from "moment";
 import { Address } from "../../crypto/Address";
 import { AssetAmount } from "../../models/AssetAmount";
 import { Authority } from "../../models/Authority";
 import { AuthorityMap } from "../../models/AuthorityMap";
 import { BlockData } from "../../models/BlockData";
 import { ChainObject } from "../../models/ChainObject";
+import { CustodyData } from "../../models/CustodyData";
+import { KeyPart } from "../../models/KeyPart";
 import { Memo } from "../../models/Memo";
 import { AccountCreateOperation } from "../../models/operation/AccountCreateOperation";
 import { AccountUpdateOperation } from "../../models/operation/AccountUpdateOperation";
+import { AddContentOperation } from "../../models/operation/AddContentOperation";
 import { BuyContentOperation } from "../../models/operation/BuyContentOperation";
 import { TransferOperation } from "../../models/operation/TransferOperation";
 import { Options } from "../../models/Options";
 import { PubKey } from "../../models/PubKey";
 import { Publishing } from "../../models/Publishing";
+import { RegionalPrice } from "../../models/RegionalPrice";
 import { Transaction } from "../../models/Transaction";
 import { VoteId } from "../../models/VoteId";
 import { Utils } from "../../utils/Utils";
@@ -46,6 +51,10 @@ export class Serializer {
         this.adapters.set(AccountUpdateOperation.name, this.accountUpdateOperationAdapter);
         this.adapters.set(BuyContentOperation.name, this.buyContentOperationAdapter);
         this.adapters.set(TransferOperation.name, this.transferOperationAdapter);
+        this.adapters.set(RegionalPrice.name, this.regionalPriceAdapter);
+        this.adapters.set(KeyPart.name, this.keyPartAdapter);
+        this.adapters.set(CustodyData.name, this.custodyDataAdapter);
+        this.adapters.set(AddContentOperation.name, this.addContentOperationAdapter);
     }
 
     public serialize(obj: any): ByteBuffer {
@@ -96,7 +105,7 @@ export class Serializer {
     }
 
     private longAdapter = (buffer: ByteBuffer, obj: Long) => {
-        obj.toBytesLE().forEach((b) => buffer.writeByte(b));
+        buffer.append(Buffer.of(...obj.toBytesLE()));
     }
 
     private assetAmountAdapter = (buffer: ByteBuffer, obj: AssetAmount) => {
@@ -148,10 +157,14 @@ export class Serializer {
         this.append(buffer, obj.publishRightsForwarded);
     }
 
+    private momentAdapter = (buffer: ByteBuffer, obj: Moment) => {
+        buffer.writeUint32(obj.unix());
+    }
+
     private blockDataAdapter = (buffer: ByteBuffer, obj: BlockData) => {
         buffer.writeUint16(obj.refBlockNum);
         buffer.writeUint32(obj.refBlockPrefix);
-        buffer.writeUint32(obj.expiration.unix());
+        this.momentAdapter(buffer, obj.expiration);
     }
 
     private transactionAdapter = (buffer: ByteBuffer, obj: Transaction) => {
@@ -199,5 +212,47 @@ export class Serializer {
         this.append(buffer, obj.amount);
         this.appendOptional(buffer, obj.memo);
         this.append(buffer, obj.extensions);
+    }
+
+    private coAuthorsAdapter = (buffer: ByteBuffer, obj: Array<[ChainObject, number]>) => {
+        buffer.writeVarint64(obj.length);
+        obj.forEach(([id, weight]) => {
+            this.append(buffer, id);
+            buffer.writeUint32(weight);
+        });
+    }
+
+    private regionalPriceAdapter = (buffer: ByteBuffer, obj: RegionalPrice) => {
+        buffer.writeUint32(obj.region);
+        this.append(buffer, obj.price);
+    }
+
+    private keyPartAdapter = (buffer: ByteBuffer, obj: KeyPart) => {
+        this.append(buffer, obj.keyC1);
+        this.append(buffer, obj.keyD1);
+    }
+
+    private custodyDataAdapter = (buffer: ByteBuffer, obj: CustodyData) => {
+        buffer.writeUint32(obj.n);
+        obj.seed.forEach((num) => buffer.writeInt8(num));
+        buffer.append(Buffer.of(...obj.pubKey));
+    }
+
+    private addContentOperationAdapter = (buffer: ByteBuffer, obj: AddContentOperation) => {
+        buffer.writeByte(obj.type);
+        this.append(buffer, obj.fee);
+        buffer.writeUint64(obj.size);
+        this.append(buffer, obj.author);
+        this.coAuthorsAdapter(buffer, obj.coAuthors);
+        this.append(buffer, obj.uri);
+        buffer.writeUint32(obj.quorum);
+        this.append(buffer, obj.price);
+        buffer.append(Buffer.of(...Utils.Base16.decode(obj.hash)));
+        this.append(buffer, obj.seeders);
+        this.append(buffer, obj.keyParts);
+        this.momentAdapter(buffer, obj.expiration);
+        this.append(buffer, obj.publishingFee);
+        this.append(buffer, obj.synopsis);
+        this.appendOptional(buffer, obj.custodyData);
     }
 }

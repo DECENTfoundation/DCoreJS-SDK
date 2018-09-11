@@ -1,5 +1,5 @@
 import * as chai from "chai";
-import { deserialize, plainToClass } from "class-transformer";
+import { deserialize, plainToClass, serialize } from "class-transformer";
 import "mocha";
 import { suite, test } from "mocha-typescript";
 import * as moment from "moment";
@@ -12,10 +12,13 @@ import { DynamicGlobalProperties } from "../../../src/models/DynamicGlobalProper
 import { Memo } from "../../../src/models/Memo";
 import { AccountCreateOperation } from "../../../src/models/operation/AccountCreateOperation";
 import { AccountUpdateOperation } from "../../../src/models/operation/AccountUpdateOperation";
+import { AddContentOperation } from "../../../src/models/operation/AddContentOperation";
 import { BuyContentOperation } from "../../../src/models/operation/BuyContentOperation";
 import { TransferOperation } from "../../../src/models/operation/TransferOperation";
 import { Options } from "../../../src/models/Options";
 import { PubKey } from "../../../src/models/PubKey";
+import { RegionalPrice } from "../../../src/models/RegionalPrice";
+import { Synopsis } from "../../../src/models/Synopsis";
 import { Transaction } from "../../../src/models/Transaction";
 import { Serializer } from "../../../src/net/serialization/Serializer";
 
@@ -107,14 +110,33 @@ class SerializeTest {
 
     @test
     public "should serialize create account operation"() {
-        const expected = "0100000000000000000022086d696b656565656501000000000102a01c045821676cfc191832ad22cc5c9ade0ea1760131c87ff2dd3fed2f13dd33010001000000000102a01c045821676cfc191832ad22cc5c9ade0ea1760131c87ff2dd3fed2f13dd33010002a01c045821676cfc191832ad22cc5c9ade0ea1760131c87ff2dd3fed2f13dd330300000000000000000000000000000000000000";
+        const expected = "0100000000000000000022076d696b6565656501000000000102a01c045821676cfc191832ad22cc5c9ade0ea1760131c87ff2dd3fed2f13dd33010001000000000102a01c045821676cfc191832ad22cc5c9ade0ea1760131c87ff2dd3fed2f13dd33010002a01c045821676cfc191832ad22cc5c9ade0ea1760131c87ff2dd3fed2f13dd330300000000000000000000000000000000000000";
 
         const op = new AccountCreateOperation(
             ChainObject.parse("1.2.34"),
-            "mikeeeee",
+            "mikeeee",
             Address.parse("DCT6718kUCCksnkeYD1YySWkXb1VLpzjkFfHHMirCRPexp5gDPJLU"),
             new AssetAmount(0),
         );
+
+        this.serializer.serialize(op).toHex().should.be.equal(expected);
+    }
+
+    @test
+    public "should serialize add new content operation"() {
+        // @ts-ignore
+        const expected = "140000000000000000000100000000000000220016687474703a2f2f68656c6c6f2e696f2f776f726c6432000000000101000000e80300000000000000222222222222222222222222222222222222222200007238ed5c0000000000000000004c7b227469746c65223a2247616d65205469746c65222c226465736372697074696f6e223a224465736372697074696f6e222c22636f6e74656e745f747970655f6964223a22312e352e35227d00";
+
+        const op = new AddContentOperation(
+            ChainObject.parse("1.2.34"),
+            "http://hello.io/world2",
+            [new RegionalPrice(new AssetAmount(1000))],
+            moment.utc("2019-05-28T13:32:34"),
+            serialize(new Synopsis("Game Title", "Description")),
+            [],
+            new AssetAmount(),
+        );
+        op.hash = "2222222222222222222222222222222222222222";
 
         this.serializer.serialize(op).toHex().should.be.equal(expected);
     }

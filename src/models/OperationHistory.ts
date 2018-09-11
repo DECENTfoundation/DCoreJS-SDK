@@ -1,10 +1,9 @@
-import { Expose, Transform, Type } from "class-transformer";
+import { Expose, Transform } from "class-transformer";
 import { ChainObject } from "./ChainObject";
 
 export class OperationHistory {
-    @Type(() => ChainObject)
+
     @Transform((value: string) => ChainObject.parse(value), { toClassOnly: true })
-    @Transform((value: ChainObject) => value.objectId, { toPlainOnly: true })
     @Expose({ name: "id" })
     public id: ChainObject;
 
@@ -17,6 +16,9 @@ export class OperationHistory {
 
     @Expose({ name: "block_num" })
     public blockNum: number;
+
+    @Expose({ name: "trx_in_block" })
+    public trxInBlock: number;
 
     @Expose({ name: "op_in_trx" })
     public opNum: number;

@@ -1,4 +1,4 @@
-import { Expose } from "class-transformer";
+import { Expose, Transform, Type } from "class-transformer";
 import { AssetAmount } from "../AssetAmount";
 import { Authority } from "../Authority";
 import { ChainObject } from "../ChainObject";
@@ -17,15 +17,20 @@ import { BaseOperation } from "./BaseOperation";
  */
 export class AccountUpdateOperation extends BaseOperation {
 
+    @Transform((value: string) => ChainObject.parse(value), { toClassOnly: true })
+    @Transform((value: ChainObject) => value.objectId, { toPlainOnly: true })
     @Expose({ name: "account" })
     public accountId: ChainObject;
 
+    @Type(() => Authority)
     @Expose({ name: "owner" })
     public owner?: Authority;
 
+    @Type(() => Authority)
     @Expose({ name: "active" })
     public active?: Authority;
 
+    @Type(() => Options)
     @Expose({ name: "options" })
     public options?: Options;
 

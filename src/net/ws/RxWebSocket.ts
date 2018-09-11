@@ -53,7 +53,7 @@ export type WebSocketFactory = () => WebSocketContract;
 export class RxWebSocket {
     private callId = 0;
     private apiId = new Map<ApiGroup, number>();
-    private subscriptions = new Subscription();
+    private subscriptions: Subscription;
     private webSocketAsync?: AsyncSubject<WebSocketContract> = null;
     private events = Observable.create((emitter: Subscriber<string>) => {
         const socket = this.webSocketFactory();
@@ -76,7 +76,7 @@ export class RxWebSocket {
     }
 
     public isConnected(): boolean {
-        return !this.subscriptions.closed;
+        return !_.isUndefined(this.subscriptions) && !this.subscriptions.closed;
     }
 
     public request<T>(request: BaseRequest<T>): Observable<T> {
@@ -96,13 +96,13 @@ export class RxWebSocket {
     }
 
     private connect() {
-        this.subscriptions.add(
+        this.subscriptions =
             this.events.subscribe({
                 complete: () => {
                     this.subscriptions.unsubscribe();
                     this.webSocketAsync = null;
                 },
-            }));
+            });
         this.events.connect();
     }
 

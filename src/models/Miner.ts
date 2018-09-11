@@ -1,32 +1,26 @@
-import { Expose, Transform, Type } from "class-transformer";
+import { Expose, Transform } from "class-transformer";
 import { Address } from "../crypto/Address";
 import { ChainObject } from "./ChainObject";
 
 export class Miner {
-    @Type(() => ChainObject)
+
     @Transform((value: string) => ChainObject.parse(value), { toClassOnly: true })
-    @Transform((value: ChainObject) => value.objectId, { toPlainOnly: true })
     @Expose({ name: "id" })
     public id: ChainObject;
 
-    @Type(() => ChainObject)
     @Transform((value: string) => ChainObject.parse(value), { toClassOnly: true })
-    @Transform((value: ChainObject) => value.objectId, { toPlainOnly: true })
     @Expose({ name: "miner_account" })
     public minerAccount: ChainObject;
 
     @Expose({ name: "last_aslot" })
     public lastAslot: number;
 
-    @Type(() => Address)
     @Transform((value: string) => Address.parse(value), { toClassOnly: true })
     @Transform((value: Address) => value.encoded, { toPlainOnly: true })
     @Expose({ name: "signing_key" })
     public signingKey: Address;
 
-    @Type(() => ChainObject)
     @Transform((value: string) => ChainObject.parse(value), { toClassOnly: true })
-    @Transform((value: ChainObject) => value.objectId, { toPlainOnly: true })
     @Expose({ name: "pay_vb" })
     public payVb: ChainObject;
 

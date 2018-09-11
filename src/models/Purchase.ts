@@ -1,7 +1,7 @@
 import { deserialize, Expose, Transform, Type } from "class-transformer";
 import { AssetAmount } from "./AssetAmount";
 import { ChainObject } from "./ChainObject";
-import { KeyParts } from "./KeyParts";
+import { KeyPart } from "./KeyPart";
 import { PubKey } from "./PubKey";
 import { Synopsis } from "./Synopsis";
 
@@ -54,9 +54,9 @@ export class Purchase {
     @Expose({ name: "pubKey" })
     public pubElGamalKey: PubKey;
 
-    @Type(() => KeyParts)
+    @Type(() => KeyPart)
     @Expose({ name: "key_particles" })
-    public keyParticles: KeyParts[];
+    public keyParticles: KeyPart[];
 
     @Expose({ name: "expired" })
     public expired: boolean;
