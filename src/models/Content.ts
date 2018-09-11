@@ -5,15 +5,12 @@ import { PricePerRegion } from "./PricePerRegion";
 import { Synopsis } from "./Synopsis";
 
 export class Content {
-    @Type(() => ChainObject)
+
     @Transform((value: string) => ChainObject.parse(value), { toClassOnly: true })
-    @Transform((value: ChainObject) => value.objectId, { toPlainOnly: true })
     @Expose({ name: "id" })
     public id: ChainObject;
 
-    @Type(() => ChainObject)
     @Transform((value: string[]) => value.map((id) => ChainObject.parse(id)), { toClassOnly: true })
-    @Transform((value: ChainObject[]) => value.map((id) => id.objectId), { toPlainOnly: true })
     @Expose({ name: "co_authors" })
     public coauthors: ChainObject[];
 

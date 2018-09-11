@@ -45,6 +45,7 @@ import { RequestApiAccess } from "../../../src/net/models/request/RequestApiAcce
 import { SearchAccountHistory } from "../../../src/net/models/request/SearchAccountHistory";
 import { SearchBuyings } from "../../../src/net/models/request/SearchBuyings";
 import { RpcEndpoints } from "../../../src/net/rpc/RpcEndpoints";
+import { Constants } from "../../Constants";
 
 chai.should();
 chai.use(chaiThings);
@@ -63,7 +64,7 @@ class HttpRequestTest {
     public before() {
         this.spy = create();
         // this.spy.log(/^RpcEndpoints_\w+/);
-        this.rpc = new RpcEndpoints({ baseUrl: "https://stagesocket.decentgo.com:8090/rpc", timeout: 15000, rejectUnauthorized: false });
+        this.rpc = new RpcEndpoints({ baseUrl: Constants.STAGE_HTTPS, timeout: 15000, rejectUnauthorized: false });
     }
 
     public after() {

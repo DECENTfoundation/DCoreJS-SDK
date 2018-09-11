@@ -6,15 +6,12 @@ import { Options } from "./Options";
 import { Publishing } from "./Publishing";
 
 export class Account {
-    @Type(() => ChainObject)
+
     @Transform((value: string) => ChainObject.parse(value), { toClassOnly: true })
-    @Transform((value: ChainObject) => value.objectId, { toPlainOnly: true })
     @Expose({ name: "id" })
     public id: ChainObject;
 
-    @Type(() => ChainObject)
     @Transform((value: string) => ChainObject.parse(value), { toClassOnly: true })
-    @Transform((value: ChainObject) => value.objectId, { toPlainOnly: true })
     @Expose({ name: "registrar" })
     public registrar: ChainObject;
 
@@ -33,9 +30,7 @@ export class Account {
     @Expose({ name: "options" })
     public options: Options;
 
-    @Type(() => ChainObject)
     @Transform((value: string) => ChainObject.parse(value), { toClassOnly: true })
-    @Transform((value: ChainObject) => value.objectId, { toPlainOnly: true })
     @Expose({ name: "statistics" })
     public statistics: ChainObject;
 

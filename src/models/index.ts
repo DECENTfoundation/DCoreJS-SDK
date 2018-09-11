@@ -15,7 +15,7 @@ export * from "./ChainObject";
 export * from "./Content";
 export * from "./DynamicGlobalProperties";
 export * from "./ExchangeRate";
-export * from "./KeyParts";
+export * from "./KeyPart";
 export * from "./Memo";
 export * from "./Miner";
 export * from "./ObjectType";

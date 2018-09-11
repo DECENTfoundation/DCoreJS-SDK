@@ -12,7 +12,7 @@ export class Authority {
 
     @Type(() => AuthorityMap)
     @Transform((values: Array<[string, number]>) => values.map(([value, weight]) => new AuthorityMap(Address.parse(value), weight)), { toClassOnly: true })
-    @Transform((values: AuthorityMap[]) => values.map((value) => [value.value, value.weight]), { toPlainOnly: true })
+    @Transform((values: object[], obj: Authority) => obj.keyAuths.map((value) => [value.value.encoded, value.weight]), { toPlainOnly: true })
     @Expose({ name: "key_auths" })
     public keyAuths: AuthorityMap[];
 

@@ -1,7 +1,7 @@
 import { Expose, Type } from "class-transformer";
 import { PubKey } from "./PubKey";
 
-export class KeyParts {
+export class KeyPart {
 
     @Type(() => PubKey)
     @Expose({ name: "C1" })
