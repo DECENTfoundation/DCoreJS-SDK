@@ -1,11 +1,10 @@
-import { Expose, Transform, Type } from "class-transformer";
+import { Expose, Transform } from "class-transformer";
 import * as moment from "moment";
 import { Moment } from "moment";
 import { ChainObject } from "./ChainObject";
 
 export class DynamicGlobalProperties {
 
-    @Type(() => ChainObject)
     @Transform((value: string) => ChainObject.parse(value), { toClassOnly: true })
     @Expose({ name: "id" })
     public id: ChainObject;
@@ -20,7 +19,6 @@ export class DynamicGlobalProperties {
     @Transform((value: string) => moment.utc(value), { toClassOnly: true })
     public time: Moment;
 
-    @Type(() => ChainObject)
     @Transform((value: string) => ChainObject.parse(value), { toClassOnly: true })
     @Expose({ name: "current_miner" })
     public currentMiner: ChainObject;

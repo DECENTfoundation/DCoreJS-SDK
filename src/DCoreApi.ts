@@ -20,7 +20,7 @@ export class DCoreApi {
     public authority: AuthorityApi = new AuthorityApi();
     public balance: BalanceApi = new BalanceApi(this.core, this);
     public block: BlockApi = new BlockApi();
-    public broadcast: BroadcastApi = new BroadcastApi();
+    public broadcast: BroadcastApi = new BroadcastApi(this.core);
     public content: ContentApi = new ContentApi(this.core);
     public general: GeneralApi = new GeneralApi();
     public history: HistoryApi = new HistoryApi(this.core);
@@ -31,5 +31,9 @@ export class DCoreApi {
     public transaction: TransactionApi = new TransactionApi(this.core);
 
     constructor(private core: DCoreSdk) {
+    }
+
+    public disconnect() {
+        this.core.disconnect();
     }
 }

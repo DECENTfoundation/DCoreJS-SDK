@@ -4,9 +4,7 @@ import { ChainObject } from "./ChainObject";
 
 export class Asset {
 
-    @Type(() => ChainObject)
     @Transform((value: string) => ChainObject.parse(value), { toClassOnly: true })
-    @Transform((value: ChainObject) => value.objectId, { toPlainOnly: true })
     @Expose({ name: "id" })
     public id: ChainObject;
 
@@ -16,9 +14,7 @@ export class Asset {
     @Expose({ name: "precision" })
     public precision: number;
 
-    @Type(() => ChainObject)
     @Transform((value: string) => ChainObject.parse(value), { toClassOnly: true })
-    @Transform((value: ChainObject) => value.objectId, { toPlainOnly: true })
     @Expose({ name: "issuer" })
     public issuer: ChainObject;
 
@@ -29,9 +25,7 @@ export class Asset {
     @Expose({ name: "options" })
     public options: AssetOptions;
 
-    @Type(() => ChainObject)
     @Transform((value: string) => ChainObject.parse(value), { toClassOnly: true })
-    @Transform((value: ChainObject) => value.objectId, { toPlainOnly: true })
     @Expose({ name: "dynamic_asset_data_id" })
     public dynamicAssetDataId: ChainObject;
 

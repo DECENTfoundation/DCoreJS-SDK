@@ -1,4 +1,5 @@
 import { plainToClass } from "class-transformer";
+import { DCoreSdk } from "../../../DCoreSdk";
 import { AssetAmount } from "../../../models/AssetAmount";
 import { ChainObject } from "../../../models/ChainObject";
 import { BaseOperation } from "../../../models/operation/BaseOperation";
@@ -8,7 +9,7 @@ import { BaseRequest } from "./BaseRequest";
 export class GetRequiredFees extends BaseRequest<AssetAmount[]> {
     constructor(
         operations: BaseOperation[],
-        assetId: ChainObject = ChainObject.parse("1.3.0"),
+        assetId: ChainObject = DCoreSdk.DCT_ASSET_ID,
     ) {
         super(
             ApiGroup.Database,

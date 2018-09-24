@@ -1,4 +1,3 @@
-import { Exclude } from "class-transformer";
 import * as _ from "lodash/fp";
 import { assertThrow, Utils } from "../utils/Utils";
 
@@ -24,14 +23,6 @@ export class Address {
         return Address.PREFIX + Utils.Base58.encode(Buffer.concat([publicKey, cks]));
     }
 
-    @Exclude()
-    public readonly publicKey: Buffer;
-
-    @Exclude()
-    public readonly encoded: string;
-
-    public constructor(publicKey: Buffer, encoded?: string) {
-        this.publicKey = publicKey;
-        this.encoded = _.isNil(encoded) ? Address.encode(publicKey) : encoded;
+    public constructor(public readonly publicKey: Buffer, public readonly encoded: string = Address.encode(publicKey)) {
     }
 }

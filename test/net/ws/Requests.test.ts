@@ -46,6 +46,7 @@ import { RequestApiAccess } from "../../../src/net/models/request/RequestApiAcce
 import { SearchAccountHistory } from "../../../src/net/models/request/SearchAccountHistory";
 import { SearchBuyings } from "../../../src/net/models/request/SearchBuyings";
 import { RxWebSocket } from "../../../src/net/ws/RxWebSocket";
+import { Constants } from "../../Constants";
 
 chai.should();
 chai.use(chaiThings);
@@ -64,7 +65,7 @@ class WsRequestTest {
     public before() {
         this.spy = create();
         // this.spy.log(/^RxWebSocket_\w+/);
-        this.rxWs = new RxWebSocket(() => new WebSocket("wss://stagesocket.decentgo.com:8090", { rejectUnauthorized: false }));
+        this.rxWs = new RxWebSocket(() => new WebSocket(Constants.STAGE_WS, { rejectUnauthorized: false }));
     }
 
     public after() {
