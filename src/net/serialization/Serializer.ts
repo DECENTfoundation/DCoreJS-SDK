@@ -105,7 +105,7 @@ export class Serializer {
     }
 
     private longAdapter = (buffer: ByteBuffer, obj: Long) => {
-        buffer.append(Buffer.of(...obj.toBytesLE()));
+        buffer.append(Uint8Array.of(...obj.toBytesLE()));
     }
 
     private assetAmountAdapter = (buffer: ByteBuffer, obj: AssetAmount) => {
@@ -235,7 +235,7 @@ export class Serializer {
     private custodyDataAdapter = (buffer: ByteBuffer, obj: CustodyData) => {
         buffer.writeUint32(obj.n);
         obj.seed.forEach((num) => buffer.writeInt8(num));
-        buffer.append(Buffer.of(...obj.pubKey));
+        buffer.append(Uint8Array.of(...obj.pubKey));
     }
 
     private addContentOperationAdapter = (buffer: ByteBuffer, obj: AddContentOperation) => {
@@ -247,7 +247,7 @@ export class Serializer {
         this.append(buffer, obj.uri);
         buffer.writeUint32(obj.quorum);
         this.append(buffer, obj.price);
-        buffer.append(Buffer.of(...Utils.Base16.decode(obj.hash)));
+        buffer.append(Uint8Array.of(...Utils.Base16.decode(obj.hash)));
         this.append(buffer, obj.seeders);
         this.append(buffer, obj.keyParts);
         this.momentAdapter(buffer, obj.expiration);
