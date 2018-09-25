@@ -1,5 +1,4 @@
 import { Expose, Transform, Type } from "class-transformer";
-import * as _ from "lodash";
 import * as moment from "moment";
 import { Moment } from "moment";
 import { Utils } from "../../utils/Utils";
