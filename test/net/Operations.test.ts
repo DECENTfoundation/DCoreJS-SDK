@@ -12,6 +12,7 @@ import { AssetAmount } from "../../src/models/AssetAmount";
 import { ChainObject } from "../../src/models/ChainObject";
 import { AccountCreateOperation } from "../../src/models/operation/AccountCreateOperation";
 import { AddContentOperation } from "../../src/models/operation/AddContentOperation";
+import { RemoveContentOperation } from "../../src/models/operation/RemoveContentOperation";
 import { TransferOperation } from "../../src/models/operation/TransferOperation";
 import { RegionalPrice } from "../../src/models/RegionalPrice";
 import { Synopsis } from "../../src/models/Synopsis";
@@ -62,6 +63,17 @@ class OperationsTest {
             moment.utc().add(10, "days"),
             serialize(new Synopsis("hello", "world")),
             [[ChainObject.parse("1.2.35"), 50]],
+        );
+
+        this.api.broadcast.broadcastWithCallback(Constants.KEY, op)
+            .subscribe((value) => value.should.be.instanceOf(TransactionConfirmation), (error) => done(error), () => done());
+    }
+
+    @test.skip
+    public "should remove a content"(done: (arg?: any) => void) {
+        const op = new RemoveContentOperation(
+            ChainObject.parse("1.2.34"),
+            "http://hello.world",
         );
 
         this.api.broadcast.broadcastWithCallback(Constants.KEY, op)
