@@ -14,6 +14,7 @@ import { AccountCreateOperation } from "../../../src/models/operation/AccountCre
 import { AccountUpdateOperation } from "../../../src/models/operation/AccountUpdateOperation";
 import { AddOrUpdateContentOperation } from "../../../src/models/operation/AddOrUpdateContentOperation";
 import { BuyContentOperation } from "../../../src/models/operation/BuyContentOperation";
+import { RemoveContentOperation } from "../../../src/models/operation/RemoveContentOperation";
 import { TransferOperation } from "../../../src/models/operation/TransferOperation";
 import { Options } from "../../../src/models/Options";
 import { PubKey } from "../../../src/models/PubKey";
@@ -137,6 +138,20 @@ class SerializeTest {
             new AssetAmount(),
         );
         op.hash = "2222222222222222222222222222222222222222";
+
+        this.serializer.serialize(op).toHex().should.be.equal(expected);
+    }
+
+    @test
+    public "should serialize remove existing content operation"() {
+        // @ts-ignore
+        const expected = "200000000000000000002216687474703a2f2f68656c6c6f2e696f2f776f726c6432";
+
+        const op = new RemoveContentOperation(
+            ChainObject.parse("1.2.34"),
+            "http://hello.io/world2",
+            new AssetAmount(),
+        );
 
         this.serializer.serialize(op).toHex().should.be.equal(expected);
     }

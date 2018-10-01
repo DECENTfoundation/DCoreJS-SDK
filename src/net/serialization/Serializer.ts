@@ -15,6 +15,7 @@ import { AccountCreateOperation } from "../../models/operation/AccountCreateOper
 import { AccountUpdateOperation } from "../../models/operation/AccountUpdateOperation";
 import { AddOrUpdateContentOperation } from "../../models/operation/AddOrUpdateContentOperation";
 import { BuyContentOperation } from "../../models/operation/BuyContentOperation";
+import { RemoveContentOperation } from "../../models/operation/RemoveContentOperation";
 import { TransferOperation } from "../../models/operation/TransferOperation";
 import { Options } from "../../models/Options";
 import { PubKey } from "../../models/PubKey";
@@ -55,6 +56,7 @@ export class Serializer {
         this.adapters.set(KeyPart.name, this.keyPartAdapter);
         this.adapters.set(CustodyData.name, this.custodyDataAdapter);
         this.adapters.set(AddOrUpdateContentOperation.name, this.addOrUpdateContentOperationAdapter);
+        this.adapters.set(RemoveContentOperation.name, this.removeContentOperationAdapter);
     }
 
     public serialize(obj: any): ByteBuffer {
@@ -254,5 +256,12 @@ export class Serializer {
         this.append(buffer, obj.publishingFee);
         this.append(buffer, obj.synopsis);
         this.appendOptional(buffer, obj.custodyData);
+    }
+
+    private removeContentOperationAdapter = (buffer: ByteBuffer, obj: RemoveContentOperation) => {
+        buffer.writeByte(obj.type);
+        this.append(buffer, obj.fee);
+        this.append(buffer, obj.author);
+        this.append(buffer, obj.uri);
     }
 }
