@@ -2,8 +2,8 @@ import { Expose, Transform, Type } from "class-transformer";
 import { AssetAmount } from "../AssetAmount";
 import { ChainObject } from "../ChainObject";
 import { Memo } from "../Memo";
-import { OperationType } from "../OperationType";
 import { BaseOperation } from "./BaseOperation";
+import { OperationType } from "./OperationType";
 
 /**
  * Transfer operation constructor

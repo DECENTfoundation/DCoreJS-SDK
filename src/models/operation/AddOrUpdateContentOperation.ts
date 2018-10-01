@@ -6,11 +6,11 @@ import { AssetAmount } from "../AssetAmount";
 import { ChainObject } from "../ChainObject";
 import { CustodyData } from "../CustodyData";
 import { KeyPart } from "../KeyPart";
-import { OperationType } from "../OperationType";
 import { RegionalPrice } from "../RegionalPrice";
 import { BaseOperation } from "./BaseOperation";
+import { OperationType } from "./OperationType";
 
-export class AddContentOperation extends BaseOperation {
+export class AddOrUpdateContentOperation extends BaseOperation {
     @Expose({ name: "size" })
     public size: number = 1;
 
@@ -20,7 +20,7 @@ export class AddContentOperation extends BaseOperation {
     public author: ChainObject;
 
     @Transform((value: Array<[string, number]>) => value.map(([id, weight]) => [ChainObject.parse(id), weight]), { toClassOnly: true })
-    @Transform((value: object, obj: AddContentOperation) => obj.coAuthors.map(([id, weight]) => [id.objectId, weight]), { toPlainOnly: true })
+    @Transform((value: object, obj: AddOrUpdateContentOperation) => obj.coAuthors.map(([id, weight]) => [id.objectId, weight]), { toPlainOnly: true })
     @Expose({ name: "co_authors" })
     public coAuthors: Array<[ChainObject, number]>;
 
@@ -47,7 +47,7 @@ export class AddContentOperation extends BaseOperation {
     public keyParts: KeyPart[] = [];
 
     @Transform((value: string) => moment.utc(value), { toClassOnly: true })
-    @Transform((value: any, obj: AddContentOperation) => obj.expiration.utc().format("YYYY-MM-DDTHH:mm:ss"), { toPlainOnly: true })
+    @Transform((value: any, obj: AddOrUpdateContentOperation) => obj.expiration.utc().format("YYYY-MM-DDTHH:mm:ss"), { toPlainOnly: true })
     @Expose({ name: "expiration" })
     public expiration: Moment;
 

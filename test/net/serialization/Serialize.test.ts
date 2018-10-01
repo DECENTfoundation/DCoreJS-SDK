@@ -5,6 +5,7 @@ import { suite, test } from "mocha-typescript";
 import * as moment from "moment";
 import "reflect-metadata";
 import { Address } from "../../../src/crypto/Address";
+import { DCoreConstants } from "../../../src/DCoreConstants";
 import { AssetAmount } from "../../../src/models/AssetAmount";
 import { BlockData } from "../../../src/models/BlockData";
 import { ChainObject } from "../../../src/models/ChainObject";
@@ -12,8 +13,9 @@ import { DynamicGlobalProperties } from "../../../src/models/DynamicGlobalProper
 import { Memo } from "../../../src/models/Memo";
 import { AccountCreateOperation } from "../../../src/models/operation/AccountCreateOperation";
 import { AccountUpdateOperation } from "../../../src/models/operation/AccountUpdateOperation";
-import { AddContentOperation } from "../../../src/models/operation/AddContentOperation";
+import { AddOrUpdateContentOperation } from "../../../src/models/operation/AddOrUpdateContentOperation";
 import { BuyContentOperation } from "../../../src/models/operation/BuyContentOperation";
+import { RemoveContentOperation } from "../../../src/models/operation/RemoveContentOperation";
 import { TransferOperation } from "../../../src/models/operation/TransferOperation";
 import { Options } from "../../../src/models/Options";
 import { PubKey } from "../../../src/models/PubKey";
@@ -21,6 +23,7 @@ import { RegionalPrice } from "../../../src/models/RegionalPrice";
 import { Synopsis } from "../../../src/models/Synopsis";
 import { Transaction } from "../../../src/models/Transaction";
 import { Serializer } from "../../../src/net/serialization/Serializer";
+import { Constants } from "../../Constants";
 
 chai.should();
 
@@ -123,11 +126,11 @@ class SerializeTest {
     }
 
     @test
-    public "should serialize add new content operation"() {
+    public "should serialize add new content or update operation"() {
         // @ts-ignore
         const expected = "140000000000000000000100000000000000220016687474703a2f2f68656c6c6f2e696f2f776f726c6432000000000101000000e80300000000000000222222222222222222222222222222222222222200007238ed5c0000000000000000004c7b227469746c65223a2247616d65205469746c65222c226465736372697074696f6e223a224465736372697074696f6e222c22636f6e74656e745f747970655f6964223a22312e352e35227d00";
 
-        const op = new AddContentOperation(
+        const op = new AddOrUpdateContentOperation(
             ChainObject.parse("1.2.34"),
             "http://hello.io/world2",
             [new RegionalPrice(new AssetAmount(1000))],
@@ -142,13 +145,27 @@ class SerializeTest {
     }
 
     @test
+    public "should serialize remove existing content operation"() {
+        // @ts-ignore
+        const expected = "200000000000000000002216687474703a2f2f68656c6c6f2e696f2f776f726c6432";
+
+        const op = new RemoveContentOperation(
+            ChainObject.parse("1.2.34"),
+            "http://hello.io/world2",
+            new AssetAmount(),
+        );
+
+        this.serializer.serialize(op).toHex().should.be.equal(expected);
+    }
+
+    @test
     public "should serialize transfer op transaction"() {
         const rawProps = '{"id":"2.1.0","head_block_number":1454654,"head_block_id":"0016323e2ef4e417c019adaef6ef45f910a3dd81","time":"2018-07-31T10:16:15","current_miner":"1.4.9","next_maintenance_time":"2018-08-01T00:00","last_budget_time":"2018-07-31T00:00","unspent_fee_budget":25299491,"mined_rewards":224368000000,"miner_budget_from_fees":38973811,"miner_budget_from_rewards":639249000000,"accounts_registered_this_interval":0,"recently_missed_count":6,"current_aslot":6842787,"recent_slots_filled":"255180578269179676182402108458748313515","dynamic_flags":0,"last_irreversible_block_num":1454654}';
         const rawOp = '{"from":"1.2.34","to":"1.2.35","amount":{"amount":1500000,"asset_id":"1.3.0"},"memo":{"from":"DCT6MA5TQQ6UbMyMaLPmPXE2Syh5G3ZVhv5SbFedqLPqdFChSeqTz","to":"DCT6bVmimtYSvWQtwdrkVVQGHkVsTJZVKtBiUqf4YmJnrJPnk89QP","message":"4bc2a1ee670302ceddb897c2d351fa0496ff089c934e35e030f8ae4f3f9397a7","nonce":735604672334802432},"fee":{"amount":500000,"asset_id":"1.3.0"}}';
         const props = deserialize(DynamicGlobalProperties, rawProps);
         const op = deserialize(TransferOperation, rawOp);
         op.extensions = [];
-        const trx = new Transaction(new BlockData(props), [op]);
+        const trx = new Transaction(new BlockData(props, DCoreConstants.EXPIRATION_DEFAULT), [op], Constants.DCT_CHAIN_ID_STAGE);
         trx.blockData.expiration = moment.utc("2018-08-01T10:14:36");
         trx.expiration = moment.utc("2018-08-01T10:14:36");
 

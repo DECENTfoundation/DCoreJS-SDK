@@ -18,7 +18,7 @@ import { NotFoundError } from "../../../src/models/error/NotFoundError";
 import { Miner } from "../../../src/models/Miner";
 import { EmptyOperation } from "../../../src/models/operation/EmptyOperation";
 import { OperationHistory } from "../../../src/models/OperationHistory";
-import { OperationType } from "../../../src/models/OperationType";
+import { OperationType } from "../../../src/models/operation/OperationType";
 import { ProcessedTransaction } from "../../../src/models/ProcessedTransaction";
 import { Purchase } from "../../../src/models/Purchase";
 import { TransactionDetail } from "../../../src/models/TransactionDetail";

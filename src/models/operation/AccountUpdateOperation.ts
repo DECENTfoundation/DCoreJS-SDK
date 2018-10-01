@@ -2,9 +2,9 @@ import { Expose, Transform, Type } from "class-transformer";
 import { AssetAmount } from "../AssetAmount";
 import { Authority } from "../Authority";
 import { ChainObject } from "../ChainObject";
-import { OperationType } from "../OperationType";
 import { Options } from "../Options";
 import { BaseOperation } from "./BaseOperation";
+import { OperationType } from "./OperationType";
 
 /**
  * Request to account update operation constructor

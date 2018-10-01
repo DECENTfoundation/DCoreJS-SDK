@@ -1,6 +1,6 @@
 import { Exclude, Expose, Type } from "class-transformer";
 import { AssetAmount } from "../AssetAmount";
-import { OperationType } from "../OperationType";
+import { OperationType } from "./OperationType";
 
 export abstract class BaseOperation {
     @Expose({ name: "extensions" })

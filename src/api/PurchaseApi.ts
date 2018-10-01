@@ -1,15 +1,17 @@
 import { Observable } from "rxjs";
-import { DCoreSdk } from "../DCoreSdk";
+import { DCoreApi } from "../DCoreApi";
 import { ChainObject } from "../models/ChainObject";
 import { ObjectType } from "../models/ObjectType";
 import { SearchPurchasesOrder } from "../models/order/SearchPurchasesOrder";
 import { Purchase } from "../models/Purchase";
 import { GetBuyingByUri } from "../net/models/request/GetBuyingByUri";
 import { SearchBuyings } from "../net/models/request/SearchBuyings";
+import { BaseApi } from "./BaseApi";
 
-export class PurchaseApi {
+export class PurchaseApi extends BaseApi {
 
-    constructor(private core: DCoreSdk) {
+    constructor(api: DCoreApi) {
+        super(api);
     }
 
     /**
@@ -28,7 +30,7 @@ export class PurchaseApi {
         from: ChainObject = ObjectType.Null.genericId(),
         limit: number = 100,
     ): Observable<Purchase[]> {
-        return this.core.request(new SearchBuyings(consumer, term, order, from, limit));
+        return this.request(new SearchBuyings(consumer, term, order, from, limit));
     }
 
     /**
@@ -40,7 +42,7 @@ export class PurchaseApi {
      * @return an account if found, {@link NotFoundError} otherwise
      */
     public getPurchase(consumer: ChainObject, uri: string): Observable<Purchase> {
-        return this.core.request(new GetBuyingByUri(consumer, uri));
+        return this.request(new GetBuyingByUri(consumer, uri));
     }
 
 }

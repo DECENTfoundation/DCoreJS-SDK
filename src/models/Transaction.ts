@@ -1,7 +1,6 @@
 import { classToPlain, Exclude, Expose, Transform } from "class-transformer";
 import { Moment } from "moment";
 import { ECKeyPair } from "../crypto/ECKeyPair";
-import { DCoreSdk } from "../DCoreSdk";
 import { Serializer } from "../net/serialization/Serializer";
 import { Utils } from "../utils/Utils";
 import { BlockData } from "./BlockData";
@@ -31,17 +30,20 @@ export class Transaction {
     @Expose({ name: "extensions" })
     public extensions: any[] = [];
 
-    constructor(blockData: BlockData, ops: BaseOperation[]) {
+    @Exclude()
+    private readonly chainId: Buffer;
+
+    constructor(blockData: BlockData, ops: BaseOperation[], chainId: string) {
         this.blockData = blockData;
         this.operations = ops;
+        this.chainId = new Buffer(Utils.Base16.decode(chainId));
         this.refBlockNum = this.blockData.refBlockNum;
         this.refBlockPrefix = this.blockData.refBlockPrefix;
-        this.expiration = this.blockData.expiration.add(DCoreSdk.transactionExpiration);
+        this.expiration = this.blockData.expiration;
     }
 
     public sign(key: ECKeyPair): Transaction {
         const serializer = new Serializer();
-        const chainId = new Buffer(Utils.Base16.decode(DCoreSdk.DCT_CHAIN_ID));
 
         let sig: string;
         do {
@@ -49,7 +51,7 @@ export class Transaction {
             this.blockData.expiration = this.blockData.expiration.add(1, "second");
             this.expiration = this.blockData.expiration;
             const data = serializer.serialize(this);
-            sig = key.sign(Buffer.concat([chainId, data.buffer]));
+            sig = key.sign(Buffer.concat([this.chainId, data.buffer]));
         } while (!sig);
 
         this.signatures = [sig];

@@ -1,14 +1,16 @@
 import { Observable } from "rxjs";
 import { map } from "rxjs/operators";
-import { DCoreSdk } from "../DCoreSdk";
+import { DCoreApi } from "../DCoreApi";
 import { ChainObject } from "../models/ChainObject";
 import { Content } from "../models/Content";
 import { GetContentById } from "../net/models/request/GetContentById";
 import { GetContentByUri } from "../net/models/request/GetContentByUri";
+import { BaseApi } from "./BaseApi";
 
-export class ContentApi {
+export class ContentApi extends BaseApi {
 
-    constructor(private core: DCoreSdk) {
+    constructor(api: DCoreApi) {
+        super(api);
     }
 
     /**
@@ -20,9 +22,9 @@ export class ContentApi {
      */
     public getContent(contentRef: ChainObject | string): Observable<Content> {
         if (typeof contentRef === "string") {
-            return this.core.request(new GetContentByUri(contentRef));
+            return this.request(new GetContentByUri(contentRef));
         } else {
-            return this.core.request(new GetContentById(contentRef)).pipe(map((list) => list[0]));
+            return this.request(new GetContentById(contentRef)).pipe(map((list) => list[0]));
         }
     }
 
