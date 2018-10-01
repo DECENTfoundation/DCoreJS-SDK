@@ -5,7 +5,7 @@ import { CoreOptions } from "request";
 import { Observable, throwError, zip } from "rxjs";
 import { tag } from "rxjs-spy/operators";
 import { scalar } from "rxjs/internal/observable/scalar";
-import { concatMap, map } from "rxjs/operators";
+import { concatMap, flatMap, map, tap } from "rxjs/operators";
 import { Address } from "./crypto/Address";
 import { ECKeyPair } from "./crypto/ECKeyPair";
 import { DCoreApi } from "./DCoreApi";
@@ -19,9 +19,10 @@ import { ApiGroup } from "./net/models/ApiGroup";
 import { BaseRequest } from "./net/models/request/BaseRequest";
 import { BroadcastTransaction } from "./net/models/request/BroadcastTransaction";
 import { BroadcastTransactionWithCallback } from "./net/models/request/BroadcastTransactionWithCallback";
+import { GetChainId } from "./net/models/request/GetChainId";
 import { GetDynamicGlobalProps } from "./net/models/request/GetDynamicGlobalProps";
 import { GetRequiredFees } from "./net/models/request/GetRequiredFees";
-import { RpcEndpoints } from "./net/rpc/RpcEndpoints";
+import { RpcService } from "./net/rpc/RpcService";
 import { RxWebSocket, WebSocketFactory } from "./net/ws/RxWebSocket";
 import { assertThrow } from "./utils/Utils";
 
@@ -30,15 +31,10 @@ export type AssetWithAmount = [Asset, Long];
 
 export class DCoreSdk {
 
-    public static DCT_CHAIN_ID = "17401602b201b3c45a3ad98afc6fb458f91f519bd30d1058adf6f2bed66376bc";
-    public static DCT_ASSET_ID = ChainObject.parse("1.3.0");
-    public static PROXY_TO_SELF_ACCOUNT_ID = ChainObject.parse("1.2.3");
-    public static BASIS_POINTS_TOTAL = 10000;
-
     public static transactionExpiration = moment.duration(30, "seconds");
 
     public static createForHttp(options: CoreOptions): DCoreApi {
-        return new DCoreApi(new DCoreSdk(new RpcEndpoints(options)));
+        return new DCoreApi(new DCoreSdk(new RpcService(options)));
     }
 
     public static createForWebSocket(factory: WebSocketFactory): DCoreApi {
@@ -46,10 +42,12 @@ export class DCoreSdk {
     }
 
     public static create(options: CoreOptions, factory: WebSocketFactory): DCoreApi {
-        return new DCoreApi(new DCoreSdk(new RpcEndpoints(options), new RxWebSocket(factory)));
+        return new DCoreApi(new DCoreSdk(new RpcService(options), new RxWebSocket(factory)));
     }
 
-    constructor(private rpc?: RpcEndpoints, private ws?: RxWebSocket) {
+    private chainId?: string;
+
+    constructor(private rpc?: RpcService, private ws?: RxWebSocket) {
         assertThrow(rpc != null || ws != null, () => "rpc or webSocket must be set");
     }
 
@@ -103,9 +101,17 @@ export class DCoreSdk {
         } else {
             finalOps = scalar(withFees);
         }
-        return zip(
-            finalOps,
-            this.request(new GetDynamicGlobalProps()),
-        ).pipe(map(([ops, props]) => new Transaction(new BlockData(props), ops)));
+        let chainId: Observable<string>;
+        if (_.isNil(this.chainId)) {
+            chainId = this.request(new GetChainId()).pipe(tap((id) => this.chainId = id));
+        } else {
+            chainId = scalar(this.chainId);
+        }
+        return chainId.pipe(flatMap((id) =>
+            zip(
+                finalOps,
+                this.request(new GetDynamicGlobalProps()),
+            ).pipe(map(([ops, props]) => new Transaction(new BlockData(props), ops, id)))),
+        );
     }
 }

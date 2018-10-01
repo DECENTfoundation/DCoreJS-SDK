@@ -32,7 +32,7 @@ class OperationsTest {
 
     public before() {
         this.spy = create();
-        // this.spy.log(/^API\w+/);
+        this.spy.log(/^API\w+/);
         this.api = DCoreSdk.createForWebSocket(() => new WebSocket(Constants.STAGE_WS, { rejectUnauthorized: false }));
     }
 

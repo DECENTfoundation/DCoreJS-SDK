@@ -6,9 +6,9 @@ import { AssetAmount } from "../AssetAmount";
 import { ChainObject } from "../ChainObject";
 import { CustodyData } from "../CustodyData";
 import { KeyPart } from "../KeyPart";
-import { OperationType } from "../OperationType";
 import { RegionalPrice } from "../RegionalPrice";
 import { BaseOperation } from "./BaseOperation";
+import { OperationType } from "./OperationType";
 
 export class AddOrUpdateContentOperation extends BaseOperation {
     @Expose({ name: "size" })

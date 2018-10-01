@@ -20,7 +20,6 @@ export * from "./Memo";
 export * from "./Miner";
 export * from "./ObjectType";
 export * from "./OperationHistory";
-export * from "./OperationType";
 export * from "./Options";
 export * from "./PricePerRegion";
 export * from "./ProcessedTransaction";

@@ -7,6 +7,7 @@ import { Content } from "./models/Content";
 import { Options } from "./models/Options";
 import { TransactionConfirmation } from "./models/TransactionConfirmation";
 
+// todo remove
 export abstract class DCoreApiRxImpl {
 
     /**

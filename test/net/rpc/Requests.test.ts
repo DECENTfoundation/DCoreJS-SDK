@@ -17,7 +17,7 @@ import { ApiAccessError } from "../../../src/models/error/ApiAccessError";
 import { NotFoundError } from "../../../src/models/error/NotFoundError";
 import { Miner } from "../../../src/models/Miner";
 import { EmptyOperation } from "../../../src/models/operation/EmptyOperation";
-import { OperationType } from "../../../src/models/OperationType";
+import { OperationType } from "../../../src/models/operation/OperationType";
 import { ProcessedTransaction } from "../../../src/models/ProcessedTransaction";
 import { Purchase } from "../../../src/models/Purchase";
 import { TransactionDetail } from "../../../src/models/TransactionDetail";
@@ -44,7 +44,7 @@ import { LookupMiners } from "../../../src/net/models/request/LookupMiners";
 import { RequestApiAccess } from "../../../src/net/models/request/RequestApiAccess";
 import { SearchAccountHistory } from "../../../src/net/models/request/SearchAccountHistory";
 import { SearchBuyings } from "../../../src/net/models/request/SearchBuyings";
-import { RpcEndpoints } from "../../../src/net/rpc/RpcEndpoints";
+import { RpcService } from "../../../src/net/rpc/RpcService";
 import { Constants } from "../../Constants";
 
 chai.should();
@@ -57,14 +57,14 @@ class HttpRequestTest {
         // wtf.dump();
     }
 
-    private rpc: RpcEndpoints;
+    private rpc: RpcService;
 
     private spy: Spy;
 
     public before() {
         this.spy = create();
         // this.spy.log(/^RpcEndpoints_\w+/);
-        this.rpc = new RpcEndpoints({ baseUrl: Constants.STAGE_HTTPS, timeout: 15000, rejectUnauthorized: false });
+        this.rpc = new RpcService({ baseUrl: Constants.STAGE_HTTPS, timeout: 15000, rejectUnauthorized: false });
     }
 
     public after() {

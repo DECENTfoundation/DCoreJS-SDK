@@ -1,9 +1,9 @@
 import { Expose, Transform, Type } from "class-transformer";
 import { AssetAmount } from "../AssetAmount";
 import { ChainObject } from "../ChainObject";
-import { OperationType } from "../OperationType";
 import { PubKey } from "../PubKey";
 import { BaseOperation } from "./BaseOperation";
+import { OperationType } from "./OperationType";
 
 /**
  * Request to buy content operation constructor

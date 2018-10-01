@@ -32,7 +32,7 @@ export class AccountApi {
      * @param accountId object ids of the account, 1.2.*
      * @return accounts if found, {@link NotFoundError} otherwise
      */
-    public getAccountsById(accountId: ChainObject[]): Observable<Account[]> {
+    public getAccountsByIds(accountId: ChainObject[]): Observable<Account[]> {
         return this.core.request(new GetAccountById(accountId));
     }
 
@@ -56,9 +56,6 @@ export class AccountApi {
      */
     public searchAccountHistory(
         accountId: ChainObject,
-        // order: SearchAccountHistoryOrder = SearchAccountHistoryOrder.TIME_DESC,
-        // from: ChainObject = ChainObject.NONE,
-        // limit: Int = 100
         order: SearchAccountHistoryOrder = SearchAccountHistoryOrder.TimeDesc,
         from: ChainObject = ObjectType.Null.genericId(),
         limit: number = 100,

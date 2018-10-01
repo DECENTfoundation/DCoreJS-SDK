@@ -1,6 +1,6 @@
 import { Expose, Transform, Type } from "class-transformer";
 import { Address } from "../crypto/Address";
-import { DCoreSdk } from "../DCoreSdk";
+import { DCoreConstants } from "../DCoreConstants";
 import { AssetAmount } from "./AssetAmount";
 import { ChainObject } from "./ChainObject";
 import { VoteId } from "./VoteId";
@@ -41,7 +41,7 @@ export class Options {
 
     constructor(publicKey: Address) {
         this.memoKey = publicKey;
-        this.votingAccount = DCoreSdk.PROXY_TO_SELF_ACCOUNT_ID;
+        this.votingAccount = DCoreConstants.PROXY_TO_SELF_ACCOUNT_ID;
         this.numMiner = 0;
         this.votes = [];
         this.extensions = [];

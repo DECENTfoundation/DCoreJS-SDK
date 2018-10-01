@@ -1,0 +1,34 @@
+import * as Long from "long";
+import * as moment from "moment";
+import { CoreOptions } from "request";
+import { Observable } from "rxjs";
+import { Address } from "./crypto/Address";
+import { ECKeyPair } from "./crypto/ECKeyPair";
+import { DCoreApi } from "./DCoreApi";
+import { Asset } from "./models/Asset";
+import { ChainObject } from "./models/ChainObject";
+import { BaseOperation } from "./models/operation/BaseOperation";
+import { TransactionConfirmation } from "./models/TransactionConfirmation";
+import { BaseRequest } from "./net/models/request/BaseRequest";
+import { RpcEndpoints } from "./net/rpc/RpcEndpoints";
+import { RxWebSocket, WebSocketFactory } from "./net/ws/RxWebSocket";
+export declare type AccountRef = ChainObject | string | Address;
+export declare type AssetWithAmount = [Asset, Long];
+export declare class DCoreSdk {
+    private rpc?;
+    private ws?;
+    static readonly DCT_CHAIN_ID: string;
+    static readonly DCT_ASSET_ID: ChainObject;
+    static readonly PROXY_TO_SELF_ACCOUNT_ID: ChainObject;
+    static readonly BASIS_POINTS_TOTAL: number;
+    static transactionExpiration: moment.Duration;
+    static createForHttp(options: CoreOptions): DCoreApi;
+    static createForWebSocket(factory: WebSocketFactory): DCoreApi;
+    static create(options: CoreOptions, factory: WebSocketFactory): DCoreApi;
+    constructor(rpc?: RpcEndpoints, ws?: RxWebSocket);
+    request<T>(request: BaseRequest<T>): Observable<T>;
+    broadcast(privateKey: ECKeyPair, ...operations: BaseOperation[]): Observable<void>;
+    broadcastWithCallback(privateKey: ECKeyPair, ...operations: BaseOperation[]): Observable<TransactionConfirmation>;
+    disconnect(): void;
+    private prepareTransaction;
+}
