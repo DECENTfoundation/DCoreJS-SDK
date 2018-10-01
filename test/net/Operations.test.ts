@@ -11,7 +11,7 @@ import { DCoreSdk } from "../../src/DCoreSdk";
 import { AssetAmount } from "../../src/models/AssetAmount";
 import { ChainObject } from "../../src/models/ChainObject";
 import { AccountCreateOperation } from "../../src/models/operation/AccountCreateOperation";
-import { AddContentOperation } from "../../src/models/operation/AddContentOperation";
+import { AddOrUpdateContentOperation } from "../../src/models/operation/AddOrUpdateContentOperation";
 import { RemoveContentOperation } from "../../src/models/operation/RemoveContentOperation";
 import { TransferOperation } from "../../src/models/operation/TransferOperation";
 import { RegionalPrice } from "../../src/models/RegionalPrice";
@@ -55,8 +55,8 @@ class OperationsTest {
     }
 
     @test.skip
-    public "should add a content"(done: (arg?: any) => void) {
-        const op = new AddContentOperation(
+    public "should add or update a content"(done: (arg?: any) => void) {
+        const op = new AddOrUpdateContentOperation(
             ChainObject.parse("1.2.34"),
             "http://hello.world",
             [new RegionalPrice(new AssetAmount(100))],

@@ -13,7 +13,7 @@ import { KeyPart } from "../../models/KeyPart";
 import { Memo } from "../../models/Memo";
 import { AccountCreateOperation } from "../../models/operation/AccountCreateOperation";
 import { AccountUpdateOperation } from "../../models/operation/AccountUpdateOperation";
-import { AddContentOperation } from "../../models/operation/AddContentOperation";
+import { AddOrUpdateContentOperation } from "../../models/operation/AddOrUpdateContentOperation";
 import { BuyContentOperation } from "../../models/operation/BuyContentOperation";
 import { RemoveContentOperation } from "../../models/operation/RemoveContentOperation";
 import { TransferOperation } from "../../models/operation/TransferOperation";
@@ -55,7 +55,7 @@ export class Serializer {
         this.adapters.set(RegionalPrice.name, this.regionalPriceAdapter);
         this.adapters.set(KeyPart.name, this.keyPartAdapter);
         this.adapters.set(CustodyData.name, this.custodyDataAdapter);
-        this.adapters.set(AddContentOperation.name, this.addContentOperationAdapter);
+        this.adapters.set(AddOrUpdateContentOperation.name, this.addOrUpdateContentOperationAdapter);
         this.adapters.set(RemoveContentOperation.name, this.removeContentOperationAdapter);
     }
 
@@ -240,7 +240,7 @@ export class Serializer {
         buffer.append(Uint8Array.of(...obj.pubKey));
     }
 
-    private addContentOperationAdapter = (buffer: ByteBuffer, obj: AddContentOperation) => {
+    private addOrUpdateContentOperationAdapter = (buffer: ByteBuffer, obj: AddOrUpdateContentOperation) => {
         buffer.writeByte(obj.type);
         this.append(buffer, obj.fee);
         buffer.writeUint64(obj.size);

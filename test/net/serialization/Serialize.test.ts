@@ -12,7 +12,7 @@ import { DynamicGlobalProperties } from "../../../src/models/DynamicGlobalProper
 import { Memo } from "../../../src/models/Memo";
 import { AccountCreateOperation } from "../../../src/models/operation/AccountCreateOperation";
 import { AccountUpdateOperation } from "../../../src/models/operation/AccountUpdateOperation";
-import { AddContentOperation } from "../../../src/models/operation/AddContentOperation";
+import { AddOrUpdateContentOperation } from "../../../src/models/operation/AddOrUpdateContentOperation";
 import { BuyContentOperation } from "../../../src/models/operation/BuyContentOperation";
 import { RemoveContentOperation } from "../../../src/models/operation/RemoveContentOperation";
 import { TransferOperation } from "../../../src/models/operation/TransferOperation";
@@ -124,11 +124,11 @@ class SerializeTest {
     }
 
     @test
-    public "should serialize add new content operation"() {
+    public "should serialize add new content or update operation"() {
         // @ts-ignore
         const expected = "140000000000000000000100000000000000220016687474703a2f2f68656c6c6f2e696f2f776f726c6432000000000101000000e80300000000000000222222222222222222222222222222222222222200007238ed5c0000000000000000004c7b227469746c65223a2247616d65205469746c65222c226465736372697074696f6e223a224465736372697074696f6e222c22636f6e74656e745f747970655f6964223a22312e352e35227d00";
 
-        const op = new AddContentOperation(
+        const op = new AddOrUpdateContentOperation(
             ChainObject.parse("1.2.34"),
             "http://hello.io/world2",
             [new RegionalPrice(new AssetAmount(1000))],
