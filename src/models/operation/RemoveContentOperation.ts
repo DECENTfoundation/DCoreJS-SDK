@@ -1,8 +1,8 @@
 import { Expose, Transform } from "class-transformer";
 import { AssetAmount } from "../AssetAmount";
 import { ChainObject } from "../ChainObject";
-import { OperationType } from "../OperationType";
 import { BaseOperation } from "./BaseOperation";
+import { OperationType } from "./OperationType";
 
 export class RemoveContentOperation extends BaseOperation {
 
