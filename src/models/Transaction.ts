@@ -1,7 +1,6 @@
 import { classToPlain, Exclude, Expose, Transform } from "class-transformer";
 import { Moment } from "moment";
 import { ECKeyPair } from "../crypto/ECKeyPair";
-import { DCoreSdk } from "../DCoreSdk";
 import { Serializer } from "../net/serialization/Serializer";
 import { Utils } from "../utils/Utils";
 import { BlockData } from "./BlockData";
@@ -40,7 +39,7 @@ export class Transaction {
         this.chainId = new Buffer(Utils.Base16.decode(chainId));
         this.refBlockNum = this.blockData.refBlockNum;
         this.refBlockPrefix = this.blockData.refBlockPrefix;
-        this.expiration = this.blockData.expiration.add(DCoreSdk.transactionExpiration);
+        this.expiration = this.blockData.expiration;
     }
 
     public sign(key: ECKeyPair): Transaction {

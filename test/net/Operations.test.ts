@@ -32,7 +32,7 @@ class OperationsTest {
 
     public before() {
         this.spy = create();
-        this.spy.log(/^API\w+/);
+        // this.spy.log(/^API\w+/);
         this.api = DCoreSdk.createForWebSocket(() => new WebSocket(Constants.STAGE_WS, { rejectUnauthorized: false }));
     }
 
@@ -49,7 +49,7 @@ class OperationsTest {
             new AssetAmount(1),
         );
 
-        this.api.broadcast.broadcastWithCallback(Constants.KEY, op)
+        this.api.broadcastApi.broadcastWithCallback(Constants.KEY, [op])
             .subscribe((value) => value.should.be.instanceOf(TransactionConfirmation), (error) => done(error), () => done());
     }
 
@@ -64,7 +64,7 @@ class OperationsTest {
             [[ChainObject.parse("1.2.35"), 50]],
         );
 
-        this.api.broadcast.broadcastWithCallback(Constants.KEY, op)
+        this.api.broadcastApi.broadcastWithCallback(Constants.KEY, [op])
             .subscribe((value) => value.should.be.instanceOf(TransactionConfirmation), (error) => done(error), () => done());
     }
 
@@ -76,7 +76,7 @@ class OperationsTest {
             Constants.PUBKEY,
         );
 
-        this.api.broadcast.broadcastWithCallback(Constants.KEY, op)
+        this.api.broadcastApi.broadcastWithCallback(Constants.KEY, [op])
             .subscribe((value) => value.should.be.instanceOf(TransactionConfirmation), (error) => done(error), () => done());
     }
 }

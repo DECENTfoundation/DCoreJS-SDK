@@ -5,6 +5,7 @@ import { suite, test } from "mocha-typescript";
 import * as moment from "moment";
 import "reflect-metadata";
 import { Address } from "../../../src/crypto/Address";
+import { DCoreConstants } from "../../../src/DCoreConstants";
 import { AssetAmount } from "../../../src/models/AssetAmount";
 import { BlockData } from "../../../src/models/BlockData";
 import { ChainObject } from "../../../src/models/ChainObject";
@@ -21,6 +22,7 @@ import { RegionalPrice } from "../../../src/models/RegionalPrice";
 import { Synopsis } from "../../../src/models/Synopsis";
 import { Transaction } from "../../../src/models/Transaction";
 import { Serializer } from "../../../src/net/serialization/Serializer";
+import { Constants } from "../../Constants";
 
 chai.should();
 
@@ -148,7 +150,7 @@ class SerializeTest {
         const props = deserialize(DynamicGlobalProperties, rawProps);
         const op = deserialize(TransferOperation, rawOp);
         op.extensions = [];
-        const trx = new Transaction(new BlockData(props), [op]);
+        const trx = new Transaction(new BlockData(props, DCoreConstants.EXPIRATION_DEFAULT), [op], Constants.DCT_CHAIN_ID_STAGE);
         trx.blockData.expiration = moment.utc("2018-08-01T10:14:36");
         trx.expiration = moment.utc("2018-08-01T10:14:36");
 

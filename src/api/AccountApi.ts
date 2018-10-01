@@ -1,6 +1,6 @@
 import { Observable } from "rxjs";
 import { Address } from "../crypto/Address";
-import { DCoreSdk } from "../DCoreSdk";
+import { DCoreApi } from "../DCoreApi";
 import { Account } from "../models/Account";
 import { ChainObject } from "../models/ChainObject";
 import { ObjectType } from "../models/ObjectType";
@@ -10,10 +10,12 @@ import { GetAccountById } from "../net/models/request/GetAccountById";
 import { GetAccountByName } from "../net/models/request/GetAccountByName";
 import { GetKeyReferences } from "../net/models/request/GetKeyReferences";
 import { SearchAccountHistory } from "../net/models/request/SearchAccountHistory";
+import { BaseApi } from "./BaseApi";
 
-export class AccountApi {
+export class AccountApi extends BaseApi {
 
-    constructor(private core: DCoreSdk) {
+    constructor(api: DCoreApi) {
+        super(api);
     }
 
     /**
@@ -23,7 +25,7 @@ export class AccountApi {
      * @return an account if found, {@link NotFoundError} otherwise
      */
     public getAccountByName(accountName: string): Observable<Account> {
-        return this.core.request(new GetAccountByName(accountName));
+        return this.request(new GetAccountByName(accountName));
     }
 
     /**
@@ -33,7 +35,7 @@ export class AccountApi {
      * @return accounts if found, {@link NotFoundError} otherwise
      */
     public getAccountsByIds(accountId: ChainObject[]): Observable<Account[]> {
-        return this.core.request(new GetAccountById(accountId));
+        return this.request(new GetAccountById(accountId));
     }
 
     /**
@@ -43,7 +45,7 @@ export class AccountApi {
      * @return account ids referencing the public keys, {@link NotFoundError} otherwise
      */
     public getAccountIdsByKey(keys: Address[]): Observable<ChainObject[][]> {
-        return this.core.request(new GetKeyReferences(keys));
+        return this.request(new GetKeyReferences(keys));
     }
 
     /**
@@ -60,7 +62,7 @@ export class AccountApi {
         from: ChainObject = ObjectType.Null.genericId(),
         limit: number = 100,
     ): Observable<TransactionDetail[]> {
-        return this.core.request(new SearchAccountHistory(accountId, order, from, limit));
+        return this.request(new SearchAccountHistory(accountId, order, from, limit));
     }
 
 }

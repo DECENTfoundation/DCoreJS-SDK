@@ -1,6 +1,6 @@
 import * as _ from "lodash";
 import * as Long from "long";
-import * as moment from "moment";
+import { Duration } from "moment";
 import { CoreOptions } from "request";
 import { Observable, throwError, zip } from "rxjs";
 import { tag } from "rxjs-spy/operators";
@@ -30,8 +30,6 @@ export type AccountRef = ChainObject | string | Address;
 export type AssetWithAmount = [Asset, Long];
 
 export class DCoreSdk {
-
-    public static transactionExpiration = moment.duration(30, "seconds");
 
     public static createForHttp(options: CoreOptions): DCoreApi {
         return new DCoreApi(new DCoreSdk(new RpcService(options)));
@@ -64,15 +62,15 @@ export class DCoreSdk {
         return result.pipe(tag("API_request_" + request.method));
     }
 
-    public broadcast(privateKey: ECKeyPair, ...operations: BaseOperation[]): Observable<void> {
-        return this.prepareTransaction(...operations).pipe(
+    public broadcast(privateKey: ECKeyPair, operations: BaseOperation[], transactionExpiration: Duration): Observable<void> {
+        return this.prepareTransaction(operations, transactionExpiration).pipe(
             map((trx) => trx.sign(privateKey)),
             concatMap((trx) => this.request(new BroadcastTransaction(trx))),
         );
     }
 
-    public broadcastWithCallback(privateKey: ECKeyPair, ...operations: BaseOperation[]): Observable<TransactionConfirmation> {
-        return this.prepareTransaction(...operations).pipe(
+    public broadcastWithCallback(privateKey: ECKeyPair, operations: BaseOperation[], transactionExpiration: Duration): Observable<TransactionConfirmation> {
+        return this.prepareTransaction(operations, transactionExpiration).pipe(
             map((trx) => trx.sign(privateKey)),
             concatMap((trx) => this.request(new BroadcastTransactionWithCallback(trx, this.ws.getCallId()))),
         );
@@ -84,7 +82,7 @@ export class DCoreSdk {
         }
     }
 
-    private prepareTransaction(...operations: BaseOperation[]): Observable<Transaction> {
+    public prepareTransaction(operations: BaseOperation[], transactionExpiration: Duration): Observable<Transaction> {
         const [withoutFees, withFees] = operations.reduce((res: [BaseOperation[], BaseOperation[]], el) => {
             res[_.isNil(el.fee) ? 0 : 1].push(el);
             return res;
@@ -111,7 +109,7 @@ export class DCoreSdk {
             zip(
                 finalOps,
                 this.request(new GetDynamicGlobalProps()),
-            ).pipe(map(([ops, props]) => new Transaction(new BlockData(props), ops, id)))),
+            ).pipe(map(([ops, props]) => new Transaction(new BlockData(props, transactionExpiration), ops, id)))),
         );
     }
 }

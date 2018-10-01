@@ -3,17 +3,19 @@ import { Observable } from "rxjs";
 import { concatMap, map } from "rxjs/operators";
 import { Address } from "../crypto/Address";
 import { DCoreApi } from "../DCoreApi";
-import { AccountRef, AssetWithAmount, DCoreSdk } from "../DCoreSdk";
+import { AccountRef, AssetWithAmount } from "../DCoreSdk";
 import { Asset } from "../models/Asset";
 import { AssetAmount } from "../models/AssetAmount";
 import { ChainObject } from "../models/ChainObject";
 import { GetAccountBalances } from "../net/models/request/GetAccountBalances";
 import { GetAccountBalancesByName } from "../net/models/request/GetAccountBalancesByName";
 import { ObjectCheckOf } from "../utils/ObjectCheckOf";
+import { BaseApi } from "./BaseApi";
 
-export class BalanceApi {
+export class BalanceApi extends BaseApi {
 
-    constructor(private core: DCoreSdk, private api: DCoreApi) {
+    constructor(api: DCoreApi) {
+        super(api);
     }
 
     /**
@@ -36,7 +38,7 @@ export class BalanceApi {
     public getBalance(account: AccountRef, assets?: string[] | ChainObject[]): Observable<AssetAmount[]> | Observable<AssetWithAmount[]> {
         let balance: (ids?: ChainObject[]) => Observable<AssetAmount[]>;
         if (ObjectCheckOf<Address>(account, "publicKey")) {
-            balance = (ids) => this.api.account.getAccountIdsByKey([account]).pipe(
+            balance = (ids) => this.api.accountApi.getAccountIdsByKey([account]).pipe(
                 map((list) => list[0][0]),
                 concatMap((accountId) => this.getBalanceInternal(accountId, ids)),
             );
@@ -45,7 +47,7 @@ export class BalanceApi {
         }
 
         if (!_.isNil(assets) && assets.length > 0 && typeof assets[0] === "string") {
-            return this.api.asset.lookupAssets(assets as string[])
+            return this.api.assetApi.lookupAssets(assets as string[])
                 .pipe(concatMap((assetList) =>
                     balance(assetList.map((asset) => asset.id)).pipe(map((balances) => this.createTuple(assetList, balances))),
                 ));
@@ -60,9 +62,9 @@ export class BalanceApi {
 
     private getBalanceInternal(account: ChainObject | string, assets?: ChainObject[]): Observable<AssetAmount[]> {
         if (typeof account === "string") {
-            return this.core.request(new GetAccountBalancesByName(account, assets));
+            return this.request(new GetAccountBalancesByName(account, assets));
         } else {
-            return this.core.request(new GetAccountBalances(account, assets));
+            return this.request(new GetAccountBalances(account, assets));
         }
     }
 }

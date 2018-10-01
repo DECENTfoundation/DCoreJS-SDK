@@ -1,12 +1,17 @@
+import { Duration } from "moment";
 import { Observable } from "rxjs";
+import { DCoreApi } from "../DCoreApi";
 import { DCoreSdk } from "../DCoreSdk";
+import { BaseOperation } from "../models/operation/BaseOperation";
 import { ProcessedTransaction } from "../models/ProcessedTransaction";
 import { GetRecentTransactionById } from "../net/models/request/GetRecentTransactionById";
 import { GetTransaction } from "../net/models/request/GetTransaction";
+import { BaseApi } from "./BaseApi";
 
-export class TransactionApi {
+export class TransactionApi extends BaseApi {
 
-    constructor(private core: DCoreSdk) {
+    constructor(api: DCoreApi, private core: DCoreSdk) {
+        super(api);
     }
 
     /**
@@ -20,7 +25,7 @@ export class TransactionApi {
      *  @return a transaction if found, {@link NotFoundError} otherwise
      */
     public getRecentTransaction(trxId: string): Observable<ProcessedTransaction> {
-        return this.core.request(new GetRecentTransactionById(trxId));
+        return this.request(new GetRecentTransactionById(trxId));
     }
 
     /**
@@ -32,7 +37,18 @@ export class TransactionApi {
      * @return a transaction if found, {@link NotFoundError} otherwise
      */
     public getTransaction(blockNum: number, trxInBlock: number): Observable<ProcessedTransaction> {
-        return this.core.request(new GetTransaction(blockNum, trxInBlock));
+        return this.request(new GetTransaction(blockNum, trxInBlock));
+    }
+
+    /**
+     * create unsigned transaction
+     *
+     * @param operations operations to include in transaction
+     * @param transactionExpiration transaction expiration in seconds,
+     * after the expiry the transaction is removed from recent pool and will be dismissed if not included in DCore block
+     */
+    public createTransaction(operations: BaseOperation[], transactionExpiration: Duration = this.api.transactionExpiration) {
+        this.core.prepareTransaction(operations, transactionExpiration);
     }
 
 }

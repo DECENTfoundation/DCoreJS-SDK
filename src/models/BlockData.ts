@@ -1,5 +1,5 @@
 import * as _ from "lodash";
-import { Moment } from "moment";
+import { Duration, Moment } from "moment";
 import { DynamicGlobalProperties } from "./DynamicGlobalProperties";
 
 export class BlockData {
@@ -8,10 +8,10 @@ export class BlockData {
     public refBlockPrefix: number;
     public expiration: Moment;
 
-    constructor(props: DynamicGlobalProperties) {
+    constructor(props: DynamicGlobalProperties, transactionExpiration: Duration) {
         // tslint:disable-next-line:no-bitwise
         this.refBlockNum = (props.headBlockNumber & 0xFFFF);
         this.refBlockPrefix = _.parseInt(props.headBlockId.substring(8, 16).match(/.{1,2}/g).reverse().join(""), 16);
-        this.expiration = props.time;
+        this.expiration = props.time.add(transactionExpiration);
     }
 }

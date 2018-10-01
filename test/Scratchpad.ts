@@ -231,8 +231,8 @@ class Scratchpad {
     @test dcoreSdk() {
         // spy.log(/^API_\w+/);
         this.spy.log();
-        this.apiWs.asset.getAssets([ChainObject.parse("1.3.1000")]).subscribe();
-        this.apiRpc.asset.getAssets([ChainObject.parse("1.3.1000")]).subscribe();
+        this.apiWs.assetApi.getAssets([ChainObject.parse("1.3.1000")]).subscribe();
+        this.apiRpc.assetApi.getAssets([ChainObject.parse("1.3.1000")]).subscribe();
     }
 
     @test instanceChecks() {
@@ -253,7 +253,7 @@ class Scratchpad {
         );
 
         this.spy.log();
-        this.api.broadcast.broadcastWithCallback(Constants.KEY, op).subscribe();
+        this.api.broadcastApi.broadcastWithCallback(Constants.KEY, [op]).subscribe();
     }
 
     @test "construct with default values"() {
