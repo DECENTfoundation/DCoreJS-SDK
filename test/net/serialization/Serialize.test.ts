@@ -142,10 +142,10 @@ class SerializeTest {
         this.serializer.serialize(op).toHex().should.be.equal(expected);
     }
 
-    @test.skip
+    @test
     public "should serialize remove existing content operation"() {
         // @ts-ignore
-        const expected = "todo";
+        const expected = "200000000000000000002216687474703a2f2f68656c6c6f2e696f2f776f726c6432";
 
         const op = new RemoveContentOperation(
             ChainObject.parse("1.2.34"),
