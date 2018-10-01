@@ -12,7 +12,7 @@ import { ApiGroup } from "../models/ApiGroup";
 import { BaseRequest } from "../models/request/BaseRequest";
 import { RpcResponse } from "../models/response/RpcResponse";
 
-export class RpcEndpoints {
+export class RpcService {
     private baseRequest: RxHttpRequest;
 
     constructor(options: CoreOptions) {

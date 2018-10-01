@@ -1,3 +1,5 @@
+import { Duration } from "moment";
+import { Observable } from "rxjs";
 import { AccountApi } from "./api/AccountApi";
 import { AssetApi } from "./api/AssetApi";
 import { AuthorityApi } from "./api/AuthorityApi";
@@ -12,25 +14,34 @@ import { PurchaseApi } from "./api/PurchaseApi";
 import { SeedersApi } from "./api/SeedersApi";
 import { SubscriptionApi } from "./api/SubscriptionApi";
 import { TransactionApi } from "./api/TransactionApi";
+import { DCoreConstants } from "./DCoreConstants";
 import { DCoreSdk } from "./DCoreSdk";
+import { BaseRequest } from "./net/models/request/BaseRequest";
 
 export class DCoreApi {
-    public account: AccountApi = new AccountApi(this.core);
-    public asset: AssetApi = new AssetApi(this.core);
-    public authority: AuthorityApi = new AuthorityApi();
-    public balance: BalanceApi = new BalanceApi(this.core, this);
-    public block: BlockApi = new BlockApi();
-    public broadcast: BroadcastApi = new BroadcastApi(this.core);
-    public content: ContentApi = new ContentApi(this.core);
-    public general: GeneralApi = new GeneralApi();
-    public history: HistoryApi = new HistoryApi(this.core);
-    public mining: MiningApi = new MiningApi(this.core);
-    public purchase: PurchaseApi = new PurchaseApi(this.core);
-    public seeder: SeedersApi = new SeedersApi();
-    public subscription: SubscriptionApi = new SubscriptionApi();
-    public transaction: TransactionApi = new TransactionApi(this.core);
+
+    public transactionExpiration: Duration = DCoreConstants.EXPIRATION_DEFAULT;
+
+    public accountApi: AccountApi = new AccountApi(this);
+    public assetApi: AssetApi = new AssetApi(this);
+    public authorityApi: AuthorityApi = new AuthorityApi(this);
+    public balanceApi: BalanceApi = new BalanceApi(this);
+    public blockApi: BlockApi = new BlockApi(this);
+    public broadcastApi: BroadcastApi = new BroadcastApi(this, this.core);
+    public contentApi: ContentApi = new ContentApi(this);
+    public generalApi: GeneralApi = new GeneralApi(this);
+    public historyApi: HistoryApi = new HistoryApi(this);
+    public miningApi: MiningApi = new MiningApi(this);
+    public purchaseApi: PurchaseApi = new PurchaseApi(this);
+    public seedersApi: SeedersApi = new SeedersApi(this);
+    public subscriptionApi: SubscriptionApi = new SubscriptionApi(this);
+    public transactionApi: TransactionApi = new TransactionApi(this, this.core);
 
     constructor(private core: DCoreSdk) {
+    }
+
+    public request<T>(request: BaseRequest<T>): Observable<T> {
+        return this.core.request(request);
     }
 
     public disconnect() {

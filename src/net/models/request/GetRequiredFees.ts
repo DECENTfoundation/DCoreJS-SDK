@@ -1,5 +1,5 @@
 import { plainToClass } from "class-transformer";
-import { DCoreSdk } from "../../../DCoreSdk";
+import { DCoreConstants } from "../../../DCoreConstants";
 import { AssetAmount } from "../../../models/AssetAmount";
 import { ChainObject } from "../../../models/ChainObject";
 import { BaseOperation } from "../../../models/operation/BaseOperation";
@@ -9,7 +9,7 @@ import { BaseRequest } from "./BaseRequest";
 export class GetRequiredFees extends BaseRequest<AssetAmount[]> {
     constructor(
         operations: BaseOperation[],
-        assetId: ChainObject = DCoreSdk.DCT_ASSET_ID,
+        assetId: ChainObject = DCoreConstants.DCT_ASSET_ID,
     ) {
         super(
             ApiGroup.Database,

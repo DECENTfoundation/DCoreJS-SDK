@@ -1,6 +1,6 @@
 import { Expose, Transform } from "class-transformer";
 import * as Long from "long";
-import { DCoreSdk } from "../DCoreSdk";
+import { DCoreConstants } from "../DCoreConstants";
 import { assertThrow } from "../utils/Utils";
 import { ChainObject } from "./ChainObject";
 import { ObjectType } from "./ObjectType";
@@ -17,7 +17,7 @@ export class AssetAmount {
     @Expose({ name: "asset_id" })
     public assetId: ChainObject;
 
-    constructor(amount: Long | number | string = Long.ZERO, assetId: ChainObject = DCoreSdk.DCT_ASSET_ID) {
+    constructor(amount: Long | number | string = Long.ZERO, assetId: ChainObject = DCoreConstants.DCT_ASSET_ID) {
         this.amount = Long.fromValue(amount);
         this.assetId = assetId;
 

@@ -1,12 +1,14 @@
 import { Observable } from "rxjs";
-import { DCoreSdk } from "../DCoreSdk";
+import { DCoreApi } from "../DCoreApi";
 import { ChainObject } from "../models/ChainObject";
 import { ObjectType } from "../models/ObjectType";
 import { OperationHistory } from "../models/OperationHistory";
 import { GetAccountHistory } from "../net/models/request/GetAccountHistory";
+import { BaseApi } from "./BaseApi";
 
-export class HistoryApi {
-    constructor(private core: DCoreSdk) {
+export class HistoryApi extends BaseApi {
+    constructor(api: DCoreApi) {
+        super(api);
     }
 
     protected getAccountHistory(
@@ -15,7 +17,7 @@ export class HistoryApi {
         stopId: ChainObject = ObjectType.OperationHistory.genericId(),
         limit: number = 100,
     ): Observable<OperationHistory[]> {
-        return this.core.request(new GetAccountHistory(accountId, stopId, limit, startId));
+        return this.request(new GetAccountHistory(accountId, stopId, limit, startId));
     }
 
 }

@@ -1,5 +1,5 @@
 import { Observable } from "rxjs";
-import { DCoreSdk } from "../DCoreSdk";
+import { DCoreApi } from "../DCoreApi";
 import { Asset } from "../models/Asset";
 import { AssetAmount } from "../models/AssetAmount";
 import { ChainObject } from "../models/ChainObject";
@@ -7,10 +7,12 @@ import { BaseOperation } from "../models/operation/BaseOperation";
 import { GetAssets } from "../net/models/request/GetAssets";
 import { GetRequiredFees } from "../net/models/request/GetRequiredFees";
 import { LookupAssetSymbols } from "../net/models/request/LookupAssetSymbols";
+import { BaseApi } from "./BaseApi";
 
-export class AssetApi {
+export class AssetApi extends BaseApi {
 
-    constructor(private core: DCoreSdk) {
+    constructor(api: DCoreApi) {
+        super(api);
     }
 
     /**
@@ -21,7 +23,7 @@ export class AssetApi {
      * @return list of assets or empty
      */
     public getAssets(assetIds: ChainObject[]): Observable<Asset[]> {
-        return this.core.request(new GetAssets(assetIds));
+        return this.request(new GetAssets(assetIds));
     }
 
     /**
@@ -32,7 +34,7 @@ export class AssetApi {
      * @return list of assets or empty
      */
     public lookupAssets(assetSymbols: string[]): Observable<Asset[]> {
-        return this.core.request(new LookupAssetSymbols(assetSymbols));
+        return this.request(new LookupAssetSymbols(assetSymbols));
     }
 
     /**
@@ -43,6 +45,6 @@ export class AssetApi {
      * @return a list of fee asset amounts
      */
     public getFees(op: BaseOperation[]): Observable<AssetAmount[]> {
-        return this.core.request(new GetRequiredFees(op));
+        return this.request(new GetRequiredFees(op));
     }
 }

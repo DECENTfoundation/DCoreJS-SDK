@@ -16,7 +16,7 @@ import { ChainObject } from "../src/models/ChainObject";
 import { TransferOperation } from "../src/models/operation/TransferOperation";
 import { GetAccountById } from "../src/net/models/request/GetAccountById";
 import { GetAccountByName } from "../src/net/models/request/GetAccountByName";
-import { RpcEndpoints } from "../src/net/rpc/RpcEndpoints";
+import { RpcService } from "../src/net/rpc/RpcService";
 import { RxWebSocket } from "../src/net/ws/RxWebSocket";
 import { Utils } from "../src/utils/Utils";
 import { Constants } from "./Constants";
@@ -110,7 +110,7 @@ class Scratchpad {
     }
 
     @test accountByName() {
-        const api = new RpcEndpoints({ baseUrl: "https://stagesocket.decentgo.com:8090/rpc", timeout: 15000, rejectUnauthorized: false });
+        const api = new RpcService({ baseUrl: "https://stagesocket.decentgo.com:8090/rpc", timeout: 15000, rejectUnauthorized: false });
         api.request(new GetAccountByName("u961279ec8b7ae7bd62f304f7c1c3d345")).subscribe(
             (account) => console.log(account),
             (err) => console.error(err)
@@ -118,7 +118,7 @@ class Scratchpad {
     }
 
     @test accountById() {
-        const api = new RpcEndpoints({ baseUrl: "https://stagesocket.decentgo.com:8090/rpc", timeout: 15000, rejectUnauthorized: false });
+        const api = new RpcService({ baseUrl: "https://stagesocket.decentgo.com:8090/rpc", timeout: 15000, rejectUnauthorized: false });
         return api.request(new GetAccountById([ChainObject.parse("1.2.15")])).subscribe(
             (account) => console.log(account),
             (err) => console.error(err)
@@ -231,8 +231,8 @@ class Scratchpad {
     @test dcoreSdk() {
         // spy.log(/^API_\w+/);
         this.spy.log();
-        this.apiWs.asset.getAssets([ChainObject.parse("1.3.1000")]).subscribe();
-        this.apiRpc.asset.getAssets([ChainObject.parse("1.3.1000")]).subscribe();
+        this.apiWs.assetApi.getAssets([ChainObject.parse("1.3.1000")]).subscribe();
+        this.apiRpc.assetApi.getAssets([ChainObject.parse("1.3.1000")]).subscribe();
     }
 
     @test instanceChecks() {
@@ -253,7 +253,7 @@ class Scratchpad {
         );
 
         this.spy.log();
-        this.api.broadcast.broadcastWithCallback(Constants.KEY, op).subscribe();
+        this.api.broadcastApi.broadcastWithCallback(Constants.KEY, [op]).subscribe();
     }
 
     @test "construct with default values"() {
