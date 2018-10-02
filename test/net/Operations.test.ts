@@ -76,7 +76,7 @@ class OperationsTest {
             "http://hello.world",
         );
 
-        this.api.broadcast.broadcastWithCallback(Constants.KEY, op)
+        this.api.broadcastApi.broadcastWithCallback(Constants.KEY, [op])
             .subscribe((value) => value.should.be.instanceOf(TransactionConfirmation), (error) => done(error), () => done());
     }
 

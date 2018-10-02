@@ -78,7 +78,7 @@ export class AddOrUpdateContentOperation extends BaseOperation {
         this.price = price;
         this.expiration = expiration;
         this.synopsis = synopsis;
-        this.hash = Utils.Base16.encode(Utils.ripemd160(new Buffer(uri)));
+        this.hash = Utils.ripemd160(new Buffer(uri)).toString("hex");
         this.fee = fee;
     }
 }

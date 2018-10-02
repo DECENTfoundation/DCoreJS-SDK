@@ -23,7 +23,6 @@ import { Publishing } from "../../models/Publishing";
 import { RegionalPrice } from "../../models/RegionalPrice";
 import { Transaction } from "../../models/Transaction";
 import { VoteId } from "../../models/VoteId";
-import { Utils } from "../../utils/Utils";
 
 type Adapter<T> = (buffer: ByteBuffer, obj: T) => void;
 
@@ -131,8 +130,8 @@ export class Serializer {
         } else {
             this.append(buffer, obj.to);
         }
-        buffer.writeUint64(obj.nonce);
-        this.append(buffer, Utils.Base16.decode(obj.message));
+        this.append(buffer, obj.nonce);
+        this.append(buffer, Buffer.from(obj.message, "hex"));
     }
 
     // tslint:disable-next-line:no-bitwise
@@ -249,7 +248,7 @@ export class Serializer {
         this.append(buffer, obj.uri);
         buffer.writeUint32(obj.quorum);
         this.append(buffer, obj.price);
-        buffer.append(Uint8Array.of(...Utils.Base16.decode(obj.hash)));
+        buffer.append(Buffer.from(obj.hash, "hex"));
         this.append(buffer, obj.seeders);
         this.append(buffer, obj.keyParts);
         this.momentAdapter(buffer, obj.expiration);

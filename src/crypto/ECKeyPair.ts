@@ -1,6 +1,9 @@
+import * as crypto from "crypto";
 import * as _ from "lodash/fp";
-import { publicKeyCreate, sign } from "secp256k1";
+import * as Long from "long";
+import { privateKeyVerify, publicKeyCreate, publicKeyTweakMul, sign } from "secp256k1";
 import { assertThrow, Utils } from "../utils/Utils";
+import { Address } from "./Address";
 
 export class ECKeyPair {
 
@@ -17,6 +20,14 @@ export class ECKeyPair {
         // check compressed byte and drop if true
         data = data.length === 33 && data[32] === 1 ? data.slice(0, data.length - 1) : data;
         return new ECKeyPair(data);
+    }
+
+    public static generate(): ECKeyPair {
+        let random: Buffer;
+        do {
+            random = crypto.randomBytes(32);
+        } while (!privateKeyVerify(random));
+        return new ECKeyPair(random);
     }
 
     private static VERSION: number = 0x80;
@@ -45,7 +56,12 @@ export class ECKeyPair {
             (sigData[33] & 0x80) !== 0) {
             return;
         } else {
-            return Utils.Base16.encode(sigData);
+            return sigData.toString("hex");
         }
+    }
+
+    public secret(recipient: Address, nonce: Long): Buffer {
+        const key = publicKeyTweakMul(recipient.publicKey, this.privateKey, true);
+        return Utils.hash512(new Buffer(nonce.toString() + Utils.hash512(key.slice(1)).toString("hex")));
     }
 }

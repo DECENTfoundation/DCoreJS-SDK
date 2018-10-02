@@ -41,7 +41,7 @@ class SerializeTest {
             ChainObject.parse("1.2.30"),
             ChainObject.parse("1.2.31"),
             new AssetAmount(10000000),
-            Memo.create("hello memo"),
+            Memo.createPublic("hello memo"),
             new AssetAmount(5000),
         );
 
