@@ -2,7 +2,6 @@ import { classToPlain, Exclude, Expose, Transform } from "class-transformer";
 import { Moment } from "moment";
 import { ECKeyPair } from "../crypto/ECKeyPair";
 import { Serializer } from "../net/serialization/Serializer";
-import { Utils } from "../utils/Utils";
 import { BlockData } from "./BlockData";
 import { BaseOperation } from "./operation/BaseOperation";
 
@@ -36,7 +35,7 @@ export class Transaction {
     constructor(blockData: BlockData, ops: BaseOperation[], chainId: string) {
         this.blockData = blockData;
         this.operations = ops;
-        this.chainId = new Buffer(Utils.Base16.decode(chainId));
+        this.chainId = Buffer.from(chainId, "hex");
         this.refBlockNum = this.blockData.refBlockNum;
         this.refBlockPrefix = this.blockData.refBlockPrefix;
         this.expiration = this.blockData.expiration;
