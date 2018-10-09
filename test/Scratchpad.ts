@@ -97,15 +97,15 @@ class Scratchpad {
             });
 
         const aa = plainToClass(Authority, {
-                "weight_threshold": 1,
-                "account_auths": [],
-                "key_auths": [
-                    [
-                        "DCT6MA5TQQ6UbMyMaLPmPXE2Syh5G3ZVhv5SbFedqLPqdFChSeqTz",
-                        1
-                    ]
+            "weight_threshold": 1,
+            "account_auths": [],
+            "key_auths": [
+                [
+                    "DCT6MA5TQQ6UbMyMaLPmPXE2Syh5G3ZVhv5SbFedqLPqdFChSeqTz",
+                    1
                 ]
-            }
+            ]
+        }
         );
 
         account.should.be.instanceOf(Account);
@@ -177,7 +177,7 @@ class Scratchpad {
         spy.log(/^RxWebSocket_make_\w+/);
 
         rxWs.request(new GetAccountByName("u961279ec8b7ae7bd62f304f7c1c3d345"))
-        // .pipe(mergeMap(() => rxWs.request(new GetAccountById(ChainObject.parse("1.2.15")))))
+            // .pipe(mergeMap(() => rxWs.request(new GetAccountById(ChainObject.parse("1.2.15")))))
             .subscribe();
 
         /*
@@ -208,7 +208,6 @@ class Scratchpad {
         const hello = "hello world";
         const bytes = new Buffer(hello);
         console.log(bytes.toString("hex"));
-        console.log(Utils.Base16.encode(bytes));
     }
 
     @test maxNumber() {
@@ -278,7 +277,7 @@ class Scratchpad {
     @test "test nonce"() {
         const entropy = createHash("sha224").update(ECKeyPair.generate().privateKey).digest();
         const time = Buffer.of(...Long.fromValue(moment().valueOf()).toBytesLE());
-        const bytes = Buffer.concat([time.slice(0, 7), entropy.slice(0, 1), ]);
+        const bytes = Buffer.concat([time.slice(0, 7), entropy.slice(0, 1),]);
         console.log(bytes)
 
         const num = Long.fromBytesLE([...bytes], true);

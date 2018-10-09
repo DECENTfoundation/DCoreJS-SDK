@@ -1,9 +1,10 @@
-import * as crypto from "crypto";
+import * as Crypto from "crypto";
 import * as _ from "lodash/fp";
 import * as Long from "long";
 import { privateKeyVerify, publicKeyCreate, publicKeyTweakMul, sign } from "secp256k1";
 import { assertThrow, Utils } from "../utils/Utils";
 import { Address } from "./Address";
+import { Passphrase } from "./Passphrase";
 
 export class ECKeyPair {
 
@@ -25,9 +26,15 @@ export class ECKeyPair {
     public static generate(): ECKeyPair {
         let random: Buffer;
         do {
-            random = crypto.randomBytes(32);
+            random = Crypto.randomBytes(32);
         } while (!privateKeyVerify(random));
         return new ECKeyPair(random);
+    }
+
+    public static generateFromPhrase(phrase: Passphrase | string, sequence: number = 0): ECKeyPair {
+        return new ECKeyPair(
+            Buffer.concat([Buffer.from([ECKeyPair.VERSION]), Utils.hash256(Utils.hash512(Buffer.from(`${phrase.toString()} ${sequence}`)))]),
+        );
     }
 
     private static VERSION: number = 0x80;
