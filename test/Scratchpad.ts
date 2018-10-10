@@ -21,7 +21,6 @@ import { GetAccountById } from "../src/net/models/request/GetAccountById";
 import { GetAccountByName } from "../src/net/models/request/GetAccountByName";
 import { RpcService } from "../src/net/rpc/RpcService";
 import { RxWebSocket } from "../src/net/ws/RxWebSocket";
-import { Utils } from "../src/utils/Utils";
 import { Constants } from "./Constants";
 import WebSocket = require("isomorphic-ws");
 
@@ -44,6 +43,14 @@ class Scratchpad {
         () => new WebSocket(Constants.STAGE_WS, { rejectUnauthorized: false }),
     );
     private spy = create();
+
+    @test.only "get account balance"() {
+
+        this.apiRpc.balanceApi.getBalance(ChainObject.parse("1.2.1135"), ["DCT"]).subscribe(
+            (b) => console.log(b),
+            (err) => console.error(err)
+        );
+    }
 
     @test "parsing account"() {
         const account = plainToClass(Account,
@@ -206,7 +213,7 @@ class Scratchpad {
 
     @test base16() {
         const hello = "hello world";
-        const bytes = new Buffer(hello);
+        const bytes = Buffer.from(hello);
         console.log(bytes.toString("hex"));
     }
 

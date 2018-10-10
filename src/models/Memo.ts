@@ -11,7 +11,7 @@ export class Memo {
     }
 
     public static createEncrypted(message: string, keyPair: ECKeyPair, recipient: Address, nonce: Long = Utils.generateNonce()): Memo {
-        const msgBytes = new Buffer(message);
+        const msgBytes = Buffer.from(message);
         const withChecksum = Buffer.concat([Utils.hash256(msgBytes).slice(0, 4), msgBytes]);
         const secret = keyPair.secret(recipient, nonce);
         const cipherText = Utils.encrypt(secret, withChecksum);

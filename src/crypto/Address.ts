@@ -10,7 +10,7 @@ export class Address {
     private static PREFIX: string = "DCT";
 
     private static decode(address: string): Buffer {
-        const decoded = new Buffer(Utils.Base58.decode(address.slice(3, address.length)));
+        const decoded = Buffer.from(Utils.Base58.decode(address.slice(3, address.length)));
         const key = decoded.slice(0, decoded.length - 4);
         const cks = decoded.slice(decoded.length - 4, decoded.length);
         const cksActual = Utils.ripemd160(key).slice(0, 4);
