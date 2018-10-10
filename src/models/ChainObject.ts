@@ -31,5 +31,7 @@ export class ChainObject {
         }
     }
 
-    public eq = (other: ChainObject): boolean => this.objectId === other.objectId;
+    public eq(other: ChainObject): boolean {
+        return this.objectId === other.objectId;
+    }
 }
