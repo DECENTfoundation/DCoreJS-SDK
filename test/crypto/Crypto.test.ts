@@ -5,6 +5,7 @@ import { suite, test } from "mocha-typescript";
 import "reflect-metadata";
 import { Address } from "../../src/crypto/Address";
 import { ECKeyPair } from "../../src/crypto/ECKeyPair";
+import { Passphrase } from "../../src/crypto/Passphrase";
 import { Memo } from "../../src/models/Memo";
 import { Constants } from "../Constants";
 
@@ -13,6 +14,12 @@ chai.should();
 @suite("crypto tests")
 // @ts-ignore
 class CryptoTest {
+
+    @test
+    public "should generate credentials"() {
+        const phrase = Passphrase.generate();
+        chai.expect(phrase.words).to.have.lengthOf(16);
+    }
 
     @test
     public "should parse private key in wif format and generate valid public address"() {
