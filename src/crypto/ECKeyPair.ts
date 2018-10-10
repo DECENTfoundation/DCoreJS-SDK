@@ -5,6 +5,7 @@ import { privateKeyVerify, publicKeyCreate, publicKeyTweakMul, sign } from "secp
 import { assertThrow, Utils } from "../utils/Utils";
 import { Address } from "./Address";
 import { Passphrase } from "./Passphrase";
+import { Wif } from "./Wif";
 
 export class ECKeyPair {
 
@@ -56,6 +57,10 @@ export class ECKeyPair {
 
     public get publicAddress(): Address {
         return new Address(this.publicKey);
+    }
+
+    public get privateWif(): Wif {
+        return new Wif(this.privateKey, ECKeyPair.VERSION);
     }
 
     public sign(data: Buffer): string | undefined {
