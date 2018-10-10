@@ -3,7 +3,6 @@ import * as Crypto from "crypto";
 import { createHash } from "crypto";
 import * as Long from "long";
 import * as moment from "moment";
-import { ECKeyPair } from "../crypto/ECKeyPair";
 
 export function assertThrow(value: boolean, lazyMessage: () => string) {
     if (!value) {
@@ -15,11 +14,24 @@ export class Utils {
 
     public static Base58 = BaseX("123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz");
 
-    public static generateNonce(): Long {
-        const entropy = createHash("sha224").update(ECKeyPair.generate().privateKey).digest();
-        const time = Buffer.of(...Long.fromValue(moment().valueOf()).toBytesLE());
-        const bytes = Buffer.concat([time.slice(0, 7), entropy.slice(0, 1)]);
-        return Long.fromBytesLE([...bytes], true);
+    public static generateNonce(power: number = 250): Long {
+        return Long.fromBytes([...Utils.generateEntropy(power)], true);
+    }
+
+    public static generateEntropy(power: number = 250): Buffer {
+        const input = Buffer.from(moment().toString());
+        let entropy = Buffer.concat([
+            Utils.hash256(input),
+            Buffer.from(input.toString("binary")),
+            Buffer.from(moment().toString()),
+        ]);
+
+        const start = moment().valueOf();
+        while ((moment().valueOf() - start) < power) {
+            entropy = Utils.hash256(entropy);
+        }
+
+        return Utils.hash256(Buffer.concat([entropy, Crypto.randomBytes(32)]));
     }
 
     public static hash256(data: Buffer): Buffer {
