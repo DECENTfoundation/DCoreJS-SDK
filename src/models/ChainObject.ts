@@ -30,4 +30,6 @@ export class ChainObject {
             this.objectId = this.objectType.space + "." + this.objectType.type + "." + this.instance;
         }
     }
+
+    public eq = (other: ChainObject): boolean => this.objectId === other.objectId;
 }

@@ -57,7 +57,7 @@ export class BalanceApi extends BaseApi {
     }
 
     private createTuple(assets: Asset[], balances: AssetAmount[]): AssetWithAmount[] {
-        return assets.map((asset) => [asset, balances.find((amount) => amount.assetId === asset.id).amount] as AssetWithAmount);
+        return assets.map((asset) => [asset, balances.find((amount) => amount.assetId.eq(asset.id)).amount] as AssetWithAmount);
     }
 
     private getBalanceInternal(account: ChainObject | string, assets?: ChainObject[]): Observable<AssetAmount[]> {
