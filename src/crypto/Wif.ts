@@ -1,4 +1,3 @@
-import * as _ from "lodash/fp";
 import { Utils } from "../utils/Utils";
 
 export class Wif {
