@@ -2,10 +2,13 @@
 import * as ByteBuffer from "bytebuffer";
 import * as chai from "chai";
 import { plainToClass } from "class-transformer";
+import { createHash } from "crypto";
 import * as Long from "long";
 import { suite, test, timeout } from "mocha-typescript";
+import * as moment from "moment";
 import "reflect-metadata";
 import { create } from "rxjs-spy";
+import { ecdhUnsafe, publicKeyTweakMul } from "secp256k1";
 import { Address } from "../src/crypto/Address";
 import { ECKeyPair } from "../src/crypto/ECKeyPair";
 import { DCoreSdk } from "../src/DCoreSdk";
@@ -94,15 +97,15 @@ class Scratchpad {
             });
 
         const aa = plainToClass(Authority, {
-                "weight_threshold": 1,
-                "account_auths": [],
-                "key_auths": [
-                    [
-                        "DCT6MA5TQQ6UbMyMaLPmPXE2Syh5G3ZVhv5SbFedqLPqdFChSeqTz",
-                        1
-                    ]
+            "weight_threshold": 1,
+            "account_auths": [],
+            "key_auths": [
+                [
+                    "DCT6MA5TQQ6UbMyMaLPmPXE2Syh5G3ZVhv5SbFedqLPqdFChSeqTz",
+                    1
                 ]
-            }
+            ]
+        }
         );
 
         account.should.be.instanceOf(Account);
@@ -174,7 +177,7 @@ class Scratchpad {
         spy.log(/^RxWebSocket_make_\w+/);
 
         rxWs.request(new GetAccountByName("u961279ec8b7ae7bd62f304f7c1c3d345"))
-        // .pipe(mergeMap(() => rxWs.request(new GetAccountById(ChainObject.parse("1.2.15")))))
+            // .pipe(mergeMap(() => rxWs.request(new GetAccountById(ChainObject.parse("1.2.15")))))
             .subscribe();
 
         /*
@@ -205,7 +208,6 @@ class Scratchpad {
         const hello = "hello world";
         const bytes = new Buffer(hello);
         console.log(bytes.toString("hex"));
-        console.log(Utils.Base16.encode(bytes));
     }
 
     @test maxNumber() {
@@ -260,13 +262,39 @@ class Scratchpad {
         class Foo {
             public def: number = 10;
             public cons: number;
+
             constructor(value: number) {
                 this.cons = value;
             }
         }
 
         const foo = new Foo(5);
-        foo.cons.should.be.equal(5)
-        foo.def.should.be.equal(10)
+        foo.cons.should.be.equal(5);
+        foo.def.should.be.equal(10);
+    }
+
+
+    @test "test nonce"() {
+        const entropy = createHash("sha224").update(ECKeyPair.generate().privateKey).digest();
+        const time = Buffer.of(...Long.fromValue(moment().valueOf()).toBytesLE());
+        const bytes = Buffer.concat([time.slice(0, 7), entropy.slice(0, 1),]);
+        console.log(bytes)
+
+        const num = Long.fromBytesLE([...bytes], true);
+        const rev = Long.fromString(num.toString(), true);
+        console.log(num.toString())
+        console.log(rev.toString())
+        console.log(Buffer.of(...rev.toBytesLE()))
+    }
+
+    @test "shared secret"() {
+        const keyPair = ECKeyPair.parseWif("5Jd7zdvxXYNdUfnEXt5XokrE3zwJSs734yQ36a1YaqioRTGGLtn");
+        const address = Address.parse("DCT6bVmimtYSvWQtwdrkVVQGHkVsTJZVKtBiUqf4YmJnrJPnk89QP");
+        console.log(ecdhUnsafe(address.publicKey, keyPair.privateKey, true).toString("hex"));
+
+        console.log(publicKeyTweakMul(address.publicKey, keyPair.privateKey))
+
     }
 }
+// 02e4d03d9995ebb1b61b11e5e8631a70cdfdd2691df320ad3187751b256cccf808
+// e4d03d9995ebb1b61b11e5e8631a70cdfdd2691df320ad3187751b256cccf808

@@ -1,6 +1,10 @@
+import * as Crypto from "crypto";
 import * as _ from "lodash/fp";
-import { publicKeyCreate, sign } from "secp256k1";
+import * as Long from "long";
+import { privateKeyVerify, publicKeyCreate, publicKeyTweakMul, sign } from "secp256k1";
 import { assertThrow, Utils } from "../utils/Utils";
+import { Address } from "./Address";
+import { Passphrase } from "./Passphrase";
 
 export class ECKeyPair {
 
@@ -19,6 +23,22 @@ export class ECKeyPair {
         return new ECKeyPair(data);
     }
 
+    public static generate(): ECKeyPair {
+        let random: Buffer;
+        do {
+            random = Crypto.randomBytes(32);
+        } while (!privateKeyVerify(random));
+        return new ECKeyPair(random);
+    }
+
+    public static generateFromPhrase(phrase: Passphrase | string, sequence: number = 0): ECKeyPair {
+        let random: Buffer;
+        do {
+            random = Utils.hash256(Utils.hash512(Buffer.from(`${phrase.toString()} ${sequence}`)));
+        } while (!privateKeyVerify(random));
+        return new ECKeyPair(random);
+    }
+
     private static VERSION: number = 0x80;
     private static COMPRESSED: number = 4;
     private static COMPACT: number = 27;
@@ -34,6 +54,10 @@ export class ECKeyPair {
         this.publicKey = publicKeyCreate(this.privateKey, true);
     }
 
+    public get publicAddress(): Address {
+        return new Address(this.publicKey);
+    }
+
     public sign(data: Buffer): string | undefined {
         const sig = sign(Utils.hash256(data), this.privateKey);
         const head = Buffer.alloc(1, sig.recovery + ECKeyPair.COMPRESSED + ECKeyPair.COMPACT);
@@ -45,7 +69,12 @@ export class ECKeyPair {
             (sigData[33] & 0x80) !== 0) {
             return;
         } else {
-            return Utils.Base16.encode(sigData);
+            return sigData.toString("hex");
         }
+    }
+
+    public secret(recipient: Address, nonce: Long): Buffer {
+        const key = publicKeyTweakMul(recipient.publicKey, this.privateKey, true);
+        return Utils.hash512(new Buffer(nonce.toString() + Utils.hash512(key.slice(1)).toString("hex")));
     }
 }
