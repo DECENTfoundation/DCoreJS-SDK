@@ -10,7 +10,7 @@ import { Wif } from "./Wif";
 export class ECKeyPair {
 
     public static parseWif(base58: string): ECKeyPair {
-        let data = new Buffer(Utils.Base58.decode(base58));
+        let data = Buffer.from(Utils.Base58.decode(base58));
         assertThrow(data.length > 4, () => "input too short");
         const checksum = data.slice(data.length - 4, data.length);
         data = data.slice(0, data.length - 4);
@@ -80,6 +80,6 @@ export class ECKeyPair {
 
     public secret(recipient: Address, nonce: Long): Buffer {
         const key = publicKeyTweakMul(recipient.publicKey, this.privateKey, true);
-        return Utils.hash512(new Buffer(nonce.toString() + Utils.hash512(key.slice(1)).toString("hex")));
+        return Utils.hash512(Buffer.from(nonce.toString() + Utils.hash512(key.slice(1)).toString("hex")));
     }
 }
