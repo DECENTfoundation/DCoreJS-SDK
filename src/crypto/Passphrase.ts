@@ -5,7 +5,7 @@ import { SeedDictionary } from "./dictionaries/SeedDictionary";
 export class Passphrase {
 
     public static generate(count: number = Passphrase.WORD_COUNT): Passphrase {
-        return new Passphrase(Utils.generateEntropy(), SeedDictionary.default, count);
+        return new Passphrase(Buffer.from(Utils.generateNonce().toBytesLE()), SeedDictionary.default, count);
     }
 
     private static WORD_COUNT = 16;

@@ -22,22 +22,6 @@ export class Utils {
         return Long.fromBytesLE([...bytes], true);
     }
 
-    public static generateEntropy(power: number = 250): Buffer {
-        const input = Buffer.from(moment().toString());
-        let entropy = Buffer.concat([
-            Utils.hash256(input),
-            Buffer.from(input.toString("binary")),
-            Buffer.from(moment().toString()),
-        ]);
-
-        const start = moment().valueOf();
-        while ((moment().valueOf() - start) < power) {
-            entropy = Utils.hash256(entropy);
-        }
-
-        return Utils.hash256(Buffer.concat([entropy, Crypto.randomBytes(32)]));
-    }
-
     public static hash256(data: Buffer): Buffer {
         return createHash("sha256").update(data).digest();
     }

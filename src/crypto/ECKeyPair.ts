@@ -32,9 +32,11 @@ export class ECKeyPair {
     }
 
     public static generateFromPhrase(phrase: Passphrase | string, sequence: number = 0): ECKeyPair {
-        return new ECKeyPair(
-            Buffer.concat([Buffer.from([ECKeyPair.VERSION]), Utils.hash256(Utils.hash512(Buffer.from(`${phrase.toString()} ${sequence}`)))]),
-        );
+        let random: Buffer;
+        do {
+            random = Utils.hash256(Utils.hash512(Buffer.from(`${phrase.toString()} ${sequence}`)));
+        } while (!privateKeyVerify(random));
+        return new ECKeyPair(random);
     }
 
     private static VERSION: number = 0x80;
@@ -50,6 +52,10 @@ export class ECKeyPair {
     private constructor(privateKey: Buffer) {
         this.privateKey = privateKey;
         this.publicKey = publicKeyCreate(this.privateKey, true);
+    }
+
+    public get publicAddress(): Address {
+        return new Address(this.publicKey);
     }
 
     public sign(data: Buffer): string | undefined {
