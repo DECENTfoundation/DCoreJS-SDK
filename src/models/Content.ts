@@ -10,9 +10,9 @@ export class Content {
     @Expose({ name: "id" })
     public id: ChainObject;
 
-    @Transform((value: string[]) => value.map((id) => ChainObject.parse(id)), { toClassOnly: true })
+    @Transform((value: Array<[string, number]>) => value.map(([id, weight]) => [ChainObject.parse(id), weight]), { toClassOnly: true })
     @Expose({ name: "co_authors" })
-    public coauthors: ChainObject[];
+    public coAuthors: Array<[ChainObject, number]>;
 
     @Type(() => Date)
     @Expose({ name: "expiration" })

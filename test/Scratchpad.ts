@@ -44,9 +44,17 @@ class Scratchpad {
     );
     private spy = create();
 
-    @test.only "get account balance"() {
+    @test "get account balance"() {
 
         this.apiRpc.balanceApi.getBalance(ChainObject.parse("1.2.1135"), ["DCT"]).subscribe(
+            (b) => console.log(b),
+            (err) => console.error(err)
+        );
+    }
+
+    @test "get content by uri"() {
+
+        this.apiRpc.contentApi.getContent("https://alax.io/1/1/tv.tamago.tamago").subscribe(
             (b) => console.log(b),
             (err) => console.error(err)
         );
