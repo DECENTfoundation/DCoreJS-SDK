@@ -1,4 +1,8 @@
 import { Expose, Transform, Type } from "class-transformer";
+
+import { assertThrow } from "../utils";
+
+import { AssetAmount } from "./AssetAmount";
 import { AssetOptions } from "./AssetOptions";
 import { ChainObject } from "./ChainObject";
 
@@ -29,16 +33,17 @@ export class Asset {
     @Expose({ name: "dynamic_asset_data_id" })
     public dynamicAssetDataId: ChainObject;
 
-    // create DCT
-    /*
-        constructor(id: ChainObject) {
-            this.id = id;
-            this.symbol = "DCT";
-            this.precision = 8;
-            this.issuer = ChainObject.parse("1.2.1");
-            this.description = "";
-            this.options = new AssetOptions(id);
-            this.dynamicAssetDataId = ChainObject.parse("2.3.0");
+    public convert(assetAmount: AssetAmount): AssetAmount {
+        if (this.options.exchangeRate.base.assetId.eq(assetAmount.assetId)) {
+            const amount = this.options.exchangeRate.quote.amount.div(this.options.exchangeRate.base.amount).mul(assetAmount.amount);
+            return new AssetAmount(amount, this.id);
         }
-    */
+
+        if (this.options.exchangeRate.quote.assetId.eq(assetAmount.assetId)) {
+            const amount = this.options.exchangeRate.base.amount.div(this.options.exchangeRate.quote.amount).mul(assetAmount.amount);
+            return new AssetAmount(amount, this.id);
+        }
+
+        assertThrow(false, () => `cannot convert ${assetAmount.assetId} with ${this.symbol}:${this.id}`);
+    }
 }
