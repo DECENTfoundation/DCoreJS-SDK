@@ -21,7 +21,7 @@ export class BalanceApi extends BaseApi {
     /**
      * get account balance
      *
-     * @param account account name, or object id of the account (1.2.*) or account public key
+     * @param account account name, or object id of the account (1.2.*) or address with public key
      * @param assets symbols of the asset eg. DCT
      * @return list of amounts for different assets
      */
@@ -30,14 +30,14 @@ export class BalanceApi extends BaseApi {
     /**
      * get account balance
      *
-     * @param account account name, or object id of the account (1.2.*) or account public key
+     * @param account account name, or object id of the account (1.2.*) or address with public key
      * @param assets object ids of the asset (1.3.*)
      * @return list of amounts for different assets
      */
     public getBalance(account: AccountRef, assets?: ChainObject[]): Observable<AssetAmount[]>;
     public getBalance(account: AccountRef, assets?: string[] | ChainObject[]): Observable<AssetAmount[]> | Observable<AssetWithAmount[]> {
         let balance: (ids?: ChainObject[]) => Observable<AssetAmount[]>;
-        if (ObjectCheckOf<Address>(account, "publicKey")) {
+        if (typeof account !== "string" && ObjectCheckOf<Address>(account, "publicKey")) {
             balance = (ids) => this.api.accountApi.getAccountIdsByKey([account]).pipe(
                 map((list) => list[0][0]),
                 concatMap((accountId) => this.getBalanceInternal(accountId, ids)),
