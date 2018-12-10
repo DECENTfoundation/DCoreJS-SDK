@@ -52,6 +52,14 @@ class Scratchpad {
         );
     }
 
+    @test.skip "get account balance by name"() {
+
+        this.apiRpc.balanceApi.getBalance("u961279ec8b7ae7bd62f304f7c1c3d345", ["DCT"]).subscribe(
+            (b) => console.log(b),
+            (err) => console.error(err)
+        );
+    }
+
     @test "get content by uri"() {
 
         this.apiRpc.contentApi.getContent("https://alax.io/1/1/tv.tamago.tamago").subscribe(
