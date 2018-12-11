@@ -12,7 +12,7 @@ export class HistoryApi extends BaseApi {
         super(api);
     }
 
-    protected getAccountHistory(
+    public getAccountHistory(
         accountId: ChainObject,
         startId: ChainObject = ObjectType.OperationHistory.genericId(),
         stopId: ChainObject = ObjectType.OperationHistory.genericId(),
@@ -21,7 +21,7 @@ export class HistoryApi extends BaseApi {
         return this.request(new GetAccountHistory(accountId, stopId, limit, startId));
     }
 
-    protected getRelativeAccountHistory(
+    public getRelativeAccountHistory(
         accountId: ChainObject,
         startId: number = 0,
         stopId: number = 0,
