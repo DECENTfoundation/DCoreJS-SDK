@@ -17,8 +17,8 @@ import { DynamicGlobalProperties } from "../../../src/models/DynamicGlobalProper
 import { NotFoundError } from "../../../src/models/error/NotFoundError";
 import { Miner } from "../../../src/models/Miner";
 import { EmptyOperation } from "../../../src/models/operation/EmptyOperation";
-import { OperationHistory } from "../../../src/models/OperationHistory";
 import { OperationType } from "../../../src/models/operation/OperationType";
+import { OperationHistory } from "../../../src/models/OperationHistory";
 import { ProcessedTransaction } from "../../../src/models/ProcessedTransaction";
 import { Purchase } from "../../../src/models/Purchase";
 import { TransactionDetail } from "../../../src/models/TransactionDetail";
@@ -36,6 +36,7 @@ import { GetDynamicGlobalProps } from "../../../src/net/models/request/GetDynami
 import { GetKeyReferences } from "../../../src/net/models/request/GetKeyReferences";
 import { GetMiners } from "../../../src/net/models/request/GetMiners";
 import { GetRecentTransactionById } from "../../../src/net/models/request/GetRecentTransactionById";
+import { GetRelativeAccountHistory } from "../../../src/net/models/request/GetRelativeAccountHistory";
 import { GetRequiredFees } from "../../../src/net/models/request/GetRequiredFees";
 import { GetTransaction } from "../../../src/net/models/request/GetTransaction";
 import { Login } from "../../../src/net/models/request/Login";
@@ -94,6 +95,12 @@ class WsRequestTest {
     @test
     public "should return account history by name"(done: (arg?: any) => void) {
         this.rxWs.request(new GetAccountHistory(ChainObject.parse("1.2.35"), ChainObject.parse("1.7.35")))
+            .subscribe((value) => value.should.all.instanceOf(OperationHistory), (error) => done(error), () => done());
+    }
+
+    @test
+    public "should return account relative history"(done: (arg?: any) => void) {
+        this.rxWs.request(new GetRelativeAccountHistory(ChainObject.parse("1.2.35"), 10, 20))
             .subscribe((value) => value.should.all.instanceOf(OperationHistory), (error) => done(error), () => done());
     }
 
