@@ -35,6 +35,7 @@ import { GetDynamicGlobalProps } from "../../../src/net/models/request/GetDynami
 import { GetKeyReferences } from "../../../src/net/models/request/GetKeyReferences";
 import { GetMiners } from "../../../src/net/models/request/GetMiners";
 import { GetRecentTransactionById } from "../../../src/net/models/request/GetRecentTransactionById";
+import { GetRelativeAccountHistory } from "../../../src/net/models/request/GetRelativeAccountHistory";
 import { GetRequiredFees } from "../../../src/net/models/request/GetRequiredFees";
 import { GetTransaction } from "../../../src/net/models/request/GetTransaction";
 import { Login } from "../../../src/net/models/request/Login";
@@ -92,6 +93,15 @@ class HttpRequestTest {
     @test
     public "should return account history by name"(done: (arg?: any) => void) {
         this.rpc.request(new GetAccountHistory(ChainObject.parse("1.2.35"), ChainObject.parse("1.7.35")))
+            .subscribe(undefined, (error) => {
+                error.should.be.instanceOf(ApiAccessError);
+                done();
+            }, () => done());
+    }
+
+    @test
+    public "should return account relative history"(done: (arg?: any) => void) {
+        this.rpc.request(new GetRelativeAccountHistory(ChainObject.parse("1.2.35"), 10, 20))
             .subscribe(undefined, (error) => {
                 error.should.be.instanceOf(ApiAccessError);
                 done();
