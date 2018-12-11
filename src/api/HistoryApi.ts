@@ -4,6 +4,7 @@ import { ChainObject } from "../models/ChainObject";
 import { ObjectType } from "../models/ObjectType";
 import { OperationHistory } from "../models/OperationHistory";
 import { GetAccountHistory } from "../net/models/request/GetAccountHistory";
+import { GetRelativeAccountHistory } from "../net/models/request/GetRelativeAccountHistory";
 import { BaseApi } from "./BaseApi";
 
 export class HistoryApi extends BaseApi {
@@ -18,6 +19,15 @@ export class HistoryApi extends BaseApi {
         limit: number = 100,
     ): Observable<OperationHistory[]> {
         return this.request(new GetAccountHistory(accountId, stopId, limit, startId));
+    }
+
+    protected getRelativeAccountHistory(
+        accountId: ChainObject,
+        startId: number = 0,
+        stopId: number = 0,
+        limit: number = 100,
+    ): Observable<OperationHistory[]> {
+        return this.request(new GetRelativeAccountHistory(accountId, stopId, limit, startId));
     }
 
 }
