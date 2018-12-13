@@ -6,6 +6,7 @@ import "reflect-metadata";
 import { create } from "rxjs-spy";
 import { Spy } from "rxjs-spy/spy-interface";
 import { Address } from "../../../src/crypto/Address";
+import { OperationHistory } from "../../../src/models";
 import { Account } from "../../../src/models/Account";
 import { AccountNameId } from "../../../src/models/AccountNameId";
 import { Asset } from "../../../src/models/Asset";
@@ -219,6 +220,12 @@ class HttpRequestTest {
     public "should return history by search"(done: (arg?: any) => void) {
         this.rpc.request(new SearchAccountHistory(ChainObject.parse("1.2.35")))
             .subscribe((value) => value.should.all.be.instanceOf(TransactionDetail), (error) => done(error), () => done());
+    }
+
+    @test
+    public "should return account history"(done: (arg?: any) => void) {
+        this.rpc.request(new GetAccountHistory(ChainObject.parse("1.2.35")))
+            .subscribe((value) => value.should.all.be.instanceOf(OperationHistory), (error) => done(error), () => done());
     }
 
     @test
