@@ -21,6 +21,7 @@ import { EmptyOperation } from "../../../src/models/operation/EmptyOperation";
 import { OperationType } from "../../../src/models/operation/OperationType";
 import { ProcessedTransaction } from "../../../src/models/ProcessedTransaction";
 import { Purchase } from "../../../src/models/Purchase";
+import { Statistics } from "../../../src/models/Statistics";
 import { TransactionDetail } from "../../../src/models/TransactionDetail";
 import { ApiGroup } from "../../../src/net/models/ApiGroup";
 import { GetAccountBalances } from "../../../src/net/models/request/GetAccountBalances";
@@ -38,6 +39,7 @@ import { GetMiners } from "../../../src/net/models/request/GetMiners";
 import { GetRecentTransactionById } from "../../../src/net/models/request/GetRecentTransactionById";
 import { GetRelativeAccountHistory } from "../../../src/net/models/request/GetRelativeAccountHistory";
 import { GetRequiredFees } from "../../../src/net/models/request/GetRequiredFees";
+import { GetStatisticsById } from "../../../src/net/models/request/GetStatisticsById";
 import { GetTransaction } from "../../../src/net/models/request/GetTransaction";
 import { Login } from "../../../src/net/models/request/Login";
 import { LookupAccounts } from "../../../src/net/models/request/LookupAccounts";
@@ -83,6 +85,12 @@ class HttpRequestTest {
     public "should return account by id"(done: (arg?: any) => void) {
         this.rpc.request(new GetAccountById([ChainObject.parse("1.2.35")]))
             .subscribe((value) => value.should.include.one.instanceOf(Account), (error) => done(error), () => done());
+    }
+
+    @test
+    public "should return account statistics by id"(done: (arg?: any) => void) {
+        this.rpc.request(new GetStatisticsById(ChainObject.parse("2.5.35")))
+            .subscribe((value) => value.should.include.one.instanceOf(Statistics), (error) => done(error), () => done());
     }
 
     @test
