@@ -22,6 +22,7 @@ import { BroadcastTransactionWithCallback } from "./net/models/request/Broadcast
 import { GetChainId } from "./net/models/request/GetChainId";
 import { GetDynamicGlobalProps } from "./net/models/request/GetDynamicGlobalProps";
 import { GetRequiredFees } from "./net/models/request/GetRequiredFees";
+import { RpcEnabledApis } from "./net/rpc/RpcEnabledApis";
 import { RpcService } from "./net/rpc/RpcService";
 import { RxWebSocket, WebSocketFactory } from "./net/ws/RxWebSocket";
 import { assertThrow } from "./utils/Utils";
@@ -54,7 +55,7 @@ export class DCoreSdk {
         if (this.ws != null && (this.rpc == null || this.ws.isConnected() || request.apiGroup !== ApiGroup.Database)) {
             result = this.ws.request(request);
         } else {
-            if (request.apiGroup !== ApiGroup.Database) {
+            if (!_.includes(RpcEnabledApis, request.apiGroup)) {
                 return throwError(Error("not available through HTTP API"));
             }
             result = this.rpc.request(request);

@@ -6,11 +6,13 @@ import { throwError } from "rxjs";
 import { tag } from "rxjs-spy/operators";
 import { Observable } from "rxjs/internal/Observable";
 import { map } from "rxjs/operators";
-import { ApiAccessError } from "../../models/error/ApiAccessError";
+import { ApiAccessError } from "../../models/error";
 import { NotFoundError } from "../../models/error/NotFoundError";
-import { ApiGroup } from "../models/ApiGroup";
 import { BaseRequest } from "../models/request/BaseRequest";
 import { RpcResponse } from "../models/response/RpcResponse";
+import { HttpJson } from "./HttpJson";
+import { RpcApiGroupMap } from "./RpcApiGroupMap";
+import { RpcEnabledApis } from "./RpcEnabledApis";
 
 export class RpcService {
     private baseRequest: RxHttpRequest;
@@ -20,10 +22,10 @@ export class RpcService {
     }
 
     public request<T>(request: BaseRequest<T>): Observable<T> {
-        if (request.apiGroup !== ApiGroup.Database) {
+        if (!_.includes(RpcEnabledApis, request.apiGroup)) {
             return throwError(new ApiAccessError(request.apiGroup));
         }
-        return this.baseRequest.post("", { body: serialize(request) }).pipe(
+        return this.baseRequest.post("", { body: serialize(new HttpJson(request, RpcApiGroupMap.get(request.apiGroup))) }).pipe(
             map((data) => {
                 if (data.response.statusCode === 200) {
                     const response = deserialize(RpcResponse, data.response.body);

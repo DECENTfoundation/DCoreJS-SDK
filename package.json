@@ -1,6 +1,6 @@
 {
   "name": "dcorejs-sdk",
-  "version": "0.9.24",
+  "version": "0.10.25",
   "homepage": "http://decent.ch",
   "description": "DcoreJS SDK.",
   "main": "./dist/index.js",
