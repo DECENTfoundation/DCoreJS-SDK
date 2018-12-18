@@ -9,6 +9,7 @@ import { TransactionDetail } from "../models/TransactionDetail";
 import { GetAccountById } from "../net/models/request/GetAccountById";
 import { GetAccountByName } from "../net/models/request/GetAccountByName";
 import { GetKeyReferences } from "../net/models/request/GetKeyReferences";
+import { GetStatisticsById } from "../net/models/request/GetStatisticsById";
 import { SearchAccountHistory } from "../net/models/request/SearchAccountHistory";
 import { BaseApi } from "./BaseApi";
 
@@ -63,6 +64,16 @@ export class AccountApi extends BaseApi {
         limit: number = 100,
     ): Observable<TransactionDetail[]> {
         return this.request(new SearchAccountHistory(accountId, order, from, limit));
+    }
+
+    /**
+     * get Statistics by object id
+     *
+     * @param objectId object id of statistics
+     * @return object if found, {@link NotFoundError} otherwise
+     */
+    public getStatisticsById(objectId: ChainObject): Observable<any> {
+        return this.request(new GetStatisticsById(objectId));
     }
 
 }
