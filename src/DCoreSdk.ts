@@ -1,3 +1,4 @@
+import Decimal from "decimal.js";
 import * as _ from "lodash";
 import * as Long from "long";
 import { Duration } from "moment";
@@ -29,6 +30,11 @@ import { assertThrow } from "./utils/Utils";
 
 export type AccountRef = ChainObject | string | Address;
 export type AssetWithAmount = [Asset, Long];
+
+Decimal.set({
+    // max amount have precision 16 (satoshi significant places) and we are doubling that for partial result from multiply/division operations
+    precision: 32,
+});
 
 export class DCoreSdk {
 
