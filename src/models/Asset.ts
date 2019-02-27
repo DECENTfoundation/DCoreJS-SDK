@@ -1,4 +1,6 @@
 import { Expose, Transform, Type } from "class-transformer";
+import { Decimal } from "decimal.js";
+import * as Long from "long";
 
 import { assertThrow } from "../utils";
 
@@ -34,14 +36,18 @@ export class Asset {
     public dynamicAssetDataId: ChainObject;
 
     public convert(assetAmount: AssetAmount): AssetAmount {
+        const quote = new Decimal(this.options.exchangeRate.quote.amount.toString());
+        const base = new Decimal(this.options.exchangeRate.base.amount.toString());
+        const amount = new Decimal(assetAmount.amount.toString());
+
         if (this.options.exchangeRate.base.assetId.eq(assetAmount.assetId)) {
-            const amount = this.options.exchangeRate.quote.amount.div(this.options.exchangeRate.base.amount).mul(assetAmount.amount);
-            return new AssetAmount(amount, this.id);
+            const result = quote.div(base).mul(amount);
+            return new AssetAmount(Long.fromString(result.toFixed(0)), this.id);
         }
 
         if (this.options.exchangeRate.quote.assetId.eq(assetAmount.assetId)) {
-            const amount = this.options.exchangeRate.base.amount.div(this.options.exchangeRate.quote.amount).mul(assetAmount.amount);
-            return new AssetAmount(amount, this.id);
+            const result = base.div(quote).mul(amount);
+            return new AssetAmount(Long.fromString(result.toFixed(0)), this.id);
         }
 
         assertThrow(false, () => `cannot convert ${assetAmount.assetId} with ${this.symbol}:${this.id}`);
