@@ -5,7 +5,7 @@ export class CustodyData {
     public n: number;
 
     @Expose({ name: "u_seed" })
-    public seed: number[]; // 16 int8
+    public seed: string; // 16 int8
 
     @Expose({ name: "pubKey" })
     public pubKey: number[]; // 33 uint8
