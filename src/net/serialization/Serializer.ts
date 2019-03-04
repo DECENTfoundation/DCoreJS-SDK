@@ -89,9 +89,9 @@ export class Serializer {
     private chainIdAdapter = (buffer: ByteBuffer, obj: ChainObject) => buffer.writeVarint32(obj.instance);
 
     private stringAdapter = (buffer: ByteBuffer, obj: string) => {
-        const encodedStringLength = new TextEncoder().encode(obj).length;
-        buffer.writeVarint32(encodedStringLength);
-        buffer.writeUTF8String(obj);
+        const encodedString = new TextEncoder().encode(obj);
+        buffer.writeVarint32(encodedString.length);
+        buffer.append(encodedString);
     }
 
     private addressAdapter = (buffer: ByteBuffer, obj: Address) => buffer.append(obj.publicKey);

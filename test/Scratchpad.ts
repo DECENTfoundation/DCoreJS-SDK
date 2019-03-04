@@ -325,10 +325,10 @@ class Scratchpad {
         const now = new Date();
         const diacriticsOperation = new AddOrUpdateContentOperation(
             ChainObject.parse("1.2.34"),
-            "https://staging-resources.alax.io/apps/mobi.minicraft.three.mini.craft.building.games9",
+            "https://staging-resources.alax.io/apps/mobi.minicraft.three.mini.craft.building.games12",
             [new RegionalPrice( new AssetAmount(0))],
             moment(now).add(7, "days"),
-            '{"title":"nbnbj","description":"ád","content_type_id":"1.5.5"}',
+            '{"title":"nbnbj","description":"ádááá","content_type_id":"1.5.5"}',
             []
         )
         this.api.broadcastApi.broadcastWithCallback(Constants.KEY, [diacriticsOperation]).subscribe();
