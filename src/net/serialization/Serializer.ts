@@ -2,6 +2,7 @@ import * as ByteBuffer from "bytebuffer";
 import * as _ from "lodash";
 import * as Long from "long";
 import { Moment } from "moment";
+import { TextEncoder } from "util";
 import { Address } from "../../crypto/Address";
 import { AssetAmount } from "../../models/AssetAmount";
 import { Authority } from "../../models/Authority";
@@ -88,7 +89,8 @@ export class Serializer {
     private chainIdAdapter = (buffer: ByteBuffer, obj: ChainObject) => buffer.writeVarint32(obj.instance);
 
     private stringAdapter = (buffer: ByteBuffer, obj: string) => {
-        buffer.writeVarint32(obj.length);
+        const encodedStringLength = new TextEncoder().encode(obj).length;
+        buffer.writeVarint32(encodedStringLength);
         buffer.writeUTF8String(obj);
     }
 
@@ -253,7 +255,7 @@ export class Serializer {
         this.append(buffer, obj.keyParts);
         this.momentAdapter(buffer, obj.expiration);
         this.append(buffer, obj.publishingFee);
-        this.append(buffer, obj.synopsis);
+        this.stringAdapter(buffer, obj.synopsis);
         this.appendOptional(buffer, obj.custodyData);
     }
 
