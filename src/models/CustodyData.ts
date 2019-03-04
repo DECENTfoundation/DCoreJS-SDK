@@ -8,5 +8,5 @@ export class CustodyData {
     public seed: string; // 16 int8
 
     @Expose({ name: "pubKey" })
-    public pubKey: number[]; // 33 uint8
+    public pubKey: string; // 33 uint8
 }
