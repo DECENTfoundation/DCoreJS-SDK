@@ -2,6 +2,7 @@ import * as ByteBuffer from "bytebuffer";
 import * as _ from "lodash";
 import * as Long from "long";
 import { Moment } from "moment";
+import { TextEncoder } from "util";
 import { Address } from "../../crypto/Address";
 import { AssetAmount } from "../../models/AssetAmount";
 import { Authority } from "../../models/Authority";
@@ -88,8 +89,9 @@ export class Serializer {
     private chainIdAdapter = (buffer: ByteBuffer, obj: ChainObject) => buffer.writeVarint32(obj.instance);
 
     private stringAdapter = (buffer: ByteBuffer, obj: string) => {
-        buffer.writeVarint32(obj.length);
-        buffer.writeUTF8String(obj);
+        const encodedString = new TextEncoder().encode(obj);
+        buffer.writeVarint32(encodedString.length);
+        buffer.append(encodedString);
     }
 
     private addressAdapter = (buffer: ByteBuffer, obj: Address) => buffer.append(obj.publicKey);
@@ -235,8 +237,8 @@ export class Serializer {
 
     private custodyDataAdapter = (buffer: ByteBuffer, obj: CustodyData) => {
         buffer.writeUint32(obj.n);
-        obj.seed.forEach((num) => buffer.writeInt8(num));
-        buffer.append(Uint8Array.of(...obj.pubKey));
+        this.stringAdapter(buffer, obj.seed);
+        this.stringAdapter(buffer, obj.pubKey);
     }
 
     private addOrUpdateContentOperationAdapter = (buffer: ByteBuffer, obj: AddOrUpdateContentOperation) => {
@@ -253,7 +255,7 @@ export class Serializer {
         this.append(buffer, obj.keyParts);
         this.momentAdapter(buffer, obj.expiration);
         this.append(buffer, obj.publishingFee);
-        this.append(buffer, obj.synopsis);
+        this.stringAdapter(buffer, obj.synopsis);
         this.appendOptional(buffer, obj.custodyData);
     }
 

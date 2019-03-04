@@ -12,10 +12,12 @@ import { ecdhUnsafe, publicKeyTweakMul } from "secp256k1";
 import { Address } from "../src/crypto/Address";
 import { ECKeyPair } from "../src/crypto/ECKeyPair";
 import { DCoreSdk } from "../src/DCoreSdk";
+import { RegionalPrice } from "../src/models";
 import { Account } from "../src/models/Account";
 import { AssetAmount } from "../src/models/AssetAmount";
 import { Authority } from "../src/models/Authority";
 import { ChainObject } from "../src/models/ChainObject";
+import { AddOrUpdateContentOperation } from "../src/models/operation";
 import { TransferOperation } from "../src/models/operation/TransferOperation";
 import { GetAccountById } from "../src/net/models/request/GetAccountById";
 import { GetAccountByName } from "../src/net/models/request/GetAccountByName";
@@ -317,6 +319,19 @@ class Scratchpad {
 
         console.log(publicKeyTweakMul(address.publicKey, keyPair.privateKey))
 
+    }
+
+    @test.skip "content encoding check"() {
+        const now = new Date();
+        const diacriticsOperation = new AddOrUpdateContentOperation(
+            ChainObject.parse("1.2.34"),
+            "https://staging-resources.alax.io/apps/mobi.minicraft.three.mini.craft.building.games14",
+            [new RegionalPrice( new AssetAmount(0))],
+            moment(now).add(7, "days"),
+            '{"title":"nbnbj","description":"ádááá","content_type_id":"1.5.5"}',
+            []
+        )
+        this.api.broadcastApi.broadcastWithCallback(Constants.KEY, [diacriticsOperation]).subscribe();
     }
 }
 // 02e4d03d9995ebb1b61b11e5e8631a70cdfdd2691df320ad3187751b256cccf808
