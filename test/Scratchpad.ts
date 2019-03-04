@@ -325,7 +325,7 @@ class Scratchpad {
         const now = new Date();
         const diacriticsOperation = new AddOrUpdateContentOperation(
             ChainObject.parse("1.2.34"),
-            "https://staging-resources.alax.io/apps/mobi.minicraft.three.mini.craft.building.games12",
+            "https://staging-resources.alax.io/apps/mobi.minicraft.three.mini.craft.building.games14",
             [new RegionalPrice( new AssetAmount(0))],
             moment(now).add(7, "days"),
             '{"title":"nbnbj","description":"ádááá","content_type_id":"1.5.5"}',

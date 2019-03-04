@@ -237,8 +237,8 @@ export class Serializer {
 
     private custodyDataAdapter = (buffer: ByteBuffer, obj: CustodyData) => {
         buffer.writeUint32(obj.n);
-        obj.seed.forEach((num) => buffer.writeInt8(num));
-        buffer.append(Uint8Array.of(...obj.pubKey));
+        this.stringAdapter(buffer, obj.seed);
+        this.stringAdapter(buffer, obj.pubKey);
     }
 
     private addOrUpdateContentOperationAdapter = (buffer: ByteBuffer, obj: AddOrUpdateContentOperation) => {
