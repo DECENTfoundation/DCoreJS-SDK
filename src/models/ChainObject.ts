@@ -3,11 +3,15 @@ import { ObjectType } from "./ObjectType";
 
 export class ChainObject {
     public static parse(id: string): ChainObject {
-        if (ChainObject.regexp.test(id)) {
+        if (this.isValid(id)) {
             return new ChainObject(id);
         } else {
             throw TypeError("not a valid chain id:" + id);
         }
+    }
+
+    public static isValid(id: string): boolean {
+        return ChainObject.regexp.test(id);
     }
 
     private static regexp: RegExp = /^([0-9]+)\.([0-9]+)\.([0-9]+)(\.([0-9]+))?$/;

@@ -1,16 +1,23 @@
-import { Observable } from "rxjs";
+import { Observable, of, throwError } from "rxjs";
+import { catchError, map } from "rxjs/operators";
 import { Address } from "../crypto/Address";
 import { DCoreApi } from "../DCoreApi";
+import { AccountRef } from "../DCoreSdk";
 import { Account } from "../models/Account";
 import { ChainObject } from "../models/ChainObject";
+import { IllegalArgumentError } from "../models/error/IllegalArgumentError";
+import { ObjectNotFoundError } from "../models/error/ObjectNotFoundError";
 import { ObjectType } from "../models/ObjectType";
 import { SearchAccountHistoryOrder } from "../models/order/SearchAccountHistoryOrder";
 import { TransactionDetail } from "../models/TransactionDetail";
 import { GetAccountById } from "../net/models/request/GetAccountById";
 import { GetAccountByName } from "../net/models/request/GetAccountByName";
+import { GetAccountCount } from "../net/models/request/GetAccountCount";
+import { GetAccountReferences } from "../net/models/request/GetAccountReferences";
 import { GetKeyReferences } from "../net/models/request/GetKeyReferences";
 import { GetStatisticsById } from "../net/models/request/GetStatisticsById";
 import { SearchAccountHistory } from "../net/models/request/SearchAccountHistory";
+import { ObjectCheckOf } from "../utils/ObjectCheckOf";
 import { BaseApi } from "./BaseApi";
 
 export class AccountApi extends BaseApi {
@@ -20,33 +27,96 @@ export class AccountApi extends BaseApi {
     }
 
     /**
-     * get Account object by name
+     * Check if the account exist.
      *
-     * @param accountName the name of the account
-     * @return an account if found, {@link NotFoundError} otherwise
+     * @param account account id or name
+     *
+     * @return account exists in DCore database
      */
-    public getAccountByName(accountName: string): Observable<Account> {
-        return this.request(new GetAccountByName(accountName));
+    public exist(account: AccountRef): Observable<boolean> {
+        return this.get(account).pipe(
+            catchError((err) => {
+                if (err instanceof ObjectNotFoundError || err instanceof TypeError) {
+                    return of(false);
+                } else {
+                    return throwError(err);
+                }
+            }),
+            map(() => true),
+        );
     }
 
     /**
-     * get Account objects by ids
+     * Get account object by name.
      *
-     * @param accountId object ids of the account, 1.2.*
-     * @return accounts if found, {@link NotFoundError} otherwise
+     * @param name the name of the account
+     *
+     * @return an account if found, {@link ObjectNotFoundError} otherwise
      */
-    public getAccountsByIds(accountId: ChainObject[]): Observable<Account[]> {
-        return this.request(new GetAccountById(accountId));
+    public getByName(name: string): Observable<Account> {
+        return this.request(new GetAccountByName(name));
     }
 
     /**
-     * get Account object ids referenced by public keys
+     * Get account by name or id.
      *
-     * @param keys public keys
-     * @return account ids referencing the public keys, {@link NotFoundError} otherwise
+     * @param account account name or account id
+     *
+     * @return an account if exist, {@link ObjectNotFoundError} if not found, or {@link IllegalArgumentError} if the account name or id is not valid
      */
-    public getAccountIdsByKey(keys: Address[]): Observable<ChainObject[][]> {
+    public get(account: AccountRef): Observable<Account> {
+        if (typeof account === "string") {
+            if (ChainObject.isValid) {
+                return this.get(ChainObject.parse(account));
+            }
+            if (Account.isValidName(account)) {
+                return this.getByName(account);
+            }
+        }
+        if (ObjectCheckOf<ChainObject>(account, "instance")) {
+            return this.getAll([account]).pipe(map((list) => list[0]));
+        }
+        return throwError(new IllegalArgumentError("not a valid account name or id"));
+    }
+
+    /**
+     * Get the total number of accounts registered on the blockchain.
+     */
+    public countAll(): Observable<number> {
+        return this.request(new GetAccountCount());
+    }
+
+    /**
+     * Get account object ids by public key addresses.
+     *
+     * @param keys formatted public keys of the account, eg. DCT5j2bMj7XVWLxUW7AXeMiYPambYFZfCcMroXDvbCfX1VoswcZG4
+     *
+     * @return a list of account object ids
+     */
+    public findAllReferencesByKeys(keys: Address[]): Observable<ChainObject[][]> {
         return this.request(new GetKeyReferences(keys));
+    }
+
+    /**
+     * Get all accounts that refer to the account id in their owner or active authorities.
+     *
+     * @param accountId account object id
+     *
+     * @return a list of account object ids
+     */
+    public findAllReferencesByAccount(accountId: ChainObject): Observable<ChainObject[]> {
+        return this.request(new GetAccountReferences(accountId));
+    }
+
+    /**
+     * Get account objects by ids.
+     *
+     * @param accountIds object ids of the account, 1.2.*
+     *
+     * @return an account list if found, {@link ObjectNotFoundError} otherwise
+     */
+    public getAll(accountIds: ChainObject[]): Observable<Account[]> {
+        return this.request(new GetAccountById(accountIds));
     }
 
     /**
@@ -67,13 +137,12 @@ export class AccountApi extends BaseApi {
     }
 
     /**
-     * get Statistics by object id
+     * Get statistics by object id
      *
      * @param objectId object id of statistics
-     * @return object if found, {@link NotFoundError} otherwise
+     * @return object if found, {@link ObjectNotFoundError} otherwise
      */
     public getStatisticsById(objectId: ChainObject): Observable<any> {
         return this.request(new GetStatisticsById(objectId));
     }
-
 }

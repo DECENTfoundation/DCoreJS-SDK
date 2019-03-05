@@ -7,6 +7,12 @@ import { Publishing } from "./Publishing";
 
 export class Account {
 
+    public static isValidName(name: string): boolean {
+        return this.regexp.test(name);
+    }
+
+    private static regexp: RegExp = /^(?=.{5,63}$)([a-z][a-z0-9-]+[a-z0-9])(\.[a-z][a-z0-9-]+[a-z0-9])*$/;
+
     @Transform((value: string) => ChainObject.parse(value), { toClassOnly: true })
     @Expose({ name: "id" })
     public id: ChainObject;

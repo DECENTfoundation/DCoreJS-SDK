@@ -15,16 +15,26 @@ export class TransactionApi extends BaseApi {
     }
 
     /**
-     * If the transaction has not expired, this method will return the transaction for the given ID or it will return
-     * {@link NotFoundError} Just because it is not known does not mean it wasn't included
-     * in the blockchain. The ID can be retrieved from [Transaction] or [TransactionConfirmation] objects.
-     * You can set up a custom expiration value in {@link DCoreSdk.transactionExpiration}
+     * Create unsigned transaction
+     *
+     * @param operations operations to include in transaction
+     * @param expiration transaction expiration in seconds, after the expiry the transaction is removed from recent pool
+     * and will be dismissed if not included in DCore block
+     */
+    public createTransaction(operations: BaseOperation[], expiration: Duration = this.api.transactionExpiration) {
+        this.core.prepareTransaction(operations, expiration);
+    }
+
+    /**
+     * If the transaction has not expired, this method will return the transaction for the given ID or it will return {@link ObjectNotFoundError}
+     * Just because it is not known does not mean it wasn't included in the DCore.
+     * The ID can be retrieved from [Transaction] or [TransactionConfirmation] objects.
      *
      * @param trxId transaction id
      *
-     *  @return a transaction if found, {@link NotFoundError} otherwise
+     * @return a transaction if found, {@link ObjectNotFoundError} otherwise
      */
-    public getRecentTransaction(trxId: string): Observable<ProcessedTransaction> {
+    public getRecent(trxId: string): Observable<ProcessedTransaction> {
         return this.request(new GetRecentTransactionById(trxId));
     }
 
@@ -34,21 +44,10 @@ export class TransactionApi extends BaseApi {
      * @param blockNum block number
      * @param trxInBlock position of the transaction in block
      *
-     * @return a transaction if found, {@link NotFoundError} otherwise
+     * @return a transaction if found, {@link ObjectNotFoundError} otherwise
      */
-    public getTransaction(blockNum: number, trxInBlock: number): Observable<ProcessedTransaction> {
+    public get(blockNum: number, trxInBlock: number): Observable<ProcessedTransaction> {
         return this.request(new GetTransaction(blockNum, trxInBlock));
-    }
-
-    /**
-     * create unsigned transaction
-     *
-     * @param operations operations to include in transaction
-     * @param transactionExpiration transaction expiration in seconds,
-     * after the expiry the transaction is removed from recent pool and will be dismissed if not included in DCore block
-     */
-    public createTransaction(operations: BaseOperation[], transactionExpiration: Duration = this.api.transactionExpiration) {
-        this.core.prepareTransaction(operations, transactionExpiration);
     }
 
 }

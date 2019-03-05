@@ -1,9 +1,9 @@
 /**
  * Object not found error
  */
-export class NotFoundError extends Error {
+export class ObjectNotFoundError extends Error {
     constructor(description: string) {
         super("object not found: " + description);
-        Object.setPrototypeOf(this, NotFoundError.prototype);
+        Object.setPrototypeOf(this, ObjectNotFoundError.prototype);
     }
 }

@@ -9,7 +9,7 @@ import { merge } from "rxjs/internal/observable/merge";
 import { scalar } from "rxjs/internal/observable/scalar";
 import { OperatorFunction } from "rxjs/internal/types";
 import { filter, first, flatMap, map, publish, tap } from "rxjs/operators";
-import { NotFoundError } from "../../models/error/NotFoundError";
+import { ObjectNotFoundError } from "../../models/error/ObjectNotFoundError";
 import { ObjectCheckOf } from "../../utils/ObjectCheckOf";
 import { ApiGroup } from "../models/ApiGroup";
 import { BaseRequest } from "../models/request/BaseRequest";
@@ -157,7 +157,7 @@ export class RxWebSocket {
 
     private checkEmpty(value: object, request: BaseRequest<any>): void {
         if (_.isNil(value) || (_.isArray(value) && value.filter(Boolean).length === 0)) {
-            throw new NotFoundError(request.description());
+            throw new ObjectNotFoundError(request.description());
         }
     }
 

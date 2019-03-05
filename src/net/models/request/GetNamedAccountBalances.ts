@@ -4,7 +4,7 @@ import { ChainObject } from "../../../models/ChainObject";
 import { ApiGroup } from "../ApiGroup";
 import { BaseRequest } from "./BaseRequest";
 
-export class GetAccountBalancesByName extends BaseRequest<AssetAmount[]> {
+export class GetNamedAccountBalances extends BaseRequest<AssetAmount[]> {
     constructor(
         accountName: string,
         assets: ChainObject[] = [],

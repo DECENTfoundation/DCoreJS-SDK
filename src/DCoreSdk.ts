@@ -1,16 +1,15 @@
 import Decimal from "decimal.js";
 import * as _ from "lodash";
-import * as Long from "long";
 import { Duration } from "moment";
 import { CoreOptions } from "request";
 import { Observable, throwError, zip } from "rxjs";
 import { tag } from "rxjs-spy/operators";
 import { scalar } from "rxjs/internal/observable/scalar";
 import { concatMap, flatMap, map, tap } from "rxjs/operators";
-import { Address } from "./crypto/Address";
 import { ECKeyPair } from "./crypto/ECKeyPair";
 import { DCoreApi } from "./DCoreApi";
 import { Asset } from "./models/Asset";
+import { AssetAmount } from "./models/AssetAmount";
 import { BlockData } from "./models/BlockData";
 import { ChainObject } from "./models/ChainObject";
 import { BaseOperation } from "./models/operation/BaseOperation";
@@ -28,8 +27,8 @@ import { RpcService } from "./net/rpc/RpcService";
 import { RxWebSocket, WebSocketFactory } from "./net/ws/RxWebSocket";
 import { assertThrow } from "./utils/Utils";
 
-export type AccountRef = ChainObject | string | Address;
-export type AssetWithAmount = [Asset, Long];
+export type AccountRef = ChainObject | string;
+export type AssetWithAmount = [Asset, AssetAmount];
 
 Decimal.set({
     // max amount have precision 16 (satoshi significant places) and we are doubling that for partial result from multiply/division operations

@@ -14,17 +14,17 @@ export class ContentApi extends BaseApi {
     }
 
     /**
-     * get content
+     * Get content
      *
-     * @param contentRef uri of the content or object id of the content, 2.13.*
+     * @param content uri of the content or object id of the content, 2.13.*
      *
-     * @return a content if found, {@link NotFoundError} otherwise
+     * @return a content if found, {@link ObjectNotFoundError} otherwise
      */
-    public getContent(contentRef: ChainObject | string): Observable<Content> {
-        if (typeof contentRef === "string") {
-            return this.request(new GetContentByUri(contentRef));
+    public get(content: ChainObject | string): Observable<Content> {
+        if (typeof content === "string") {
+            return this.request(new GetContentByUri(content));
         } else {
-            return this.request(new GetContentById(contentRef)).pipe(map((list) => list[0]));
+            return this.request(new GetContentById(content)).pipe(map((list) => list[0]));
         }
     }
 

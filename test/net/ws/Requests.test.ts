@@ -14,7 +14,7 @@ import { AssetAmount } from "../../../src/models/AssetAmount";
 import { ChainObject } from "../../../src/models/ChainObject";
 import { Content } from "../../../src/models/Content";
 import { DynamicGlobalProperties } from "../../../src/models/DynamicGlobalProperties";
-import { NotFoundError } from "../../../src/models/error/NotFoundError";
+import { ObjectNotFoundError } from "../../../src/models/error/ObjectNotFoundError";
 import { Miner } from "../../../src/models/Miner";
 import { EmptyOperation } from "../../../src/models/operation/EmptyOperation";
 import { OperationType } from "../../../src/models/operation/OperationType";
@@ -158,7 +158,7 @@ class WsRequestTest {
         this.rxWs.request(new GetRecentTransactionById("95914695085f08b84218e39cdea6f910f380e469"))
         // .subscribe((value) => value.should.be.instanceOf(ProcessedTransaction), (error) => done(error), () => done());
             .subscribe(undefined, (error) => {
-                error.should.be.instanceOf(NotFoundError);
+                error.should.be.instanceOf(ObjectNotFoundError);
                 done();
             }, () => done());
     }
