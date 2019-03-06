@@ -42,7 +42,7 @@
     "@types/wtfnode": "^0.5.0",
     "chai": "^4.1.2",
     "chai-things": "^0.2.0",
-    "create-ts-index": "^1.0.14",
+    "create-ts-index": "^1.5.2",
     "isomorphic-ws": "^4.0.1",
     "mocha": "^5.2.0",
     "mocha-typescript": "^1.1.17",

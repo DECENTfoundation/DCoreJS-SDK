@@ -70,6 +70,9 @@ export class ObjectType {
     private constructor(public space: number, public type: number) {
     }
 
+    /**
+     * Get generic id for type, eg. 1.2.0
+     */
     public genericId(): ChainObject {
         return new ChainObject(this);
     }

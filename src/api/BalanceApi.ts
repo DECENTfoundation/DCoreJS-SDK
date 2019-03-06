@@ -1,15 +1,13 @@
-import * as _ from "lodash";
 import { Observable } from "rxjs";
-import { concatMap, map } from "rxjs/operators";
-import { Address } from "../crypto/Address";
+import { flatMap, map } from "rxjs/operators";
 import { DCoreApi } from "../DCoreApi";
+import { DCoreConstants } from "../DCoreConstants";
 import { AccountRef, AssetWithAmount } from "../DCoreSdk";
 import { Asset } from "../models/Asset";
 import { AssetAmount } from "../models/AssetAmount";
 import { ChainObject } from "../models/ChainObject";
 import { GetAccountBalances } from "../net/models/request/GetAccountBalances";
-import { GetAccountBalancesByName } from "../net/models/request/GetAccountBalancesByName";
-import { ObjectCheckOf } from "../utils/ObjectCheckOf";
+import { GetNamedAccountBalances } from "../net/models/request/GetNamedAccountBalances";
 import { BaseApi } from "./BaseApi";
 
 export class BalanceApi extends BaseApi {
@@ -19,50 +17,65 @@ export class BalanceApi extends BaseApi {
     }
 
     /**
-     * get account balance
+     * Get account balance.
      *
-     * @param account account name, or object id of the account (1.2.*) or address with public key
-     * @param assets symbols of the asset eg. DCT
-     * @return list of amounts for different assets
+     * @param account account name or account object id, 1.2.*
+     * @param asset object id of the assets, 1.3.*
+     *
+     * @return amount for asset
      */
-    public getBalance(account: AccountRef, assets?: string[]): Observable<AssetWithAmount[]>;
+    public get(account: AccountRef, asset: ChainObject): Observable<AssetAmount> {
+        return this.getAll(account, [asset]).pipe(map((list) => list[0]));
+    }
 
     /**
-     * get account balance
+     * Get account balances.
      *
-     * @param account account name, or object id of the account (1.2.*) or address with public key
-     * @param assets object ids of the asset (1.3.*)
+     * @param account account name or account object id, 1.2.*
+     * @param assets object ids of the assets, 1.3.*
+     *
      * @return list of amounts for different assets
      */
-    public getBalance(account: AccountRef, assets?: ChainObject[]): Observable<AssetAmount[]>;
-    public getBalance(account: AccountRef, assets?: string[] | ChainObject[]): Observable<AssetAmount[]> | Observable<AssetWithAmount[]> {
-        let balance: (ids?: ChainObject[]) => Observable<AssetAmount[]>;
-        if (typeof account !== "string" && ObjectCheckOf<Address>(account, "publicKey")) {
-            balance = (ids) => this.api.accountApi.getAccountIdsByKey([account]).pipe(
-                map((list) => list[0][0]),
-                concatMap((accountId) => this.getBalanceInternal(accountId, ids)),
-            );
-        } else {
-            balance = (ids) => this.getBalanceInternal(account, ids);
-        }
+    public getAll(account: AccountRef, assets?: ChainObject[]): Observable<AssetAmount[]> {
+        return this.getBalanceInternal(account, assets);
+    }
 
-        if (!_.isNil(assets) && assets.length > 0 && typeof assets[0] === "string") {
-            return this.api.assetApi.lookupAssets(assets as string[])
-                .pipe(concatMap((assetList) =>
-                    balance(assetList.map((asset) => asset.id)).pipe(map((balances) => this.createTuple(assetList, balances))),
-                ));
-        } else {
-            return balance(assets as ChainObject[]);
-        }
+    /**
+     * Get account balance with asset.
+     *
+     * @param account account name or account object id, 1.2.*
+     * @param assetSymbol asset symbol, eg. DCT
+     *
+     * @return a pair of asset to amount
+     */
+    public getWithAsset(account: AccountRef, assetSymbol: string = DCoreConstants.DCT_ASSET_SYMBOL): Observable<AssetWithAmount> {
+        return this.getAllWithAsset(account, [assetSymbol]).pipe(map((list) => list[0]));
+    }
+
+    /**
+     * Get account balance with asset.
+     *
+     * @param account account name or account object id, 1.2.*
+     * @param assetSymbols asset symbols, eg. DCT
+     *
+     * @return a list of pairs of assets to amounts
+     */
+    public getAllWithAsset(account: AccountRef, assetSymbols: string[]): Observable<AssetWithAmount[]> {
+        return this.api.assetApi.getAllByName(assetSymbols)
+            .pipe(flatMap((assets) => this.getAll(account, assets.map((asset) => asset.id))
+                .pipe(map((balances) => this.createTuple(assets, balances))),
+            ));
     }
 
     private createTuple(assets: Asset[], balances: AssetAmount[]): AssetWithAmount[] {
-        return assets.map((asset) => [asset, balances.find((amount) => amount.assetId.eq(asset.id)).amount] as AssetWithAmount);
+        return assets.map((asset) => [asset, balances.find((balance) => balance.assetId.eq(asset.id))] as AssetWithAmount);
     }
 
-    private getBalanceInternal(account: ChainObject | string, assets?: ChainObject[]): Observable<AssetAmount[]> {
-        if (typeof account === "string") {
-            return this.request(new GetAccountBalancesByName(account, assets));
+    private getBalanceInternal(account: AccountRef, assets?: ChainObject[]): Observable<AssetAmount[]> {
+        if (typeof account === "string" && ChainObject.isValid(account)) {
+            return this.getBalanceInternal(ChainObject.parse(account), assets);
+        } else if (typeof account === "string") {
+            return this.request(new GetNamedAccountBalances(account, assets));
         } else {
             return this.request(new GetAccountBalances(account, assets));
         }

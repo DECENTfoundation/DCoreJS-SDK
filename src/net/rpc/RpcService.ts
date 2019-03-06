@@ -7,7 +7,7 @@ import { tag } from "rxjs-spy/operators";
 import { Observable } from "rxjs/internal/Observable";
 import { map } from "rxjs/operators";
 import { ApiAccessError } from "../../models/error";
-import { NotFoundError } from "../../models/error/NotFoundError";
+import { ObjectNotFoundError } from "../../models/error/ObjectNotFoundError";
 import { BaseRequest } from "../models/request/BaseRequest";
 import { RpcResponse } from "../models/response/RpcResponse";
 import { HttpJson } from "./HttpJson";
@@ -36,7 +36,7 @@ export class RpcService {
                         && (!_.isArray(response.result) || response.result.filter(Boolean).length > 0)) {
                         return request.transformer(response.result);
                     }
-                    throw new NotFoundError(request.description());
+                    throw new ObjectNotFoundError(request.description());
                 }
             }),
             tag("RpcEndpoints_request"),

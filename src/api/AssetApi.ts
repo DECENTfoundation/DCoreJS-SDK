@@ -1,11 +1,9 @@
 import { Observable } from "rxjs";
+import { map } from "rxjs/operators";
 import { DCoreApi } from "../DCoreApi";
 import { Asset } from "../models/Asset";
-import { AssetAmount } from "../models/AssetAmount";
 import { ChainObject } from "../models/ChainObject";
-import { BaseOperation } from "../models/operation/BaseOperation";
 import { GetAssets } from "../net/models/request/GetAssets";
-import { GetRequiredFees } from "../net/models/request/GetRequiredFees";
 import { LookupAssetSymbols } from "../net/models/request/LookupAssetSymbols";
 import { BaseApi } from "./BaseApi";
 
@@ -16,35 +14,46 @@ export class AssetApi extends BaseApi {
     }
 
     /**
-     * get assets by id
+     * Get asset by id.
+     *
+     * @param assetId asset id eg. DCT id is 1.3.0
+     *
+     * @return asset or {@link ObjectNotFoundError}
+     */
+    public get(assetId: ChainObject): Observable<Asset> {
+        return this.getAll([assetId]).pipe(map((list) => list[0]));
+    }
+
+    /**
+     * Get assets by id.
      *
      * @param assetIds asset id eg. DCT id is 1.3.0
      *
-     * @return list of assets or empty
+     * @return list of assets or {@link ObjectNotFoundError}
      */
-    public getAssets(assetIds: ChainObject[]): Observable<Asset[]> {
+    public getAll(assetIds: ChainObject[]): Observable<Asset[]> {
         return this.request(new GetAssets(assetIds));
     }
 
     /**
-     * lookup assets by symbol
+     * Get asset by symbol
      *
-     * @param assetSymbols asset symbols eg. DCT
+     * @param assetSymbol asset symbol eg. DCT
      *
-     * @return list of assets or empty
+     * @return asset or {@link ObjectNotFoundError}
      */
-    public lookupAssets(assetSymbols: string[]): Observable<Asset[]> {
-        return this.request(new LookupAssetSymbols(assetSymbols));
+    public getByName(assetSymbol: string): Observable<Asset> {
+        return this.getAllByName([assetSymbol]).pipe(map((list) => list[0]));
     }
 
     /**
-     * Returns fees for operation
+     * Get assets by symbol
      *
-     * @param op list of operations
+     * @param assetSymbols asset symbols eg. DCT
      *
-     * @return a list of fee asset amounts
+     * @return list of assets or {@link ObjectNotFoundError}
      */
-    public getFees(op: BaseOperation[]): Observable<AssetAmount[]> {
-        return this.request(new GetRequiredFees(op));
+    public getAllByName(assetSymbols: string[]): Observable<Asset[]> {
+        return this.request(new LookupAssetSymbols(assetSymbols));
     }
 }

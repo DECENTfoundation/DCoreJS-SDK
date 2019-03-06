@@ -17,19 +17,35 @@ export class BroadcastApi extends BaseApi {
         super(api);
     }
 
+    /**
+     * Broadcast operation to DCore
+     *
+     * @param privateKey EC key pair or Base58 encoded private key
+     * @param operations operations to be submitted to DCore
+     * @param expiration transaction expiration in seconds, after the expiry the transaction is removed from recent pool and will be dismissed if not included in DCore block
+     */
     public broadcast(
         privateKey: ECKeyPair | string,
         operations: BaseOperation[],
-        transactionExpiration: Duration = this.api.transactionExpiration,
+        expiration: Duration = this.api.transactionExpiration,
     ): Observable<void> {
-        return this.core.broadcast(BroadcastApi.getPrivate(privateKey), operations, transactionExpiration);
+        return this.core.broadcast(BroadcastApi.getPrivate(privateKey), operations, expiration);
     }
 
+    /**
+     * Broadcast operation to DCore
+     *
+     * @param privateKey EC key pair or Base58 encoded private key
+     * @param operations operations to be submitted to DCore
+     * @param expiration transaction expiration in seconds, after the expiry the transaction is removed from recent pool and will be dismissed if not included in DCore block
+     *
+     * @return a transaction confirmation
+     */
     public broadcastWithCallback(
         privateKey: ECKeyPair | string,
         operations: BaseOperation[],
-        transactionExpiration: Duration = this.api.transactionExpiration,
+        expiration: Duration = this.api.transactionExpiration,
     ): Observable<TransactionConfirmation> {
-        return this.core.broadcastWithCallback(BroadcastApi.getPrivate(privateKey), operations, transactionExpiration);
+        return this.core.broadcastWithCallback(BroadcastApi.getPrivate(privateKey), operations, expiration);
     }
 }
