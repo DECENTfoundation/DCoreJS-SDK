@@ -72,7 +72,9 @@ export class BalanceApi extends BaseApi {
     }
 
     private getBalanceInternal(account: AccountRef, assets?: ChainObject[]): Observable<AssetAmount[]> {
-        if (typeof account === "string") {
+        if (typeof account === "string" && ChainObject.isValid(account)) {
+            return this.getBalanceInternal(ChainObject.parse(account), assets);
+        } else if (typeof account === "string") {
             return this.request(new GetNamedAccountBalances(account, assets));
         } else {
             return this.request(new GetAccountBalances(account, assets));

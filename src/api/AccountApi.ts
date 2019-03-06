@@ -1,5 +1,5 @@
 import { Observable, of, throwError } from "rxjs";
-import { catchError, map } from "rxjs/operators";
+import { catchError, map, mapTo } from "rxjs/operators";
 import { Address } from "../crypto/Address";
 import { DCoreApi } from "../DCoreApi";
 import { AccountRef } from "../DCoreSdk";
@@ -42,7 +42,7 @@ export class AccountApi extends BaseApi {
                     return throwError(err);
                 }
             }),
-            map(() => true),
+            mapTo(true),
         );
     }
 
@@ -66,7 +66,7 @@ export class AccountApi extends BaseApi {
      */
     public get(account: AccountRef): Observable<Account> {
         if (typeof account === "string") {
-            if (ChainObject.isValid) {
+            if (ChainObject.isValid(account)) {
                 return this.get(ChainObject.parse(account));
             }
             if (Account.isValidName(account)) {

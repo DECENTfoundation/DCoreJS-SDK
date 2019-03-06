@@ -21,7 +21,9 @@ export class ContentApi extends BaseApi {
      * @return a content if found, {@link ObjectNotFoundError} otherwise
      */
     public get(content: ChainObject | string): Observable<Content> {
-        if (typeof content === "string") {
+        if (typeof content === "string" && ChainObject.isValid(content)) {
+            this.get(ChainObject.parse(content));
+        } else if (typeof content === "string") {
             return this.request(new GetContentByUri(content));
         } else {
             return this.request(new GetContentById(content)).pipe(map((list) => list[0]));
