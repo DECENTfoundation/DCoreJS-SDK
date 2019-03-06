@@ -28,6 +28,7 @@ export * from "./PubKey";
 export * from "./Publishing";
 export * from "./Purchase";
 export * from "./RegionalPrice";
+export * from "./Statistics";
 export * from "./Synopsis";
 export * from "./Transaction";
 export * from "./TransactionConfirmation";
