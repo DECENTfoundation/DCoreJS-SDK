@@ -7,16 +7,12 @@ import { Account } from "../models/Account";
 import { ChainObject } from "../models/ChainObject";
 import { IllegalArgumentError } from "../models/error/IllegalArgumentError";
 import { ObjectNotFoundError } from "../models/error/ObjectNotFoundError";
-import { ObjectType } from "../models/ObjectType";
-import { SearchAccountHistoryOrder } from "../models/order/SearchAccountHistoryOrder";
-import { TransactionDetail } from "../models/TransactionDetail";
 import { GetAccountById } from "../net/models/request/GetAccountById";
 import { GetAccountByName } from "../net/models/request/GetAccountByName";
 import { GetAccountCount } from "../net/models/request/GetAccountCount";
 import { GetAccountReferences } from "../net/models/request/GetAccountReferences";
 import { GetKeyReferences } from "../net/models/request/GetKeyReferences";
 import { GetStatisticsById } from "../net/models/request/GetStatisticsById";
-import { SearchAccountHistory } from "../net/models/request/SearchAccountHistory";
 import { ObjectCheckOf } from "../utils/ObjectCheckOf";
 import { BaseApi } from "./BaseApi";
 
@@ -117,23 +113,6 @@ export class AccountApi extends BaseApi {
      */
     public getAll(accountIds: ChainObject[]): Observable<Account[]> {
         return this.request(new GetAccountById(accountIds));
-    }
-
-    /**
-     * search account history
-     *
-     * @param accountId object id of the account, 1.2.*
-     * @param order
-     * @param from object id of the history object to start from, use {@link ObjectType.Null.genericId()} to ignore
-     * @param limit number of entries, max 100
-     */
-    public searchAccountHistory(
-        accountId: ChainObject,
-        order: SearchAccountHistoryOrder = SearchAccountHistoryOrder.TimeDesc,
-        from: ChainObject = ObjectType.Null.genericId(),
-        limit: number = 100,
-    ): Observable<TransactionDetail[]> {
-        return this.request(new SearchAccountHistory(accountId, order, from, limit));
     }
 
     /**

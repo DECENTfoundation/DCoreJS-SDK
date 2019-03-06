@@ -32,5 +32,4 @@ export * from "./Statistics";
 export * from "./Synopsis";
 export * from "./Transaction";
 export * from "./TransactionConfirmation";
-export * from "./TransactionDetail";
 export * from "./VoteId";

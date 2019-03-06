@@ -22,7 +22,6 @@ import { OperationType } from "../../../src/models/operation/OperationType";
 import { ProcessedTransaction } from "../../../src/models/ProcessedTransaction";
 import { Purchase } from "../../../src/models/Purchase";
 import { Statistics } from "../../../src/models/Statistics";
-import { TransactionDetail } from "../../../src/models/TransactionDetail";
 import { ApiGroup } from "../../../src/net/models/ApiGroup";
 import { GetAccountBalances } from "../../../src/net/models/request/GetAccountBalances";
 import { GetAccountById } from "../../../src/net/models/request/GetAccountById";
@@ -46,7 +45,6 @@ import { LookupAccounts } from "../../../src/net/models/request/LookupAccounts";
 import { LookupAssetSymbols } from "../../../src/net/models/request/LookupAssetSymbols";
 import { LookupMiners } from "../../../src/net/models/request/LookupMiners";
 import { RequestApiAccess } from "../../../src/net/models/request/RequestApiAccess";
-import { SearchAccountHistory } from "../../../src/net/models/request/SearchAccountHistory";
 import { SearchBuyings } from "../../../src/net/models/request/SearchBuyings";
 import { RpcService } from "../../../src/net/rpc/RpcService";
 import { Constants } from "../../Constants";
@@ -222,12 +220,6 @@ class HttpRequestTest {
                 error.should.be.instanceOf(ApiAccessError);
                 done();
             }, () => done());
-    }
-
-    @test
-    public "should return history by search"(done: (arg?: any) => void) {
-        this.rpc.request(new SearchAccountHistory(ChainObject.parse("1.2.35")))
-            .subscribe((value) => value.should.all.be.instanceOf(TransactionDetail), (error) => done(error), () => done());
     }
 
     @test
