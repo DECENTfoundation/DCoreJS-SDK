@@ -6,7 +6,7 @@ import { ECKeyPair } from "../crypto/ECKeyPair";
 import { Utils } from "../utils/Utils";
 
 export class Memo {
-    public static createPublic(message: string): Memo {
+    public static createPublic(message?: string): Memo {
         return new Memo(Buffer.concat([Buffer.alloc(4, 0), Buffer.from(message)]).toString("hex"));
     }
 

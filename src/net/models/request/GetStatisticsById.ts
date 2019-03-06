@@ -1,13 +1,13 @@
+import { AccountStatistics } from "../../../models/AccountStatistics";
 import { ChainObject } from "../../../models/ChainObject";
-import { Statistics } from "../../../models/Statistics";
 import { GetObjects } from "./GetObjects";
 
-export class GetStatisticsById extends GetObjects<Statistics> {
+export class GetStatisticsById extends GetObjects<AccountStatistics> {
     constructor(
         objectId: ChainObject,
     ) {
         super(
-            Statistics,
+            AccountStatistics,
             [objectId],
         );
     }
