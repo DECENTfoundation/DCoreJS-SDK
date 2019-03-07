@@ -1,4 +1,5 @@
 import { Expose, Transform, Type } from "class-transformer";
+import { Address } from "../crypto/Address";
 
 import { Authority } from "./Authority";
 import { ChainObject } from "./ChainObject";
@@ -46,4 +47,8 @@ export class Account {
 
     @Expose({ name: "top_n_control_flags" })
     public topControlFlags: number;
+
+    public get primaryAddress(): Address {
+        return this.active.keyAuths[0].value;
+    }
 }

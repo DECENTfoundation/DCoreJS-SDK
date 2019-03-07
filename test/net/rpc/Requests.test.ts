@@ -6,9 +6,8 @@ import "reflect-metadata";
 import { create } from "rxjs-spy";
 import { Spy } from "rxjs-spy/spy-interface";
 import { Address } from "../../../src/crypto/Address";
-import { OperationHistory } from "../../../src/models";
+import { AccountStatistics, OperationHistory } from "../../../src/models";
 import { Account } from "../../../src/models/Account";
-import { AccountNameId } from "../../../src/models/AccountNameId";
 import { Asset } from "../../../src/models/Asset";
 import { AssetAmount } from "../../../src/models/AssetAmount";
 import { ChainObject } from "../../../src/models/ChainObject";
@@ -16,12 +15,12 @@ import { Content } from "../../../src/models/Content";
 import { DynamicGlobalProperties } from "../../../src/models/DynamicGlobalProperties";
 import { ApiAccessError } from "../../../src/models/error/ApiAccessError";
 import { ObjectNotFoundError } from "../../../src/models/error/ObjectNotFoundError";
+import { FullAccount } from "../../../src/models/FullAccount";
 import { Miner } from "../../../src/models/Miner";
 import { EmptyOperation } from "../../../src/models/operation/EmptyOperation";
 import { OperationType } from "../../../src/models/operation/OperationType";
 import { ProcessedTransaction } from "../../../src/models/ProcessedTransaction";
 import { Purchase } from "../../../src/models/Purchase";
-import { Statistics } from "../../../src/models/Statistics";
 import { ApiGroup } from "../../../src/net/models/ApiGroup";
 import { GetAccountBalances } from "../../../src/net/models/request/GetAccountBalances";
 import { GetAccountById } from "../../../src/net/models/request/GetAccountById";
@@ -33,6 +32,7 @@ import { GetChainId } from "../../../src/net/models/request/GetChainId";
 import { GetContentById } from "../../../src/net/models/request/GetContentById";
 import { GetContentByUri } from "../../../src/net/models/request/GetContentByUri";
 import { GetDynamicGlobalProps } from "../../../src/net/models/request/GetDynamicGlobalProps";
+import { GetFullAccounts } from "../../../src/net/models/request/GetFullAccounts";
 import { GetKeyReferences } from "../../../src/net/models/request/GetKeyReferences";
 import { GetMiners } from "../../../src/net/models/request/GetMiners";
 import { GetRecentTransactionById } from "../../../src/net/models/request/GetRecentTransactionById";
@@ -41,13 +41,15 @@ import { GetRequiredFees } from "../../../src/net/models/request/GetRequiredFees
 import { GetStatisticsById } from "../../../src/net/models/request/GetStatisticsById";
 import { GetTransaction } from "../../../src/net/models/request/GetTransaction";
 import { Login } from "../../../src/net/models/request/Login";
+import { LookupAccountNames } from "../../../src/net/models/request/LookupAccountNames";
 import { LookupAccounts } from "../../../src/net/models/request/LookupAccounts";
 import { LookupAssetSymbols } from "../../../src/net/models/request/LookupAssetSymbols";
 import { LookupMiners } from "../../../src/net/models/request/LookupMiners";
 import { RequestApiAccess } from "../../../src/net/models/request/RequestApiAccess";
+import { SearchAccounts } from "../../../src/net/models/request/SearchAccounts";
 import { SearchBuyings } from "../../../src/net/models/request/SearchBuyings";
 import { RpcService } from "../../../src/net/rpc/RpcService";
-import { Constants } from "../../Constants";
+import { Helpers } from "../../Helpers";
 
 chai.should();
 chai.use(chaiThings);
@@ -66,7 +68,7 @@ class HttpRequestTest {
     public before() {
         this.spy = create();
         // this.spy.log(/^RpcEndpoints_\w+/);
-        this.rpc = new RpcService({ baseUrl: Constants.STAGE_HTTPS, timeout: 15000, rejectUnauthorized: false });
+        this.rpc = new RpcService({ baseUrl: Helpers.STAGE_HTTPS, timeout: 15000, rejectUnauthorized: false });
     }
 
     public after() {
@@ -88,7 +90,7 @@ class HttpRequestTest {
     @test
     public "should return account statistics by id"(done: (arg?: any) => void) {
         this.rpc.request(new GetStatisticsById(ChainObject.parse("2.5.35")))
-            .subscribe((value) => value.should.include.one.instanceOf(Statistics), (error) => done(error), () => done());
+            .subscribe((value) => value.should.include.one.instanceOf(AccountStatistics), (error) => done(error), () => done());
     }
 
     @test
@@ -198,7 +200,7 @@ class HttpRequestTest {
     @test
     public "should return accounts by name lookup"(done: (arg?: any) => void) {
         this.rpc.request(new LookupAccounts("alx-customer"))
-            .subscribe((value) => value.should.all.be.instanceOf(AccountNameId), (error) => done(error), () => done());
+            .subscribe((value) => undefined, (error) => done(error), () => done());
     }
 
     @test
@@ -210,7 +212,7 @@ class HttpRequestTest {
     @test
     public "should return miners by name lookup"(done: (arg?: any) => void) {
         this.rpc.request(new LookupMiners(""))
-            .subscribe((value) => value.should.all.be.instanceOf(AccountNameId), (error) => done(error), () => done());
+            .subscribe((value) => undefined, (error) => done(error), () => done());
     }
 
     @test
@@ -232,5 +234,23 @@ class HttpRequestTest {
     public "should return purchases by search"(done: (arg?: any) => void) {
         this.rpc.request(new SearchBuyings(ChainObject.parse("1.2.35"), ""))
             .subscribe((value) => value.should.all.be.instanceOf(Purchase), (error) => done(error), () => done());
+    }
+
+    @test
+    public "should return full account by id"(done: (arg?: any) => void) {
+        this.rpc.request(new GetFullAccounts(["1.2.35"], false))
+            .subscribe((value) => value.get("1.2.35").should.be.instanceof(FullAccount), (error) => done(error), () => done());
+    }
+
+    @test
+    public "should return accounts by search term"(done: (arg?: any) => void) {
+        this.rpc.request(new SearchAccounts("alax"))
+            .subscribe((value) => value.should.all.be.instanceOf(Account), (error) => done(error), () => done());
+    }
+
+    @test
+    public "should return accounts by lookup term"(done: (arg?: any) => void) {
+        this.rpc.request(new LookupAccountNames(["decent"]))
+            .subscribe((value) => value.should.all.be.instanceOf(Account), (error) => done(error), () => done());
     }
 }

@@ -23,7 +23,7 @@ import { GetAccountById } from "../src/net/models/request/GetAccountById";
 import { GetAccountByName } from "../src/net/models/request/GetAccountByName";
 import { RpcService } from "../src/net/rpc/RpcService";
 import { RxWebSocket } from "../src/net/ws/RxWebSocket";
-import { Constants } from "./Constants";
+import { Helpers } from "./Helpers";
 import WebSocket = require("isomorphic-ws");
 
 chai.should();
@@ -33,16 +33,16 @@ chai.should();
 class Scratchpad {
 
     private apiWs = DCoreSdk.createForWebSocket(
-        () => new WebSocket(Constants.STAGE_WS, { rejectUnauthorized: false })
+        () => new WebSocket(Helpers.STAGE_WS, { rejectUnauthorized: false })
     );
 
     private apiRpc = DCoreSdk.createForHttp(
-        { baseUrl: Constants.STAGE_HTTPS, timeout: 15000, rejectUnauthorized: false }
+        { baseUrl: Helpers.STAGE_HTTPS, timeout: 15000, rejectUnauthorized: false }
     );
 
     private api = DCoreSdk.create(
-        { baseUrl: Constants.STAGE_HTTPS, timeout: 15000, rejectUnauthorized: false },
-        () => new WebSocket(Constants.STAGE_WS, { rejectUnauthorized: false }),
+        { baseUrl: Helpers.STAGE_HTTPS, timeout: 15000, rejectUnauthorized: false },
+        () => new WebSocket(Helpers.STAGE_WS, { rejectUnauthorized: false }),
     );
     private spy = create();
 
@@ -280,7 +280,7 @@ class Scratchpad {
         );
 
         this.spy.log();
-        this.api.broadcastApi.broadcastWithCallback(Constants.KEY, [op]).subscribe();
+        this.api.broadcastApi.broadcastWithCallback(Helpers.KEY, [op]).subscribe();
     }
 
     @test "construct with default values"() {
@@ -331,7 +331,7 @@ class Scratchpad {
             '{"title":"nbnbj","description":"ádááá","content_type_id":"1.5.5"}',
             []
         )
-        this.api.broadcastApi.broadcastWithCallback(Constants.KEY, [diacriticsOperation]).subscribe();
+        this.api.broadcastApi.broadcastWithCallback(Helpers.KEY, [diacriticsOperation]).subscribe();
     }
 }
 // 02e4d03d9995ebb1b61b11e5e8631a70cdfdd2691df320ad3187751b256cccf808

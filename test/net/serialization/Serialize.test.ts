@@ -23,7 +23,7 @@ import { RegionalPrice } from "../../../src/models/RegionalPrice";
 import { Synopsis } from "../../../src/models/Synopsis";
 import { Transaction } from "../../../src/models/Transaction";
 import { Serializer } from "../../../src/net/serialization/Serializer";
-import { Constants } from "../../Constants";
+import { Helpers } from "../../Helpers";
 
 chai.should();
 
@@ -165,7 +165,7 @@ class SerializeTest {
         const props = deserialize(DynamicGlobalProperties, rawProps);
         const op = deserialize(TransferOperation, rawOp);
         op.extensions = [];
-        const trx = new Transaction(new BlockData(props, DCoreConstants.EXPIRATION_DEFAULT), [op], Constants.DCT_CHAIN_ID_STAGE);
+        const trx = new Transaction(new BlockData(props, DCoreConstants.EXPIRATION_DEFAULT), [op], Helpers.DCT_CHAIN_ID_STAGE);
         trx.blockData.expiration = moment.utc("2018-08-01T10:14:36");
         trx.expiration = moment.utc("2018-08-01T10:14:36");
 
