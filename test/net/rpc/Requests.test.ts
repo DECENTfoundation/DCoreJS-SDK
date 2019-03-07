@@ -49,7 +49,7 @@ import { RequestApiAccess } from "../../../src/net/models/request/RequestApiAcce
 import { SearchAccounts } from "../../../src/net/models/request/SearchAccounts";
 import { SearchBuyings } from "../../../src/net/models/request/SearchBuyings";
 import { RpcService } from "../../../src/net/rpc/RpcService";
-import { Constants } from "../../Constants";
+import { Helpers } from "../../Helpers";
 
 chai.should();
 chai.use(chaiThings);
@@ -68,7 +68,7 @@ class HttpRequestTest {
     public before() {
         this.spy = create();
         // this.spy.log(/^RpcEndpoints_\w+/);
-        this.rpc = new RpcService({ baseUrl: Constants.STAGE_HTTPS, timeout: 15000, rejectUnauthorized: false });
+        this.rpc = new RpcService({ baseUrl: Helpers.STAGE_HTTPS, timeout: 15000, rejectUnauthorized: false });
     }
 
     public after() {

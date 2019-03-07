@@ -17,7 +17,7 @@ import { TransferOperation } from "../../src/models/operation/TransferOperation"
 import { RegionalPrice } from "../../src/models/RegionalPrice";
 import { Synopsis } from "../../src/models/Synopsis";
 import { TransactionConfirmation } from "../../src/models/TransactionConfirmation";
-import { Constants } from "../Constants";
+import { Helpers } from "../Helpers";
 
 chai.should();
 
@@ -34,7 +34,7 @@ class OperationsTest {
     public before() {
         this.spy = create();
         // this.spy.log(/^API\w+/);
-        this.api = DCoreSdk.createForWebSocket(() => new WebSocket(Constants.STAGE_WS, { rejectUnauthorized: false }));
+        this.api = DCoreSdk.createForWebSocket(() => new WebSocket(Helpers.STAGE_WS, { rejectUnauthorized: false }));
     }
 
     public after() {
@@ -50,7 +50,7 @@ class OperationsTest {
             new AssetAmount(1),
         );
 
-        this.api.broadcastApi.broadcastWithCallback(Constants.KEY, [op])
+        this.api.broadcastApi.broadcastWithCallback(Helpers.KEY, [op])
             .subscribe((value) => value.should.be.instanceOf(TransactionConfirmation), (error) => done(error), () => done());
     }
 
@@ -65,7 +65,7 @@ class OperationsTest {
             [[ChainObject.parse("1.2.35"), 50]],
         );
 
-        this.api.broadcastApi.broadcastWithCallback(Constants.KEY, [op])
+        this.api.broadcastApi.broadcastWithCallback(Helpers.KEY, [op])
             .subscribe((value) => value.should.be.instanceOf(TransactionConfirmation), (error) => done(error), () => done());
     }
 
@@ -76,7 +76,7 @@ class OperationsTest {
             "http://hello.world",
         );
 
-        this.api.broadcastApi.broadcastWithCallback(Constants.KEY, [op])
+        this.api.broadcastApi.broadcastWithCallback(Helpers.KEY, [op])
             .subscribe((value) => value.should.be.instanceOf(TransactionConfirmation), (error) => done(error), () => done());
     }
 
@@ -85,10 +85,10 @@ class OperationsTest {
         const op = new AccountCreateOperation(
             ChainObject.parse("1.2.34"),
             "marian",
-            Constants.PUBKEY,
+            Helpers.PUBKEY,
         );
 
-        this.api.broadcastApi.broadcastWithCallback(Constants.KEY, [op])
+        this.api.broadcastApi.broadcastWithCallback(Helpers.KEY, [op])
             .subscribe((value) => value.should.be.instanceOf(TransactionConfirmation), (error) => done(error), () => done());
     }
 }

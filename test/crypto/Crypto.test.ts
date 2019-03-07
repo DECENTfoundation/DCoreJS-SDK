@@ -7,7 +7,7 @@ import { Address } from "../../src/crypto/Address";
 import { ECKeyPair } from "../../src/crypto/ECKeyPair";
 import { Passphrase } from "../../src/crypto/Passphrase";
 import { Memo } from "../../src/models/Memo";
-import { Constants } from "../Constants";
+import { Helpers } from "../Helpers";
 
 chai.should();
 
@@ -45,7 +45,7 @@ class CryptoTest {
         const nonce = Long.fromString("10872523688190906880", true);
         const address = Address.parse("DCT6bVmimtYSvWQtwdrkVVQGHkVsTJZVKtBiUqf4YmJnrJPnk89QP");
 
-        const ss = Constants.KEY.secret(address, nonce).toString("hex");
+        const ss = Helpers.KEY.secret(address, nonce).toString("hex");
 
         ss.should.be.equal(expected);
     }
@@ -56,16 +56,16 @@ class CryptoTest {
         const plain = "hello memo here i am";
         const address = Address.parse("DCT6bVmimtYSvWQtwdrkVVQGHkVsTJZVKtBiUqf4YmJnrJPnk89QP");
         const nonce = Long.fromString("10872523688190906880", true);
-        const memo = Memo.createEncrypted(plain, Constants.KEY, address, nonce);
+        const memo = Memo.createEncrypted(plain, Helpers.KEY, address, nonce);
 
         memo.message.should.be.equal(expected);
-        memo.decrypt(Constants.KEY).should.be.equal(plain);
+        memo.decrypt(Helpers.KEY).should.be.equal(plain);
     }
     @test
     public "should decrypt public memo"() {
         const plain = "hello memo here i am";
         const memo = Memo.createPublic(plain);
 
-        memo.decrypt(Constants.KEY).should.be.equal(plain);
+        memo.decrypt(Helpers.KEY).should.be.equal(plain);
     }
 }

@@ -223,7 +223,7 @@ export class AccountApi extends BaseApi {
                 memo && Memo.createPublic(memo),
                 fee));
         } else {
-            this.get(account).pipe(map((acc) => new TransferOperation(
+            return this.get(account).pipe(map((acc) => new TransferOperation(
                 credentials.account,
                 acc.id,
                 amount,

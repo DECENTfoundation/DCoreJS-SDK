@@ -44,7 +44,7 @@ import { LookupMiners } from "../../../src/net/models/request/LookupMiners";
 import { RequestApiAccess } from "../../../src/net/models/request/RequestApiAccess";
 import { SearchBuyings } from "../../../src/net/models/request/SearchBuyings";
 import { RxWebSocket } from "../../../src/net/ws/RxWebSocket";
-import { Constants } from "../../Constants";
+import { Helpers } from "../../Helpers";
 
 chai.should();
 chai.use(chaiThings);
@@ -63,7 +63,7 @@ class WsRequestTest {
     public before() {
         this.spy = create();
         // this.spy.log(/^RxWebSocket_\w+/);
-        this.rxWs = new RxWebSocket(() => new WebSocket(Constants.STAGE_WS, { rejectUnauthorized: false }));
+        this.rxWs = new RxWebSocket(() => new WebSocket(Helpers.STAGE_WS, { rejectUnauthorized: false }));
     }
 
     public after() {
