@@ -6,8 +6,10 @@ import { AccountRef, AssetWithAmount } from "../DCoreSdk";
 import { Asset } from "../models/Asset";
 import { AssetAmount } from "../models/AssetAmount";
 import { ChainObject } from "../models/ChainObject";
+import { VestingBalance } from "../models/VestingBalance";
 import { GetAccountBalances } from "../net/models/request/GetAccountBalances";
 import { GetNamedAccountBalances } from "../net/models/request/GetNamedAccountBalances";
+import { GetVestingBalances } from "../net/models/request/GetVestingBalances";
 import { BaseApi } from "./BaseApi";
 
 export class BalanceApi extends BaseApi {
@@ -65,6 +67,17 @@ export class BalanceApi extends BaseApi {
             .pipe(flatMap((assets) => this.getAll(account, assets.map((asset) => asset.id))
                 .pipe(map((balances) => this.createTuple(assets, balances))),
             ));
+    }
+
+    /**
+     * Get information about a vesting balance object.
+     *
+     * @param accountId id of the account
+     *
+     * @return a list of vesting balances with additional information
+     */
+    public getAllVesting(accountId: ChainObject): Observable<VestingBalance[]> {
+        return this.api.request(new GetVestingBalances(accountId));
     }
 
     private createTuple(assets: Asset[], balances: AssetAmount[]): AssetWithAmount[] {
