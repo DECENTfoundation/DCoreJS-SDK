@@ -1,8 +1,9 @@
-import { Expose, Transform } from "class-transformer";
+import { Expose } from "class-transformer";
 import * as _ from "lodash/fp";
 import * as Long from "long";
 import { Address } from "../crypto/Address";
 import { ECKeyPair } from "../crypto/ECKeyPair";
+import { AddressToClass, AddressToPlain, LongToClass, LongToPlain } from "../utils/TypeAdapters";
 import { Utils } from "../utils/Utils";
 
 export class Memo {
@@ -18,21 +19,21 @@ export class Memo {
         return new Memo(cipherText.toString("hex"), new Address(keyPair.publicKey), recipient, nonce);
     }
 
-    @Transform((value: string) => Address.parse(value), { toClassOnly: true })
-    @Transform((value?: Address) => _.isNil(value) ? value : value.encoded, { toPlainOnly: true })
+    @AddressToClass
+    @AddressToPlain
     @Expose({ name: "from" })
     public from?: Address;
 
-    @Transform((value: string) => Address.parse(value), { toClassOnly: true })
-    @Transform((value?: Address) => _.isNil(value) ? value : value.encoded, { toPlainOnly: true })
+    @AddressToClass
+    @AddressToPlain
     @Expose({ name: "to" })
     public to?: Address;
 
     @Expose({ name: "message" })
     public message: string;
 
-    @Transform((value: string) => Long.fromValue(value), { toClassOnly: true })
-    @Transform((value: object, obj: Memo) => obj.nonce.toString(), { toPlainOnly: true })
+    @LongToClass
+    @LongToPlain
     @Expose({ name: "nonce" })
     public nonce: Long;
 

@@ -1,7 +1,7 @@
 /* tslint:disable */
 import * as ByteBuffer from "bytebuffer";
 import * as chai from "chai";
-import { plainToClass } from "class-transformer";
+import { classToPlain, plainToClass } from "class-transformer";
 import { createHash } from "crypto";
 import * as Long from "long";
 import { suite, test, timeout } from "mocha-typescript";
@@ -48,7 +48,7 @@ class Scratchpad {
 
     @test "get account balance"() {
 
-        this.apiRpc.balanceApi.getBalance(ChainObject.parse("1.2.1135"), ["DCT"]).subscribe(
+        this.apiRpc.balanceApi.getAllWithAsset(ChainObject.parse("1.2.1135"), ["DCT"]).subscribe(
             (b) => console.log(b),
             (err) => console.error(err)
         );
@@ -56,7 +56,7 @@ class Scratchpad {
 
     @test.skip "get account balance by name"() {
 
-        this.apiRpc.balanceApi.getBalance("u961279ec8b7ae7bd62f304f7c1c3d345", ["DCT"]).subscribe(
+        this.apiRpc.balanceApi.getAllWithAsset("u961279ec8b7ae7bd62f304f7c1c3d345", ["DCT"]).subscribe(
             (b) => console.log(b),
             (err) => console.error(err)
         );
@@ -64,7 +64,7 @@ class Scratchpad {
 
     @test "get content by uri"() {
 
-        this.apiRpc.contentApi.getContent("https://alax.io/1/1/tv.tamago.tamago").subscribe(
+        this.apiRpc.contentApi.get("https://alax.io/1/1/tv.tamago.tamago").subscribe(
             (b) => console.log(b),
             (err) => console.error(err)
         );
@@ -132,7 +132,6 @@ class Scratchpad {
             ]
         }
         );
-
         account.should.be.instanceOf(Account);
         aa.should.be.instanceOf(Authority);
     }
@@ -258,18 +257,19 @@ class Scratchpad {
     @test dcoreSdk() {
         // spy.log(/^API_\w+/);
         this.spy.log();
-        this.apiWs.assetApi.getAssets([ChainObject.parse("1.3.1000")]).subscribe();
-        this.apiRpc.assetApi.getAssets([ChainObject.parse("1.3.1000")]).subscribe();
+        this.apiWs.assetApi.getAll([ChainObject.parse("1.3.1000")]).subscribe();
+        this.apiRpc.assetApi.getAll([ChainObject.parse("1.3.1000")]).subscribe();
     }
 
     @test instanceChecks() {
         const bb = ByteBuffer.allocate(10);
         let l = Long.fromValue(1);
         console.log(l);
-        bb.writeUint64(l);
-        // console.log(l instanceof Long);
+        console.log(l instanceof Long);
         // l = Long.fromValue(10);
         // console.log(l instanceof Long)
+        // @ts-ignore
+        bb.writeUint64(l.toString());
     }
 
     @test "make a transfer broadcast through API"() {
@@ -332,6 +332,24 @@ class Scratchpad {
             []
         )
         this.api.broadcastApi.broadcastWithCallback(Helpers.KEY, [diacriticsOperation]).subscribe();
+    }
+
+    @test "type adapters"() {
+        const json = { "amount": 18446744073709550000, "asset_id": "1.3.0" };
+        const clazz = plainToClass(AssetAmount, json);
+        const plain = classToPlain(clazz);
+        console.log(clazz);
+        // console.log(clazz.amount.toString());
+        console.log(plain);
+        console.log(json);
+        // console.log(Long.fromValue("1152921504606847000").toString());
+
+        const big = Long.MAX_UNSIGNED_VALUE.toString();
+        console.log(big);
+        console.log(big.toString());
+        console.log(Long.fromString(big.toString(), true).toString());
+
+        JSON.stringify(json).should.be.equal(JSON.stringify(plain));
     }
 }
 // 02e4d03d9995ebb1b61b11e5e8631a70cdfdd2691df320ad3187751b256cccf808

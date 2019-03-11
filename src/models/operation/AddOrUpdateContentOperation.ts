@@ -1,6 +1,6 @@
 import { Expose, Transform, Type } from "class-transformer";
-import * as moment from "moment";
 import { Moment } from "moment";
+import { ChainObjectToClass, ChainObjectToPlain, CoAuthorsToClass, CoAuthorsToPlain, MomentToClass, MomentToPlain } from "../../utils/TypeAdapters";
 import { Utils } from "../../utils/Utils";
 import { AssetAmount } from "../AssetAmount";
 import { ChainObject } from "../ChainObject";
@@ -14,13 +14,13 @@ export class AddOrUpdateContentOperation extends BaseOperation {
     @Expose({ name: "size" })
     public size: number = 1;
 
-    @Transform((value: string) => ChainObject.parse(value), { toClassOnly: true })
-    @Transform((value: ChainObject) => value.objectId, { toPlainOnly: true })
+    @ChainObjectToClass
+    @ChainObjectToPlain
     @Expose({ name: "author" })
     public author: ChainObject;
 
-    @Transform((value: Array<[string, number]>) => value.map(([id, weight]) => [ChainObject.parse(id), weight]), { toClassOnly: true })
-    @Transform((value: object, obj: AddOrUpdateContentOperation) => obj.coAuthors.map(([id, weight]) => [id.objectId, weight]), { toPlainOnly: true })
+    @CoAuthorsToClass
+    @CoAuthorsToPlain
     @Expose({ name: "co_authors" })
     public coAuthors: Array<[ChainObject, number]>;
 
@@ -46,8 +46,8 @@ export class AddOrUpdateContentOperation extends BaseOperation {
     @Expose({ name: "key_parts" })
     public keyParts: KeyPart[] = [];
 
-    @Transform((value: string) => moment.utc(value), { toClassOnly: true })
-    @Transform((value: any, obj: AddOrUpdateContentOperation) => obj.expiration.utc().format("YYYY-MM-DDTHH:mm:ss"), { toPlainOnly: true })
+    @MomentToClass
+    @MomentToPlain
     @Expose({ name: "expiration" })
     public expiration: Moment;
 
