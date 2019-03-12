@@ -37,28 +37,36 @@ export class Asset {
     @Expose({ name: "dynamic_asset_data_id" })
     public dynamicAssetDataId: ChainObject;
 
-    public convert(assetAmount: AssetAmount, rounding: Decimal.Rounding = Decimal.ROUND_CEIL): AssetAmount {
-        if (!( this.id.eq(DCoreConstants.DCT_ASSET_ID) || assetAmount.assetId.eq(DCoreConstants.DCT_ASSET_ID))) {
-            throw new UnsupportedAssetError("One of converted asset must be DCT, conversions between arbitrary assets is not supported");
-        }
+    public convertFromDCT(amount: Long | number, roundingMode: Decimal.Rounding = Decimal.ROUND_CEIL) {
+        return this.convert(typeof amount === "number" ? Long.fromNumber(amount) : amount, this.id, roundingMode);
+    }
 
+    public convertToDCT(amount: Long | number, roundingMode: Decimal.Rounding = Decimal.ROUND_CEIL) {
+        return this.convert(typeof amount === "number" ? Long.fromNumber(amount) : amount, DCoreConstants.DCT_ASSET_ID, roundingMode);
+    }
+
+    private convert(amount: Long, toAssetId: ChainObject, rounding: Decimal.Rounding): AssetAmount {
         if (!this.options.exchangeable) {
             throw new UnsupportedAssetError("Converting is available only for exchangeable assets");
         }
+
         const quote = new Decimal(this.options.exchangeRate.quote.amount.toString());
         const base = new Decimal(this.options.exchangeRate.base.amount.toString());
-        const amount = new Decimal(assetAmount.amount.toString());
+        // const amount = new Decimal(assetAmount.amount.toString());
 
-        if (this.options.exchangeRate.base.assetId.eq(assetAmount.assetId)) {
-            const result = quote.div(base).mul(amount);
-            return new AssetAmount(Long.fromString(result.toFixed(0, rounding)), this.id);
+        assertThrow(quote.greaterThan(0), () => "Quote exchange amount must be greater then 0");
+        assertThrow(base.greaterThan(0), () => "Base exchange amount must be greater then 0");
+
+        if (this.options.exchangeRate.base.assetId.eq(toAssetId)) {
+            const result = quote.div(base).mul(amount.toString());
+            return new AssetAmount(Long.fromString(result.toFixed(0, rounding)), toAssetId);
         }
 
-        if (this.options.exchangeRate.quote.assetId.eq(assetAmount.assetId)) {
-            const result = base.div(quote).mul(amount);
-            return new AssetAmount(Long.fromString(result.toFixed(0, rounding)), this.id);
+        if (this.options.exchangeRate.quote.assetId.eq(toAssetId)) {
+            const result = base.div(quote).mul(amount.toString());
+            return new AssetAmount(Long.fromString(result.toFixed(0, rounding)), toAssetId);
         }
 
-        assertThrow(false, () => `cannot convert ${assetAmount.assetId} with ${this.symbol}:${this.id}`);
+        assertThrow(false, () => `cannot convert ${toAssetId} with ${this.symbol}:${this.id}`);
     }
 }
