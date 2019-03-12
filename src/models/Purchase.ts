@@ -37,7 +37,7 @@ export class Purchase {
     @Expose({ name: "paid_price_after_exchange" })
     public priceAfter: AssetAmount;
 
-    @ChainObjectToClass
+    @Transform((value: string[]) => value.map((id) => ChainObject.parse(id)), { toClassOnly: true })
     @Expose({ name: "seeders_answered" })
     public seedersAnswered: ChainObject[];
 

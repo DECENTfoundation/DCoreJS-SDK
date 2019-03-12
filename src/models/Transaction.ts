@@ -44,7 +44,7 @@ export class Transaction {
         this.expiration = this.blockData.expiration;
     }
 
-    public sign(key: ECKeyPair): Transaction {
+    public withSignature(key: ECKeyPair): Transaction {
         const serializer = new Serializer();
 
         let sig: string;

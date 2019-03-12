@@ -6,6 +6,7 @@ import { suite, test, timeout } from "mocha-typescript";
 import "reflect-metadata";
 import { create } from "rxjs-spy";
 import { Spy } from "rxjs-spy/spy-interface";
+import { flatMap } from "rxjs/operators";
 import { Address } from "../../../src/crypto/Address";
 import { Account } from "../../../src/models/Account";
 import { Asset } from "../../../src/models/Asset";
@@ -67,7 +68,7 @@ class WsRequestTest {
     }
 
     public after() {
-        this.rxWs.close();
+        this.rxWs.disconnect();
         this.spy.teardown();
     }
 
@@ -197,8 +198,9 @@ class WsRequestTest {
     }
 
     @test
-    public "should request api access"(done: (arg?: any) => void) {
-        this.rxWs.request(new RequestApiAccess(ApiGroup.Database))
+    public "should request api access, has to login before"(done: (arg?: any) => void) {
+        this.rxWs.request(new Login()).pipe(flatMap(() =>
+            this.rxWs.request(new RequestApiAccess(ApiGroup.Database))))
             .subscribe((value) => value.should.be.a("number"), (error) => done(error), () => done());
     }
 
