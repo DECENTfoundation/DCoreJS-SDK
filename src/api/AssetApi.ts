@@ -1,4 +1,6 @@
+import { Decimal } from "decimal.js";
 import { Observable } from "rxjs";
+import { map } from "rxjs/operators";
 import { DCoreApi } from "../DCoreApi";
 import { Asset } from "../models/Asset";
 import { AssetAmount } from "../models/AssetAmount";
@@ -61,4 +63,31 @@ export class AssetApi extends BaseApi {
     public getAssetsData(assetIds: ChainObject[]): Observable<AssetData[]> {
         return this.request(new GetAssetData(assetIds));
     }
+
+    /**
+     * Get asset by id and convert amount in DCT to this asset
+     *
+     * @param assetId asset id to get
+     * @param amount amount to convert
+     * @param roundingMode rounding mode to use when rounding to target asset precision
+     */
+    public convertFromDCT(assetId: ChainObject, amount: number | Long, roundingMode: Decimal.Rounding = Decimal.ROUND_CEIL): Observable<AssetAmount> {
+        return this.getAssets([assetId]).pipe(
+            map((asset: Asset[]) => asset[0].convertFromDCT(amount, roundingMode)),
+        );
+    }
+
+    /**
+     * Get asset by id and convert amount in this asset to DCT
+     *
+     * @param assetId asset id to get
+     * @param amount amount to convert
+     * @param roundingMode rounding mode to use when rounding to target asset precision
+     */
+    public convertToDCT(assetId: ChainObject, amount: number | Long, roundingMode: Decimal.Rounding = Decimal.ROUND_CEIL): Observable<AssetAmount> {
+        return this.getAssets([assetId]).pipe(
+            map((asset: Asset[]) => asset[0].convertToDCT(amount, roundingMode)),
+        );
+    }
+
 }

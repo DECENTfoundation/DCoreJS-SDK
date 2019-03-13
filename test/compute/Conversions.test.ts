@@ -5,11 +5,10 @@ import "mocha";
 import { suite, test } from "mocha-typescript";
 import "reflect-metadata";
 import { Asset, AssetAmount, AssetOptions, ChainObject, ExchangeRate } from "../../src/models";
-import { UnsupportedAssetError } from "../../src/models/error/UnsupportedAssetError";
 
 chai.should();
 
-const getTestAsset = (assetId: string, baseAmount: number, baseId: string, quoteAmount: number, quoteId: string ): Asset => {
+const getTestAsset = (assetId: string, baseAmount: number, baseId: string, quoteAmount: number, quoteId: string): Asset => {
     const asset = new Asset();
     asset.id = ChainObject.parse(assetId);
     const base = new AssetAmount(Long.fromNumber(baseAmount), ChainObject.parse(baseId));
@@ -47,15 +46,5 @@ class ConversionsTest {
     @test
     public "should successfully round floor"() {
         testAsset.convertFromDCT(1, Decimal.ROUND_FLOOR).amount.toNumber().should.be.eq(0);
-    }
-
-    @test
-    public "throw error for non-exchangeable asset"() {
-        testAsset.options.exchangeable = false;
-        try {
-            testAsset.convertToDCT(1);
-        } catch (e) {
-            e.should.be.instanceOf(UnsupportedAssetError);
-        }
     }
 }
