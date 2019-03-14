@@ -71,7 +71,7 @@ export class RxWebSocket {
     }
 
     private static send(ws: WebSocketContract, request: string): void {
-        // todo logging ?
+        // todo logging https://decentplatform.atlassian.net/browse/DSDK-587
         // tslint:disable-next-line
         console.log(request);
         ws.send(request);
