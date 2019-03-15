@@ -1,5 +1,6 @@
-import { Expose, Transform, Type } from "class-transformer";
+import { Expose, Type } from "class-transformer";
 import { Address } from "../../crypto/Address";
+import { ChainObjectToClass, ChainObjectToPlain } from "../../utils/TypeAdapters";
 import { AssetAmount } from "../AssetAmount";
 import { Authority } from "../Authority";
 import { ChainObject } from "../ChainObject";
@@ -17,8 +18,8 @@ import { OperationType } from "./OperationType";
  */
 export class AccountCreateOperation extends BaseOperation {
 
-    @Transform((value: string) => ChainObject.parse(value), { toClassOnly: true })
-    @Transform((value: ChainObject) => value.objectId, { toPlainOnly: true })
+    @ChainObjectToClass
+    @ChainObjectToPlain
     @Expose({ name: "registrar" })
     public registrar: ChainObject;
 

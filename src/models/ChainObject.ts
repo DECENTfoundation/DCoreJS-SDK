@@ -1,4 +1,5 @@
 import * as ByteBuffer from "bytebuffer";
+import * as Long from "long";
 import { ObjectType } from "./ObjectType";
 
 export class ChainObject {
@@ -17,7 +18,7 @@ export class ChainObject {
     private static regexp: RegExp = /^([0-9]+)\.([0-9]+)\.([0-9]+)(\.([0-9]+))?$/;
 
     public readonly objectType: ObjectType;
-    public readonly instance: number = 0;
+    public readonly instance: Long = Long.fromNumber(0);
     public readonly fullBytes: Buffer = Buffer.alloc(0);
     public readonly objectId: string;
 
@@ -25,9 +26,11 @@ export class ChainObject {
         if (typeof objectId === "string") {
             const group = ChainObject.regexp.exec(objectId);
             this.objectType = ObjectType.types[+group[1]][+group[2]];
-            this.instance = +group[3];
+            this.instance = Long.fromString(group[3], true);
             this.objectId = objectId;
-            this.fullBytes = new ByteBuffer(8, ByteBuffer.LITTLE_ENDIAN).writeUint64(this.instance).reset().skip(6)
+            this.fullBytes = new ByteBuffer(8, ByteBuffer.LITTLE_ENDIAN)
+            // @ts-ignore fails on instance of Long, force a string
+                .writeUint64(obj.toString()).reset().skip(6)
                 .writeByte(this.objectType.type).writeByte(this.objectType.space).buffer;
         } else {
             this.objectType = objectId;

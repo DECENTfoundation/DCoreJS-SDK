@@ -1,9 +1,10 @@
-import { Expose, Transform, Type } from "class-transformer";
+import { Expose, Type } from "class-transformer";
 import { Decimal } from "decimal.js";
 import * as Long from "long";
 import { DCoreConstants } from "../DCoreConstants";
 
 import { assertThrow } from "../utils";
+import { ChainObjectToClass } from "../utils/TypeAdapters";
 
 import { AssetAmount } from "./AssetAmount";
 import { AssetOptions } from "./AssetOptions";
@@ -12,7 +13,7 @@ import { UnsupportedAssetError } from "./error/UnsupportedAssetError";
 
 export class Asset {
 
-    @Transform((value: string) => ChainObject.parse(value), { toClassOnly: true })
+    @ChainObjectToClass
     @Expose({ name: "id" })
     public id: ChainObject;
 
@@ -22,7 +23,7 @@ export class Asset {
     @Expose({ name: "precision" })
     public precision: number;
 
-    @Transform((value: string) => ChainObject.parse(value), { toClassOnly: true })
+    @ChainObjectToClass
     @Expose({ name: "issuer" })
     public issuer: ChainObject;
 
@@ -33,12 +34,12 @@ export class Asset {
     @Expose({ name: "options" })
     public options: AssetOptions;
 
-    @Transform((value: string) => ChainObject.parse(value), { toClassOnly: true })
+    @ChainObjectToClass
     @Expose({ name: "dynamic_asset_data_id" })
     public dynamicAssetDataId: ChainObject;
 
     public convert(assetAmount: AssetAmount, rounding: Decimal.Rounding = Decimal.ROUND_CEIL): AssetAmount {
-        if (!( this.id.eq(DCoreConstants.DCT_ASSET_ID) || assetAmount.assetId.eq(DCoreConstants.DCT_ASSET_ID))) {
+        if (!(this.id.eq(DCoreConstants.DCT_ASSET_ID) || assetAmount.assetId.eq(DCoreConstants.DCT_ASSET_ID))) {
             throw new UnsupportedAssetError("One of converted asset must be DCT, conversions between arbitrary assets is not supported");
         }
 

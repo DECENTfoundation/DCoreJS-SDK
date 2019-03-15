@@ -1,19 +1,20 @@
-import { Expose, Transform } from "class-transformer";
+import { Expose } from "class-transformer";
 import * as Long from "long";
 import { DCoreConstants } from "../DCoreConstants";
+import { ChainObjectToClass, ChainObjectToPlain, LongToClass, LongToPlain } from "../utils/TypeAdapters";
 import { assertThrow } from "../utils/Utils";
 import { ChainObject } from "./ChainObject";
 import { ObjectType } from "./ObjectType";
 
 export class AssetAmount {
 
-    @Transform((value: string) => Long.fromValue(value), { toClassOnly: true })
-    @Transform((value: object, obj: AssetAmount) => obj.amount.toString(), { toPlainOnly: true })
+    @LongToClass
+    @LongToPlain
     @Expose({ name: "amount" })
     public amount: Long;
 
-    @Transform((value: string) => ChainObject.parse(value), { toClassOnly: true })
-    @Transform((value: ChainObject) => value.objectId, { toPlainOnly: true })
+    @ChainObjectToClass
+    @ChainObjectToPlain
     @Expose({ name: "asset_id" })
     public assetId: ChainObject;
 

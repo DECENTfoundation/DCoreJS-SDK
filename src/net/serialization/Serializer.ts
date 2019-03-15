@@ -86,7 +86,8 @@ export class Serializer {
         }
     }
 
-    private chainIdAdapter = (buffer: ByteBuffer, obj: ChainObject) => buffer.writeVarint32(obj.instance);
+    // @ts-ignore fails on instance of Long, force a string
+    private chainIdAdapter = (buffer: ByteBuffer, obj: ChainObject) => buffer.writeVarint64(obj.instance.toString());
 
     private stringAdapter = (buffer: ByteBuffer, obj: string) => {
         const encodedString = new TextEncoder().encode(obj);
@@ -108,7 +109,8 @@ export class Serializer {
     }
 
     private longAdapter = (buffer: ByteBuffer, obj: Long) => {
-        buffer.append(Uint8Array.of(...obj.toBytesLE()));
+        // @ts-ignore fails on instance of Long, force a string
+        buffer.writeUint64(obj.toString());
     }
 
     private assetAmountAdapter = (buffer: ByteBuffer, obj: AssetAmount) => {
@@ -166,7 +168,7 @@ export class Serializer {
 
     private blockDataAdapter = (buffer: ByteBuffer, obj: BlockData) => {
         buffer.writeUint16(obj.refBlockNum);
-        buffer.writeUint32(obj.refBlockPrefix);
+        buffer.writeUint32(obj.refBlockPrefix.getLowBitsUnsigned());
         this.momentAdapter(buffer, obj.expiration);
     }
 

@@ -1,4 +1,5 @@
-import { Expose, Transform, Type } from "class-transformer";
+import { Expose, Type } from "class-transformer";
+import { ChainObjectToClass, ChainObjectToPlain } from "../../utils/TypeAdapters";
 import { AssetAmount } from "../AssetAmount";
 import { ChainObject } from "../ChainObject";
 import { PubKey } from "../PubKey";
@@ -18,8 +19,8 @@ export class BuyContentOperation extends BaseOperation {
     @Expose({ name: "URI" })
     public uri: string;
 
-    @Transform((value: string) => ChainObject.parse(value), { toClassOnly: true })
-    @Transform((value: ChainObject) => value.objectId, { toPlainOnly: true })
+    @ChainObjectToClass
+    @ChainObjectToPlain
     @Expose({ name: "consumer" })
     public consumer: ChainObject;
 

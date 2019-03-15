@@ -1,26 +1,27 @@
-import { Expose, Transform } from "class-transformer";
+import { Expose } from "class-transformer";
+import * as Long from "long";
 import { Address } from "../crypto/Address";
+import { AddressToClass, ChainObjectToClass } from "../utils/TypeAdapters";
 import { ChainObject } from "./ChainObject";
 
 export class Miner {
 
-    @Transform((value: string) => ChainObject.parse(value), { toClassOnly: true })
+    @ChainObjectToClass
     @Expose({ name: "id" })
     public id: ChainObject;
 
-    @Transform((value: string) => ChainObject.parse(value), { toClassOnly: true })
+    @ChainObjectToClass
     @Expose({ name: "miner_account" })
     public minerAccount: ChainObject;
 
     @Expose({ name: "last_aslot" })
     public lastAslot: number;
 
-    @Transform((value: string) => Address.parse(value), { toClassOnly: true })
-    @Transform((value: Address) => value.encoded, { toPlainOnly: true })
+    @AddressToClass
     @Expose({ name: "signing_key" })
     public signingKey: Address;
 
-    @Transform((value: string) => ChainObject.parse(value), { toClassOnly: true })
+    @ChainObjectToClass
     @Expose({ name: "pay_vb" })
     public payVb: ChainObject;
 
@@ -37,5 +38,5 @@ export class Miner {
     public totalMissed: number;
 
     @Expose({ name: "last_confirmed_block_num" })
-    public lastConfirmedBlockNum: number;
+    public lastConfirmedBlockNum: Long;
 }
