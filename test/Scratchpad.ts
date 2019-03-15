@@ -19,6 +19,7 @@ import { Authority } from "../src/models/Authority";
 import { ChainObject } from "../src/models/ChainObject";
 import { AddOrUpdateContentOperation } from "../src/models/operation";
 import { TransferOperation } from "../src/models/operation/TransferOperation";
+import { API_GROUP_NAMES, ApiGroup } from "../src/net/models/ApiGroup";
 import { GetAccountById } from "../src/net/models/request/GetAccountById";
 import { GetAccountByName } from "../src/net/models/request/GetAccountByName";
 import { RpcService } from "../src/net/rpc/RpcService";
@@ -350,6 +351,11 @@ class Scratchpad {
         console.log(Long.fromString(big.toString(), true).toString());
 
         JSON.stringify(json).should.be.equal(JSON.stringify(plain));
+    }
+
+    @test "enum to string"() {
+        console.log(ApiGroup.Broadcast.toString().toLowerCase());
+        console.log(API_GROUP_NAMES[ApiGroup.Broadcast]);
     }
 }
 // 02e4d03d9995ebb1b61b11e5e8631a70cdfdd2691df320ad3187751b256cccf808

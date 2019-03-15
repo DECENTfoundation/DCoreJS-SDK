@@ -1,24 +1,20 @@
-import { serialize } from "class-transformer";
 import * as _ from "lodash";
-import { Observable, Subscription } from "rxjs";
+import { NEVER, Observable, Subject, Subscription, throwError } from "rxjs";
 import { tag } from "rxjs-spy/operators";
 import { Subscriber } from "rxjs/internal-compatibility";
 import { AsyncSubject } from "rxjs/internal/AsyncSubject";
 import { defer } from "rxjs/internal/observable/defer";
 import { merge } from "rxjs/internal/observable/merge";
 import { scalar } from "rxjs/internal/observable/scalar";
-import { OperatorFunction } from "rxjs/internal/types";
-import { filter, first, flatMap, map, publish, tap } from "rxjs/operators";
+import { filter, first, flatMap, map, tap, timeout } from "rxjs/operators";
+import { DCoreError } from "../../models/error/DCoreError";
 import { ObjectNotFoundError } from "../../models/error/ObjectNotFoundError";
 import { ObjectCheckOf } from "../../utils/ObjectCheckOf";
-import { ApiGroup } from "../models/ApiGroup";
 import { BaseRequest } from "../models/request/BaseRequest";
-import { Login } from "../models/request/Login";
-import { RequestApiAccess } from "../models/request/RequestApiAccess";
 import { WithCallback } from "../models/request/WithCallback";
-import { WsResult } from "../models/response/WsResult";
-import { WsResultNotice } from "../models/response/WsResultNotice";
-import { RequestJson } from "./RequestJson";
+import { CallbackResponse } from "../models/response/CallbackResponse";
+import { DataResponse } from "../models/response/DataResponse";
+import { WebSocketClosedError } from "../models/WebSocketClosedError";
 
 export interface CloseEvent {
     wasClean: boolean;
@@ -51,11 +47,44 @@ export interface WebSocketContract {
 export type WebSocketFactory = () => WebSocketContract;
 
 export class RxWebSocket {
+
+    private static checkError(value: object, callId: number): void {
+        if (ObjectCheckOf<DataResponse>(value, "id") && value.id === callId && !_.isNil(value.error)) {
+            throw new DCoreError(value.error);
+        }
+    }
+
+    private static getIdAndResult(value: object): [number, object] {
+        if (ObjectCheckOf<DataResponse>(value, "id")) {
+            return [value.id, value.result];
+        }
+        if (ObjectCheckOf<CallbackResponse>(value, "method")) {
+            return [value.params[0], value.params[1][0]];
+        }
+        throw Error(`not supported response: ${value}`);
+    }
+
+    private static checkEmpty(value: object, request: BaseRequest<any>): void {
+        if (_.isNil(value) || (_.isArray(value) && value.filter(Boolean).length === 0)) {
+            throw new ObjectNotFoundError(request.description());
+        }
+    }
+
+    private static send(ws: WebSocketContract, request: string): void {
+        // todo logging https://decentplatform.atlassian.net/browse/DSDK-587
+        // tslint:disable-next-line
+        console.log(request);
+        ws.send(request);
+    }
+
+    public timeout = 60 * 1000;
+
     private callId = 0;
-    private apiId = new Map<ApiGroup, number>();
     private subscriptions: Subscription;
     private webSocketAsync?: AsyncSubject<WebSocketContract> = null;
-    private events = Observable.create((emitter: Subscriber<string>) => {
+    private messages: Subject<object | Error> = new Subject();
+
+    private events: Observable<string> = Observable.create((emitter: Subscriber<string>) => {
         const socket = this.webSocketFactory();
         socket.onopen = () => {
             this.webSocketAsync.next(socket);
@@ -70,7 +99,7 @@ export class RxWebSocket {
         };
         socket.onmessage = (message: MessageEvent) => emitter.next(message.data);
         socket.onerror = (error: ErrorEvent) => emitter.error(Error(error.message));
-    }).pipe(tag("RxWebSocket_events"), publish());
+    }).pipe(tag("RxWebSocket_events"));
 
     constructor(private webSocketFactory: WebSocketFactory) {
     }
@@ -83,105 +112,73 @@ export class RxWebSocket {
         return this.make(request, this.getCallId());
     }
 
+    public requestStream<T>(request: BaseRequest<T> & WithCallback): Observable<T> {
+        return this.makeStream(request, this.getCallId(), this.getCallId());
+    }
+
     public getCallId(): number {
         return this.callId++;
     }
 
-    public close() {
+    public disconnect() {
         this.webSocket().subscribe((socket: WebSocketContract) => {
             socket.close(1000, "closing");
-            socket.onclose({ wasClean: true, code: 1000, reason: "self close" });
+            socket.onclose({ wasClean: true, code: 1000, reason: "self disconnect" });
             socket.onclose = undefined;
         });
     }
 
-    private connect() {
-        this.subscriptions =
-            this.events.subscribe({
-                complete: () => {
-                    this.subscriptions.unsubscribe();
-                    this.webSocketAsync = null;
-                },
-            });
-        this.events.connect();
-    }
-
-    private webSocket(): Observable<WebSocketContract> {
-        if (_.isNull(this.webSocketAsync)) {
+    public webSocket(): Observable<WebSocketContract> {
+        if (_.isNil(this.webSocketAsync)) {
             this.webSocketAsync = new AsyncSubject<WebSocketContract>();
             this.connect();
         }
         return this.webSocketAsync;
     }
 
-    private checkApiAccess<T extends WebSocketContract>(request: BaseRequest<any>): OperatorFunction<T, [T, number]> {
-        return flatMap((ws) => {
-            if (request instanceof Login) {
-                return scalar<[T, number]>([ws, 1]);
-            } else if (!this.apiId.has(request.apiGroup) && request.apiGroup === ApiGroup.Login) {
-                return this.make(new Login(), this.getCallId()).pipe(
-                    tap({ complete: () => this.apiId.set(ApiGroup.Login, 1) }),
-                    map<boolean, [T, number]>(() => [ws, 1]),
-                );
-            } else if (!this.apiId.has(request.apiGroup)) {
-                return this.make(new RequestApiAccess(request.apiGroup), this.getCallId()).pipe(
-                    tap({ next: (value: number) => this.apiId.set(request.apiGroup, value) }),
-                    map<number, [T, number]>((value) => [ws, value]));
-            } else {
-                return scalar<[T, number]>([ws, this.apiId.get(request.apiGroup)]);
-            }
-        });
+    private connect() {
+        this.subscriptions =
+            this.events.pipe(
+                tap({
+                    complete: () => this.messages.next(new WebSocketClosedError()),
+                    error: (err) => this.messages.next(err),
+                }),
+                filter((value) => typeof value === "string"),
+                map((value: string) => JSON.parse(value)),
+                tap((value: object) => this.messages.next(value)),
+            ).subscribe({
+                complete: () => {
+                    this.subscriptions.unsubscribe();
+                    this.webSocketAsync = null;
+                },
+            });
     }
 
-    private send(ws: WebSocketContract, request: string): void {
-        // tslint:disable-next-line
-        console.log(request);
-        ws.send(request);
-    }
-
-    private checkError(value: object, callId: number): void {
-        if (ObjectCheckOf<WsResult>(value, "id") && value.id === callId && !_.isNil(value.error)) {
-            throw Error(value.error.message);
-        }
-    }
-
-    private getIdAndResult(value: object): [number, object] {
-        if (ObjectCheckOf<WsResult>(value, "id")) {
-            return [value.id, value.result];
-        }
-        if (ObjectCheckOf<WsResultNotice>(value, "method")) {
-            return [value.params[0], value.params[1][0]];
-        }
-        throw Error(`not supported response: ${value}`);
-    }
-
-    private checkEmpty(value: object, request: BaseRequest<any>): void {
-        if (_.isNil(value) || (_.isArray(value) && value.filter(Boolean).length === 0)) {
-            throw new ObjectNotFoundError(request.description());
-        }
-    }
-
-    private make<T>(request: BaseRequest<T>, callId: number): Observable<T> {
-        // public prepare(request: BaseRequest<any>, callId: number): Observable<any> {
+    private makeStream<T>(request: BaseRequest<T>, callId: number, callbackId?: number): Observable<T> {
         return merge(
-            this.events,
+            this.messages,
             defer(() => this.webSocket()).pipe(
-                this.checkApiAccess(request),
-                tap((value) => this.send(value[0], serialize(new RequestJson(callId, value[1], request)))),
+                tap((socket) => RxWebSocket.send(socket, request.json(callId, callbackId))),
+                flatMap(() => NEVER),
             ))
             .pipe(
-                filter((value) => typeof value === "string"),
-                // tag(`RxWebSocket_make_${request.method}_plain`),
-                map((value: string) => JSON.parse(value)),
-                tag(`RxWebSocket_make_${request.method}_value`),
-                tap((value: object) => this.checkError(value, callId)),
-                map(this.getIdAndResult),
+                tag(`RxWebSocket_make_${request.method}_plain`),
+                flatMap((value) => value instanceof Error ? throwError(value) : scalar(value)),
+                tap((value: object) => RxWebSocket.checkError(value, callId)),
+                map((value) => RxWebSocket.getIdAndResult(value)),
             ).pipe(
-                first((value: [number, object]) => ObjectCheckOf<WithCallback>(request, "callbackId") ? request.callbackId === value[0] : callId === value[0]),
-                map((value: [number, object]) => value[1]),
-                tap((value) => this.checkEmpty(value, request)),
+                filter(([id, obj]: [number, object]) => id === (callbackId ? callbackId : callId)),
+                map(([id, obj]: [number, object]) => obj),
+                tap((obj: object) => RxWebSocket.checkEmpty(obj, request)),
                 map(request.transformer),
                 tag(`RxWebSocket_make_${request.method}`),
             );
+    }
+
+    private make<T>(request: BaseRequest<T>, callId: number): Observable<T> {
+        return this.makeStream(request, callId).pipe(
+            first(),
+            timeout(this.timeout),
+        );
     }
 }

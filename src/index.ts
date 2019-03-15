@@ -5,6 +5,5 @@ export * from "./crypto";
 export * from "./models";
 export * from "./utils";
 export * from "./DCoreApi";
-export * from "./DCoreApiRxImpl";
 export * from "./DCoreConstants";
 export * from "./DCoreSdk";

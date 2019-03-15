@@ -10,14 +10,12 @@ export class BroadcastTransactionWithCallback extends BaseRequest<TransactionCon
 
     constructor(
         transaction: Transaction,
-        callbackId: number,
     ) {
         super(
             ApiGroup.Broadcast,
             "broadcast_transaction_with_callback",
-            [callbackId, transaction],
+            [transaction],
             (value: object) => plainToClass(TransactionConfirmation, value),
         );
-        this.callbackId = callbackId;
     }
 }

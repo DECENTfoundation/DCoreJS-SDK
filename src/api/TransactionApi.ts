@@ -4,6 +4,7 @@ import { DCoreApi } from "../DCoreApi";
 import { DCoreSdk } from "../DCoreSdk";
 import { BaseOperation } from "../models/operation/BaseOperation";
 import { ProcessedTransaction } from "../models/ProcessedTransaction";
+import { Transaction } from "../models/Transaction";
 import { GetRecentTransactionById } from "../net/models/request/GetRecentTransactionById";
 import { GetTransaction } from "../net/models/request/GetTransaction";
 import { BaseApi } from "./BaseApi";
@@ -21,8 +22,8 @@ export class TransactionApi extends BaseApi {
      * @param expiration transaction expiration in seconds, after the expiry the transaction is removed from recent pool
      * and will be dismissed if not included in DCore block
      */
-    public createTransaction(operations: BaseOperation[], expiration: Duration = this.api.transactionExpiration) {
-        this.core.prepareTransaction(operations, expiration);
+    public createTransaction(operations: BaseOperation[], expiration: Duration = this.api.transactionExpiration): Observable<Transaction> {
+        return this.core.prepareTransaction(operations, expiration);
     }
 
     /**

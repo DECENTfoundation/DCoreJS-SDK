@@ -30,7 +30,7 @@ export class ChainObject {
             this.objectId = objectId;
             this.fullBytes = new ByteBuffer(8, ByteBuffer.LITTLE_ENDIAN)
             // @ts-ignore fails on instance of Long, force a string
-                .writeUint64(obj.toString()).reset().skip(6)
+                .writeUint64(this.instance.toString()).reset().skip(6)
                 .writeByte(this.objectType.type).writeByte(this.objectType.space).buffer;
         } else {
             this.objectType = objectId;
