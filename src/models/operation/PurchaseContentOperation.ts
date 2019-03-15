@@ -1,8 +1,12 @@
 import { Expose, Type } from "class-transformer";
+import { Credentials } from "../../crypto/Credentials";
+import { ElGamal } from "../../crypto/ElGamal";
 import { ChainObjectToClass, ChainObjectToPlain } from "../../utils/TypeAdapters";
 import { AssetAmount } from "../AssetAmount";
 import { ChainObject } from "../ChainObject";
+import { Content } from "../Content";
 import { PubKey } from "../PubKey";
+import { Regions } from "../Regions";
 import { BaseOperation } from "./BaseOperation";
 import { OperationType } from "./OperationType";
 
@@ -15,7 +19,16 @@ import { OperationType } from "./OperationType";
  * @param publicElGamal public el gamal key
  * @param regionCode region code of the consumer
  */
-export class BuyContentOperation extends BaseOperation {
+export class PurchaseContentOperation extends BaseOperation {
+    public static create(credentials: Credentials, content: Content): PurchaseContentOperation {
+        return new PurchaseContentOperation(
+            content.uri,
+            credentials.account,
+            content.regionPrice(),
+            content.uri.startsWith("ipfs") ? new PubKey(ElGamal.createPublic(credentials.keyPair).toString()) : new PubKey(),
+        );
+    }
+
     @Expose({ name: "URI" })
     public uri: string;
 
@@ -33,7 +46,7 @@ export class BuyContentOperation extends BaseOperation {
     public pubKey: PubKey;
 
     @Expose({ name: "region_code_from" })
-    public regionCode: number = 1;
+    public regionCode: number = Regions.All;
 
     constructor(uri: string, consumer: ChainObject, price: AssetAmount, pubKey: PubKey) {
         super(OperationType.RequestToBuy);

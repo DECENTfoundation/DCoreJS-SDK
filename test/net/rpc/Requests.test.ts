@@ -43,7 +43,7 @@ import { Login } from "../../../src/net/models/request/Login";
 import { LookupAccountNames } from "../../../src/net/models/request/LookupAccountNames";
 import { LookupAccounts } from "../../../src/net/models/request/LookupAccounts";
 import { LookupAssetSymbols } from "../../../src/net/models/request/LookupAssetSymbols";
-import { LookupMiners } from "../../../src/net/models/request/LookupMiners";
+import { LookupMinerAccounts } from "../../../src/net/models/request/LookupMinerAccounts";
 import { SearchAccounts } from "../../../src/net/models/request/SearchAccounts";
 import { SearchBuyings } from "../../../src/net/models/request/SearchBuyings";
 import { RpcService } from "../../../src/net/rpc/RpcService";
@@ -209,7 +209,7 @@ class HttpRequestTest {
 
     @test
     public "should return miners by name lookup"(done: (arg?: any) => void) {
-        this.rpc.request(new LookupMiners(""))
+        this.rpc.request(new LookupMinerAccounts(""))
             .subscribe((value) => undefined, (error) => done(error), () => done());
     }
 

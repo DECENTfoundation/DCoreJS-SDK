@@ -15,8 +15,7 @@ export function ChainObjectToPlain(target: any, key: string): void {
 }
 
 export function LongToClass(target: any, key: string): void {
-    return Transform((value: number | string) =>
-        typeof value === "string" ? Long.fromString(value, true) : Long.fromNumber(value, true), { toClassOnly: true })(target, key);
+    return Transform((value: number | string) => Long.fromValue(value).toUnsigned(), { toClassOnly: true })(target, key);
 }
 
 export function LongToPlain(target: any, key: string): void {

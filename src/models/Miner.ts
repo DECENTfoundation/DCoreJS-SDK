@@ -1,8 +1,9 @@
-import { Expose } from "class-transformer";
+import { Expose, Transform } from "class-transformer";
 import * as Long from "long";
 import { Address } from "../crypto/Address";
 import { AddressToClass, ChainObjectToClass } from "../utils/TypeAdapters";
 import { ChainObject } from "./ChainObject";
+import { VoteId } from "./VoteId";
 
 export class Miner {
 
@@ -25,8 +26,9 @@ export class Miner {
     @Expose({ name: "pay_vb" })
     public payVb: ChainObject;
 
+    @Transform((value: string) => VoteId.parse(value))
     @Expose({ name: "vote_id" })
-    public voteId: string;
+    public voteId: VoteId;
 
     @Expose({ name: "total_votes" })
     public totalVotes: number;

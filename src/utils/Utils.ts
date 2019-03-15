@@ -4,7 +4,7 @@ import { createHash } from "crypto";
 import * as Long from "long";
 import * as moment from "moment";
 
-export function assertThrow(value: boolean, lazyMessage: () => string) {
+export function assertThrow(value: boolean, lazyMessage: () => string = () => "assert error") {
     if (!value) {
         throw TypeError(lazyMessage());
     }

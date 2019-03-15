@@ -53,7 +53,7 @@
     "tsconfig-paths": "^3.1.1",
     "tslint": "^5.10.0",
     "tslint-no-circular-imports": "^0.5.2",
-    "typescript": "^3.0.3",
+    "typescript": "^3.3.3333",
     "ws": "^6.0.0",
     "wtfnode": "^0.7.0"
   },
@@ -64,6 +64,7 @@
     "@types/long": "^4.0.0",
     "@types/secp256k1": "^3.5.0",
     "base-x": "^3.0.4",
+    "big-integer": "^1.6.42",
     "bytebuffer": "^5.0.1",
     "class-transformer": "^0.1.9",
     "decimal.js": "^10.1.1",

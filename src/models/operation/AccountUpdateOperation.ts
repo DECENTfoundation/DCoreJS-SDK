@@ -1,9 +1,11 @@
 import { Expose, Type } from "class-transformer";
 import { ChainObjectToClass, ChainObjectToPlain } from "../../utils/TypeAdapters";
+import { Account } from "../Account";
 import { AssetAmount } from "../AssetAmount";
 import { Authority } from "../Authority";
 import { ChainObject } from "../ChainObject";
 import { Options } from "../Options";
+import { VoteId } from "../VoteId";
 import { BaseOperation } from "./BaseOperation";
 import { OperationType } from "./OperationType";
 
@@ -17,6 +19,11 @@ import { OperationType } from "./OperationType";
  *
  */
 export class AccountUpdateOperation extends BaseOperation {
+    public static create(account: Account, votes: VoteId[]) {
+        const options = account.options;
+        options.votes = votes;
+        return new AccountUpdateOperation(account.id, null, null, options);
+    }
 
     @ChainObjectToClass
     @ChainObjectToPlain

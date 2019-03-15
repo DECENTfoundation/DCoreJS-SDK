@@ -8,7 +8,7 @@ export class GetAccountCount extends BaseRequest<Long> {
             ApiGroup.Database,
             "get_account_count",
             [],
-            (value: number) => Long.fromNumber(value),
+            (value: string | number) => Long.fromValue(value).toUnsigned(),
         );
     }
 }

@@ -241,7 +241,7 @@ export class AccountApi extends BaseApi {
      * @param amount amount to send with asset type
      * @param memo optional message
      * @param encrypted encrypted is visible only for sender and receiver, unencrypted is visible publicly
-     * @param fee [AssetAmount] fee for the operation, if left [BaseOperation.FEE_UNSET] the fee will be computed in DCT asset
+     * @param fee {@link AssetAmount} fee for the operation, if left undefined the fee will be computed in DCT asset
      *
      * @return a transaction confirmation
      */

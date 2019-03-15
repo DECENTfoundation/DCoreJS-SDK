@@ -15,7 +15,7 @@ import { Memo } from "../../models/Memo";
 import { AccountCreateOperation } from "../../models/operation/AccountCreateOperation";
 import { AccountUpdateOperation } from "../../models/operation/AccountUpdateOperation";
 import { AddOrUpdateContentOperation } from "../../models/operation/AddOrUpdateContentOperation";
-import { BuyContentOperation } from "../../models/operation/BuyContentOperation";
+import { PurchaseContentOperation } from "../../models/operation/PurchaseContentOperation";
 import { RemoveContentOperation } from "../../models/operation/RemoveContentOperation";
 import { TransferOperation } from "../../models/operation/TransferOperation";
 import { Options } from "../../models/Options";
@@ -50,7 +50,7 @@ export class Serializer {
         this.adapters.set(Transaction.name, this.transactionAdapter);
         this.adapters.set(AccountCreateOperation.name, this.accountCreateOperationAdapter);
         this.adapters.set(AccountUpdateOperation.name, this.accountUpdateOperationAdapter);
-        this.adapters.set(BuyContentOperation.name, this.buyContentOperationAdapter);
+        this.adapters.set(PurchaseContentOperation.name, this.buyContentOperationAdapter);
         this.adapters.set(TransferOperation.name, this.transferOperationAdapter);
         this.adapters.set(RegionalPrice.name, this.regionalPriceAdapter);
         this.adapters.set(KeyPart.name, this.keyPartAdapter);
@@ -199,7 +199,7 @@ export class Serializer {
         this.append(buffer, obj.extensions);
     }
 
-    private buyContentOperationAdapter = (buffer: ByteBuffer, obj: BuyContentOperation) => {
+    private buyContentOperationAdapter = (buffer: ByteBuffer, obj: PurchaseContentOperation) => {
         buffer.writeByte(obj.type);
         this.append(buffer, obj.fee);
         this.append(buffer, obj.uri);

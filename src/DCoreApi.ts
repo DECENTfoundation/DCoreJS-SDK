@@ -45,7 +45,7 @@ export class DCoreApi {
         return this.core.request(request);
     }
 
-    public requestWithCallback<T>(request: BaseRequest<T> & WithCallback): Observable<T> {
+    public requestStream<T>(request: BaseRequest<T> & WithCallback): Observable<T> {
         return this.core.requestStream(request);
     }
 

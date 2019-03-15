@@ -4,7 +4,7 @@ export * from "./AccountCreateOperation";
 export * from "./AccountUpdateOperation";
 export * from "./AddOrUpdateContentOperation";
 export * from "./BaseOperation";
-export * from "./BuyContentOperation";
+export * from "./PurchaseContentOperation";
 export * from "./EmptyOperation";
 export * from "./OperationType";
 export * from "./RemoveContentOperation";

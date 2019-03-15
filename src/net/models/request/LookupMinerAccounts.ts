@@ -1,9 +1,10 @@
 import * as _ from "lodash";
 import { ChainObject } from "../../../models/ChainObject";
+import { MinerId } from "../../../models/MinerId";
 import { ApiGroup } from "../ApiGroup";
 import { BaseRequest } from "./BaseRequest";
 
-export class LookupMiners extends BaseRequest<Map<string, ChainObject>> {
+export class LookupMinerAccounts extends BaseRequest<MinerId[]> {
     constructor(
         lookupTerm: string,
         limit: number = 1000,
@@ -12,8 +13,7 @@ export class LookupMiners extends BaseRequest<Map<string, ChainObject>> {
             ApiGroup.Database,
             "lookup_miner_accounts",
             [lookupTerm, _.max([0, _.min([limit, 1000])])],
-            (value: [string, string]) =>
-                new Map(value.map(([name, id]) => [name, ChainObject.parse(id)] as [string, ChainObject])),
+            (value: Array<[string, string]>) => value.map(([name, id]) => new MinerId(name, ChainObject.parse(id))),
         );
     }
 }

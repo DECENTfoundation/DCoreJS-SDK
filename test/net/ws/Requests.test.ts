@@ -41,7 +41,7 @@ import { GetTransaction } from "../../../src/net/models/request/GetTransaction";
 import { Login } from "../../../src/net/models/request/Login";
 import { LookupAccounts } from "../../../src/net/models/request/LookupAccounts";
 import { LookupAssetSymbols } from "../../../src/net/models/request/LookupAssetSymbols";
-import { LookupMiners } from "../../../src/net/models/request/LookupMiners";
+import { LookupMinerAccounts } from "../../../src/net/models/request/LookupMinerAccounts";
 import { RequestApiAccess } from "../../../src/net/models/request/RequestApiAccess";
 import { SearchBuyings } from "../../../src/net/models/request/SearchBuyings";
 import { RxWebSocket } from "../../../src/net/ws/RxWebSocket";
@@ -193,7 +193,7 @@ class WsRequestTest {
 
     @test
     public "should return miners by name lookup"(done: (arg?: any) => void) {
-        this.rxWs.request(new LookupMiners(""))
+        this.rxWs.request(new LookupMinerAccounts(""))
             .subscribe((value) => undefined, (error) => done(error), () => done());
     }
 

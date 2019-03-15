@@ -6,7 +6,7 @@ import { BaseRequest } from "./BaseRequest";
 import { WithCallback } from "./WithCallback";
 
 export class BroadcastTransactionWithCallback extends BaseRequest<TransactionConfirmation> implements WithCallback {
-    public callbackId: number;
+    public callbackId: any = {};
 
     constructor(
         transaction: Transaction,

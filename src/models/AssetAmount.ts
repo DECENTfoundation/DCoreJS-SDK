@@ -19,7 +19,7 @@ export class AssetAmount {
     public assetId: ChainObject;
 
     constructor(amount: Long | number | string = Long.ZERO, assetId: ChainObject = DCoreConstants.DCT_ASSET_ID) {
-        this.amount = Long.fromValue(amount);
+        this.amount = Long.fromValue(amount).toUnsigned();
         this.assetId = assetId;
 
         assertThrow(this.amount >= Long.ZERO, () => "amount must be greater or equal to 0");

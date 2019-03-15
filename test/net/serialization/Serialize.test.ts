@@ -14,7 +14,7 @@ import { Memo } from "../../../src/models/Memo";
 import { AccountCreateOperation } from "../../../src/models/operation/AccountCreateOperation";
 import { AccountUpdateOperation } from "../../../src/models/operation/AccountUpdateOperation";
 import { AddOrUpdateContentOperation } from "../../../src/models/operation/AddOrUpdateContentOperation";
-import { BuyContentOperation } from "../../../src/models/operation/BuyContentOperation";
+import { PurchaseContentOperation } from "../../../src/models/operation/PurchaseContentOperation";
 import { RemoveContentOperation } from "../../../src/models/operation/RemoveContentOperation";
 import { TransferOperation } from "../../../src/models/operation/TransferOperation";
 import { Options } from "../../../src/models/Options";
@@ -52,7 +52,7 @@ class SerializeTest {
     public "should serialize buy content operation"() {
         const expected = "1500000000000000000033697066733a516d61625537574e485a77636f6a674a724352774b68734a7666696e4c54397866666e4b4d4673726343474746501e809698000000000000010000009b01393130383430393539353932363431303631383538343930393638383830363132333831353335303037303838393138373132303036303039303236323639383330353937313939383532363530313030393830343535343035383735383238393637363235373630393334303934393631353931343538333133383834313435363939373639383133333939313030343939313437333637302e";
 
-        const op = new BuyContentOperation(
+        const op = new PurchaseContentOperation(
             "ipfs:QmabU7WNHZwcojgJrCRwKhsJvfinLT9xffnKMFsrcCGGFP",
             ChainObject.parse("1.2.30"),
             new AssetAmount(10000000),
@@ -67,7 +67,7 @@ class SerializeTest {
     public "should serialize buy content operation with encoded uri"() {
         const expected = "150000000000000000006c687474703a2f2f616c61782e696f2f3f736368656d653d616c6c6178253341253246253246636f6d2e6578616d706c652e68656c6c6f776f726c64253341332676657273696f6e3d37663438623234652d386162392d343831302d386239612d3933363134366164366164321e00e1f5050000000000010000009b01353138323534353438383331383039353030303439383138303536383533393732383231343534353437323437303937343935383333383934323432363735393531303132313835313730383533303632353932313433363737373535353531373238383133393738373936353235333534373538383334303830333534323736323236383732313635363133383837363030323032383433372e";
 
-        const op = new BuyContentOperation(
+        const op = new PurchaseContentOperation(
             "http://alax.io/?scheme=allax%3A%2F%2Fcom.example.helloworld%3A3&version=7f48b24e-8ab9-4810-8b9a-936146ad6ad2",
             ChainObject.parse("1.2.30"),
             new AssetAmount(100000000),

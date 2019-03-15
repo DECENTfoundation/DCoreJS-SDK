@@ -357,6 +357,19 @@ class Scratchpad {
         console.log(ApiGroup.Broadcast.toString().toLowerCase());
         console.log(API_GROUP_NAMES[ApiGroup.Broadcast]);
     }
+
+    @test "long unsigned"() {
+        console.log(Long.fromString("1234567890"));
+        console.log(Long.fromString("1234567890", false).toUnsigned());
+        console.log(Long.fromString("1234567890", true).toUnsigned());
+        console.log(Long.fromString("1234567890", false).toSigned());
+        console.log(Long.fromString("-1234567890"));
+        console.log(Long.fromString("-1234567890", true));
+        console.log(Long.MAX_VALUE);
+        console.log(Long.MAX_VALUE.toUnsigned());
+        console.log(Long.MAX_UNSIGNED_VALUE);
+        console.log(Long.MAX_UNSIGNED_VALUE.toSigned());
+    }
 }
 // 02e4d03d9995ebb1b61b11e5e8631a70cdfdd2691df320ad3187751b256cccf808
 // e4d03d9995ebb1b61b11e5e8631a70cdfdd2691df320ad3187751b256cccf808

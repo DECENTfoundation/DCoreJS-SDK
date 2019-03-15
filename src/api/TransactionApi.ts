@@ -1,12 +1,18 @@
+import * as Long from "long";
 import { Duration } from "moment";
 import { Observable } from "rxjs";
 import { DCoreApi } from "../DCoreApi";
 import { DCoreSdk } from "../DCoreSdk";
+import { ChainObject } from "../models/ChainObject";
 import { BaseOperation } from "../models/operation/BaseOperation";
 import { ProcessedTransaction } from "../models/ProcessedTransaction";
 import { Transaction } from "../models/Transaction";
+import { TransactionConfirmation } from "../models/TransactionConfirmation";
+import { GetProposedTransactions } from "../net/models/request/GetProposedTransactions";
 import { GetRecentTransactionById } from "../net/models/request/GetRecentTransactionById";
 import { GetTransaction } from "../net/models/request/GetTransaction";
+import { GetTransactionById } from "../net/models/request/GetTransactionById";
+import { GetTransactionHex } from "../net/models/request/GetTransactionHex";
 import { BaseApi } from "./BaseApi";
 
 export class TransactionApi extends BaseApi {
@@ -27,6 +33,18 @@ export class TransactionApi extends BaseApi {
     }
 
     /**
+     * Get the set of proposed transactions relevant to the specified account id.
+     *
+     * @param accountId account object id, 1.2.*
+     *
+     * @return a set of proposed transactions
+     */
+    // todo model
+    public getAllProposed(accountId: ChainObject) {
+        return this.request(new GetProposedTransactions(accountId));
+    }
+
+    /**
      * If the transaction has not expired, this method will return the transaction for the given ID or it will return {@link ObjectNotFoundError}
      * Just because it is not known does not mean it wasn't included in the DCore.
      * The ID can be retrieved from [Transaction] or [TransactionConfirmation] objects.
@@ -40,6 +58,21 @@ export class TransactionApi extends BaseApi {
     }
 
     /**
+     * This method will return the transaction for the given ID or it will return [ch.decent.sdk.exception.ObjectNotFoundException].
+     * The ID can be retrieved from [Transaction] or [TransactionConfirmation] objects.
+     *
+     * Note: By default these objects are not tracked, the transaction_history_plugin must be loaded for these objects to be maintained.
+     * Just because it is not known does not mean it wasn't included in the DCore.
+     *
+     * @param trxId transaction id
+     *
+     * @return a transaction if found, {@link ObjectNotFoundError} otherwise
+     */
+    public getById(trxId: string): Observable<ProcessedTransaction> {
+        return this.request(new GetTransactionById(trxId));
+    }
+
+    /**
      * get applied transaction
      *
      * @param blockNum block number
@@ -47,8 +80,29 @@ export class TransactionApi extends BaseApi {
      *
      * @return a transaction if found, {@link ObjectNotFoundError} otherwise
      */
-    public get(blockNum: number, trxInBlock: number): Observable<ProcessedTransaction> {
+    public get(blockNum: Long | number, trxInBlock: Long | number): Observable<ProcessedTransaction> {
         return this.request(new GetTransaction(blockNum, trxInBlock));
     }
 
+    /**
+     * get applied transaction
+     *
+     * @param confirmation confirmation returned from transaction broadcast
+     *
+     * @return a transaction if found, {@link ObjectNotFoundError} otherwise
+     */
+    public getByConfirmation(confirmation: TransactionConfirmation): Observable<ProcessedTransaction> {
+        return this.get(confirmation.blockNum, confirmation.trxNum);
+    }
+
+    /**
+     * Get a hexdump of the serialized binary form of a transaction.
+     *
+     * @param transaction a signed transaction
+     *
+     * @return hexadecimal string
+     */
+    public getHexDump(transaction: Transaction): Observable<string> {
+        return this.request(new GetTransactionHex(transaction));
+    }
 }

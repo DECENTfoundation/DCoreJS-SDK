@@ -53,7 +53,7 @@ export class BroadcastApi extends BaseApi {
      * @return a transaction confirmation
      */
     public broadcastTrxWithCallback(transaction: Transaction): Observable<TransactionConfirmation> {
-        return this.requestWithCallback(new BroadcastTransactionWithCallback(transaction)).pipe(first());
+        return this.request(new BroadcastTransactionWithCallback(transaction)).pipe(first());
     }
 
     /**

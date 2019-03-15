@@ -5,6 +5,7 @@ import { suite, test } from "mocha-typescript";
 import "reflect-metadata";
 import { Address } from "../../src/crypto/Address";
 import { ECKeyPair } from "../../src/crypto/ECKeyPair";
+import { ElGamal } from "../../src/crypto/ElGamal";
 import { Passphrase } from "../../src/crypto/Passphrase";
 import { Memo } from "../../src/models/Memo";
 import { Helpers } from "../Helpers";
@@ -61,11 +62,21 @@ class CryptoTest {
         memo.message.should.be.equal(expected);
         memo.decrypt(Helpers.KEY).should.be.equal(plain);
     }
+
     @test
     public "should decrypt public memo"() {
         const plain = "hello memo here i am";
         const memo = Memo.createPublic(plain);
 
         memo.decrypt(Helpers.KEY).should.be.equal(plain);
+    }
+
+    @test
+    public "should generate public el gamal"() {
+        const priv = "8149734503494312909116126763927194608124629667940168421251424974828815164868905638030541425377704620941193711130535974967507480114755414928915429397074890";
+        const pub = "5182545488318095000498180568539728214545472470974958338942426759510121851708530625921436777555517288139787965253547588340803542762268721656138876002028437";
+
+        ElGamal.createPrivate(Helpers.KEY).toString().should.be.equal(priv);
+        ElGamal.createPublic(Helpers.KEY).toString().should.be.equal(pub);
     }
 }

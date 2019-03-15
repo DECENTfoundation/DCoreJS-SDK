@@ -9,7 +9,7 @@ export enum OperationType {
     MinerUpdate,
     MinerUpdateGlobalParameters,
     ProposalCreate,
-    ProposalUpdagte,
+    ProposalUpdate,
     ProposalDelete,
     WithdrawPermissionCreate,
     WithdrawPermissionUpdate,
