@@ -11,6 +11,7 @@ import { Account } from "../../../src/models/Account";
 import { AccountNameId } from "../../../src/models/AccountNameId";
 import { Asset } from "../../../src/models/Asset";
 import { AssetAmount } from "../../../src/models/AssetAmount";
+import { AssetData } from "../../../src/models/AssetData";
 import { ChainObject } from "../../../src/models/ChainObject";
 import { Content } from "../../../src/models/Content";
 import { DynamicGlobalProperties } from "../../../src/models/DynamicGlobalProperties";
@@ -28,6 +29,7 @@ import { GetAccountBalances } from "../../../src/net/models/request/GetAccountBa
 import { GetAccountById } from "../../../src/net/models/request/GetAccountById";
 import { GetAccountByName } from "../../../src/net/models/request/GetAccountByName";
 import { GetAccountHistory } from "../../../src/net/models/request/GetAccountHistory";
+import { GetAssetData } from "../../../src/net/models/request/GetAssetData";
 import { GetAssets } from "../../../src/net/models/request/GetAssets";
 import { GetBuyingByUri } from "../../../src/net/models/request/GetBuyingByUri";
 import { GetChainId } from "../../../src/net/models/request/GetChainId";
@@ -240,5 +242,11 @@ class HttpRequestTest {
     public "should return purchases by search"(done: (arg?: any) => void) {
         this.rpc.request(new SearchBuyings(ChainObject.parse("1.2.35"), ""))
             .subscribe((value) => value.should.all.be.instanceOf(Purchase), (error) => done(error), () => done());
+    }
+
+    @test
+    public "should return asset data"(done: (arg?: any) => void) {
+        this.rpc.request(new GetAssetData([ChainObject.parse("2.3.0")]))
+            .subscribe((value) => value.should.all.be.instanceOf(AssetData), (error) => done(error), () => done());
     }
 }
