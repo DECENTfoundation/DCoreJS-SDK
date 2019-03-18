@@ -14,10 +14,6 @@
     "email": "michal@decent.ch"
   },
   "license": "MIT",
-  "engines": {
-    "node": "9.5.0",
-    "npm": "5.6.0"
-  },
   "pre-commit": [
     "lint"
   ],
