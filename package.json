@@ -25,8 +25,7 @@
     "build": "sh ./scripts/build.sh",
     "clean": "sh ./scripts/clean.sh",
     "lint": "sh ./scripts/lint.sh",
-    "test": "sh ./scripts/test.sh",
-    "postinstall": "npm run build"
+    "test": "sh ./scripts/test.sh"
   },
   "devDependencies": {
     "@types/chai": "^4.1.4",
