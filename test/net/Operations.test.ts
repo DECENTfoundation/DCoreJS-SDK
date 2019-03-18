@@ -1,5 +1,4 @@
 import * as chai from "chai";
-import { serialize } from "class-transformer";
 import * as WebSocket from "isomorphic-ws";
 import { suite, test, timeout } from "mocha-typescript";
 import * as moment from "moment";
@@ -56,13 +55,13 @@ class OperationsTest {
 
     @test.skip
     public "should add or update a content"(done: (arg?: any) => void) {
-        const op = new AddOrUpdateContentOperation(
+        const op = AddOrUpdateContentOperation.create(
             ChainObject.parse("1.2.34"),
-            "http://hello.world",
-            [new RegionalPrice(new AssetAmount(100))],
-            moment.utc().add(10, "days"),
-            serialize(new Synopsis("hello", "world")),
             [[ChainObject.parse("1.2.35"), 50]],
+            "http://hello.world",
+            new RegionalPrice(new AssetAmount(100)),
+            moment.utc().add(10, "days"),
+            new Synopsis("hello", "world"),
         );
 
         this.api.broadcastApi.broadcastWithCallback(Helpers.KEY, [op])
@@ -82,7 +81,7 @@ class OperationsTest {
 
     @test.skip
     public "should create an account"(done: (arg?: any) => void) {
-        const op = new AccountCreateOperation(
+        const op = AccountCreateOperation.create(
             ChainObject.parse("1.2.34"),
             "marian",
             Helpers.PUBKEY,

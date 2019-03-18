@@ -16,7 +16,7 @@ export class Memo {
         const withChecksum = Buffer.concat([Utils.hash256(msgBytes).slice(0, 4), msgBytes]);
         const secret = keyPair.secret(recipient, nonce);
         const cipherText = Utils.encrypt(secret, withChecksum);
-        return new Memo(cipherText.toString("hex"), new Address(keyPair.publicKey), recipient, nonce);
+        return new Memo(cipherText.toString("hex"), keyPair.publicAddress, recipient, nonce);
     }
 
     @AddressToClass

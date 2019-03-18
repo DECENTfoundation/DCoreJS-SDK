@@ -9,15 +9,6 @@ import { VoteId } from "../VoteId";
 import { BaseOperation } from "./BaseOperation";
 import { OperationType } from "./OperationType";
 
-/**
- * Request to account update operation constructor
- *
- * @param accountId account
- * @param owner owner authority
- * @param active active authority
- * @param options account options
- *
- */
 export class AccountUpdateOperation extends BaseOperation {
     public static create(account: Account, votes: VoteId[]) {
         const options = account.options;
@@ -42,6 +33,15 @@ export class AccountUpdateOperation extends BaseOperation {
     @Expose({ name: "options" })
     public options?: Options;
 
+    /**
+     * Request to account update operation constructor
+     *
+     * @param accountId account
+     * @param owner owner authority
+     * @param active active authority
+     * @param options account options
+     * @param fee {@link AssetAmount} fee for the operation, if left undefined the fee will be computed in DCT asset
+     */
     constructor(accountId: ChainObject, owner?: Authority, active?: Authority, options?: Options, fee?: AssetAmount) {
         super(OperationType.AccountUpdate);
         this.accountId = accountId;

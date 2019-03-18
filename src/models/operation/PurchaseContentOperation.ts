@@ -10,15 +10,6 @@ import { Regions } from "../Regions";
 import { BaseOperation } from "./BaseOperation";
 import { OperationType } from "./OperationType";
 
-/**
- * Request to buy content operation constructor
- *
- * @param uri uri of the content
- * @param consumer chain object id of the buyer's account
- * @param price price of content, can be equal to or higher then specified in content
- * @param publicElGamal public el gamal key
- * @param regionCode region code of the consumer
- */
 export class PurchaseContentOperation extends BaseOperation {
     public static create(credentials: Credentials, content: Content): PurchaseContentOperation {
         return new PurchaseContentOperation(
@@ -43,17 +34,27 @@ export class PurchaseContentOperation extends BaseOperation {
 
     @Type(() => PubKey)
     @Expose({ name: "pubKey" })
-    public pubKey: PubKey;
+    public publicElGamal: PubKey;
 
     @Expose({ name: "region_code_from" })
-    public regionCode: number = Regions.All;
+    public regionCode: number;
 
-    constructor(uri: string, consumer: ChainObject, price: AssetAmount, pubKey: PubKey) {
+    /**
+     * Request to purchase content operation constructor
+     *
+     * @param uri uri of the content
+     * @param consumer chain object id of the buyer's account
+     * @param price price of content, can be equal to or higher then specified in content
+     * @param publicElGamal public el gamal key
+     * @param regionCode region code of the consumer
+     */
+    constructor(uri: string, consumer: ChainObject, price: AssetAmount, publicElGamal: PubKey, regionCode: Regions = Regions.All) {
         super(OperationType.RequestToBuy);
         this.uri = uri;
         this.consumer = consumer;
         this.price = price;
-        this.pubKey = pubKey;
-        this.fee = new AssetAmount();
+        this.publicElGamal = publicElGamal;
+        this.regionCode = regionCode;
+        this.fee = new AssetAmount(); // fee for this OP is 0
     }
 }

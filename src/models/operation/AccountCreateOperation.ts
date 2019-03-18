@@ -8,15 +8,11 @@ import { Options } from "../Options";
 import { BaseOperation } from "./BaseOperation";
 import { OperationType } from "./OperationType";
 
-/**
- * Request to create account operation constructor
- *
- * @param registrar registrar
- * @param owner owner authority
- * @param active active authority
- * @param options account options
- */
 export class AccountCreateOperation extends BaseOperation {
+
+    public static create(registrar: ChainObject, name: string, publicKey: Address, fee?: AssetAmount) {
+        return new this(registrar, name, new Authority(publicKey), new Authority(publicKey), new Options(publicKey), fee);
+    }
 
     @ChainObjectToClass
     @ChainObjectToPlain
@@ -38,13 +34,23 @@ export class AccountCreateOperation extends BaseOperation {
     @Expose({ name: "options" })
     public options: Options;
 
-    constructor(registrar: ChainObject, name: string, publicKey: Address, fee?: AssetAmount) {
+    /**
+     * Request to create account operation constructor
+     *
+     * @param registrar registrar
+     * @param name account name
+     * @param owner owner authority
+     * @param active active authority
+     * @param options account options
+     * @param fee {@link AssetAmount} fee for the operation, if left undefined the fee will be computed in DCT asset
+     */
+    constructor(registrar: ChainObject, name: string, owner: Authority, active: Authority, options: Options, fee?: AssetAmount) {
         super(OperationType.AccountCreate);
         this.registrar = registrar;
         this.name = name;
-        this.owner = new Authority(publicKey);
-        this.active = new Authority(publicKey);
-        this.options = new Options(publicKey);
+        this.owner = owner;
+        this.active = active;
+        this.options = options;
         this.fee = fee;
     }
 }

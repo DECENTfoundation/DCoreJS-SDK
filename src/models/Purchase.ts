@@ -1,7 +1,7 @@
 import { deserialize, Expose, Transform, Type } from "class-transformer";
 import * as Long from "long";
 import { Moment } from "moment";
-import { ChainObjectToClass, LongToClass, MomentToClass } from "../utils/TypeAdapters";
+import { ChainObjectArrayToClass, ChainObjectToClass, LongToClass, MomentToClass } from "../utils/TypeAdapters";
 import { AssetAmount } from "./AssetAmount";
 import { ChainObject } from "./ChainObject";
 import { KeyPart } from "./KeyPart";
@@ -37,7 +37,7 @@ export class Purchase {
     @Expose({ name: "paid_price_after_exchange" })
     public priceAfter: AssetAmount;
 
-    @Transform((value: string[]) => value.map((id) => ChainObject.parse(id)), { toClassOnly: true })
+    @ChainObjectArrayToClass
     @Expose({ name: "seeders_answered" })
     public seedersAnswered: ChainObject[];
 

@@ -7,7 +7,7 @@ import { ChainObject } from "./ChainObject";
 import { VoteId } from "./VoteId";
 
 export class Options {
-    @Type(() => Address)
+
     @AddressToClass
     @AddressToPlain
     @Expose({ name: "memo_key" })

@@ -14,6 +14,14 @@ export function ChainObjectToPlain(target: any, key: string): void {
     return Transform((value: ChainObject) => value.objectId, { toPlainOnly: true })(target, key);
 }
 
+export function ChainObjectArrayToClass(target: any, key: string): void {
+    return Transform((value: string[]) => value.map((id) => ChainObject.parse(id)), { toClassOnly: true })(target, key);
+}
+
+export function ChainObjectArrayToPlain(target: any, key: string): void {
+    return Transform((value: ChainObject[]) => value.map((id) => id.objectId), { toPlainOnly: true })(target, key);
+}
+
 export function LongToClass(target: any, key: string): void {
     return Transform((value: number | string) => Long.fromValue(value).toUnsigned(), { toClassOnly: true })(target, key);
 }

@@ -206,7 +206,7 @@ export class Serializer {
         this.append(buffer, obj.consumer);
         this.append(buffer, obj.price);
         buffer.writeUint32(obj.regionCode);
-        this.append(buffer, obj.pubKey);
+        this.append(buffer, obj.publicElGamal);
     }
 
     private transferOperationAdapter = (buffer: ByteBuffer, obj: TransferOperation) => {
@@ -246,7 +246,7 @@ export class Serializer {
     private addOrUpdateContentOperationAdapter = (buffer: ByteBuffer, obj: AddOrUpdateContentOperation) => {
         buffer.writeByte(obj.type);
         this.append(buffer, obj.fee);
-        buffer.writeUint64(obj.size);
+        this.append(buffer, obj.size);
         this.append(buffer, obj.author);
         this.coAuthorsAdapter(buffer, obj.coAuthors);
         this.append(buffer, obj.uri);
