@@ -20,22 +20,26 @@ export interface CloseEvent {
     wasClean: boolean;
     code: number;
     reason: string;
+    target: any;
 }
 
 export interface MessageEvent {
     data: any;
+    type: any;
+    target: any;
 }
 
 export interface ErrorEvent {
     error: any;
     message: string;
+    target: any;
 }
 
 export interface WebSocketContract {
-    onopen?: (event: any) => void;
-    onclose?: (closeEvent: CloseEvent) => void;
-    onmessage?: (messageEvent: MessageEvent) => void;
-    onerror?: (errorEvent: ErrorEvent) => void;
+    onopen?: any;
+    onclose?: any;
+    onmessage?: any;
+    onerror?: any;
 
     close(code?: number, data?: string): void;
 
@@ -121,7 +125,7 @@ export class RxWebSocket {
     public disconnect() {
         this.webSocket().subscribe((socket: WebSocketContract) => {
             socket.close(1000, "closing");
-            socket.onclose!({ wasClean: true, code: 1000, reason: "self disconnect" });
+            socket.onclose!({ wasClean: true, code: 1000, reason: "self disconnect", target: socket });
             socket.onclose = undefined;
         });
     }
