@@ -60,7 +60,7 @@ export class Serializer {
     }
 
     public serialize(obj: any): ByteBuffer {
-        const buffer = new ByteBuffer(0, true);
+        const buffer = new ByteBuffer(1024, true);
         this.append(buffer, obj);
         return buffer.compact(0, buffer.offset).reset();
     }
