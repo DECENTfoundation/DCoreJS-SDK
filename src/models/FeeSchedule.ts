@@ -1,4 +1,5 @@
 import { Expose, Transform } from "class-transformer";
+import * as _ from "lodash";
 import * as Long from "long";
 import { LongToClass } from "../utils/TypeAdapters";
 import { AssetAmount } from "./AssetAmount";
@@ -16,7 +17,7 @@ export class FeeSchedule {
     @Transform((values: Array<[number, FeeParam]>) => new Map(values.map(([type, fee]) =>
         [type, new FeeParameter(
             new AssetAmount(fee.fee || fee.basic_fee),
-            fee.price_per_kb && new AssetAmount(fee.price_per_kb),
+            _.isNil(fee.price_per_kb) ? fee.price_per_kb : new AssetAmount(fee.price_per_kb),
         )] as [OperationType, FeeParameter])), { toClassOnly: true })
     @Expose({ name: "parameters" })
     public parameters: Map<OperationType, FeeParameter>;

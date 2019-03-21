@@ -39,7 +39,7 @@ export class DCoreSdk {
     }
 
     public static createForWebSocket(factory: WebSocketFactory): DCoreApi {
-        return new DCoreApi(new DCoreSdk(null, new RxWebSocket(factory)));
+        return new DCoreApi(new DCoreSdk(undefined, new RxWebSocket(factory)));
     }
 
     public static create(options: CoreOptions, factory: WebSocketFactory): DCoreApi {
@@ -56,7 +56,7 @@ export class DCoreSdk {
         if (this.ws) {
             return this.ws.requestStream(request).pipe(tag("API_request_callback_" + request.method));
         } else {
-            throwError(new IllegalArgumentError("callbacks not available through HTTP API"));
+            return throwError(new IllegalArgumentError("callbacks not available through HTTP API"));
         }
     }
 

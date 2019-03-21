@@ -35,7 +35,7 @@ export class AddOrUpdateContentOperation extends BaseOperation {
         fee?: AssetAmount,
     ): AddOrUpdateContentOperation {
         return new this(Long.fromNumber(1), author, coAuthors, uri, 0, [price],
-            Utils.ripemd160(Buffer.from(uri)).toString("hex"), [], [], expiration, new AssetAmount(), serialize(synopsis), null, fee);
+            Utils.ripemd160(Buffer.from(uri)).toString("hex"), [], [], expiration, new AssetAmount(), serialize(synopsis), undefined, fee);
     }
 
     @LongToClass

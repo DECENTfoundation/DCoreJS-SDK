@@ -24,13 +24,11 @@ export interface CloseEvent {
 
 export interface MessageEvent {
     data: any;
-    type: string;
 }
 
 export interface ErrorEvent {
     error: any;
     message: string;
-    type: string;
 }
 
 export interface WebSocketContract {
@@ -56,7 +54,7 @@ export class RxWebSocket {
 
     private static getIdAndResult(value: object): [number, object] {
         if (ObjectCheckOf<DataResponse>(value, "id")) {
-            return [value.id, value.result];
+            return [value.id, value.result!];
         }
         if (ObjectCheckOf<CallbackResponse>(value, "method")) {
             return [value.params[0], value.params[1][0]];
@@ -81,14 +79,14 @@ export class RxWebSocket {
 
     private callId = 0;
     private subscriptions: Subscription;
-    private webSocketAsync?: AsyncSubject<WebSocketContract> = null;
+    private webSocketAsync?: AsyncSubject<WebSocketContract>;
     private messages: Subject<object | Error> = new Subject();
 
     private events: Observable<string> = Observable.create((emitter: Subscriber<string>) => {
         const socket = this.webSocketFactory();
         socket.onopen = () => {
-            this.webSocketAsync.next(socket);
-            this.webSocketAsync.complete();
+            this.webSocketAsync!.next(socket);
+            this.webSocketAsync!.complete();
         };
         socket.onclose = (event: CloseEvent) => {
             if (event.wasClean) {
@@ -123,7 +121,7 @@ export class RxWebSocket {
     public disconnect() {
         this.webSocket().subscribe((socket: WebSocketContract) => {
             socket.close(1000, "closing");
-            socket.onclose({ wasClean: true, code: 1000, reason: "self disconnect" });
+            socket.onclose!({ wasClean: true, code: 1000, reason: "self disconnect" });
             socket.onclose = undefined;
         });
     }
@@ -149,7 +147,7 @@ export class RxWebSocket {
             ).subscribe({
                 complete: () => {
                     this.subscriptions.unsubscribe();
-                    this.webSocketAsync = null;
+                    this.webSocketAsync = undefined;
                 },
             });
     }

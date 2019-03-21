@@ -77,6 +77,6 @@ export class Content {
     public seederPrice: object[];
 
     public regionPrice(region: number = Regions.All): AssetAmount {
-        return this.price.prices.has(region) ? this.price.prices.get(region) : this.price.prices.values().next().value;
+        return this.price.prices.has(region) ? this.price.prices.get(region)! : this.price.prices.values().next().value;
     }
 }

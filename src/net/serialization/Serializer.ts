@@ -82,7 +82,8 @@ export class Serializer {
             obj.forEach((value) => this.append(buffer, value));
         } else {
             const key = _.isObject(obj) ? obj.constructor.name : typeof obj;
-            this.adapters.get(key)(buffer, obj);
+            const adapter = this.adapters.get(key);
+            _.isNil(adapter) ? TypeError(`no adapter for ${key}`) : adapter(buffer, obj);
         }
     }
 

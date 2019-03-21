@@ -14,6 +14,9 @@
     "noUnusedLocals": true,
     "baseUrl": ".",
     "outDir": "./dist",
+    "strict": true,
+    "alwaysStrict": true,
+    "strictPropertyInitialization": false,
     "paths": {}
   },
   "exclude": [

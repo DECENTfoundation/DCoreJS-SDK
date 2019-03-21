@@ -220,14 +220,14 @@ export class AccountApi extends BaseApi {
                 credentials.account,
                 (typeof account === "string") ? ChainObject.parse(account) : account,
                 amount,
-                memo && Memo.createPublic(memo),
+                _.isNil(memo) ? memo : Memo.createPublic(memo),
                 fee));
         } else {
             return this.get(account).pipe(map((acc) => new TransferOperation(
                 credentials.account,
                 acc.id,
                 amount,
-                memo && (encrypted ? Memo.createEncrypted(memo, credentials.keyPair, acc.primaryAddress) : Memo.createPublic(memo)),
+                _.isNil(memo) ? memo : (encrypted ? Memo.createEncrypted(memo, credentials.keyPair, acc.primaryAddress) : Memo.createPublic(memo)),
                 fee,
             )));
         }

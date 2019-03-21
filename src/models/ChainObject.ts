@@ -1,4 +1,5 @@
 import * as ByteBuffer from "bytebuffer";
+import * as _ from "lodash";
 import * as Long from "long";
 import { ObjectType } from "./ObjectType";
 
@@ -25,8 +26,8 @@ export class ChainObject {
     public constructor(objectId: string | ObjectType) {
         if (typeof objectId === "string") {
             const group = ChainObject.regexp.exec(objectId);
-            this.objectType = ObjectType.types[+group[1]][+group[2]];
-            this.instance = Long.fromString(group[3], true);
+            this.objectType = ObjectType.types[+group![1]][+group![2]];
+            this.instance = Long.fromString(group![3], true);
             this.objectId = objectId;
             this.fullBytes = new ByteBuffer(8, ByteBuffer.LITTLE_ENDIAN)
             // @ts-ignore fails on instance of Long, force a string
@@ -38,7 +39,7 @@ export class ChainObject {
         }
     }
 
-    public eq(other: ChainObject): boolean {
-        return this.objectId === other.objectId;
+    public eq(other?: ChainObject): boolean {
+        return !_.isNil(other) && this.objectId === other.objectId;
     }
 }

@@ -1,3 +1,4 @@
+import * as _ from "lodash";
 import { Observable } from "rxjs";
 import { map } from "rxjs/operators";
 import { Credentials } from "../crypto/Credentials";
@@ -48,7 +49,7 @@ export class ContentApi extends BaseApi {
      */
     public get(content: ChainObject | string): Observable<Content> {
         if (typeof content === "string" && ChainObject.isValid(content)) {
-            this.get(ChainObject.parse(content));
+            return this.get(ChainObject.parse(content));
         } else if (typeof content === "string") {
             return this.request(new GetContentByUri(content));
         } else {
@@ -134,7 +135,6 @@ export class ContentApi extends BaseApi {
         memo?: string,
         fee?: AssetAmount,
     ): TransferOperation {
-        return new TransferOperation(credentials.account, id, amount, memo && Memo.createPublic(memo), fee);
+        return new TransferOperation(credentials.account, id, amount, _.isNil(memo) ? memo : Memo.createPublic(memo), fee);
     }
-
 }

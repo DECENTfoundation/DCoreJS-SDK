@@ -1,4 +1,5 @@
 import { serialize } from "class-transformer";
+import * as _ from "lodash";
 import { Observable, zip } from "rxjs";
 import { map } from "rxjs/operators";
 import { Credentials } from "../crypto/Credentials";
@@ -43,7 +44,7 @@ export class MessageApi extends BaseApi {
      */
     public getAll(sender?: ChainObject, receiver?: ChainObject, maxCount: number = 1000): Observable<Message[]> {
         return this.getAllOperations(sender, receiver, maxCount).pipe(
-            map((list) => [].concat(...list.map((r) => Message.create(r)))),
+            map((list) => _.flatten(list.map((r) => Message.create(r)))),
         );
     }
 
@@ -78,7 +79,7 @@ export class MessageApi extends BaseApi {
      * @return list of messages
      */
     public getAllDecryptedForSender(credentials: Credentials, maxCount: number = 1000): Observable<Message[]> {
-        return this.getAllDecrypted(credentials, credentials.account, null, maxCount);
+        return this.getAllDecrypted(credentials, credentials.account, undefined, maxCount);
     }
 
     /**
@@ -90,7 +91,7 @@ export class MessageApi extends BaseApi {
      * @return list of messages
      */
     public getAllDecryptedForReceiver(credentials: Credentials, maxCount: number = 1000): Observable<Message[]> {
-        return this.getAllDecrypted(credentials, null, credentials.account, maxCount);
+        return this.getAllDecrypted(credentials, undefined, credentials.account, maxCount);
     }
 
     /**

@@ -2,13 +2,12 @@ import { Expose, Type } from "class-transformer";
 import { Decimal } from "decimal.js";
 import * as Long from "long";
 import { DCoreConstants } from "../DCoreConstants";
-
-import { assertThrow } from "../utils";
 import { ChainObjectToClass } from "../utils/TypeAdapters";
 
 import { AssetAmount } from "./AssetAmount";
 import { AssetOptions } from "./AssetOptions";
 import { ChainObject } from "./ChainObject";
+import { IllegalArgumentError } from "./error/IllegalArgumentError";
 import { UnsupportedAssetError } from "./error/UnsupportedAssetError";
 
 export class Asset {
@@ -60,6 +59,6 @@ export class Asset {
             return new AssetAmount(Long.fromString(result.toFixed(0, rounding)), this.id);
         }
 
-        assertThrow(false, () => `cannot convert ${assetAmount.assetId} with ${this.symbol}:${this.id}`);
+        throw new IllegalArgumentError(`cannot convert ${assetAmount.assetId} with ${this.symbol}:${this.id}`);
     }
 }

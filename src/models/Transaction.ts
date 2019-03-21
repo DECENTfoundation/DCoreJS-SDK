@@ -47,7 +47,7 @@ export class Transaction {
     public withSignature(key: ECKeyPair): Transaction {
         const serializer = new Serializer();
 
-        let sig: string;
+        let sig: string | undefined;
         do {
             // increment expiration until we get dcore valid signature
             this.blockData.expiration = this.blockData.expiration.add(1, "second");
