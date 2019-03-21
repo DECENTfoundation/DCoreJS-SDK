@@ -17,6 +17,7 @@
     "strict": true,
     "alwaysStrict": true,
     "strictPropertyInitialization": false,
+    "types": [],
     "paths": {}
   },
   "exclude": [
