@@ -1,4 +1,3 @@
-import * as ByteBuffer from "bytebuffer";
 import { classToPlain, Exclude, Expose, Transform } from "class-transformer";
 import * as Long from "long";
 import { Moment } from "moment";
@@ -54,7 +53,7 @@ export class Transaction {
             this.blockData.expiration = this.blockData.expiration.add(1, "second");
             this.expiration = this.blockData.expiration;
             const data = serializer.serialize(this);
-            sig = key.sign(ByteBuffer.concat([this.chainId, data]).buffer);
+            sig = key.sign(Buffer.concat([this.chainId, data]));
         } while (!sig);
 
         this.signatures = [sig];

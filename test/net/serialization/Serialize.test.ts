@@ -46,7 +46,7 @@ class SerializeTest {
             new AssetAmount(5000),
         );
 
-        this.serializer.serialize(op).toHex().should.be.equal(expected);
+        this.serializer.serialize(op).toString("hex").should.be.equal(expected);
     }
 
     @test
@@ -62,7 +62,7 @@ class SerializeTest {
             Regions.None,
         );
 
-        this.serializer.serialize(op).toHex().should.be.equal(expected);
+        this.serializer.serialize(op).toString("hex").should.be.equal(expected);
     }
 
     @test
@@ -78,7 +78,7 @@ class SerializeTest {
             Regions.None,
         );
 
-        this.serializer.serialize(op).toHex().should.be.equal(expected);
+        this.serializer.serialize(op).toString("hex").should.be.equal(expected);
     }
 
     @test
@@ -105,13 +105,13 @@ class SerializeTest {
 
         const op = new AccountUpdateOperation(
             ChainObject.parse("1.2.34"),
-            null,
-            null,
+            undefined,
+            undefined,
             options,
             new AssetAmount(500000),
         );
 
-        this.serializer.serialize(op).toHex().should.be.equal(expected);
+        this.serializer.serialize(op).toString("hex").should.be.equal(expected);
     }
 
     @test
@@ -125,7 +125,7 @@ class SerializeTest {
             new AssetAmount(0),
         );
 
-        this.serializer.serialize(op).toHex().should.be.equal(expected);
+        this.serializer.serialize(op).toString("hex").should.be.equal(expected);
     }
 
     @test
@@ -144,7 +144,7 @@ class SerializeTest {
         );
         op.hash = "2222222222222222222222222222222222222222";
 
-        this.serializer.serialize(op).toHex().should.be.equal(expected);
+        this.serializer.serialize(op).toString("hex").should.be.equal(expected);
     }
 
     @test
@@ -158,7 +158,7 @@ class SerializeTest {
             new AssetAmount(),
         );
 
-        this.serializer.serialize(op).toHex().should.be.equal(expected);
+        this.serializer.serialize(op).toString("hex").should.be.equal(expected);
     }
 
     @test
@@ -172,7 +172,7 @@ class SerializeTest {
         trx.blockData.expiration = moment.utc("2018-08-01T10:14:36");
         trx.expiration = moment.utc("2018-08-01T10:14:36");
 
-        this.serializer.serialize(trx).toHex().should.be.equal("3e322ef4e4170c88615b012720a10700000000000022230000000000020160e3160000000000000102c03f8e840c1699fd7808c2bb858e249c688c5be8acf0a0c1c484ab0cfb27f0a802e0ced80260630f641f61f6d6959f32b5c43b1a38be55666b98abfe8bafcc556b002ea2558d64350a204bc2a1ee670302ceddb897c2d351fa0496ff089c934e35e030f8ae4f3f9397a70000");
+        this.serializer.serialize(trx).toString("hex").should.be.equal("3e322ef4e4170c88615b012720a10700000000000022230000000000020160e3160000000000000102c03f8e840c1699fd7808c2bb858e249c688c5be8acf0a0c1c484ab0cfb27f0a802e0ced80260630f641f61f6d6959f32b5c43b1a38be55666b98abfe8bafcc556b002ea2558d64350a204bc2a1ee670302ceddb897c2d351fa0496ff089c934e35e030f8ae4f3f9397a70000");
     }
 
 }

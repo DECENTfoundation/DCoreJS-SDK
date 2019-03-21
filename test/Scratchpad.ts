@@ -306,9 +306,9 @@ class Scratchpad {
         const bytes = Buffer.concat([time.slice(0, 7), entropy.slice(0, 1),]);
         console.log(bytes)
 
-        const num = Long.fromBytes([...bytes], true);
+        // const num = Long.fromBytes([...bytes], true);
         const rev = Long.fromString(bytes.toString("hex"), true, 16);
-        console.log(num.toString())
+        // console.log(num.toString())
         console.log(rev.toString())
         console.log(Buffer.of(...rev.toBytesLE()))
     }
@@ -369,6 +369,11 @@ class Scratchpad {
         console.log(Long.MAX_VALUE.toUnsigned());
         console.log(Long.MAX_UNSIGNED_VALUE);
         console.log(Long.MAX_UNSIGNED_VALUE.toSigned());
+    }
+
+    @test "buffer"() {
+        const bb = ByteBuffer.fromUTF8("asd");
+        Buffer.isBuffer(bb.toBuffer()).should.be.true;
     }
 }
 // 02e4d03d9995ebb1b61b11e5e8631a70cdfdd2691df320ad3187751b256cccf808

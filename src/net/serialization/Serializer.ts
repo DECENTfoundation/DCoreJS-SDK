@@ -59,10 +59,10 @@ export class Serializer {
         this.adapters.set(RemoveContentOperation.name, this.removeContentOperationAdapter);
     }
 
-    public serialize(obj: any): ByteBuffer {
+    public serialize(obj: any): Buffer {
         const buffer = new ByteBuffer(1024, true);
         this.append(buffer, obj);
-        return buffer.compact(0, buffer.offset).reset();
+        return Buffer.from(buffer.compact(0, buffer.offset).reset().buffer);
     }
 
     private appendOptional(buffer: ByteBuffer, obj?: any) {
