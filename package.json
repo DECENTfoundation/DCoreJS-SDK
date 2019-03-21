@@ -29,7 +29,8 @@
     "build": "sh ./scripts/build.sh",
     "clean": "sh ./scripts/clean.sh",
     "lint": "sh ./scripts/lint.sh",
-    "test": "sh ./scripts/test.sh"
+    "test": "sh ./scripts/test.sh",
+    "postinstall": "tsc"
   },
   "devDependencies": {
     "@types/chai": "^4.1.7",
