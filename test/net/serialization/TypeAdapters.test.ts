@@ -40,7 +40,7 @@ class TypeAdaptersTest {
             { value: "1.2." + Long.MAX_UNSIGNED_VALUE.toString() + "1" },
             { value: "1.2.3.4" },
         ];
-        underTest = fail.map((plain) => {
+        let undef = fail.map((plain) => {
                 try {
                     classToPlain(plainToClass(TestClass, plain));
                 } catch (e) {
@@ -48,7 +48,7 @@ class TypeAdaptersTest {
                 }
             }
         );
-        underTest.every((v) => v === undefined).should.be.true;
+        undef.every((v) => v === undefined).should.be.true;
     }
 
     @test

@@ -65,13 +65,13 @@ export class ValidationApi extends BaseApi {
     /**
      * Verifies if the signers have enough authority to authorize an account.
      *
-     * @param account account name or object id
+     * @param nameOrId account name or object id
      * @param keys signer keys
      *
      * @return if the signers have enough authority
      */
-    public verifyAccountAuthority(account: string, keys: Address[]): Observable<boolean> {
-        return this.request(new VerifyAccountAuthority(account, keys));
+    public verifyAccountAuthority(nameOrId: string, keys: Address[]): Observable<boolean> {
+        return this.request(new VerifyAccountAuthority(nameOrId, keys));
     }
 
     /**

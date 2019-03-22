@@ -16,7 +16,7 @@ export class Transaction {
     public operations: BaseOperation[];
 
     @Expose({ name: "signatures" })
-    public signatures: string[];
+    public signatures?: string[];
 
     @MomentToPlain
     @Expose({ name: "expiration" })

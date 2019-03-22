@@ -228,7 +228,7 @@ class HttpRequestTest {
     @test
     public "should return full account by id"(done: (arg?: any) => void) {
         this.rpc.request(new GetFullAccounts(["1.2.35"], false))
-            .subscribe((value) => value.get("1.2.35").should.be.instanceof(FullAccount), (error) => done(error), () => done());
+            .subscribe((value) => value.get("1.2.35")!.should.be.instanceof(FullAccount), (error) => done(error), () => done());
     }
 
     @test

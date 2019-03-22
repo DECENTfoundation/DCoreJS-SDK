@@ -3,6 +3,7 @@ import * as ByteBuffer from "bytebuffer";
 import * as chai from "chai";
 import { classToPlain, plainToClass } from "class-transformer";
 import { createHash } from "crypto";
+import * as _ from "lodash";
 import * as Long from "long";
 import { suite, test, timeout } from "mocha-typescript";
 import * as moment from "moment";
@@ -123,15 +124,15 @@ class Scratchpad {
             });
 
         const aa = plainToClass(Authority, {
-            "weight_threshold": 1,
-            "account_auths": [],
-            "key_auths": [
-                [
-                    "DCT6MA5TQQ6UbMyMaLPmPXE2Syh5G3ZVhv5SbFedqLPqdFChSeqTz",
-                    1
+                "weight_threshold": 1,
+                "account_auths": [],
+                "key_auths": [
+                    [
+                        "DCT6MA5TQQ6UbMyMaLPmPXE2Syh5G3ZVhv5SbFedqLPqdFChSeqTz",
+                        1
+                    ]
                 ]
-            ]
-        }
+            }
         );
         account.should.be.instanceOf(Account);
         aa.should.be.instanceOf(Authority);
@@ -202,7 +203,7 @@ class Scratchpad {
         spy.log(/^RxWebSocket_make_\w+/);
 
         rxWs.request(new GetAccountByName("u961279ec8b7ae7bd62f304f7c1c3d345"))
-            // .pipe(mergeMap(() => rxWs.request(new GetAccountById(ChainObject.parse("1.2.15")))))
+        // .pipe(mergeMap(() => rxWs.request(new GetAccountById(ChainObject.parse("1.2.15")))))
             .subscribe();
 
         /*
@@ -299,18 +300,17 @@ class Scratchpad {
         foo.def.should.be.equal(10);
     }
 
-
     @test "test nonce"() {
         const entropy = createHash("sha224").update(ECKeyPair.generate().privateKey).digest();
         const time = Buffer.of(...Long.fromValue(moment().valueOf()).toBytesLE());
         const bytes = Buffer.concat([time.slice(0, 7), entropy.slice(0, 1),]);
-        console.log(bytes)
+        console.log(bytes);
 
         // const num = Long.fromBytes([...bytes], true);
         const rev = Long.fromString(bytes.toString("hex"), true, 16);
         // console.log(num.toString())
-        console.log(rev.toString())
-        console.log(Buffer.of(...rev.toBytesLE()))
+        console.log(rev.toString());
+        console.log(Buffer.of(...rev.toBytesLE()));
     }
 
     @test "shared secret"() {
@@ -318,7 +318,7 @@ class Scratchpad {
         const address = Address.parse("DCT6bVmimtYSvWQtwdrkVVQGHkVsTJZVKtBiUqf4YmJnrJPnk89QP");
         console.log(ecdhUnsafe(address.publicKey, keyPair.privateKey, true).toString("hex"));
 
-        console.log(publicKeyTweakMul(address.publicKey, keyPair.privateKey))
+        console.log(publicKeyTweakMul(address.publicKey, keyPair.privateKey));
 
     }
 
@@ -328,10 +328,10 @@ class Scratchpad {
             ChainObject.parse("1.2.34"),
             [],
             "https://staging-resources.alax.io/apps/mobi.minicraft.three.mini.craft.building.games14",
-            new RegionalPrice( new AssetAmount(0)),
+            new RegionalPrice(new AssetAmount(0)),
             moment(now).add(7, "days"),
             new Synopsis("nbnbj", "ádááá", ChainObject.parse("1.5.5")),
-        )
+        );
         this.api.broadcastApi.broadcastWithCallback(Helpers.KEY, [diacriticsOperation]).subscribe();
     }
 
@@ -374,7 +374,14 @@ class Scratchpad {
     @test "buffer"() {
         const bb = ByteBuffer.fromUTF8("asd");
         Buffer.isBuffer(bb.toBuffer()).should.be.true;
+        console.log(_.isEmpty(undefined));
+    }
+
+    @test "undef"() {
+        console.log(undefined && "hello undefined");
+        console.log("defined" && "hello defined");
     }
 }
+
 // 02e4d03d9995ebb1b61b11e5e8631a70cdfdd2691df320ad3187751b256cccf808
 // e4d03d9995ebb1b61b11e5e8631a70cdfdd2691df320ad3187751b256cccf808
