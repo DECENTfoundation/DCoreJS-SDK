@@ -1,9 +1,10 @@
 import { Expose, plainToClass, Transform } from "class-transformer";
-import { RegionalPrice } from "./RegionalPrice";
+import { AssetAmount } from "./AssetAmount";
+import { Regions } from "./Regions";
 
 export class PricePerRegion {
-    // tslint:disable-next-line:max-line-length
-    @Transform((values: Array<[number, any]>) => values.map(([region, price]) => plainToClass(RegionalPrice, { region, price })), { toClassOnly: true })
+    @Transform((values: Array<[number, object]>) => new Map(values.map(([region, price]) =>
+        [region, plainToClass(AssetAmount, price)] as [Regions, AssetAmount])), { toClassOnly: true })
     @Expose({ name: "map_price" })
-    public prices: RegionalPrice[];
+    public prices: Map<Regions, AssetAmount>;
 }

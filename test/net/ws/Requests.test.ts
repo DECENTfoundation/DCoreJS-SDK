@@ -6,22 +6,21 @@ import { suite, test, timeout } from "mocha-typescript";
 import "reflect-metadata";
 import { create } from "rxjs-spy";
 import { Spy } from "rxjs-spy/spy-interface";
+import { flatMap } from "rxjs/operators";
 import { Address } from "../../../src/crypto/Address";
 import { Account } from "../../../src/models/Account";
-import { AccountNameId } from "../../../src/models/AccountNameId";
 import { Asset } from "../../../src/models/Asset";
 import { AssetAmount } from "../../../src/models/AssetAmount";
 import { ChainObject } from "../../../src/models/ChainObject";
 import { Content } from "../../../src/models/Content";
 import { DynamicGlobalProperties } from "../../../src/models/DynamicGlobalProperties";
-import { NotFoundError } from "../../../src/models/error/NotFoundError";
+import { ObjectNotFoundError } from "../../../src/models/error/ObjectNotFoundError";
 import { Miner } from "../../../src/models/Miner";
 import { EmptyOperation } from "../../../src/models/operation/EmptyOperation";
 import { OperationType } from "../../../src/models/operation/OperationType";
 import { OperationHistory } from "../../../src/models/OperationHistory";
 import { ProcessedTransaction } from "../../../src/models/ProcessedTransaction";
 import { Purchase } from "../../../src/models/Purchase";
-import { TransactionDetail } from "../../../src/models/TransactionDetail";
 import { ApiGroup } from "../../../src/net/models/ApiGroup";
 import { GetAccountBalances } from "../../../src/net/models/request/GetAccountBalances";
 import { GetAccountById } from "../../../src/net/models/request/GetAccountById";
@@ -42,12 +41,11 @@ import { GetTransaction } from "../../../src/net/models/request/GetTransaction";
 import { Login } from "../../../src/net/models/request/Login";
 import { LookupAccounts } from "../../../src/net/models/request/LookupAccounts";
 import { LookupAssetSymbols } from "../../../src/net/models/request/LookupAssetSymbols";
-import { LookupMiners } from "../../../src/net/models/request/LookupMiners";
+import { LookupMinerAccounts } from "../../../src/net/models/request/LookupMinerAccounts";
 import { RequestApiAccess } from "../../../src/net/models/request/RequestApiAccess";
-import { SearchAccountHistory } from "../../../src/net/models/request/SearchAccountHistory";
 import { SearchBuyings } from "../../../src/net/models/request/SearchBuyings";
 import { RxWebSocket } from "../../../src/net/ws/RxWebSocket";
-import { Constants } from "../../Constants";
+import { Helpers } from "../../Helpers";
 
 chai.should();
 chai.use(chaiThings);
@@ -66,11 +64,11 @@ class WsRequestTest {
     public before() {
         this.spy = create();
         // this.spy.log(/^RxWebSocket_\w+/);
-        this.rxWs = new RxWebSocket(() => new WebSocket(Constants.STAGE_WS, { rejectUnauthorized: false }));
+        this.rxWs = new RxWebSocket(() => new WebSocket(Helpers.STAGE_WS, { rejectUnauthorized: false }));
     }
 
     public after() {
-        this.rxWs.close();
+        this.rxWs.disconnect();
         this.spy.teardown();
     }
 
@@ -158,7 +156,7 @@ class WsRequestTest {
         this.rxWs.request(new GetRecentTransactionById("95914695085f08b84218e39cdea6f910f380e469"))
         // .subscribe((value) => value.should.be.instanceOf(ProcessedTransaction), (error) => done(error), () => done());
             .subscribe(undefined, (error) => {
-                error.should.be.instanceOf(NotFoundError);
+                error.should.be.instanceOf(ObjectNotFoundError);
                 done();
             }, () => done());
     }
@@ -184,7 +182,7 @@ class WsRequestTest {
     @test
     public "should return accounts by name lookup"(done: (arg?: any) => void) {
         this.rxWs.request(new LookupAccounts("alx-customer"))
-            .subscribe((value) => value.should.all.be.instanceOf(AccountNameId), (error) => done(error), () => done());
+            .subscribe((value) => undefined, (error) => done(error), () => done());
     }
 
     @test
@@ -195,20 +193,15 @@ class WsRequestTest {
 
     @test
     public "should return miners by name lookup"(done: (arg?: any) => void) {
-        this.rxWs.request(new LookupMiners(""))
-            .subscribe((value) => value.should.all.be.instanceOf(AccountNameId), (error) => done(error), () => done());
+        this.rxWs.request(new LookupMinerAccounts(""))
+            .subscribe((value) => undefined, (error) => done(error), () => done());
     }
 
     @test
-    public "should request api access"(done: (arg?: any) => void) {
-        this.rxWs.request(new RequestApiAccess(ApiGroup.Database))
+    public "should request api access, has to login before"(done: (arg?: any) => void) {
+        this.rxWs.request(new Login()).pipe(flatMap(() =>
+            this.rxWs.request(new RequestApiAccess(ApiGroup.Database))))
             .subscribe((value) => value.should.be.a("number"), (error) => done(error), () => done());
-    }
-
-    @test
-    public "should return history by search"(done: (arg?: any) => void) {
-        this.rxWs.request(new SearchAccountHistory(ChainObject.parse("1.2.35")))
-            .subscribe((value) => value.should.all.be.instanceOf(TransactionDetail), (error) => done(error), () => done());
     }
 
     @test

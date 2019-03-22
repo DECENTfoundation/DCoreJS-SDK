@@ -24,7 +24,7 @@ export class ObjectType {
     public static ChainPropertyObject = new ObjectType(2, 9);
     public static MinerScheduleObject = new ObjectType(2, 10);
     public static BudgetRecordObject = new ObjectType(2, 11);
-    public static BuyingObject = new ObjectType(2, 12);
+    public static PurchaseObject = new ObjectType(2, 12);
     public static ContentObject = new ObjectType(2, 13);
     public static PublisherObject = new ObjectType(2, 14);
     public static SubscriptionObject = new ObjectType(2, 15);
@@ -58,7 +58,7 @@ export class ObjectType {
             ObjectType.ChainPropertyObject,
             ObjectType.MinerScheduleObject,
             ObjectType.BudgetRecordObject,
-            ObjectType.BuyingObject,
+            ObjectType.PurchaseObject,
             ObjectType.ContentObject,
             ObjectType.PublisherObject,
             ObjectType.SubscriptionObject,
@@ -70,6 +70,9 @@ export class ObjectType {
     private constructor(public space: number, public type: number) {
     }
 
+    /**
+     * Get generic id for type, eg. 1.2.0
+     */
     public genericId(): ChainObject {
         return new ChainObject(this);
     }

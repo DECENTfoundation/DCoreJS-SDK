@@ -1,8 +1,8 @@
 import { Expose, Type } from "class-transformer";
 import { AssetAmount } from "./AssetAmount";
+import { Regions } from "./Regions";
 
 export class RegionalPrice {
-    public static NONE = 1;
 
     @Type(() => AssetAmount)
     @Expose({ name: "price" })
@@ -11,7 +11,7 @@ export class RegionalPrice {
     @Expose({ name: "region" })
     public region: number;
 
-    constructor(price: AssetAmount, region: number = RegionalPrice.NONE) {
+    constructor(price: AssetAmount, region: number = Regions.All) {
         this.price = price;
         this.region = region;
     }

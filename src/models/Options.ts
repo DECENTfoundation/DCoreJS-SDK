@@ -1,26 +1,26 @@
 import { Expose, Transform, Type } from "class-transformer";
 import { Address } from "../crypto/Address";
 import { DCoreConstants } from "../DCoreConstants";
+import { AddressToClass, AddressToPlain, ChainObjectToClass, ChainObjectToPlain } from "../utils/TypeAdapters";
 import { AssetAmount } from "./AssetAmount";
 import { ChainObject } from "./ChainObject";
 import { VoteId } from "./VoteId";
 
 export class Options {
-    @Type(() => Address)
-    @Transform((value: string) => Address.parse(value), { toClassOnly: true })
-    @Transform((value: Address) => value.encoded, { toPlainOnly: true })
+
+    @AddressToClass
+    @AddressToPlain
     @Expose({ name: "memo_key" })
     public memoKey: Address;
 
-    @Transform((value: string) => ChainObject.parse(value), { toClassOnly: true })
-    @Transform((value: ChainObject) => value.objectId, { toPlainOnly: true })
+    @ChainObjectToClass
+    @ChainObjectToPlain
     @Expose({ name: "voting_account" })
     public votingAccount: ChainObject;
 
     @Expose({ name: "num_miner" })
     public numMiner: number;
 
-    @Type(() => VoteId)
     @Transform((values: string[]) => values.map((vote) => VoteId.parse(vote)), { toClassOnly: true })
     @Transform((values: VoteId[]) => values.map((vote) => `${vote.type}:${vote.id}`), { toPlainOnly: true })
     @Expose({ name: "votes" })

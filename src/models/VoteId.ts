@@ -17,4 +17,8 @@ export class VoteId {
         this.type = type;
         this.id = id;
     }
+
+    public toString() {
+        return `${this.type}:${this.id}`;
+    }
 }

@@ -1,5 +1,6 @@
-import { Exclude, Expose } from "class-transformer";
+import { Exclude, Expose, serialize } from "class-transformer";
 import { ApiGroup } from "../ApiGroup";
+import { RequestJson } from "../RequestJson";
 
 export abstract class BaseRequest<T> {
     @Exclude()
@@ -29,5 +30,9 @@ export abstract class BaseRequest<T> {
 
     public description(): string {
         return `method: ${this.method} params: ${this.params}`;
+    }
+
+    public json(callId: number = 1, callbackId?: number): string {
+        return serialize(new RequestJson(this, callId, callbackId));
     }
 }
