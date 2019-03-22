@@ -17,6 +17,7 @@ import { TransactionApi } from "./api/TransactionApi";
 import { DCoreConstants } from "./DCoreConstants";
 import { DCoreSdk } from "./DCoreSdk";
 import { BaseRequest } from "./net/models/request/BaseRequest";
+import { WithCallback } from "./net/models/request/WithCallback";
 
 export class DCoreApi {
 
@@ -27,7 +28,7 @@ export class DCoreApi {
     public authorityApi: AuthorityApi = new AuthorityApi(this);
     public balanceApi: BalanceApi = new BalanceApi(this);
     public blockApi: BlockApi = new BlockApi(this);
-    public broadcastApi: BroadcastApi = new BroadcastApi(this, this.core);
+    public broadcastApi: BroadcastApi = new BroadcastApi(this);
     public contentApi: ContentApi = new ContentApi(this);
     public generalApi: GeneralApi = new GeneralApi(this);
     public historyApi: HistoryApi = new HistoryApi(this);
@@ -44,7 +45,15 @@ export class DCoreApi {
         return this.core.request(request);
     }
 
+    public requestStream<T>(request: BaseRequest<T> & WithCallback): Observable<T> {
+        return this.core.requestStream(request);
+    }
+
     public disconnect() {
         this.core.disconnect();
+    }
+
+    public set timeout(millis: number) {
+        this.core.timeout = millis;
     }
 }

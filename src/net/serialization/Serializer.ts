@@ -15,7 +15,7 @@ import { Memo } from "../../models/Memo";
 import { AccountCreateOperation } from "../../models/operation/AccountCreateOperation";
 import { AccountUpdateOperation } from "../../models/operation/AccountUpdateOperation";
 import { AddOrUpdateContentOperation } from "../../models/operation/AddOrUpdateContentOperation";
-import { BuyContentOperation } from "../../models/operation/BuyContentOperation";
+import { PurchaseContentOperation } from "../../models/operation/PurchaseContentOperation";
 import { RemoveContentOperation } from "../../models/operation/RemoveContentOperation";
 import { TransferOperation } from "../../models/operation/TransferOperation";
 import { Options } from "../../models/Options";
@@ -50,7 +50,7 @@ export class Serializer {
         this.adapters.set(Transaction.name, this.transactionAdapter);
         this.adapters.set(AccountCreateOperation.name, this.accountCreateOperationAdapter);
         this.adapters.set(AccountUpdateOperation.name, this.accountUpdateOperationAdapter);
-        this.adapters.set(BuyContentOperation.name, this.buyContentOperationAdapter);
+        this.adapters.set(PurchaseContentOperation.name, this.buyContentOperationAdapter);
         this.adapters.set(TransferOperation.name, this.transferOperationAdapter);
         this.adapters.set(RegionalPrice.name, this.regionalPriceAdapter);
         this.adapters.set(KeyPart.name, this.keyPartAdapter);
@@ -59,10 +59,10 @@ export class Serializer {
         this.adapters.set(RemoveContentOperation.name, this.removeContentOperationAdapter);
     }
 
-    public serialize(obj: any): ByteBuffer {
-        const buffer = new ByteBuffer(0, true);
+    public serialize(obj: any): Buffer {
+        const buffer = new ByteBuffer(1024, true);
         this.append(buffer, obj);
-        return buffer.compact(0, buffer.offset).reset();
+        return Buffer.from(buffer.compact(0, buffer.offset).reset().buffer);
     }
 
     private appendOptional(buffer: ByteBuffer, obj?: any) {
@@ -82,11 +82,13 @@ export class Serializer {
             obj.forEach((value) => this.append(buffer, value));
         } else {
             const key = _.isObject(obj) ? obj.constructor.name : typeof obj;
-            this.adapters.get(key)(buffer, obj);
+            const adapter = this.adapters.get(key);
+            _.isNil(adapter) ? TypeError(`no adapter for ${key}`) : adapter(buffer, obj);
         }
     }
 
-    private chainIdAdapter = (buffer: ByteBuffer, obj: ChainObject) => buffer.writeVarint32(obj.instance);
+    // @ts-ignore fails on instance of Long, force a string
+    private chainIdAdapter = (buffer: ByteBuffer, obj: ChainObject) => buffer.writeVarint64(obj.instance.toString());
 
     private stringAdapter = (buffer: ByteBuffer, obj: string) => {
         const encodedString = new TextEncoder().encode(obj);
@@ -108,7 +110,8 @@ export class Serializer {
     }
 
     private longAdapter = (buffer: ByteBuffer, obj: Long) => {
-        buffer.append(Uint8Array.of(...obj.toBytesLE()));
+        // @ts-ignore fails on instance of Long, force a string
+        buffer.writeUint64(obj.toString());
     }
 
     private assetAmountAdapter = (buffer: ByteBuffer, obj: AssetAmount) => {
@@ -166,7 +169,7 @@ export class Serializer {
 
     private blockDataAdapter = (buffer: ByteBuffer, obj: BlockData) => {
         buffer.writeUint16(obj.refBlockNum);
-        buffer.writeUint32(obj.refBlockPrefix);
+        buffer.writeUint32(obj.refBlockPrefix.getLowBitsUnsigned());
         this.momentAdapter(buffer, obj.expiration);
     }
 
@@ -197,14 +200,14 @@ export class Serializer {
         this.append(buffer, obj.extensions);
     }
 
-    private buyContentOperationAdapter = (buffer: ByteBuffer, obj: BuyContentOperation) => {
+    private buyContentOperationAdapter = (buffer: ByteBuffer, obj: PurchaseContentOperation) => {
         buffer.writeByte(obj.type);
         this.append(buffer, obj.fee);
         this.append(buffer, obj.uri);
         this.append(buffer, obj.consumer);
         this.append(buffer, obj.price);
         buffer.writeUint32(obj.regionCode);
-        this.append(buffer, obj.pubKey);
+        this.append(buffer, obj.publicElGamal);
     }
 
     private transferOperationAdapter = (buffer: ByteBuffer, obj: TransferOperation) => {
@@ -244,7 +247,7 @@ export class Serializer {
     private addOrUpdateContentOperationAdapter = (buffer: ByteBuffer, obj: AddOrUpdateContentOperation) => {
         buffer.writeByte(obj.type);
         this.append(buffer, obj.fee);
-        buffer.writeUint64(obj.size);
+        this.append(buffer, obj.size);
         this.append(buffer, obj.author);
         this.coAuthorsAdapter(buffer, obj.coAuthors);
         this.append(buffer, obj.uri);

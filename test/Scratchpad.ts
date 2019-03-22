@@ -1,8 +1,9 @@
 /* tslint:disable */
 import * as ByteBuffer from "bytebuffer";
 import * as chai from "chai";
-import { plainToClass } from "class-transformer";
+import { classToPlain, plainToClass } from "class-transformer";
 import { createHash } from "crypto";
+import * as _ from "lodash";
 import * as Long from "long";
 import { suite, test, timeout } from "mocha-typescript";
 import * as moment from "moment";
@@ -12,18 +13,19 @@ import { ecdhUnsafe, publicKeyTweakMul } from "secp256k1";
 import { Address } from "../src/crypto/Address";
 import { ECKeyPair } from "../src/crypto/ECKeyPair";
 import { DCoreSdk } from "../src/DCoreSdk";
-import { RegionalPrice } from "../src/models";
+import { RegionalPrice, Synopsis } from "../src/models";
 import { Account } from "../src/models/Account";
 import { AssetAmount } from "../src/models/AssetAmount";
 import { Authority } from "../src/models/Authority";
 import { ChainObject } from "../src/models/ChainObject";
 import { AddOrUpdateContentOperation } from "../src/models/operation";
 import { TransferOperation } from "../src/models/operation/TransferOperation";
+import { API_GROUP_NAMES, ApiGroup } from "../src/net/models/ApiGroup";
 import { GetAccountById } from "../src/net/models/request/GetAccountById";
 import { GetAccountByName } from "../src/net/models/request/GetAccountByName";
 import { RpcService } from "../src/net/rpc/RpcService";
 import { RxWebSocket } from "../src/net/ws/RxWebSocket";
-import { Constants } from "./Constants";
+import { Helpers } from "./Helpers";
 import WebSocket = require("isomorphic-ws");
 
 chai.should();
@@ -33,22 +35,22 @@ chai.should();
 class Scratchpad {
 
     private apiWs = DCoreSdk.createForWebSocket(
-        () => new WebSocket(Constants.STAGE_WS, { rejectUnauthorized: false })
+        () => new WebSocket(Helpers.STAGE_WS, { rejectUnauthorized: false })
     );
 
     private apiRpc = DCoreSdk.createForHttp(
-        { baseUrl: Constants.STAGE_HTTPS, timeout: 15000, rejectUnauthorized: false }
+        { baseUrl: Helpers.STAGE_HTTPS, timeout: 15000, rejectUnauthorized: false }
     );
 
     private api = DCoreSdk.create(
-        { baseUrl: Constants.STAGE_HTTPS, timeout: 15000, rejectUnauthorized: false },
-        () => new WebSocket(Constants.STAGE_WS, { rejectUnauthorized: false }),
+        { baseUrl: Helpers.STAGE_HTTPS, timeout: 15000, rejectUnauthorized: false },
+        () => new WebSocket(Helpers.STAGE_WS, { rejectUnauthorized: false }),
     );
     private spy = create();
 
     @test "get account balance"() {
 
-        this.apiRpc.balanceApi.getBalance(ChainObject.parse("1.2.1135"), ["DCT"]).subscribe(
+        this.apiRpc.balanceApi.getAllWithAsset(ChainObject.parse("1.2.1135"), ["DCT"]).subscribe(
             (b) => console.log(b),
             (err) => console.error(err)
         );
@@ -56,7 +58,7 @@ class Scratchpad {
 
     @test.skip "get account balance by name"() {
 
-        this.apiRpc.balanceApi.getBalance("u961279ec8b7ae7bd62f304f7c1c3d345", ["DCT"]).subscribe(
+        this.apiRpc.balanceApi.getAllWithAsset("u961279ec8b7ae7bd62f304f7c1c3d345", ["DCT"]).subscribe(
             (b) => console.log(b),
             (err) => console.error(err)
         );
@@ -64,7 +66,7 @@ class Scratchpad {
 
     @test "get content by uri"() {
 
-        this.apiRpc.contentApi.getContent("https://alax.io/1/1/tv.tamago.tamago").subscribe(
+        this.apiRpc.contentApi.get("https://alax.io/1/1/tv.tamago.tamago").subscribe(
             (b) => console.log(b),
             (err) => console.error(err)
         );
@@ -122,17 +124,16 @@ class Scratchpad {
             });
 
         const aa = plainToClass(Authority, {
-            "weight_threshold": 1,
-            "account_auths": [],
-            "key_auths": [
-                [
-                    "DCT6MA5TQQ6UbMyMaLPmPXE2Syh5G3ZVhv5SbFedqLPqdFChSeqTz",
-                    1
+                "weight_threshold": 1,
+                "account_auths": [],
+                "key_auths": [
+                    [
+                        "DCT6MA5TQQ6UbMyMaLPmPXE2Syh5G3ZVhv5SbFedqLPqdFChSeqTz",
+                        1
+                    ]
                 ]
-            ]
-        }
+            }
         );
-
         account.should.be.instanceOf(Account);
         aa.should.be.instanceOf(Authority);
     }
@@ -202,7 +203,7 @@ class Scratchpad {
         spy.log(/^RxWebSocket_make_\w+/);
 
         rxWs.request(new GetAccountByName("u961279ec8b7ae7bd62f304f7c1c3d345"))
-            // .pipe(mergeMap(() => rxWs.request(new GetAccountById(ChainObject.parse("1.2.15")))))
+        // .pipe(mergeMap(() => rxWs.request(new GetAccountById(ChainObject.parse("1.2.15")))))
             .subscribe();
 
         /*
@@ -258,18 +259,19 @@ class Scratchpad {
     @test dcoreSdk() {
         // spy.log(/^API_\w+/);
         this.spy.log();
-        this.apiWs.assetApi.getAssets([ChainObject.parse("1.3.1000")]).subscribe();
-        this.apiRpc.assetApi.getAssets([ChainObject.parse("1.3.1000")]).subscribe();
+        this.apiWs.assetApi.getAll([ChainObject.parse("1.3.1000")]).subscribe();
+        this.apiRpc.assetApi.getAll([ChainObject.parse("1.3.1000")]).subscribe();
     }
 
     @test instanceChecks() {
         const bb = ByteBuffer.allocate(10);
         let l = Long.fromValue(1);
         console.log(l);
-        bb.writeUint64(l);
-        // console.log(l instanceof Long);
+        console.log(l instanceof Long);
         // l = Long.fromValue(10);
         // console.log(l instanceof Long)
+        // @ts-ignore
+        bb.writeUint64(l.toString());
     }
 
     @test "make a transfer broadcast through API"() {
@@ -280,7 +282,7 @@ class Scratchpad {
         );
 
         this.spy.log();
-        this.api.broadcastApi.broadcastWithCallback(Constants.KEY, [op]).subscribe();
+        this.api.broadcastApi.broadcastWithCallback(Helpers.KEY, [op]).subscribe();
     }
 
     @test "construct with default values"() {
@@ -298,18 +300,17 @@ class Scratchpad {
         foo.def.should.be.equal(10);
     }
 
-
     @test "test nonce"() {
         const entropy = createHash("sha224").update(ECKeyPair.generate().privateKey).digest();
         const time = Buffer.of(...Long.fromValue(moment().valueOf()).toBytesLE());
         const bytes = Buffer.concat([time.slice(0, 7), entropy.slice(0, 1),]);
-        console.log(bytes)
+        console.log(bytes);
 
-        const num = Long.fromBytesLE([...bytes], true);
-        const rev = Long.fromString(num.toString(), true);
-        console.log(num.toString())
-        console.log(rev.toString())
-        console.log(Buffer.of(...rev.toBytesLE()))
+        // const num = Long.fromBytes([...bytes], true);
+        const rev = Long.fromString(bytes.toString("hex"), true, 16);
+        // console.log(num.toString())
+        console.log(rev.toString());
+        console.log(Buffer.of(...rev.toBytesLE()));
     }
 
     @test "shared secret"() {
@@ -317,22 +318,70 @@ class Scratchpad {
         const address = Address.parse("DCT6bVmimtYSvWQtwdrkVVQGHkVsTJZVKtBiUqf4YmJnrJPnk89QP");
         console.log(ecdhUnsafe(address.publicKey, keyPair.privateKey, true).toString("hex"));
 
-        console.log(publicKeyTweakMul(address.publicKey, keyPair.privateKey))
+        console.log(publicKeyTweakMul(address.publicKey, keyPair.privateKey));
 
     }
 
     @test.skip "content encoding check"() {
         const now = new Date();
-        const diacriticsOperation = new AddOrUpdateContentOperation(
+        const diacriticsOperation = AddOrUpdateContentOperation.create(
             ChainObject.parse("1.2.34"),
+            [],
             "https://staging-resources.alax.io/apps/mobi.minicraft.three.mini.craft.building.games14",
-            [new RegionalPrice( new AssetAmount(0))],
+            new RegionalPrice(new AssetAmount(0)),
             moment(now).add(7, "days"),
-            '{"title":"nbnbj","description":"ádááá","content_type_id":"1.5.5"}',
-            []
-        )
-        this.api.broadcastApi.broadcastWithCallback(Constants.KEY, [diacriticsOperation]).subscribe();
+            new Synopsis("nbnbj", "ádááá", ChainObject.parse("1.5.5")),
+        );
+        this.api.broadcastApi.broadcastWithCallback(Helpers.KEY, [diacriticsOperation]).subscribe();
+    }
+
+    @test "type adapters"() {
+        const json = { "amount": 18446744073709550000, "asset_id": "1.3.0" };
+        const clazz = plainToClass(AssetAmount, json);
+        const plain = classToPlain(clazz);
+        console.log(clazz);
+        // console.log(clazz.amount.toString());
+        console.log(plain);
+        console.log(json);
+        // console.log(Long.fromValue("1152921504606847000").toString());
+
+        const big = Long.MAX_UNSIGNED_VALUE.toString();
+        console.log(big);
+        console.log(big.toString());
+        console.log(Long.fromString(big.toString(), true).toString());
+
+        JSON.stringify(json).should.be.equal(JSON.stringify(plain));
+    }
+
+    @test "enum to string"() {
+        console.log(ApiGroup.Broadcast.toString().toLowerCase());
+        console.log(API_GROUP_NAMES[ApiGroup.Broadcast]);
+    }
+
+    @test "long unsigned"() {
+        console.log(Long.fromString("1234567890"));
+        console.log(Long.fromString("1234567890", false).toUnsigned());
+        console.log(Long.fromString("1234567890", true).toUnsigned());
+        console.log(Long.fromString("1234567890", false).toSigned());
+        console.log(Long.fromString("-1234567890"));
+        console.log(Long.fromString("-1234567890", true));
+        console.log(Long.MAX_VALUE);
+        console.log(Long.MAX_VALUE.toUnsigned());
+        console.log(Long.MAX_UNSIGNED_VALUE);
+        console.log(Long.MAX_UNSIGNED_VALUE.toSigned());
+    }
+
+    @test "buffer"() {
+        const bb = ByteBuffer.fromUTF8("asd");
+        Buffer.isBuffer(bb.toBuffer()).should.be.true;
+        console.log(_.isEmpty(undefined));
+    }
+
+    @test "undef"() {
+        console.log(undefined && "hello undefined");
+        console.log("defined" && "hello defined");
     }
 }
+
 // 02e4d03d9995ebb1b61b11e5e8631a70cdfdd2691df320ad3187751b256cccf808
 // e4d03d9995ebb1b61b11e5e8631a70cdfdd2691df320ad3187751b256cccf808

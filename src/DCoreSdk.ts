@@ -1,35 +1,31 @@
 import Decimal from "decimal.js";
 import * as _ from "lodash";
-import * as Long from "long";
 import { Duration } from "moment";
 import { CoreOptions } from "request";
 import { Observable, throwError, zip } from "rxjs";
 import { tag } from "rxjs-spy/operators";
 import { scalar } from "rxjs/internal/observable/scalar";
-import { concatMap, flatMap, map, tap } from "rxjs/operators";
-import { Address } from "./crypto/Address";
-import { ECKeyPair } from "./crypto/ECKeyPair";
+import { flatMap, map, tap } from "rxjs/operators";
 import { DCoreApi } from "./DCoreApi";
 import { Asset } from "./models/Asset";
+import { AssetAmount } from "./models/AssetAmount";
 import { BlockData } from "./models/BlockData";
 import { ChainObject } from "./models/ChainObject";
+import { IllegalArgumentError } from "./models/error/IllegalArgumentError";
 import { BaseOperation } from "./models/operation/BaseOperation";
 import { Transaction } from "./models/Transaction";
-import { TransactionConfirmation } from "./models/TransactionConfirmation";
-import { ApiGroup } from "./net/models/ApiGroup";
 import { BaseRequest } from "./net/models/request/BaseRequest";
-import { BroadcastTransaction } from "./net/models/request/BroadcastTransaction";
-import { BroadcastTransactionWithCallback } from "./net/models/request/BroadcastTransactionWithCallback";
 import { GetChainId } from "./net/models/request/GetChainId";
 import { GetDynamicGlobalProps } from "./net/models/request/GetDynamicGlobalProps";
 import { GetRequiredFees } from "./net/models/request/GetRequiredFees";
-import { RpcEnabledApis } from "./net/rpc/RpcEnabledApis";
+import { WithCallback } from "./net/models/request/WithCallback";
 import { RpcService } from "./net/rpc/RpcService";
 import { RxWebSocket, WebSocketFactory } from "./net/ws/RxWebSocket";
+import { ObjectCheckOf } from "./utils/ObjectCheckOf";
 import { assertThrow } from "./utils/Utils";
 
-export type AccountRef = ChainObject | string | Address;
-export type AssetWithAmount = [Asset, Long];
+export type AccountRef = ChainObject | string;
+export type AssetWithAmount = [Asset, AssetAmount];
 
 Decimal.set({
     // max amount have precision 16 (satoshi significant places) and we are doubling that for partial result from multiply/division operations
@@ -43,7 +39,7 @@ export class DCoreSdk {
     }
 
     public static createForWebSocket(factory: WebSocketFactory): DCoreApi {
-        return new DCoreApi(new DCoreSdk(null, new RxWebSocket(factory)));
+        return new DCoreApi(new DCoreSdk(undefined, new RxWebSocket(factory)));
     }
 
     public static create(options: CoreOptions, factory: WebSocketFactory): DCoreApi {
@@ -56,36 +52,37 @@ export class DCoreSdk {
         assertThrow(rpc != null || ws != null, () => "rpc or webSocket must be set");
     }
 
+    public requestStream<T>(request: BaseRequest<T> & WithCallback): Observable<T> {
+        if (this.ws) {
+            return this.ws.requestStream(request).pipe(tag("API_request_callback_" + request.method));
+        } else {
+            return throwError(new IllegalArgumentError("callbacks not available through HTTP API"));
+        }
+    }
+
     public request<T>(request: BaseRequest<T>): Observable<T> {
         let result: Observable<T>;
-        if (this.ws != null && (this.rpc == null || this.ws.isConnected() || request.apiGroup !== ApiGroup.Database)) {
+        assertThrow(_.isNil(this.ws) || _.isNil(this.rpc), () => "either ws or rpc must be present");
+        if (this.ws && (_.isNil(this.rpc) || this.ws.isConnected() || ObjectCheckOf<WithCallback>(request, "callbackId"))) {
             result = this.ws.request(request);
         } else {
-            if (!_.includes(RpcEnabledApis, request.apiGroup)) {
-                return throwError(Error("not available through HTTP API"));
+            if (_.isNil(this.rpc)) {
+                return throwError(new IllegalArgumentError("callbacks not available through HTTP API"));
             }
             result = this.rpc.request(request);
         }
         return result.pipe(tag("API_request_" + request.method));
     }
 
-    public broadcast(privateKey: ECKeyPair, operations: BaseOperation[], transactionExpiration: Duration): Observable<void> {
-        return this.prepareTransaction(operations, transactionExpiration).pipe(
-            map((trx) => trx.sign(privateKey)),
-            concatMap((trx) => this.request(new BroadcastTransaction(trx))),
-        );
-    }
-
-    public broadcastWithCallback(privateKey: ECKeyPair, operations: BaseOperation[], transactionExpiration: Duration): Observable<TransactionConfirmation> {
-        return this.prepareTransaction(operations, transactionExpiration).pipe(
-            map((trx) => trx.sign(privateKey)),
-            concatMap((trx) => this.request(new BroadcastTransactionWithCallback(trx, this.ws.getCallId()))),
-        );
+    public set timeout(millis: number) {
+        if (this.ws) {
+            this.ws.timeout = millis;
+        }
     }
 
     public disconnect() {
-        if (this.ws != null) {
-            this.ws.close();
+        if (this.ws) {
+            this.ws.disconnect();
         }
     }
 

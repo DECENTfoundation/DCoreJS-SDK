@@ -5,9 +5,10 @@ import { suite, test } from "mocha-typescript";
 import "reflect-metadata";
 import { Address } from "../../src/crypto/Address";
 import { ECKeyPair } from "../../src/crypto/ECKeyPair";
+import { ElGamal } from "../../src/crypto/ElGamal";
 import { Passphrase } from "../../src/crypto/Passphrase";
 import { Memo } from "../../src/models/Memo";
-import { Constants } from "../Constants";
+import { Helpers } from "../Helpers";
 
 chai.should();
 
@@ -45,7 +46,7 @@ class CryptoTest {
         const nonce = Long.fromString("10872523688190906880", true);
         const address = Address.parse("DCT6bVmimtYSvWQtwdrkVVQGHkVsTJZVKtBiUqf4YmJnrJPnk89QP");
 
-        const ss = Constants.KEY.secret(address, nonce).toString("hex");
+        const ss = Helpers.KEY.secret(address, nonce).toString("hex");
 
         ss.should.be.equal(expected);
     }
@@ -56,16 +57,26 @@ class CryptoTest {
         const plain = "hello memo here i am";
         const address = Address.parse("DCT6bVmimtYSvWQtwdrkVVQGHkVsTJZVKtBiUqf4YmJnrJPnk89QP");
         const nonce = Long.fromString("10872523688190906880", true);
-        const memo = Memo.createEncrypted(plain, Constants.KEY, address, nonce);
+        const memo = Memo.createEncrypted(plain, Helpers.KEY, address, nonce);
 
         memo.message.should.be.equal(expected);
-        memo.decrypt(Constants.KEY).should.be.equal(plain);
+        memo.decrypt(Helpers.KEY).should.be.equal(plain);
     }
+
     @test
     public "should decrypt public memo"() {
         const plain = "hello memo here i am";
         const memo = Memo.createPublic(plain);
 
-        memo.decrypt(Constants.KEY).should.be.equal(plain);
+        memo.decrypt(Helpers.KEY).should.be.equal(plain);
+    }
+
+    @test
+    public "should generate public el gamal"() {
+        const priv = "8149734503494312909116126763927194608124629667940168421251424974828815164868905638030541425377704620941193711130535974967507480114755414928915429397074890";
+        const pub = "5182545488318095000498180568539728214545472470974958338942426759510121851708530625921436777555517288139787965253547588340803542762268721656138876002028437";
+
+        ElGamal.createPrivate(Helpers.KEY).toString().should.be.equal(priv);
+        ElGamal.createPublic(Helpers.KEY).toString().should.be.equal(pub);
     }
 }

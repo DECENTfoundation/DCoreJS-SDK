@@ -1,4 +1,7 @@
 import { deserialize, Expose, Transform, Type } from "class-transformer";
+import * as Long from "long";
+import { Moment } from "moment";
+import { ChainObjectArrayToClass, ChainObjectToClass, LongToClass, MomentToClass } from "../utils/TypeAdapters";
 import { AssetAmount } from "./AssetAmount";
 import { ChainObject } from "./ChainObject";
 import { KeyPart } from "./KeyPart";
@@ -6,7 +9,8 @@ import { PubKey } from "./PubKey";
 import { Synopsis } from "./Synopsis";
 
 export class Purchase {
-    @Transform((value: string) => ChainObject.parse(value), { toClassOnly: true })
+
+    @ChainObjectToClass
     @Expose({ name: "id" })
     public id: ChainObject;
 
@@ -33,12 +37,13 @@ export class Purchase {
     @Expose({ name: "paid_price_after_exchange" })
     public priceAfter: AssetAmount;
 
-    @Transform((value: string[]) => value.map((id) => ChainObject.parse(id)), { toClassOnly: true })
+    @ChainObjectArrayToClass
     @Expose({ name: "seeders_answered" })
     public seedersAnswered: ChainObject[];
 
+    @LongToClass
     @Expose({ name: "size" })
-    public size: number;
+    public size: Long;
 
     @Expose({ name: "rating" })
     public rating: number;
@@ -46,9 +51,9 @@ export class Purchase {
     @Expose({ name: "comment" })
     public comment: string;
 
-    @Type(() => Date)
+    @MomentToClass
     @Expose({ name: "expiration_time" })
-    public expiration: Date;
+    public expiration: Moment;
 
     @Type(() => PubKey)
     @Expose({ name: "pubKey" })
@@ -64,16 +69,16 @@ export class Purchase {
     @Expose({ name: "delivered" })
     public delivered: boolean;
 
-    @Type(() => Date)
+    @MomentToClass
     @Expose({ name: "expiration_or_delivery_time" })
-    public deliveryExpiration: Date;
+    public deliveryExpiration: Moment;
 
     @Expose({ name: "rated_or_commented" })
     public ratedOrCommented: boolean;
 
-    @Type(() => Date)
+    @MomentToClass
     @Expose({ name: "created" })
-    public created: Date;
+    public created: Moment;
 
     @Expose({ name: "region_code_from" })
     public regionFrom: number;

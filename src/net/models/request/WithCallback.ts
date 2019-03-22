@@ -1,3 +1,4 @@
 export interface WithCallback {
-    callbackId: number;
+    // not used, cannot have empty interface
+    readonly callbackId: any;
 }

@@ -1,4 +1,5 @@
-import { Expose, Transform } from "class-transformer";
+import { Expose } from "class-transformer";
+import { ChainObjectToClass, ChainObjectToPlain } from "../../utils/TypeAdapters";
 import { AssetAmount } from "../AssetAmount";
 import { ChainObject } from "../ChainObject";
 import { BaseOperation } from "./BaseOperation";
@@ -6,8 +7,8 @@ import { OperationType } from "./OperationType";
 
 export class RemoveContentOperation extends BaseOperation {
 
-    @Transform((value: string) => ChainObject.parse(value), { toClassOnly: true })
-    @Transform((value: ChainObject) => value.objectId, { toPlainOnly: true })
+    @ChainObjectToClass
+    @ChainObjectToPlain
     @Expose({ name: "author" })
     public author: ChainObject;
 

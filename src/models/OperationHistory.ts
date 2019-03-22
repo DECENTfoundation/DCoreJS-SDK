@@ -1,9 +1,11 @@
-import { Expose, Transform } from "class-transformer";
+import { Expose } from "class-transformer";
+import * as Long from "long";
+import { ChainObjectToClass, LongToClass } from "../utils/TypeAdapters";
 import { ChainObject } from "./ChainObject";
 
 export class OperationHistory {
 
-    @Transform((value: string) => ChainObject.parse(value), { toClassOnly: true })
+    @ChainObjectToClass
     @Expose({ name: "id" })
     public id: ChainObject;
 
@@ -14,15 +16,19 @@ export class OperationHistory {
     @Expose({ name: "result" })
     public result: any;
 
+    @LongToClass
     @Expose({ name: "block_num" })
-    public blockNum: number;
+    public blockNum: Long;
 
+    @LongToClass
     @Expose({ name: "trx_in_block" })
-    public trxInBlock: number;
+    public trxInBlock: Long;
 
+    @LongToClass
     @Expose({ name: "op_in_trx" })
-    public opNum: number;
+    public opNum: Long;
 
+    @LongToClass
     @Expose({ name: "virtual_op" })
-    public virtualOp: number;
+    public virtualOp: Long;
 }

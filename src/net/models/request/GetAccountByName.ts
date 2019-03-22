@@ -1,5 +1,6 @@
 import { plainToClass } from "class-transformer";
 import { Account } from "../../../models/Account";
+import { assertThrow } from "../../../utils/Utils";
 import { ApiGroup } from "../ApiGroup";
 import { BaseRequest } from "./BaseRequest";
 
@@ -13,5 +14,7 @@ export class GetAccountByName extends BaseRequest<Account> {
             [accountName],
             (value: object) => plainToClass(Account, value),
         );
+
+        assertThrow(Account.isValidName(accountName), () => "not a valid account name");
     }
 }

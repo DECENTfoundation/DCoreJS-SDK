@@ -8,7 +8,7 @@ export abstract class BaseOperation {
 
     @Type(() => AssetAmount)
     @Expose({ name: "fee" })
-    public fee: AssetAmount;
+    public fee?: AssetAmount;
 
     @Exclude()
     public type: OperationType;

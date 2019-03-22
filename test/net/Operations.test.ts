@@ -1,5 +1,4 @@
 import * as chai from "chai";
-import { serialize } from "class-transformer";
 import * as WebSocket from "isomorphic-ws";
 import { suite, test, timeout } from "mocha-typescript";
 import * as moment from "moment";
@@ -17,7 +16,7 @@ import { TransferOperation } from "../../src/models/operation/TransferOperation"
 import { RegionalPrice } from "../../src/models/RegionalPrice";
 import { Synopsis } from "../../src/models/Synopsis";
 import { TransactionConfirmation } from "../../src/models/TransactionConfirmation";
-import { Constants } from "../Constants";
+import { Helpers } from "../Helpers";
 
 chai.should();
 
@@ -33,8 +32,8 @@ class OperationsTest {
 
     public before() {
         this.spy = create();
-        // this.spy.log(/^API\w+/);
-        this.api = DCoreSdk.createForWebSocket(() => new WebSocket(Constants.STAGE_WS, { rejectUnauthorized: false }));
+        this.spy.log(/^API\w+/);
+        this.api = DCoreSdk.createForWebSocket(() => new WebSocket(Helpers.STAGE_WS, { rejectUnauthorized: false }));
     }
 
     public after() {
@@ -50,22 +49,22 @@ class OperationsTest {
             new AssetAmount(1),
         );
 
-        this.api.broadcastApi.broadcastWithCallback(Constants.KEY, [op])
+        this.api.broadcastApi.broadcastWithCallback(Helpers.KEY, [op])
             .subscribe((value) => value.should.be.instanceOf(TransactionConfirmation), (error) => done(error), () => done());
     }
 
     @test.skip
     public "should add or update a content"(done: (arg?: any) => void) {
-        const op = new AddOrUpdateContentOperation(
+        const op = AddOrUpdateContentOperation.create(
             ChainObject.parse("1.2.34"),
-            "http://hello.world",
-            [new RegionalPrice(new AssetAmount(100))],
-            moment.utc().add(10, "days"),
-            serialize(new Synopsis("hello", "world")),
             [[ChainObject.parse("1.2.35"), 50]],
+            "http://hello.world",
+            new RegionalPrice(new AssetAmount(100)),
+            moment.utc().add(10, "days"),
+            new Synopsis("hello", "world"),
         );
 
-        this.api.broadcastApi.broadcastWithCallback(Constants.KEY, [op])
+        this.api.broadcastApi.broadcastWithCallback(Helpers.KEY, [op])
             .subscribe((value) => value.should.be.instanceOf(TransactionConfirmation), (error) => done(error), () => done());
     }
 
@@ -76,19 +75,19 @@ class OperationsTest {
             "http://hello.world",
         );
 
-        this.api.broadcastApi.broadcastWithCallback(Constants.KEY, [op])
+        this.api.broadcastApi.broadcastWithCallback(Helpers.KEY, [op])
             .subscribe((value) => value.should.be.instanceOf(TransactionConfirmation), (error) => done(error), () => done());
     }
 
     @test.skip
     public "should create an account"(done: (arg?: any) => void) {
-        const op = new AccountCreateOperation(
+        const op = AccountCreateOperation.create(
             ChainObject.parse("1.2.34"),
             "marian",
-            Constants.PUBKEY,
+            Helpers.PUBKEY,
         );
 
-        this.api.broadcastApi.broadcastWithCallback(Constants.KEY, [op])
+        this.api.broadcastApi.broadcastWithCallback(Helpers.KEY, [op])
             .subscribe((value) => value.should.be.instanceOf(TransactionConfirmation), (error) => done(error), () => done());
     }
 }

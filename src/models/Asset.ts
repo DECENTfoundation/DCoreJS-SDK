@@ -1,17 +1,17 @@
-import { Expose, Transform, Type } from "class-transformer";
+import { Expose, Type } from "class-transformer";
 import { Decimal } from "decimal.js";
 import * as Long from "long";
 import { DCoreConstants } from "../DCoreConstants";
-
-import { assertThrow } from "../utils";
-
+import { ChainObjectToClass } from "../utils/TypeAdapters";
+import { assertThrow } from "../utils/Utils";
 import { AssetAmount } from "./AssetAmount";
 import { AssetOptions } from "./AssetOptions";
 import { ChainObject } from "./ChainObject";
+import { IllegalArgumentError } from "./error/IllegalArgumentError";
 
 export class Asset {
 
-    @Transform((value: string) => ChainObject.parse(value), { toClassOnly: true })
+    @ChainObjectToClass
     @Expose({ name: "id" })
     public id: ChainObject;
 
@@ -21,7 +21,7 @@ export class Asset {
     @Expose({ name: "precision" })
     public precision: number;
 
-    @Transform((value: string) => ChainObject.parse(value), { toClassOnly: true })
+    @ChainObjectToClass
     @Expose({ name: "issuer" })
     public issuer: ChainObject;
 
@@ -32,7 +32,7 @@ export class Asset {
     @Expose({ name: "options" })
     public options: AssetOptions;
 
-    @Transform((value: string) => ChainObject.parse(value), { toClassOnly: true })
+    @ChainObjectToClass
     @Expose({ name: "dynamic_asset_data_id" })
     public dynamicAssetDataId: ChainObject;
 
@@ -73,6 +73,6 @@ export class Asset {
             return new AssetAmount(Long.fromString(result.toFixed(0, rounding)), toAssetId);
         }
 
-        assertThrow(false, () => `cannot convert ${toAssetId} with ${this.symbol}:${this.id}`);
+        throw new IllegalArgumentError(`cannot convert ${toAssetId} with ${this.symbol}:${this.id}`);
     }
 }

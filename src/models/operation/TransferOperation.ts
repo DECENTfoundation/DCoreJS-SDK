@@ -1,27 +1,20 @@
-import { Expose, Transform, Type } from "class-transformer";
+import { Expose, Type } from "class-transformer";
+import { ChainObjectToClass, ChainObjectToPlain } from "../../utils/TypeAdapters";
 import { AssetAmount } from "../AssetAmount";
 import { ChainObject } from "../ChainObject";
 import { Memo } from "../Memo";
 import { BaseOperation } from "./BaseOperation";
 import { OperationType } from "./OperationType";
 
-/**
- * Transfer operation constructor
- *
- * @param from account object id of the sender
- * @param to account object id of the receiver
- * @param amount an amount and asset type to transfer
- * @param memo optional string note
- */
 export class TransferOperation extends BaseOperation {
 
-    @Transform((value: string) => ChainObject.parse(value), { toClassOnly: true })
-    @Transform((value: ChainObject) => value.objectId, { toPlainOnly: true })
+    @ChainObjectToClass
+    @ChainObjectToPlain
     @Expose({ name: "from" })
     public from: ChainObject;
 
-    @Transform((value: string) => ChainObject.parse(value), { toClassOnly: true })
-    @Transform((value: ChainObject) => value.objectId, { toPlainOnly: true })
+    @ChainObjectToClass
+    @ChainObjectToPlain
     @Expose({ name: "to" })
     public to: ChainObject;
 
@@ -33,6 +26,15 @@ export class TransferOperation extends BaseOperation {
     @Expose({ name: "memo" })
     public memo?: Memo;
 
+    /**
+     * Transfer operation constructor
+     *
+     * @param from account object id of the sender
+     * @param to account object id or content object id of the receiver
+     * @param amount an [AssetAmount] to transfer
+     * @param memo optional string note
+     * @param fee {@link AssetAmount} fee for the operation, if left undefined the fee will be computed in DCT asset
+     */
     constructor(from: ChainObject, to: ChainObject, amount: AssetAmount, memo?: Memo, fee?: AssetAmount) {
         super(OperationType.Transfer2);
         this.from = from;

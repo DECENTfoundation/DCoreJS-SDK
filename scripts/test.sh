@@ -1,1 +1,1 @@
-mocha
+mocha test/**/*.test.ts
