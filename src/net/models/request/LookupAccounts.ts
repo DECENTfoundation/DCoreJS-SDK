@@ -12,7 +12,7 @@ export class LookupAccounts extends BaseRequest<Map<string, ChainObject>> {
             ApiGroup.Database,
             "lookup_accounts",
             [lookupTerm, _.max([0, _.min([limit, 1000])])],
-            (value: [string, string]) =>
+            (value: Array<[string, string]>) =>
                 new Map(value.map(([name, id]) => [name, ChainObject.parse(id)] as [string, ChainObject])),
         );
     }

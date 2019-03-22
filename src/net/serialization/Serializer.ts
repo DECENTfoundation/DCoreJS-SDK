@@ -59,10 +59,10 @@ export class Serializer {
         this.adapters.set(RemoveContentOperation.name, this.removeContentOperationAdapter);
     }
 
-    public serialize(obj: any): ByteBuffer {
-        const buffer = new ByteBuffer(0, true);
+    public serialize(obj: any): Buffer {
+        const buffer = new ByteBuffer(1024, true);
         this.append(buffer, obj);
-        return buffer.compact(0, buffer.offset).reset();
+        return Buffer.from(buffer.compact(0, buffer.offset).reset().buffer);
     }
 
     private appendOptional(buffer: ByteBuffer, obj?: any) {
@@ -82,7 +82,8 @@ export class Serializer {
             obj.forEach((value) => this.append(buffer, value));
         } else {
             const key = _.isObject(obj) ? obj.constructor.name : typeof obj;
-            this.adapters.get(key)(buffer, obj);
+            const adapter = this.adapters.get(key);
+            _.isNil(adapter) ? TypeError(`no adapter for ${key}`) : adapter(buffer, obj);
         }
     }
 

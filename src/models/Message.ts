@@ -50,7 +50,7 @@ export class Message {
 
         assertThrow(!_.isNil(this.senderAddress));
         assertThrow(!_.isNil(this.receiverAddress));
-        const decrypted = this.decryptOrNull(credentials.keyPair, credentials.account === this.sender ? this.receiverAddress : this.senderAddress);
+        const decrypted = this.decryptOrNull(credentials.keyPair, credentials.account === this.sender ? this.receiverAddress! : this.senderAddress!);
         if (!_.isNil(decrypted)) {
             this.message = decrypted;
             this.encrypted = false;
@@ -58,14 +58,14 @@ export class Message {
         return this;
     }
 
-    private decryptOrNull(keyPair: ECKeyPair, address: Address): string {
+    private decryptOrNull(keyPair: ECKeyPair, address: Address): string | undefined {
         const secret = keyPair.secret(address, this.nonce);
         const clearText = Utils.decrypt(secret, Buffer.from(this.message, "hex"));
         const msg = clearText.slice(4);
         if (Utils.hash256(msg).slice(0, 4).equals(clearText.slice(0, 4))) {
             return msg.toString("utf8");
         } else {
-            return null;
+            return;
         }
     }
 }

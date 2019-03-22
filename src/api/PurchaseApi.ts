@@ -111,6 +111,6 @@ export class PurchaseApi extends BaseApi {
         count: number = 100,
         startId: ChainObject = ObjectType.Null.genericId(),
     ): Observable<Purchase[]> {
-        return this.request(new SearchFeedback(user, uri, startId, count));
+        return this.request(new SearchFeedback(uri, user, startId, count));
     }
 }

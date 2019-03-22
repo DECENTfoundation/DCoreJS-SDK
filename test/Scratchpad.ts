@@ -12,7 +12,7 @@ import { ecdhUnsafe, publicKeyTweakMul } from "secp256k1";
 import { Address } from "../src/crypto/Address";
 import { ECKeyPair } from "../src/crypto/ECKeyPair";
 import { DCoreSdk } from "../src/DCoreSdk";
-import { RegionalPrice } from "../src/models";
+import { RegionalPrice, Synopsis } from "../src/models";
 import { Account } from "../src/models/Account";
 import { AssetAmount } from "../src/models/AssetAmount";
 import { Authority } from "../src/models/Authority";
@@ -306,9 +306,9 @@ class Scratchpad {
         const bytes = Buffer.concat([time.slice(0, 7), entropy.slice(0, 1),]);
         console.log(bytes)
 
-        const num = Long.fromBytesLE([...bytes], true);
-        const rev = Long.fromString(num.toString(), true);
-        console.log(num.toString())
+        // const num = Long.fromBytes([...bytes], true);
+        const rev = Long.fromString(bytes.toString("hex"), true, 16);
+        // console.log(num.toString())
         console.log(rev.toString())
         console.log(Buffer.of(...rev.toBytesLE()))
     }
@@ -324,13 +324,13 @@ class Scratchpad {
 
     @test.skip "content encoding check"() {
         const now = new Date();
-        const diacriticsOperation = new AddOrUpdateContentOperation(
+        const diacriticsOperation = AddOrUpdateContentOperation.create(
             ChainObject.parse("1.2.34"),
+            [],
             "https://staging-resources.alax.io/apps/mobi.minicraft.three.mini.craft.building.games14",
-            [new RegionalPrice( new AssetAmount(0))],
+            new RegionalPrice( new AssetAmount(0)),
             moment(now).add(7, "days"),
-            '{"title":"nbnbj","description":"ádááá","content_type_id":"1.5.5"}',
-            []
+            new Synopsis("nbnbj", "ádááá", ChainObject.parse("1.5.5")),
         )
         this.api.broadcastApi.broadcastWithCallback(Helpers.KEY, [diacriticsOperation]).subscribe();
     }
@@ -369,6 +369,11 @@ class Scratchpad {
         console.log(Long.MAX_VALUE.toUnsigned());
         console.log(Long.MAX_UNSIGNED_VALUE);
         console.log(Long.MAX_UNSIGNED_VALUE.toSigned());
+    }
+
+    @test "buffer"() {
+        const bb = ByteBuffer.fromUTF8("asd");
+        Buffer.isBuffer(bb.toBuffer()).should.be.true;
     }
 }
 // 02e4d03d9995ebb1b61b11e5e8631a70cdfdd2691df320ad3187751b256cccf808

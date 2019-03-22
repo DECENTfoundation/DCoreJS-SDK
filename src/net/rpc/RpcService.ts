@@ -32,6 +32,7 @@ export class RpcService {
                     }
                     throw new ObjectNotFoundError(request.description());
                 }
+                throw TypeError("invalid response");
             }),
             tag("RpcEndpoints_request"),
         );

@@ -47,13 +47,13 @@ export class Transaction {
     public withSignature(key: ECKeyPair): Transaction {
         const serializer = new Serializer();
 
-        let sig: string;
+        let sig: string | undefined;
         do {
             // increment expiration until we get dcore valid signature
             this.blockData.expiration = this.blockData.expiration.add(1, "second");
             this.expiration = this.blockData.expiration;
             const data = serializer.serialize(this);
-            sig = key.sign(Buffer.concat([this.chainId, data.buffer]));
+            sig = key.sign(Buffer.concat([this.chainId, data]));
         } while (!sig);
 
         this.signatures = [sig];
