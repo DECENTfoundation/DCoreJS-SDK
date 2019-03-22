@@ -1,33 +1,38 @@
 import { deserialize, Expose, Transform, Type } from "class-transformer";
+import * as Long from "long";
+import { Moment } from "moment";
+import { ChainObjectToClass, CoAuthorsToClass, LongToClass, MomentToClass } from "../utils/TypeAdapters";
 import { AssetAmount } from "./AssetAmount";
 import { ChainObject } from "./ChainObject";
 import { PricePerRegion } from "./PricePerRegion";
+import { Regions } from "./Regions";
 import { Synopsis } from "./Synopsis";
 
 export class Content {
 
-    @Transform((value: string) => ChainObject.parse(value), { toClassOnly: true })
+    @ChainObjectToClass
     @Expose({ name: "id" })
     public id: ChainObject;
 
-    @Transform((value: Array<[string, number]>) => value.map(([id, weight]) => [ChainObject.parse(id), weight]), { toClassOnly: true })
+    @CoAuthorsToClass
     @Expose({ name: "co_authors" })
     public coAuthors: Array<[ChainObject, number]>;
 
-    @Type(() => Date)
+    @MomentToClass
     @Expose({ name: "expiration" })
-    public expiration: Date;
+    public expiration: Moment;
 
-    @Type(() => Date)
+    @MomentToClass
     @Expose({ name: "created" })
-    public created: Date;
+    public created: Moment;
 
     @Type(() => PricePerRegion)
     @Expose({ name: "price" })
     public price: PricePerRegion;
 
+    @LongToClass
     @Expose({ name: "size" })
-    public size: number;
+    public size: Long;
 
     @Type(() => Synopsis)
     @Transform((value: string) => deserialize(Synopsis, value), { toClassOnly: true })
@@ -70,4 +75,8 @@ export class Content {
 
     @Expose({ name: "seeder_price" })
     public seederPrice: object[];
+
+    public regionPrice(region: number = Regions.All): AssetAmount {
+        return this.price.prices.has(region) ? this.price.prices.get(region)! : this.price.prices.values().next().value;
+    }
 }

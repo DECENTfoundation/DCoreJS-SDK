@@ -4,6 +4,7 @@ import { ChainObject } from "../../../models/ChainObject";
 import { ObjectType } from "../../../models/ObjectType";
 import { SearchPurchasesOrder } from "../../../models/order/SearchPurchasesOrder";
 import { Purchase } from "../../../models/Purchase";
+import { assertThrow } from "../../../utils/Utils";
 import { ApiGroup } from "../ApiGroup";
 import { BaseRequest } from "./BaseRequest";
 
@@ -22,5 +23,8 @@ export class SearchBuyings extends BaseRequest<Purchase[]> {
             [consumer.objectId, order, startId.objectId, term, _.max([0, _.min([limit, 100])])],
             (value: object[]) => plainToClass(Purchase, value),
         );
+
+        assertThrow(consumer.objectType === ObjectType.Account, () => "not a valid account object id");
+        assertThrow(startId.objectType === ObjectType.PurchaseObject || startId.objectType === ObjectType.Null, () => "not a valid purchase object id");
     }
 }

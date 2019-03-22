@@ -1,5 +1,5 @@
 import * as chai from "chai";
-import { deserialize, plainToClass, serialize } from "class-transformer";
+import { deserialize, plainToClass } from "class-transformer";
 import "mocha";
 import { suite, test } from "mocha-typescript";
 import * as moment from "moment";
@@ -14,16 +14,17 @@ import { Memo } from "../../../src/models/Memo";
 import { AccountCreateOperation } from "../../../src/models/operation/AccountCreateOperation";
 import { AccountUpdateOperation } from "../../../src/models/operation/AccountUpdateOperation";
 import { AddOrUpdateContentOperation } from "../../../src/models/operation/AddOrUpdateContentOperation";
-import { BuyContentOperation } from "../../../src/models/operation/BuyContentOperation";
+import { PurchaseContentOperation } from "../../../src/models/operation/PurchaseContentOperation";
 import { RemoveContentOperation } from "../../../src/models/operation/RemoveContentOperation";
 import { TransferOperation } from "../../../src/models/operation/TransferOperation";
 import { Options } from "../../../src/models/Options";
 import { PubKey } from "../../../src/models/PubKey";
 import { RegionalPrice } from "../../../src/models/RegionalPrice";
+import { Regions } from "../../../src/models/Regions";
 import { Synopsis } from "../../../src/models/Synopsis";
 import { Transaction } from "../../../src/models/Transaction";
 import { Serializer } from "../../../src/net/serialization/Serializer";
-import { Constants } from "../../Constants";
+import { Helpers } from "../../Helpers";
 
 chai.should();
 
@@ -45,37 +46,39 @@ class SerializeTest {
             new AssetAmount(5000),
         );
 
-        this.serializer.serialize(op).toHex().should.be.equal(expected);
+        this.serializer.serialize(op).toString("hex").should.be.equal(expected);
     }
 
     @test
     public "should serialize buy content operation"() {
         const expected = "1500000000000000000033697066733a516d61625537574e485a77636f6a674a724352774b68734a7666696e4c54397866666e4b4d4673726343474746501e809698000000000000010000009b01393130383430393539353932363431303631383538343930393638383830363132333831353335303037303838393138373132303036303039303236323639383330353937313939383532363530313030393830343535343035383735383238393637363235373630393334303934393631353931343538333133383834313435363939373639383133333939313030343939313437333637302e";
 
-        const op = new BuyContentOperation(
+        const op = new PurchaseContentOperation(
             "ipfs:QmabU7WNHZwcojgJrCRwKhsJvfinLT9xffnKMFsrcCGGFP",
             ChainObject.parse("1.2.30"),
             new AssetAmount(10000000),
             // tslint:disable-next-line:max-line-length
             new PubKey("9108409595926410618584909688806123815350070889187120060090262698305971998526501009804554058758289676257609340949615914583138841456997698133991004991473670"),
+            Regions.None,
         );
 
-        this.serializer.serialize(op).toHex().should.be.equal(expected);
+        this.serializer.serialize(op).toString("hex").should.be.equal(expected);
     }
 
     @test
     public "should serialize buy content operation with encoded uri"() {
         const expected = "150000000000000000006c687474703a2f2f616c61782e696f2f3f736368656d653d616c6c6178253341253246253246636f6d2e6578616d706c652e68656c6c6f776f726c64253341332676657273696f6e3d37663438623234652d386162392d343831302d386239612d3933363134366164366164321e00e1f5050000000000010000009b01353138323534353438383331383039353030303439383138303536383533393732383231343534353437323437303937343935383333383934323432363735393531303132313835313730383533303632353932313433363737373535353531373238383133393738373936353235333534373538383334303830333534323736323236383732313635363133383837363030323032383433372e";
 
-        const op = new BuyContentOperation(
+        const op = new PurchaseContentOperation(
             "http://alax.io/?scheme=allax%3A%2F%2Fcom.example.helloworld%3A3&version=7f48b24e-8ab9-4810-8b9a-936146ad6ad2",
             ChainObject.parse("1.2.30"),
             new AssetAmount(100000000),
             // tslint:disable-next-line:max-line-length
             new PubKey("5182545488318095000498180568539728214545472470974958338942426759510121851708530625921436777555517288139787965253547588340803542762268721656138876002028437"),
+            Regions.None,
         );
 
-        this.serializer.serialize(op).toHex().should.be.equal(expected);
+        this.serializer.serialize(op).toString("hex").should.be.equal(expected);
     }
 
     @test
@@ -102,27 +105,27 @@ class SerializeTest {
 
         const op = new AccountUpdateOperation(
             ChainObject.parse("1.2.34"),
-            null,
-            null,
+            undefined,
+            undefined,
             options,
             new AssetAmount(500000),
         );
 
-        this.serializer.serialize(op).toHex().should.be.equal(expected);
+        this.serializer.serialize(op).toString("hex").should.be.equal(expected);
     }
 
     @test
     public "should serialize create account operation"() {
         const expected = "0100000000000000000022076d696b6565656501000000000102a01c045821676cfc191832ad22cc5c9ade0ea1760131c87ff2dd3fed2f13dd33010001000000000102a01c045821676cfc191832ad22cc5c9ade0ea1760131c87ff2dd3fed2f13dd33010002a01c045821676cfc191832ad22cc5c9ade0ea1760131c87ff2dd3fed2f13dd330300000000000000000000000000000000000000";
 
-        const op = new AccountCreateOperation(
+        const op = AccountCreateOperation.create(
             ChainObject.parse("1.2.34"),
             "mikeeee",
             Address.parse("DCT6718kUCCksnkeYD1YySWkXb1VLpzjkFfHHMirCRPexp5gDPJLU"),
             new AssetAmount(0),
         );
 
-        this.serializer.serialize(op).toHex().should.be.equal(expected);
+        this.serializer.serialize(op).toString("hex").should.be.equal(expected);
     }
 
     @test
@@ -130,18 +133,18 @@ class SerializeTest {
         // @ts-ignore
         const expected = "140000000000000000000100000000000000220016687474703a2f2f68656c6c6f2e696f2f776f726c6432000000000101000000e80300000000000000222222222222222222222222222222222222222200007238ed5c0000000000000000004c7b227469746c65223a2247616d65205469746c65222c226465736372697074696f6e223a224465736372697074696f6e222c22636f6e74656e745f747970655f6964223a22312e352e35227d00";
 
-        const op = new AddOrUpdateContentOperation(
+        const op = AddOrUpdateContentOperation.create(
             ChainObject.parse("1.2.34"),
-            "http://hello.io/world2",
-            [new RegionalPrice(new AssetAmount(1000))],
-            moment.utc("2019-05-28T13:32:34"),
-            serialize(new Synopsis("Game Title", "Description")),
             [],
+            "http://hello.io/world2",
+            new RegionalPrice(new AssetAmount(1000), Regions.None),
+            moment.utc("2019-05-28T13:32:34"),
+            new Synopsis("Game Title", "Description"),
             new AssetAmount(),
         );
         op.hash = "2222222222222222222222222222222222222222";
 
-        this.serializer.serialize(op).toHex().should.be.equal(expected);
+        this.serializer.serialize(op).toString("hex").should.be.equal(expected);
     }
 
     @test
@@ -155,7 +158,7 @@ class SerializeTest {
             new AssetAmount(),
         );
 
-        this.serializer.serialize(op).toHex().should.be.equal(expected);
+        this.serializer.serialize(op).toString("hex").should.be.equal(expected);
     }
 
     @test
@@ -165,11 +168,11 @@ class SerializeTest {
         const props = deserialize(DynamicGlobalProperties, rawProps);
         const op = deserialize(TransferOperation, rawOp);
         op.extensions = [];
-        const trx = new Transaction(new BlockData(props, DCoreConstants.EXPIRATION_DEFAULT), [op], Constants.DCT_CHAIN_ID_STAGE);
+        const trx = new Transaction(new BlockData(props, DCoreConstants.EXPIRATION_DEFAULT), [op], Helpers.DCT_CHAIN_ID_STAGE);
         trx.blockData.expiration = moment.utc("2018-08-01T10:14:36");
         trx.expiration = moment.utc("2018-08-01T10:14:36");
 
-        this.serializer.serialize(trx).toHex().should.be.equal("3e322ef4e4170c88615b012720a10700000000000022230000000000020160e3160000000000000102c03f8e840c1699fd7808c2bb858e249c688c5be8acf0a0c1c484ab0cfb27f0a802e0ced80260630f641f61f6d6959f32b5c43b1a38be55666b98abfe8bafcc556b002ea2558d64350a204bc2a1ee670302ceddb897c2d351fa0496ff089c934e35e030f8ae4f3f9397a70000");
+        this.serializer.serialize(trx).toString("hex").should.be.equal("3e322ef4e4170c88615b012720a10700000000000022230000000000020160e3160000000000000102c03f8e840c1699fd7808c2bb858e249c688c5be8acf0a0c1c484ab0cfb27f0a802e0ced80260630f641f61f6d6959f32b5c43b1a38be55666b98abfe8bafcc556b002ea2558d64350a204bc2a1ee670302ceddb897c2d351fa0496ff089c934e35e030f8ae4f3f9397a70000");
     }
 
 }

@@ -1,7 +1,9 @@
 import { classToPlain, Exclude, Expose, Transform } from "class-transformer";
+import * as Long from "long";
 import { Moment } from "moment";
 import { ECKeyPair } from "../crypto/ECKeyPair";
 import { Serializer } from "../net/serialization/Serializer";
+import { LongToPlain, MomentToPlain } from "../utils/TypeAdapters";
 import { BlockData } from "./BlockData";
 import { BaseOperation } from "./operation/BaseOperation";
 
@@ -9,22 +11,23 @@ export class Transaction {
     @Exclude()
     public blockData: BlockData;
 
-    @Transform((values: any[], obj: Transaction) => obj.operations.map((op) => [op.type, classToPlain(op)]))
+    @Transform((values: any[], obj: Transaction) => obj.operations.map((op) => [op.type, classToPlain(op)]), { toPlainOnly: true })
     @Expose({ name: "operations" })
     public operations: BaseOperation[];
 
     @Expose({ name: "signatures" })
-    public signatures: string[];
+    public signatures?: string[];
 
+    @MomentToPlain
     @Expose({ name: "expiration" })
-    @Transform((value: any, obj: Transaction) => obj.expiration.utc().format("YYYY-MM-DDTHH:mm:ss"), { toPlainOnly: true })
     public expiration: Moment;
 
     @Expose({ name: "ref_block_num" })
     public refBlockNum: number;
 
+    @LongToPlain
     @Expose({ name: "ref_block_prefix" })
-    public refBlockPrefix: number;
+    public refBlockPrefix: Long;
 
     @Expose({ name: "extensions" })
     public extensions: any[] = [];
@@ -41,16 +44,16 @@ export class Transaction {
         this.expiration = this.blockData.expiration;
     }
 
-    public sign(key: ECKeyPair): Transaction {
+    public withSignature(key: ECKeyPair): Transaction {
         const serializer = new Serializer();
 
-        let sig: string;
+        let sig: string | undefined;
         do {
             // increment expiration until we get dcore valid signature
             this.blockData.expiration = this.blockData.expiration.add(1, "second");
             this.expiration = this.blockData.expiration;
             const data = serializer.serialize(this);
-            sig = key.sign(Buffer.concat([this.chainId, data.buffer]));
+            sig = key.sign(Buffer.concat([this.chainId, data]));
         } while (!sig);
 
         this.signatures = [sig];

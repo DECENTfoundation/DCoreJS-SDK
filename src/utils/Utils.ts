@@ -4,7 +4,7 @@ import { createHash } from "crypto";
 import * as Long from "long";
 import * as moment from "moment";
 
-export function assertThrow(value: boolean, lazyMessage: () => string) {
+export function assertThrow(value: boolean, lazyMessage: () => string = () => "assert error") {
     if (!value) {
         throw TypeError(lazyMessage());
     }
@@ -15,7 +15,7 @@ export class Utils {
     public static Base58 = BaseX("123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz");
 
     public static generateNonce(power: number = 250): Long {
-        return Long.fromBytes([...Utils.generateEntropy(power)], true);
+        return Long.fromString(Utils.generateEntropy(power).toString("hex"), true, 16);
     }
 
     public static generateEntropy(power: number = 250): Buffer {
