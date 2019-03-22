@@ -3,6 +3,7 @@ import { ChainObject } from "../../../models/ChainObject";
 import { Content } from "../../../models/Content";
 import { ObjectType } from "../../../models/ObjectType";
 import { SearchContentOrder } from "../../../models/order/SearchContentOrder";
+import { assertThrow } from "../../../utils/Utils";
 import { ApiGroup } from "../ApiGroup";
 import { BaseRequest } from "./BaseRequest";
 
@@ -22,5 +23,7 @@ export class SearchContent extends BaseRequest<Content[]> {
             [searchTerm, order, user, regionCode, type, startId.objectId, limit],
             (value: object[]) => plainToClass(Content, value),
         );
+
+        assertThrow(startId.objectType === ObjectType.ContentObject || startId.objectType === ObjectType.Null, () => "not a valid content object id");
     }
 }

@@ -3,6 +3,7 @@ import { Account } from "../../../models/Account";
 import { ChainObject } from "../../../models/ChainObject";
 import { ObjectType } from "../../../models/ObjectType";
 import { SearchAccountsOrder } from "../../../models/order/SearchAccountsOrder";
+import { assertThrow } from "../../../utils/Utils";
 import { ApiGroup } from "../ApiGroup";
 import { BaseRequest } from "./BaseRequest";
 
@@ -19,5 +20,7 @@ export class SearchAccounts extends BaseRequest<Account[]> {
             [searchTerm, order, id.objectId, limit],
             (value: object[]) => plainToClass(Account, value),
         );
+
+        assertThrow(id.objectType === ObjectType.Account || id.objectType === ObjectType.Null, () => "not a valid account object id");
     }
 }

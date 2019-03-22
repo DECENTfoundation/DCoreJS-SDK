@@ -3,6 +3,7 @@ import * as ByteBuffer from "bytebuffer";
 import * as chai from "chai";
 import { classToPlain, plainToClass } from "class-transformer";
 import { createHash } from "crypto";
+import * as _ from "lodash";
 import * as Long from "long";
 import { suite, test, timeout } from "mocha-typescript";
 import * as moment from "moment";
@@ -374,6 +375,12 @@ class Scratchpad {
     @test "buffer"() {
         const bb = ByteBuffer.fromUTF8("asd");
         Buffer.isBuffer(bb.toBuffer()).should.be.true;
+        console.log(_.isEmpty(undefined));
+    }
+
+    @test "undef"() {
+        console.log(undefined && "hello undefined")
+        console.log("defined" && "hello defined")
     }
 }
 // 02e4d03d9995ebb1b61b11e5e8631a70cdfdd2691df320ad3187751b256cccf808
