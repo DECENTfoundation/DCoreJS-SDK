@@ -6,11 +6,13 @@ import "reflect-metadata";
 import { create } from "rxjs-spy";
 import { Spy } from "rxjs-spy/spy-interface";
 import { DCoreApi } from "../../src/DCoreApi";
+import { DCoreConstants } from "../../src/DCoreConstants";
 import { DCoreSdk } from "../../src/DCoreSdk";
 import { AssetAmount } from "../../src/models/AssetAmount";
 import { ChainObject } from "../../src/models/ChainObject";
 import { AccountCreateOperation } from "../../src/models/operation/AccountCreateOperation";
 import { AddOrUpdateContentOperation } from "../../src/models/operation/AddOrUpdateContentOperation";
+import { OperationType } from "../../src/models/operation/OperationType";
 import { RemoveContentOperation } from "../../src/models/operation/RemoveContentOperation";
 import { TransferOperation } from "../../src/models/operation/TransferOperation";
 import { RegionalPrice } from "../../src/models/RegionalPrice";
@@ -89,5 +91,11 @@ class OperationsTest {
 
         this.api.broadcastApi.broadcastWithCallback(Helpers.KEY, [op])
             .subscribe((value) => value.should.be.instanceOf(TransactionConfirmation), (error) => done(error), () => done());
+    }
+
+    @test
+    public "get fee by operation type"(done: (arg?: any) => void) {
+        this.api.validationApi.getFee(OperationType.Transfer2, DCoreConstants.DCT_ASSET_ID)
+            .subscribe((value) => value.should.be.instanceOf(AssetAmount), (error) => done(error), () => done());
     }
 }
