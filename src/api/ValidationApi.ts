@@ -16,7 +16,6 @@ import { GetRequiredSignatures } from "../net/models/request/GetRequiredSignatur
 import { ValidateTransaction } from "../net/models/request/ValidateTransaction";
 import { VerifyAccountAuthority } from "../net/models/request/VerifyAccountAuthority";
 import { VerifyAuthority } from "../net/models/request/VerifyAuthority";
-import { ObjectCheckOf } from "../utils/ObjectCheckOf";
 import { assertThrow } from "../utils/Utils";
 import { BaseApi } from "./BaseApi";
 
@@ -123,7 +122,7 @@ export class ValidationApi extends BaseApi {
     public getFee(op: OperationType, assetId: ChainObject): Observable<AssetAmount>;
 
     public getFee(op: BaseOperation | OperationType, assetId: ChainObject = DCoreConstants.DCT_ASSET_ID): Observable<AssetAmount> {
-        if (ObjectCheckOf<BaseOperation>(op, "fee")) {
+        if (op instanceof BaseOperation) {
             return this.getFees([op], assetId).pipe(map((fee) => fee[0]));
         } else {
             assertThrow([
@@ -131,9 +130,8 @@ export class ValidationApi extends BaseApi {
                 OperationType.ProposalUpdate,
                 OperationType.WithdrawPermissionClaim,
                 OperationType.Custom,
-            ].indexOf(op) > -1);
+            ].indexOf(op) === -1);
             return this.getFee(new EmptyOperation(op), assetId);
         }
-
     }
 }
