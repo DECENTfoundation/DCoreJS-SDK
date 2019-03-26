@@ -13,7 +13,6 @@ import { GetAssets } from "../net/models/request/GetAssets";
 import { GetRealSupply } from "../net/models/request/GetRealSupply";
 import { ListAssets } from "../net/models/request/ListAssets";
 import { LookupAssetSymbols } from "../net/models/request/LookupAssetSymbols";
-import { PriceToDct } from "../net/models/request/PriceToDct";
 import { BaseApi } from "./BaseApi";
 
 export class AssetApi extends BaseApi {
@@ -85,17 +84,6 @@ export class AssetApi extends BaseApi {
      */
     public getAllByName(assetSymbols: string[]): Observable<Asset[]> {
         return this.request(new LookupAssetSymbols(assetSymbols));
-    }
-
-    /**
-     * Converts asset into DCT, using actual price feed.
-     *
-     * @param amount some amount
-     *
-     * @return price in DCT
-     */
-    public convertToDct(amount: AssetAmount): Observable<AssetAmount> {
-        return this.api.request(new PriceToDct(amount));
     }
 
     /**
