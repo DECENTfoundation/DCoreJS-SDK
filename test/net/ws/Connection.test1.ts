@@ -21,8 +21,8 @@ describe("web socket connections", () => {
 
         before(() => {
             spy = create();
-            spy.log();
-            rxWs = new RxWebSocket(() => new WebSocket(Helpers.STAGE_WS, { rejectUnauthorized: false }));
+            // spy.log();
+            rxWs = new RxWebSocket(() => new WebSocket(Helpers.STAGE_WS));
         });
 
         after(() => {

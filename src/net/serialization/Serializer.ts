@@ -2,7 +2,6 @@ import * as ByteBuffer from "bytebuffer";
 import * as _ from "lodash";
 import * as Long from "long";
 import { Moment } from "moment";
-import { TextEncoder } from "util";
 import { Address } from "../../crypto/Address";
 import { AssetAmount } from "../../models/AssetAmount";
 import { Authority } from "../../models/Authority";
@@ -91,9 +90,9 @@ export class Serializer {
     private chainIdAdapter = (buffer: ByteBuffer, obj: ChainObject) => buffer.writeVarint64(obj.instance.toString());
 
     private stringAdapter = (buffer: ByteBuffer, obj: string) => {
-        const encodedString = new TextEncoder().encode(obj);
-        buffer.writeVarint32(encodedString.length);
-        buffer.append(encodedString);
+        const encoded = ByteBuffer.fromUTF8(obj, true);
+        buffer.writeVarint32(encoded.capacity());
+        buffer.append(encoded);
     }
 
     private addressAdapter = (buffer: ByteBuffer, obj: Address) => buffer.append(obj.publicKey);

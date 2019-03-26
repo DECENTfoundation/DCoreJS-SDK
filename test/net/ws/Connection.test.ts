@@ -27,7 +27,7 @@ class ConnectionTest {
 
     public before() {
         this.spy = create();
-        this.spy.log();
+        // this.spy.log();
         this.rxWs = new RxWebSocket(() => new WebSocket(Helpers.STAGE_WS, { rejectUnauthorized: false }));
     }
 

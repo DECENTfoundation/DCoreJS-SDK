@@ -57,7 +57,7 @@ describe("web socket requests", () => {
         before(() => {
             spy = create();
             // spy.log(/^RxWebSocket_\w+/);
-            rxWs = new RxWebSocket(() => new WebSocket(Helpers.STAGE_WS, { rejectUnauthorized: false }));
+            rxWs = new RxWebSocket(() => new WebSocket(Helpers.STAGE_WS));
         });
 
         after(() => {

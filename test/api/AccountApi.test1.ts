@@ -17,7 +17,7 @@ chai.use(chaiThings);
 
 ([
     ["RPC", DCoreSdk.createForHttp({ baseUrl: Helpers.STAGE_HTTPS, timeout: 15000, rejectUnauthorized: false })],
-    ["WebSocket", DCoreSdk.createForWebSocket(() => new WebSocket(Helpers.STAGE_WS, { rejectUnauthorized: false }))],
+    ["WebSocket", DCoreSdk.createForWebSocket(() => new WebSocket(Helpers.STAGE_WS))],
 ] as Array<[string, DCoreApi]>).forEach(([name, api]) => {
 
     describe(`account API test suite for ${name}`, () => {
