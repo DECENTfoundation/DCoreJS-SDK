@@ -6,13 +6,13 @@ import { GetObjects } from "./GetObjects";
 
 export class GetContentById extends GetObjects<Content> {
     constructor(
-        contentId: ChainObject,
+        contentIds: [ChainObject],
     ) {
         super(
             Content,
-            [contentId],
+            contentIds,
         );
 
-        assertThrow(contentId.objectType === ObjectType.ContentObject, () => "not a valid content object id");
+        assertThrow(contentIds.every((id) => id.objectType === ObjectType.ContentObject), () => "not a valid content object ids");
     }
 }

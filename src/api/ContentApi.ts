@@ -53,8 +53,19 @@ export class ContentApi extends BaseApi {
         } else if (typeof content === "string") {
             return this.request(new GetContentByUri(content));
         } else {
-            return this.request(new GetContentById(content)).pipe(map((list) => list[0]));
+            return this.request(new GetContentById([content])).pipe(map((list) => list[0]));
         }
+    }
+
+    /**
+     * Get all content by ids
+     *
+     * @param content object id of the content, 2.13.*
+     *
+     * @return the contents
+     */
+    public getAll(contentIds: [ChainObject]): Observable<Content[]> {
+        return this.request(new GetContentById(contentIds));
     }
 
     /**
