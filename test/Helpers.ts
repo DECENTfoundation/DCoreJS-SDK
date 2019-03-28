@@ -14,10 +14,9 @@ export class Helpers {
     public static readonly ACCOUNT_NAME2 = "u3a7b78084e7d3956442d5a4d439dad51";
     public static readonly PRIVATE = "5Jd7zdvxXYNdUfnEXt5XokrE3zwJSs734yQ36a1YaqioRTGGLtn";
     public static readonly PRIVATE2 = "5JVHeRffGsKGyDf7T9i9dBbzVHQrYprYeaBQo2VCSytj7BxpMCq";
-    public static readonly PUBLIC = "DCT6MA5TQQ6UbMyMaLPmPXE2Syh5G3ZVhv5SbFedqLPqdFChSeqTz";
-    public static readonly PUBLIC2 = "DCT6bVmimtYSvWQtwdrkVVQGHkVsTJZVKtBiUqf4YmJnrJPnk89QP";
+    public static readonly PUBLIC = Address.parse("DCT6MA5TQQ6UbMyMaLPmPXE2Syh5G3ZVhv5SbFedqLPqdFChSeqTz");
+    public static readonly PUBLIC2 = Address.parse("DCT6bVmimtYSvWQtwdrkVVQGHkVsTJZVKtBiUqf4YmJnrJPnk89QP");
     public static readonly KEY = ECKeyPair.parseWif(Helpers.PRIVATE);
-    public static readonly PUBKEY = Address.parse(Helpers.PUBLIC);
     public static readonly CREDENTIALS = new Credentials(Helpers.ACCOUNT, Helpers.KEY);
 
 }

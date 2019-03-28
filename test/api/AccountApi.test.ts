@@ -1,9 +1,9 @@
 import * as chai from "chai";
 import * as chaiThings from "chai-things";
 import * as WebSocket from "isomorphic-ws";
+import * as Long from "long";
 import "mocha";
 import "reflect-metadata";
-import * as Long from "long";
 import { create } from "rxjs-spy";
 import { Spy } from "rxjs-spy/spy-interface";
 import { flatMap } from "rxjs/operators";

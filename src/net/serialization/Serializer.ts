@@ -14,8 +14,10 @@ import { Memo } from "../../models/Memo";
 import { AccountCreateOperation } from "../../models/operation/AccountCreateOperation";
 import { AccountUpdateOperation } from "../../models/operation/AccountUpdateOperation";
 import { AddOrUpdateContentOperation } from "../../models/operation/AddOrUpdateContentOperation";
+import { CustomOperation } from "../../models/operation/CustomOperation";
 import { PurchaseContentOperation } from "../../models/operation/PurchaseContentOperation";
 import { RemoveContentOperation } from "../../models/operation/RemoveContentOperation";
+import { SendMessageOperation } from "../../models/operation/SendMessageOperation";
 import { TransferOperation } from "../../models/operation/TransferOperation";
 import { Options } from "../../models/Options";
 import { PubKey } from "../../models/PubKey";
@@ -56,6 +58,7 @@ export class Serializer {
         this.adapters.set(CustodyData.name, this.custodyDataAdapter);
         this.adapters.set(AddOrUpdateContentOperation.name, this.addOrUpdateContentOperationAdapter);
         this.adapters.set(RemoveContentOperation.name, this.removeContentOperationAdapter);
+        this.adapters.set(SendMessageOperation.name, this.customOperationAdapter);
     }
 
     public serialize(obj: any): Buffer {
@@ -82,7 +85,10 @@ export class Serializer {
         } else {
             const key = _.isObject(obj) ? obj.constructor.name : typeof obj;
             const adapter = this.adapters.get(key);
-            _.isNil(adapter) ? TypeError(`no adapter for ${key}`) : adapter(buffer, obj);
+            if (_.isNil(adapter)) {
+                throw TypeError(`no adapter for ${key}`);
+            }
+            adapter(buffer, obj);
         }
     }
 
@@ -266,5 +272,14 @@ export class Serializer {
         this.append(buffer, obj.fee);
         this.append(buffer, obj.author);
         this.append(buffer, obj.uri);
+    }
+
+    private customOperationAdapter = (buffer: ByteBuffer, obj: CustomOperation) => {
+        buffer.writeByte(obj.type);
+        this.append(buffer, obj.fee);
+        this.append(buffer, obj.payer);
+        this.append(buffer, obj.requiredAuths);
+        buffer.writeUint16(obj.id);
+        this.append(buffer, Buffer.from(obj.data, "hex"));
     }
 }

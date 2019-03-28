@@ -15,27 +15,27 @@ chai.should();
 chai.use(chaiThings);
 
 describe("web socket connections", () => {
-        let rxWs: RxWebSocket;
+    let rxWs: RxWebSocket;
 
-        let spy: Spy;
+    let spy: Spy;
 
-        before(() => {
-            spy = create();
-            // spy.log();
-            rxWs = new RxWebSocket(() => new WebSocket(Helpers.STAGE_WS));
-        });
+    before(() => {
+        spy = create();
+        // spy.log();
+        rxWs = new RxWebSocket(() => new WebSocket(Helpers.STAGE_WS));
+    });
 
-        after(() => {
-            rxWs.disconnect();
-            spy.teardown();
-        });
+    after(() => {
+        rxWs.disconnect();
+        spy.teardown();
+    });
 
-        it("should connect, disconnect and connect", (done: (arg?: any) => void) => {
-            rxWs.request(new GetChainId()).pipe(tap({ error: (error) => error.should.be.an.instanceof(WebSocketClosedError) }))
-                .toPromise().then(null,
-                () => rxWs.request(new Login())
-                    .subscribe((value) => value.should.be.true, (error) => done(error), () => done()),
-            );
-            rxWs.disconnect();
-        });
+    it("should connect, disconnect and connect", (done: (arg?: any) => void) => {
+        rxWs.request(new GetChainId()).pipe(tap({ error: (error) => error.should.be.an.instanceof(WebSocketClosedError) }))
+            .toPromise().then(null,
+            () => rxWs.request(new Login())
+                .subscribe((value) => value.should.be.true, (error) => done(error), () => done()),
+        );
+        rxWs.disconnect();
+    });
 });

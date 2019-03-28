@@ -9,7 +9,6 @@ import { DCoreApi } from "../../src/DCoreApi";
 import { DCoreSdk } from "../../src/DCoreSdk";
 import { Asset } from "../../src/models/Asset";
 import { AssetAmount } from "../../src/models/AssetAmount";
-import { ChainObject } from "../../src/models/ChainObject";
 import { VestingBalance } from "../../src/models/VestingBalance";
 import { Helpers } from "../Helpers";
 

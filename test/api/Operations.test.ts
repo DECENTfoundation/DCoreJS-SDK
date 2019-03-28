@@ -12,7 +12,6 @@ import { ChainObject } from "../../src/models/ChainObject";
 import { AccountCreateOperation } from "../../src/models/operation/AccountCreateOperation";
 import { AddOrUpdateContentOperation } from "../../src/models/operation/AddOrUpdateContentOperation";
 import { RemoveContentOperation } from "../../src/models/operation/RemoveContentOperation";
-import { TransferOperation } from "../../src/models/operation/TransferOperation";
 import { RegionalPrice } from "../../src/models/RegionalPrice";
 import { Synopsis } from "../../src/models/Synopsis";
 import { TransactionConfirmation } from "../../src/models/TransactionConfirmation";
@@ -27,6 +26,7 @@ describe("blockchain based operations", () => {
     before(() => {
         spy = create();
         // spy.log(/^API\w+/);
+        spy.log();
         api = DCoreSdk.createForWebSocket(() => new WebSocket(Helpers.STAGE_WS));
     });
 
@@ -35,21 +35,10 @@ describe("blockchain based operations", () => {
         spy.teardown();
     });
 
-    it("should make a transfer", (done: (arg?: any) => void) => {
-        const op = new TransferOperation(
-            ChainObject.parse("1.2.34"),
-            ChainObject.parse("1.2.35"),
-            new AssetAmount(1),
-        );
-
-        api.broadcastApi.broadcastWithCallback(Helpers.KEY, [op])
-            .subscribe((value) => value.should.be.instanceOf(TransactionConfirmation), (error) => done(error), () => done());
-    });
-
     it.skip("should add or update a content", (done: (arg?: any) => void) => {
         const op = AddOrUpdateContentOperation.create(
-            ChainObject.parse("1.2.34"),
-            [[ChainObject.parse("1.2.35"), 50]],
+            Helpers.ACCOUNT,
+            [[Helpers.ACCOUNT2, 50]],
             "http://hello.world",
             new RegionalPrice(new AssetAmount(100)),
             moment.utc().add(10, "days"),
@@ -62,7 +51,7 @@ describe("blockchain based operations", () => {
 
     it.skip("should remove a content", (done: (arg?: any) => void) => {
         const op = new RemoveContentOperation(
-            ChainObject.parse("1.2.34"),
+            Helpers.ACCOUNT,
             "http://hello.world",
         );
 
@@ -72,12 +61,45 @@ describe("blockchain based operations", () => {
 
     it.skip("should create an account", (done: (arg?: any) => void) => {
         const op = AccountCreateOperation.create(
-            ChainObject.parse("1.2.34"),
+            Helpers.ACCOUNT,
             "marian",
-            Helpers.PUBKEY,
+            Helpers.PUBLIC,
         );
 
         api.broadcastApi.broadcastWithCallback(Helpers.KEY, [op])
             .subscribe((value) => value.should.be.instanceOf(TransactionConfirmation), (error) => done(error), () => done());
     });
+
+    it("should make a transfer high level", (done: (arg?: any) => void) => {
+        api.accountApi.transfer(
+            Helpers.CREDENTIALS,
+            Helpers.ACCOUNT2,
+            new AssetAmount(1),
+        )
+            .subscribe((value) => value.should.be.instanceOf(TransactionConfirmation), (error) => done(error), () => done());
+    });
+
+    it("should make a transfer to content", (done: (arg?: any) => void) => {
+        api.contentApi.transfer(
+            Helpers.CREDENTIALS,
+            ChainObject.parse("2.13.3"),
+            new AssetAmount(1),
+        )
+            .subscribe((value) => value.should.be.instanceOf(TransactionConfirmation), (error) => done(error), () => done());
+    });
+
+    it("should vote", (done: (arg?: any) => void) => {
+        api.miningApi.vote(
+            Helpers.CREDENTIALS,
+            [ChainObject.parse("1.4.5")])
+            .subscribe((value) => value.should.be.instanceOf(TransactionConfirmation), (error) => done(error), () => done());
+    });
+
+    it("should send a message", (done: (arg?: any) => void) => {
+        api.messageApi.sendMessage(
+            Helpers.CREDENTIALS,
+            [[Helpers.ACCOUNT2, "test message"]])
+            .subscribe((value) => value.should.be.instanceOf(TransactionConfirmation), (error) => done(error), () => done());
+    });
+
 });

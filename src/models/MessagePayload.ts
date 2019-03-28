@@ -1,6 +1,6 @@
 import { Expose, Type } from "class-transformer";
 import { Address } from "../crypto/Address";
-import { AddressToClass, ChainObjectToClass } from "../utils/TypeAdapters";
+import { AddressToClass, AddressToPlain, ChainObjectToClass, ChainObjectToPlain } from "../utils/TypeAdapters";
 import { ChainObject } from "./ChainObject";
 import { MessagePayloadReceiver } from "./MessagePayloadReceiver";
 
@@ -17,6 +17,7 @@ export class MessagePayload {
     }
 
     @ChainObjectToClass
+    @ChainObjectToPlain
     @Expose({ name: "from" })
     public from: ChainObject;
 
@@ -25,6 +26,7 @@ export class MessagePayload {
     public receiversData: MessagePayloadReceiver[];
 
     @AddressToClass
+    @AddressToPlain
     @Expose({ name: "pub_from" })
     public fromAddress?: Address;
 

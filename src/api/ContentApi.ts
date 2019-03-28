@@ -1,7 +1,7 @@
 import * as _ from "lodash";
 import { Observable } from "rxjs";
 import { scalar } from "rxjs/internal/observable/scalar";
-import { map } from "rxjs/operators";
+import { flatMap, map } from "rxjs/operators";
 import { Credentials } from "../crypto/Credentials";
 import { DCoreApi } from "../DCoreApi";
 import { AssetAmount } from "../models/AssetAmount";
@@ -16,6 +16,7 @@ import { TransferOperation } from "../models/operation/TransferOperation";
 import { SearchContentOrder } from "../models/order/SearchContentOrder";
 import { PubKey } from "../models/PubKey";
 import { REGION_NAMES, Regions } from "../models/Regions";
+import { TransactionConfirmation } from "../models/TransactionConfirmation";
 import { GenerateContentKeys } from "../net/models/request/GenerateContentKeys";
 import { GetContentById } from "../net/models/request/GetContentById";
 import { GetContentByUri } from "../net/models/request/GetContentByUri";
@@ -138,7 +139,7 @@ export class ContentApi extends BaseApi {
      * @param memo optional unencrypted message
      * @param fee {@link AssetAmount} fee for the operation, if left undefined the fee will be computed in DCT asset
      *
-     * @return a transaction confirmation
+     * @return a transfer operation
      */
     public createTransfer(
         credentials: Credentials,
@@ -148,5 +149,29 @@ export class ContentApi extends BaseApi {
         fee?: AssetAmount,
     ): Observable<TransferOperation> {
         return scalar(new TransferOperation(credentials.account, id, amount, _.isNil(memo) ? memo : Memo.createPublic(memo), fee));
+    }
+
+    /**
+     * Transfers an amount of one asset to content. Amount is transferred to author and co-authors of the content, if they are specified.
+     * Fees are paid by the "from" account.
+     *
+     * @param credentials account credentials
+     * @param id content id
+     * @param amount amount to send with asset type
+     * @param memo optional unencrypted message
+     * @param fee {@link AssetAmount} fee for the operation, if left undefined the fee will be computed in DCT asset
+     *
+     * @return a transaction confirmation
+     */
+    public transfer(
+        credentials: Credentials,
+        id: ChainObject,
+        amount: AssetAmount,
+        memo?: string,
+        fee?: AssetAmount,
+    ): Observable<TransactionConfirmation> {
+        return this.createTransfer(credentials, id, amount, memo, fee).pipe(
+            flatMap((op) => this.api.broadcastApi.broadcastWithCallback(credentials.keyPair, [op])),
+        );
     }
 }
