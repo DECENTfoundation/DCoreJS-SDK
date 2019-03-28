@@ -26,7 +26,6 @@ describe("blockchain based operations", () => {
     before(() => {
         spy = create();
         // spy.log(/^API\w+/);
-        spy.log();
         api = DCoreSdk.createForWebSocket(() => new WebSocket(Helpers.STAGE_WS));
     });
 
@@ -96,7 +95,14 @@ describe("blockchain based operations", () => {
     });
 
     it("should send a message", (done: (arg?: any) => void) => {
-        api.messageApi.sendMessage(
+        api.messageApi.sendMessages(
+            Helpers.CREDENTIALS,
+            [[Helpers.ACCOUNT2, "test message"]])
+            .subscribe((value) => value.should.be.instanceOf(TransactionConfirmation), (error) => done(error), () => done());
+    });
+
+    it("should send a message unencrypted", (done: (arg?: any) => void) => {
+        api.messageApi.sendMessagesUnencrypted(
             Helpers.CREDENTIALS,
             [[Helpers.ACCOUNT2, "test message"]])
             .subscribe((value) => value.should.be.instanceOf(TransactionConfirmation), (error) => done(error), () => done());

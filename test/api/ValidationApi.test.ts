@@ -32,7 +32,7 @@ chai.use(chaiThings);
 
         before(() => {
             spy = create();
-            spy.log(/^API\w+/);
+            // spy.log(/^API\w+/);
         });
 
         after(() => {
@@ -56,7 +56,7 @@ chai.use(chaiThings);
         });
 
         it("should return verify account authority", (done: (arg?: any) => void) => {
-            api.verifyAccountAuthority(Helpers.ACCOUNT_NAME, [Helpers.PUBKEY])
+            api.verifyAccountAuthority(Helpers.ACCOUNT_NAME, [Helpers.PUBLIC])
                 .subscribe((value) => value.should.be.true, (error) => done(error), () => done());
         });
 

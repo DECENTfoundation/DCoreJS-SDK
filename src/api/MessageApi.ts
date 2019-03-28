@@ -139,18 +139,35 @@ export class MessageApi extends BaseApi {
     }
 
     /**
-     * Send message, send messages to multiple receivers
+     * Send messages to multiple receivers
      *
      * @param credentials sender account credentials
      * @param messages a list of pairs of receiver account id and message
      *
      * @return a transaction confirmation
      */
-    public sendMessage(
+    public sendMessages(
         credentials: Credentials,
         messages: Array<[ChainObject, string]>,
     ): Observable<TransactionConfirmation> {
         return this.createMessageOperation(credentials, messages).pipe(
+            flatMap((operation) => this.api.broadcastApi.broadcastWithCallback(credentials.keyPair, [operation])),
+        );
+    }
+
+    /**
+     * Send unencrypted messages to multiple receivers
+     *
+     * @param credentials sender account credentials
+     * @param messages a list of pairs of receiver account id and message
+     *
+     * @return a transaction confirmation
+     */
+    public sendMessagesUnencrypted(
+        credentials: Credentials,
+        messages: Array<[ChainObject, string]>,
+    ): Observable<TransactionConfirmation> {
+        return this.createMessageOperationUnencrypted(credentials, messages).pipe(
             flatMap((operation) => this.api.broadcastApi.broadcastWithCallback(credentials.keyPair, [operation])),
         );
     }

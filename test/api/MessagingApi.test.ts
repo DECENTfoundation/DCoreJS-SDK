@@ -19,7 +19,7 @@ chai.use(chaiThings);
     ["RPC", DCoreSdk.createForHttp({ baseUrl: Helpers.STAGE_HTTPS, timeout: 15000, rejectUnauthorized: false })],
     ["WebSocket", DCoreSdk.createForWebSocket(() => new WebSocket(Helpers.STAGE_WS))],
 ] as Array<[string, DCoreApi]>).forEach(([name, sdk]) => {
-    const api = sdk.messagingApi;
+    const api = sdk.messageApi;
 
     describe(`messaging API test suite for ${name}`, () => {
         after(() => {
@@ -53,7 +53,7 @@ chai.use(chaiThings);
                 .subscribe((value) => value.should.be.instanceOf(SendMessageOperation), (error) => done(error), () => done());
         });
 
-        it("should return message operation unencrytped", (done: (arg?: any) => void) => {
+        it("should return message operation unencrypted", (done: (arg?: any) => void) => {
             api.createMessageOperationUnencrypted(Helpers.CREDENTIALS, [[Helpers.ACCOUNT2, "hello"]])
                 .subscribe((value) => value.should.be.instanceOf(SendMessageOperation), (error) => done(error), () => done());
         });
