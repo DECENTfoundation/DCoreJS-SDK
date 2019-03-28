@@ -2,7 +2,8 @@ module.exports = function(config) {
     config.set({
         frameworks: ["mocha", "karma-typescript"],
         files: [
-            "test/**/*1.ts", // *.tsx for React Jsx
+            "test/**/*test.ts", // *.tsx for React Jsx
+            "test/Helpers.ts",
             "src/**/*.ts"
         ],
         preprocessors: {

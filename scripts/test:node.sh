@@ -1,1 +1,1 @@
-mocha 'test/**/*.test1.ts'
+mocha 'test/**/*.test.ts'
