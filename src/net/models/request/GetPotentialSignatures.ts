@@ -1,4 +1,4 @@
-import { classToPlain, plainToClass } from "class-transformer";
+import { classToPlain } from "class-transformer";
 import { Address } from "../../../crypto/Address";
 import { Transaction } from "../../../models/Transaction";
 import { ApiGroup } from "../ApiGroup";
@@ -12,7 +12,7 @@ export class GetPotentialSignatures extends BaseRequest<Address[]> {
             ApiGroup.Database,
             "get_potential_signatures",
             [classToPlain(transaction)],
-            (value: object[]) => plainToClass(Address, value),
+            (value: string[]) => value.map((address) => Address.parse(address)),
         );
     }
 }

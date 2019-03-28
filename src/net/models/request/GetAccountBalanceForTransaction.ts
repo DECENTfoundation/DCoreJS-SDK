@@ -19,6 +19,6 @@ export class GetAccountBalanceForTransaction extends BaseRequest<BalanceChange> 
         );
 
         assertThrow(accountId.objectType === ObjectType.Account, () => "not a valid account object id");
-        assertThrow(accountId.objectType === ObjectType.OperationHistory, () => "not a valid history object id");
+        assertThrow(operationId.objectType === ObjectType.OperationHistory, () => "not a valid history object id");
     }
 }

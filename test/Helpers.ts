@@ -1,4 +1,5 @@
 import { Address } from "../src/crypto/Address";
+import { Credentials } from "../src/crypto/Credentials";
 import { ECKeyPair } from "../src/crypto/ECKeyPair";
 import { ChainObject } from "../src/models/ChainObject";
 
@@ -17,5 +18,6 @@ export class Helpers {
     public static readonly PUBLIC2 = "DCT6bVmimtYSvWQtwdrkVVQGHkVsTJZVKtBiUqf4YmJnrJPnk89QP";
     public static readonly KEY = ECKeyPair.parseWif(Helpers.PRIVATE);
     public static readonly PUBKEY = Address.parse(Helpers.PUBLIC);
+    public static readonly CREDENTIALS = new Credentials(Helpers.ACCOUNT, Helpers.KEY);
 
 }

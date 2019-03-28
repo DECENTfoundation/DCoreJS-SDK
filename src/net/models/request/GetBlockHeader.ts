@@ -11,7 +11,7 @@ export class GetBlockHeader extends BaseRequest<BlockHeader> {
         super(
             ApiGroup.Database,
             "get_block_header",
-            [blockNumber],
+            [blockNumber.toString()],
             (value: object) => plainToClass(BlockHeader, value),
         );
     }

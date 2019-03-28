@@ -11,7 +11,7 @@ export class GetBlock extends BaseRequest<SignedBlock> {
         super(
             ApiGroup.Database,
             "get_block",
-            [blockNumber],
+            [blockNumber.toString()],
             (value: object) => plainToClass(SignedBlock, value),
         );
     }

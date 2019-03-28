@@ -59,7 +59,7 @@ export class MiningApi extends BaseApi {
      *
      */
     // todo model
-    public getFeedsByMiner(account: ChainObject, count: number = 100) {
+    public getFeedsByMiner(account: ChainObject, count: number = 100): Observable<object> {
         return this.request(new GetFeedsByMiner(account, count));
     }
 

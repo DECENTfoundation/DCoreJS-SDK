@@ -2,7 +2,6 @@
 
 export * from "./AccountApi";
 export * from "./AssetApi";
-export * from "./AuthorityApi";
 export * from "./BalanceApi";
 export * from "./BaseApi";
 export * from "./BlockApi";

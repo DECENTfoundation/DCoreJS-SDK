@@ -6,13 +6,14 @@ import { GetObjects } from "./GetObjects";
 
 export class GetStatisticsById extends GetObjects<AccountStatistics> {
     constructor(
-        objectId: ChainObject,
+        objectIds: ChainObject[],
     ) {
         super(
             AccountStatistics,
-            [objectId],
+            objectIds,
         );
 
-        assertThrow(objectId.objectType === ObjectType.AccountStatisticsObject, () => "not a valid account statistics object id");
+        assertThrow(objectIds.every((id) => id.objectType === ObjectType.AccountStatisticsObject,
+            () => "not a valid account statistics object id"));
     }
 }

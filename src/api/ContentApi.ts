@@ -1,5 +1,6 @@
 import * as _ from "lodash";
 import { Observable } from "rxjs";
+import { scalar } from "rxjs/internal/observable/scalar";
 import { map } from "rxjs/operators";
 import { Credentials } from "../crypto/Credentials";
 import { DCoreApi } from "../DCoreApi";
@@ -60,7 +61,7 @@ export class ContentApi extends BaseApi {
     /**
      * Get all content by ids
      *
-     * @param content object id of the content, 2.13.*
+     * @param contentIds object id of the content, 2.13.*
      *
      * @return the contents
      */
@@ -145,7 +146,7 @@ export class ContentApi extends BaseApi {
         amount: AssetAmount,
         memo?: string,
         fee?: AssetAmount,
-    ): TransferOperation {
-        return new TransferOperation(credentials.account, id, amount, _.isNil(memo) ? memo : Memo.createPublic(memo), fee);
+    ): Observable<TransferOperation> {
+        return scalar(new TransferOperation(credentials.account, id, amount, _.isNil(memo) ? memo : Memo.createPublic(memo), fee));
     }
 }

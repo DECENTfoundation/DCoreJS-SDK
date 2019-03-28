@@ -11,7 +11,7 @@ export class GetAccountReferences extends BaseRequest<ChainObject[]> {
         super(
             ApiGroup.Database,
             "get_account_references",
-            [accountId],
+            [accountId.objectId],
             (values: string[]) => values.map((id) => ChainObject.parse(id)),
         );
 

@@ -40,7 +40,7 @@ export class TransactionApi extends BaseApi {
      * @return a set of proposed transactions
      */
     // todo model
-    public getAllProposed(accountId: ChainObject) {
+    public getAllProposed(accountId: ChainObject): Observable<object[]> {
         return this.request(new GetProposedTransactions(accountId));
     }
 

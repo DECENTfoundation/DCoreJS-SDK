@@ -8,6 +8,7 @@ import { Credentials } from "../crypto/Credentials";
 import { DCoreApi } from "../DCoreApi";
 import { AccountRef } from "../DCoreSdk";
 import { Account } from "../models/Account";
+import { AccountStatistics } from "../models/AccountStatistics";
 import { AssetAmount } from "../models/AssetAmount";
 import { ChainObject } from "../models/ChainObject";
 import { IllegalArgumentError } from "../models/error/IllegalArgumentError";
@@ -24,6 +25,7 @@ import { GetAccountCount } from "../net/models/request/GetAccountCount";
 import { GetAccountReferences } from "../net/models/request/GetAccountReferences";
 import { GetFullAccounts } from "../net/models/request/GetFullAccounts";
 import { GetKeyReferences } from "../net/models/request/GetKeyReferences";
+import { GetStatisticsById } from "../net/models/request/GetStatisticsById";
 import { LookupAccountNames } from "../net/models/request/LookupAccountNames";
 import { LookupAccounts } from "../net/models/request/LookupAccounts";
 import { SearchAccounts } from "../net/models/request/SearchAccounts";
@@ -45,6 +47,7 @@ export class AccountApi extends BaseApi {
      */
     public exist(account: AccountRef): Observable<boolean> {
         return this.get(account).pipe(
+            mapTo(true),
             catchError((err) => {
                 if (err instanceof ObjectNotFoundError || err instanceof TypeError) {
                     return of(false);
@@ -52,7 +55,6 @@ export class AccountApi extends BaseApi {
                     return throwError(err);
                 }
             }),
-            mapTo(true),
         );
     }
 
@@ -181,6 +183,10 @@ export class AccountApi extends BaseApi {
         limit: number = 1000,
     ): Observable<Account[]> {
         return this.request(new SearchAccounts(searchTerm, order, id, limit));
+    }
+
+    public getStatistics(accountIds: ChainObject[]): Observable<AccountStatistics[]> {
+        return this.request(new GetStatisticsById(accountIds));
     }
 
     /**

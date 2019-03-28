@@ -21,7 +21,6 @@ export class SubscriptionApi extends BaseApi {
      *
      * @return the subscription object corresponding to the provided ID, [ObjectNotFoundException] otherwise
      */
-    // todo subscriptions: wait for subscribe operation to test
     public get(id: ChainObject): Observable<Subscription> {
         return this.request(new GetSubscription((id)));
     }

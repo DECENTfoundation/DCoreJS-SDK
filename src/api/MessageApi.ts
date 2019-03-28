@@ -1,6 +1,7 @@
 import { serialize } from "class-transformer";
 import * as _ from "lodash";
 import { Observable, zip } from "rxjs";
+import { scalar } from "rxjs/internal/observable/scalar";
 import { map } from "rxjs/operators";
 import { Credentials } from "../crypto/Credentials";
 import { DCoreApi } from "../DCoreApi";
@@ -132,8 +133,8 @@ export class MessageApi extends BaseApi {
     public createMessageOperationUnencrypted(
         credentials: Credentials,
         messages: Array<[ChainObject, string]>,
-    ): SendMessageOperation {
-        return new SendMessageOperation(serialize(MessagePayload.createUnencrypted(credentials.account, messages)), credentials.account);
+    ): Observable<SendMessageOperation> {
+        return scalar(new SendMessageOperation(serialize(MessagePayload.createUnencrypted(credentials.account, messages)), credentials.account));
     }
 
 }

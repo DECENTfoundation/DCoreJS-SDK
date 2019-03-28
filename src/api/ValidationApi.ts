@@ -97,30 +97,18 @@ export class ValidationApi extends BaseApi {
     }
 
     /**
-     * Returns fee for operation.
+     * Returns fee for any operation or operation type except for per size fees:
      *
-     * @param op operation
-     * @param assetId asset id eg. DCT id is 1.3.0
-     *
-     * @return a fee asset amount
-     */
-    public getFee(op: BaseOperation, assetId: ChainObject): Observable<AssetAmount>;
-
-    /**
-     * Returns fee for operation type, not valid for operation per size fees:
      * {@link OperationType.ProposalCreate},
      * {@link OperationType.ProposalUpdate},
      * {@link OperationType.WithdrawPermissionClaim},
      * {@link OperationType.Custom}]
      *
-     * @param op operation type
+     * @param op operation type or operation
      * @param assetId asset id eg. DCT id is 1.3.0
      *
      * @return a fee asset amount
      */
-    // tslint:disable-next-line:unified-signatures
-    public getFee(op: OperationType, assetId: ChainObject): Observable<AssetAmount>;
-
     public getFee(op: BaseOperation | OperationType, assetId: ChainObject = DCoreConstants.DCT_ASSET_ID): Observable<AssetAmount> {
         if (op instanceof BaseOperation) {
             return this.getFees([op], assetId).pipe(map((fee) => fee[0]));
@@ -130,7 +118,7 @@ export class ValidationApi extends BaseApi {
                 OperationType.ProposalUpdate,
                 OperationType.WithdrawPermissionClaim,
                 OperationType.Custom,
-            ].indexOf(op) === -1);
+            ].indexOf(op) === -1, () => "operation type not allowed, pass full operation as arg");
             return this.getFee(new EmptyOperation(op), assetId);
         }
     }
