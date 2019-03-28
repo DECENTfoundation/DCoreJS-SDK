@@ -1,16 +1,21 @@
-module.exports = function(config) {
+module.exports = function (config) {
     config.set({
-        frameworks: ["mocha", "karma-typescript"],
+        browsers: ["ChromeHeadless"],
+        client: {
+            mocha: {
+                timeout: "20000",
+            },
+        },
         files: [
-            "test/**/*test.ts", // *.tsx for React Jsx
+            "test/**/*test.ts",
             "test/Helpers.ts",
-            "src/**/*.ts"
+            "src/**/*.ts",
         ],
+        frameworks: ["mocha", "karma-typescript"],
         preprocessors: {
-            "**/*.ts": "karma-typescript" // *.tsx for React Jsx
+            "**/*.ts": "karma-typescript",
         },
         reporters: ["mocha", "karma-typescript"],
-        browsers: ["ChromeHeadless"],
-        singleRun: true
+        singleRun: true,
     });
 };

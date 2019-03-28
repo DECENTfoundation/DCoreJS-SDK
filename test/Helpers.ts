@@ -6,7 +6,8 @@ import { ChainObject } from "../src/models/ChainObject";
 export class Helpers {
     public static readonly DCT_CHAIN_ID_STAGE = "17401602b201b3c45a3ad98afc6fb458f91f519bd30d1058adf6f2bed66376bc";
     public static STAGE_WS = "wss://stagesocket.decentgo.com:8090";
-    public static STAGE_HTTPS = "https://stagesocket.decentgo.com:8090/rpc";
+    // public static STAGE_HTTPS = "https://stagesocket.decentgo.com:8090/rpc";
+    public static STAGE_HTTPS = "https://cors-anywhere.herokuapp.com/https://stagesocket.decentgo.com:8090/rpc";
 
     public static readonly ACCOUNT = ChainObject.parse("1.2.34");
     public static readonly ACCOUNT2 = ChainObject.parse("1.2.35");
