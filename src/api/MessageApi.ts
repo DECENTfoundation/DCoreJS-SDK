@@ -1,7 +1,7 @@
 import { serialize } from "class-transformer";
 import * as _ from "lodash";
 import { Observable, zip } from "rxjs";
-import { map } from "rxjs/operators";
+import { flatMap, map } from "rxjs/operators";
 import { Credentials } from "../crypto/Credentials";
 import { DCoreApi } from "../DCoreApi";
 import { ChainObject } from "../models/ChainObject";
@@ -11,6 +11,7 @@ import { MessagePayload } from "../models/MessagePayload";
 import { MessagePayloadReceiver } from "../models/MessagePayloadReceiver";
 import { MessageResponse } from "../models/MessageResponse";
 import { SendMessageOperation } from "../models/operation/SendMessageOperation";
+import { TransactionConfirmation } from "../models/TransactionConfirmation";
 import { GetMessagesObjects } from "../net/models/request/GetMessagesObjects";
 import { assertThrow } from "../utils/Utils";
 import { BaseApi } from "./BaseApi";
@@ -134,6 +135,22 @@ export class MessageApi extends BaseApi {
         messages: Array<[ChainObject, string]>,
     ): SendMessageOperation {
         return new SendMessageOperation(serialize(MessagePayload.createUnencrypted(credentials.account, messages)), credentials.account);
+    }
+
+    /**
+     * Send message, send messages to multiple receivers
+     *
+     * @param credentials sender account credentials
+     * @param messages a list of pairs of receiver account id and message
+     *
+     * @return a transaction confirmation
+     */
+    public sendMessage(
+        credentials: Credentials,
+        messages: Array<[ChainObject, string]>,
+    ): Observable<TransactionConfirmation> {
+        return this.createMessageOperation(credentials, messages).pipe(flatMap((operation) =>
+            this.api.broadcastApi.broadcastWithCallback(credentials.keyPair, [operation])));
     }
 
 }

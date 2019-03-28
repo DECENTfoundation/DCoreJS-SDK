@@ -1,6 +1,7 @@
 import * as Long from "long";
 import { Observable } from "rxjs";
 import { flatMap, map } from "rxjs/operators";
+import { TransactionConfirmation } from "src/models";
 import { DCoreApi } from "../DCoreApi";
 import { AccountRef } from "../DCoreSdk";
 import { ChainObject } from "../models/ChainObject";
@@ -21,6 +22,7 @@ import { GetNewAssetPerBlock } from "../net/models/request/GetNewAssetPerBlock";
 import { LookupMinerAccounts } from "../net/models/request/LookupMinerAccounts";
 import { LookupVoteIds } from "../net/models/request/LookupVoteIds";
 import { SearchMinerVoting } from "../net/models/request/SearchMinerVoting";
+import { Credentials } from "./../crypto/Credentials";
 import { BaseApi } from "./BaseApi";
 
 export class MiningApi extends BaseApi {
@@ -169,7 +171,7 @@ export class MiningApi extends BaseApi {
      * @param account account name or object id, 1.2.*
      * @param minerIds list of miner account ids
      *
-     * @return a transaction confirmation
+     * @return a create vote operation
      */
     public createVoteOperation(
         account: AccountRef,
@@ -180,5 +182,23 @@ export class MiningApi extends BaseApi {
                 .pipe(map((acc) => AccountUpdateOperation.create(acc, miners.map((m) => m.voteId)))),
             ),
         );
+    }
+
+    /**
+     * Vote for miner.
+     *
+     * @param credentials account credentials
+     * @param account account name or object id, 1.2.*
+     * @param minerIds list of miner account ids
+     *
+     * @return a transaction confirmation
+     */
+    public vote(
+        credentials: Credentials,
+        account: AccountRef,
+        minerIds: ChainObject[],
+    ): Observable<TransactionConfirmation> {
+        return this.createVoteOperation(account, minerIds).pipe(flatMap((operation) =>
+            this.api.broadcastApi.broadcastWithCallback(credentials.keyPair, [operation])));
     }
 }

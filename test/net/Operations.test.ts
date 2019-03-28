@@ -5,6 +5,7 @@ import * as moment from "moment";
 import "reflect-metadata";
 import { create } from "rxjs-spy";
 import { Spy } from "rxjs-spy/spy-interface";
+import { Credentials } from "../../src/crypto/Credentials";
 import { DCoreApi } from "../../src/DCoreApi";
 import { DCoreConstants } from "../../src/DCoreConstants";
 import { DCoreSdk } from "../../src/DCoreSdk";
@@ -98,4 +99,42 @@ class OperationsTest {
         this.api.validationApi.getFee(OperationType.Transfer2, DCoreConstants.DCT_ASSET_ID)
             .subscribe((value) => value.should.be.instanceOf(AssetAmount), (error) => done(error), () => done());
     }
+
+    @test
+    public "should make a transfer high level"(done: (arg?: any) => void) {
+        this.api.accountApi.transfer(
+            new Credentials(ChainObject.parse("1.2.34"), Helpers.KEY),
+            ChainObject.parse("1.2.35"),
+            new AssetAmount(1),
+        )
+        .subscribe((value) => value.should.be.instanceOf(TransactionConfirmation), (error) => done(error), () => done());
+    }
+
+    @test
+    public "should make a transfer to content"(done: (arg?: any) => void) {
+        this.api.contentApi.transfer(
+            new Credentials(ChainObject.parse("1.2.34"), Helpers.KEY),
+            ChainObject.parse("2.13.3"),
+            new AssetAmount(1),
+        )
+        .subscribe((value) => value.should.be.instanceOf(TransactionConfirmation), (error) => done(error), () => done());
+    }
+
+    @test
+    public "should vote"(done: (arg?: any) => void) {
+        this.api.miningApi.vote(
+            new Credentials(ChainObject.parse("1.2.34"), Helpers.KEY),
+            ChainObject.parse("1.2.34"),
+            [ChainObject.parse("1.4.5")])
+            .subscribe((value) => value.should.be.instanceOf(TransactionConfirmation), (error) => done(error), () => done());
+    }
+
+    @test
+    public "should send a message"(done: (arg?: any) => void) {
+        this.api.messageApi.sendMessage(
+            new Credentials(ChainObject.parse("1.2.34"), Helpers.KEY),
+            [[ ChainObject.parse("1.2.35"), "test message"]])
+            .subscribe((value) => value.should.be.instanceOf(TransactionConfirmation), (error) => done(error), () => done());
+    }
+
 }

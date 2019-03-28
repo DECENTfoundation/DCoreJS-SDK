@@ -1,6 +1,7 @@
 import * as _ from "lodash";
 import { Observable } from "rxjs";
 import { map } from "rxjs/operators";
+import { TransactionConfirmation } from "src/models/TransactionConfirmation";
 import { Credentials } from "../crypto/Credentials";
 import { DCoreApi } from "../DCoreApi";
 import { AssetAmount } from "../models/AssetAmount";
@@ -126,7 +127,7 @@ export class ContentApi extends BaseApi {
      * @param memo optional unencrypted message
      * @param fee {@link AssetAmount} fee for the operation, if left undefined the fee will be computed in DCT asset
      *
-     * @return a transaction confirmation
+     * @return a transfer operation
      */
     public createTransfer(
         credentials: Credentials,
@@ -136,5 +137,30 @@ export class ContentApi extends BaseApi {
         fee?: AssetAmount,
     ): TransferOperation {
         return new TransferOperation(credentials.account, id, amount, _.isNil(memo) ? memo : Memo.createPublic(memo), fee);
+    }
+
+    /**
+     * Transfers an amount of one asset to content. Amount is transferred to author and co-authors of the content, if they are specified.
+     * Fees are paid by the "from" account.
+     *
+     * @param credentials account credentials
+     * @param id content id
+     * @param amount amount to send with asset type
+     * @param memo optional unencrypted message
+     * @param fee {@link AssetAmount} fee for the operation, if left undefined the fee will be computed in DCT asset
+     *
+     * @return a transaction confirmation
+     */
+    public transfer(
+        credentials: Credentials,
+        id: ChainObject,
+        amount: AssetAmount,
+        memo?: string,
+        fee?: AssetAmount,
+    ): Observable<TransactionConfirmation> {
+        return this.api.broadcastApi.broadcastWithCallback(
+            credentials.keyPair,
+            [this.createTransfer(credentials, id, amount, memo, fee)],
+        );
     }
 }
