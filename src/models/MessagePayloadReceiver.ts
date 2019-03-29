@@ -1,12 +1,13 @@
 import { Expose } from "class-transformer";
 import * as Long from "long";
 import { Address } from "../crypto/Address";
-import { AddressToClass, ChainObjectToClass, LongToClass } from "../utils/TypeAdapters";
+import { AddressToClass, AddressToPlain, ChainObjectToClass, ChainObjectToPlain, LongToClass, LongToPlain } from "../utils/TypeAdapters";
 import { ChainObject } from "./ChainObject";
 
 export class MessagePayloadReceiver {
 
     @ChainObjectToClass
+    @ChainObjectToPlain
     @Expose({ name: "to" })
     public to: ChainObject;
 
@@ -14,10 +15,12 @@ export class MessagePayloadReceiver {
     public data: string;
 
     @AddressToClass
+    @AddressToPlain
     @Expose({ name: "pub_to" })
     public toAddress?: Address;
 
     @LongToClass
+    @LongToPlain
     @Expose({ name: "nonce" })
     public nonce?: Long;
 

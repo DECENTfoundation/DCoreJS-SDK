@@ -67,7 +67,7 @@ export class RxWebSocket {
     }
 
     private static checkEmpty(value: object, request: BaseRequest<any>): void {
-        if (_.isNil(value) || (_.isArray(value) && value.filter(Boolean).length === 0)) {
+        if (_.isNil(value) || (_.isArray(value) && value.length === 1 && value[0] === null)) {
             throw new ObjectNotFoundError(request.description());
         }
     }
@@ -75,7 +75,7 @@ export class RxWebSocket {
     private static send(ws: WebSocketContract, request: string): void {
         // todo logging https://decentplatform.atlassian.net/browse/DSDK-587
         // tslint:disable-next-line
-        console.log(request);
+        // console.log(request);
         ws.send(request);
     }
 

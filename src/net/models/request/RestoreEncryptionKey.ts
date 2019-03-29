@@ -10,7 +10,7 @@ export class RestoreEncryptionKey extends BaseRequest<string> {
         super(
             ApiGroup.Database,
             "restore_encryption_key",
-            [elGamalPrivate, purchaseId],
+            [elGamalPrivate, purchaseId.objectId],
         );
 
         assertThrow(purchaseId.objectType === ObjectType.PurchaseObject, () => "not a valid purchase object id");

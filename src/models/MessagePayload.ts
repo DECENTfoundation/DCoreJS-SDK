@@ -1,7 +1,8 @@
 import { Expose, Type } from "class-transformer";
 import { Address } from "../crypto/Address";
-import { AddressToClass, ChainObjectToClass } from "../utils/TypeAdapters";
+import { AddressToClass, AddressToPlain, ChainObjectToClass, ChainObjectToPlain } from "../utils/TypeAdapters";
 import { ChainObject } from "./ChainObject";
+import { Memo } from "./Memo";
 import { MessagePayloadReceiver } from "./MessagePayloadReceiver";
 
 export class MessagePayload {
@@ -13,10 +14,11 @@ export class MessagePayload {
      * @param messages pairs of receiver account id to message text
      */
     public static createUnencrypted(from: ChainObject, messages: Array<[ChainObject, string]>): MessagePayload {
-        return new MessagePayload(from, messages.map(([id, msg]) => new MessagePayloadReceiver(id, msg)));
+        return new MessagePayload(from, messages.map(([id, msg]) => new MessagePayloadReceiver(id, Memo.createPublic(msg).message)));
     }
 
     @ChainObjectToClass
+    @ChainObjectToPlain
     @Expose({ name: "from" })
     public from: ChainObject;
 
@@ -25,6 +27,7 @@ export class MessagePayload {
     public receiversData: MessagePayloadReceiver[];
 
     @AddressToClass
+    @AddressToPlain
     @Expose({ name: "pub_from" })
     public fromAddress?: Address;
 

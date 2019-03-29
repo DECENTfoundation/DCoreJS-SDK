@@ -2,7 +2,6 @@ import { Duration } from "moment";
 import { Observable } from "rxjs";
 import { AccountApi } from "./api/AccountApi";
 import { AssetApi } from "./api/AssetApi";
-import { AuthorityApi } from "./api/AuthorityApi";
 import { BalanceApi } from "./api/BalanceApi";
 import { BlockApi } from "./api/BlockApi";
 import { BroadcastApi } from "./api/BroadcastApi";
@@ -28,7 +27,6 @@ export class DCoreApi {
 
     public accountApi: AccountApi = new AccountApi(this);
     public assetApi: AssetApi = new AssetApi(this);
-    public authorityApi: AuthorityApi = new AuthorityApi(this);
     public balanceApi: BalanceApi = new BalanceApi(this);
     public blockApi: BlockApi = new BlockApi(this);
     public broadcastApi: BroadcastApi = new BroadcastApi(this);

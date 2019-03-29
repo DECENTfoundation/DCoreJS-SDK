@@ -1,6 +1,7 @@
 import * as Long from "long";
 import { Observable } from "rxjs";
 import { flatMap, map } from "rxjs/operators";
+import { Credentials } from "../crypto/Credentials";
 import { DCoreApi } from "../DCoreApi";
 import { AccountRef } from "../DCoreSdk";
 import { ChainObject } from "../models/ChainObject";
@@ -10,6 +11,7 @@ import { MinerVotes } from "../models/MinerVotes";
 import { MinerVotingInfo } from "../models/MinerVotingInfo";
 import { AccountUpdateOperation } from "../models/operation/AccountUpdateOperation";
 import { SearchMinerVotingOrder } from "../models/order/SearchMinerVotingOrder";
+import { TransactionConfirmation } from "../models/TransactionConfirmation";
 import { VoteId } from "../models/VoteId";
 import { GetActualVotes } from "../net/models/request/GetActualVotes";
 import { GetAssetPerBlock } from "../net/models/request/GetAssetPerBlock";
@@ -59,7 +61,7 @@ export class MiningApi extends BaseApi {
      *
      */
     // todo model
-    public getFeedsByMiner(account: ChainObject, count: number = 100) {
+    public getFeedsByMiner(account: ChainObject, count: number = 100): Observable<object> {
         return this.request(new GetFeedsByMiner(account, count));
     }
 
@@ -169,7 +171,7 @@ export class MiningApi extends BaseApi {
      * @param account account name or object id, 1.2.*
      * @param minerIds list of miner account ids
      *
-     * @return a transaction confirmation
+     * @return a create vote operation
      */
     public createVoteOperation(
         account: AccountRef,
@@ -179,6 +181,23 @@ export class MiningApi extends BaseApi {
             flatMap((miners) => this.api.accountApi.get(account)
                 .pipe(map((acc) => AccountUpdateOperation.create(acc, miners.map((m) => m.voteId)))),
             ),
+        );
+    }
+
+    /**
+     * Vote for miner.
+     *
+     * @param credentials account credentials
+     * @param minerIds list of miner account ids
+     *
+     * @return a transaction confirmation
+     */
+    public vote(
+        credentials: Credentials,
+        minerIds: ChainObject[],
+    ): Observable<TransactionConfirmation> {
+        return this.createVoteOperation(credentials.account, minerIds).pipe(
+            flatMap((operation) => this.api.broadcastApi.broadcastWithCallback(credentials.keyPair, [operation])),
         );
     }
 }

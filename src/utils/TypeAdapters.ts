@@ -27,7 +27,7 @@ export function LongToClass(target: any, key: string): void {
 }
 
 export function LongToPlain(target: any, key: string): void {
-    return Transform((value: Long) => Long.fromBits(value.low, value.high, value.unsigned).toString(), { toPlainOnly: true })(target, key);
+    return Transform((value?: Long) => _.isNil(value) ? value : Long.fromBits(value.low, value.high, value.unsigned).toString(), { toPlainOnly: true })(target, key);
 }
 
 export function MomentToClass(target: any, key: string): void {

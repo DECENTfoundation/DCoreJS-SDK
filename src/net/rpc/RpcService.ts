@@ -26,11 +26,10 @@ export class RpcService {
                     if (!_.isNil(response.error)) {
                         throw new DCoreError(response.error);
                     }
-                    if (!_.isNil(response.result)
-                        && (!_.isArray(response.result) || response.result.filter(Boolean).length > 0)) {
-                        return request.transformer(response.result);
+                    if (_.isNil(response.result) || (_.isArray(response.result) && response.result.length === 1 && response.result[0] === null)) {
+                        throw new ObjectNotFoundError(request.description());
                     }
-                    throw new ObjectNotFoundError(request.description());
+                    return request.transformer(response.result);
                 }
                 throw TypeError("invalid response");
             }),

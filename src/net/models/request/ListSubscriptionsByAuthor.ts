@@ -13,7 +13,7 @@ export class ListSubscriptionsByAuthor extends BaseRequest<Subscription[]> {
     ) {
         super(
             ApiGroup.Database,
-            "list_active_subscriptions_by_consumer",
+            "list_subscriptions_by_author",
             [consumerId.objectId, count],
             (value: object[]) => plainToClass(Subscription, value),
         );

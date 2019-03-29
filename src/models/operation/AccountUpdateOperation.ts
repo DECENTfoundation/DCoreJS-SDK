@@ -30,7 +30,7 @@ export class AccountUpdateOperation extends BaseOperation {
     public active?: Authority;
 
     @Type(() => Options)
-    @Expose({ name: "options" })
+    @Expose({ name: "new_options" })
     public options?: Options;
 
     /**

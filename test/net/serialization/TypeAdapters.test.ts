@@ -3,7 +3,7 @@ import * as chaiThings from "chai-things";
 import { classToPlain, plainToClass } from "class-transformer";
 import * as _ from "lodash";
 import * as Long from "long";
-import { suite, test } from "mocha-typescript";
+import "mocha";
 import { Moment } from "moment";
 import "reflect-metadata";
 import { ChainObject } from "../../../src/models/ChainObject";
@@ -12,13 +12,8 @@ import { ChainObjectToClass, ChainObjectToPlain, LongToClass, LongToPlain, Momen
 chai.should();
 chai.use(chaiThings);
 
-/* tslint:disable */
-@suite("JSON type adapters test suite")
-// @ts-ignore
-class TypeAdaptersTest {
-
-    @test
-    public "chain object type adapter test"() {
+describe("JSON type adapters test suite", () => {
+    it("chain object type adapter test", () => {
         class TestClass {
             @ChainObjectToClass
             @ChainObjectToPlain
@@ -30,7 +25,7 @@ class TypeAdaptersTest {
             { value: "1.2." + Number.MAX_SAFE_INTEGER.toString() },
             { value: "1.2." + Long.MAX_UNSIGNED_VALUE.toString() },
         ];
-        let underTest = ok.map((plain) => classToPlain(plainToClass(TestClass, plain)));
+        const underTest = ok.map((plain) => classToPlain(plainToClass(TestClass, plain)));
         JSON.stringify(underTest).should.equal(JSON.stringify(ok));
 
         const fail = [
@@ -40,19 +35,18 @@ class TypeAdaptersTest {
             { value: "1.2." + Long.MAX_UNSIGNED_VALUE.toString() + "1" },
             { value: "1.2.3.4" },
         ];
-        let undef = fail.map((plain) => {
+        const undef = fail.map((plain) => {
                 try {
                     classToPlain(plainToClass(TestClass, plain));
                 } catch (e) {
                     return undefined;
                 }
-            }
+            },
         );
         undef.every((v) => v === undefined).should.be.true;
-    }
+    });
 
-    @test
-    public "long type adapter test"() {
+    it("long type adapter test", () => {
         class TestClass {
             @LongToPlain
             @LongToClass
@@ -91,10 +85,9 @@ class TypeAdaptersTest {
         _.intersection(underTest.map((v) => JSON.stringify(v)), outOfRange.map((v) => {
             return JSON.stringify({ value: v.value.toString });
         })).length.should.equal(0);
-    }
+    });
 
-    @test
-    public "moment type adapter test"() {
+    it("moment type adapter test", () => {
         class TestClass {
             @MomentToPlain
             @MomentToClass
@@ -106,5 +99,5 @@ class TypeAdaptersTest {
         const underTest = classToPlain(plainToClass(TestClass, expected));
 
         _.get(underTest, "value").should.equal(expected.value);
-    }
-}
+    });
+});
