@@ -31,6 +31,7 @@
     "lint": "sh ./scripts/lint.sh",
     "test:node": "sh ./scripts/test:node.sh",
     "test:browser": "sh ./scripts/test:browser.sh",
+    "test": "npm run test:node && npm run test:browser",
     "postinstall": "tsc"
   },
   "devDependencies": {
