@@ -55,12 +55,12 @@ chai.use(chaiThings);
                 }, () => done());
         });
 
-        it("should return transaction by id", (done: (arg?: any) => void) => {
+        it.skip("should return transaction by id", (done: (arg?: any) => void) => {
             api.getById("95914695085f08b84218e39cdea6f910f380e469")
                 .subscribe((value) => value.should.be.instanceOf(ProcessedTransaction), (error) => done(error), () => done());
         });
 
-        it("should return transaction", (done: (arg?: any) => void) => {
+        it.skip("should return transaction", (done: (arg?: any) => void) => {
             api.get(1370282, 0)
                 .subscribe((value) => value.should.be.instanceOf(ProcessedTransaction), (error) => done(error), () => done());
         });

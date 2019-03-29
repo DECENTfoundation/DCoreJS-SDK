@@ -7,7 +7,6 @@ import "reflect-metadata";
 import { create } from "rxjs-spy";
 import { Spy } from "rxjs-spy/spy-interface";
 import { flatMap } from "rxjs/operators";
-import { Address } from "../../src/crypto/Address";
 import { DCoreApi } from "../../src/DCoreApi";
 import { DCoreSdk } from "../../src/DCoreSdk";
 import { AccountStatistics, ChainObject, FullAccount } from "../../src/models";
@@ -43,7 +42,7 @@ chai.use(chaiThings);
         });
 
         it("account should exist", (done: (arg?: any) => void) => {
-            api.exist("1.2.35")
+            api.exist(Helpers.ACCOUNT)
                 .subscribe((value) => value.should.be.true, (error) => done(error), () => done());
         });
 
@@ -53,7 +52,7 @@ chai.use(chaiThings);
         });
 
         it("should return account by name", (done: (arg?: any) => void) => {
-            api.getByName("u3a7b78084e7d3956442d5a4d439dad51")
+            api.getByName(Helpers.ACCOUNT_NAME)
                 .subscribe((value) => value.should.be.instanceOf(Account), (error) => done(error), () => done());
         });
 
@@ -63,23 +62,23 @@ chai.use(chaiThings);
         });
 
         it("should return account ids for key references", (done: (arg?: any) => void) => {
-            api.findAllReferencesByKeys([Address.parse("DCT6MA5TQQ6UbMyMaLPmPXE2Syh5G3ZVhv5SbFedqLPqdFChSeqTz")])
+            api.findAllReferencesByKeys([Helpers.PUBLIC])
                 .subscribe((value) => value.should.include.one.include.one.instanceOf(ChainObject), (error) => done(error), () => done());
         });
 
         it("should return account ids for account references", (done: (arg?: any) => void) => {
-            api.findAllReferencesByAccount(ChainObject.parse("1.2.34"))
+            api.findAllReferencesByAccount(Helpers.ACCOUNT)
                 .subscribe((value) => value.length.should.eq(0), (error) => done(error), () => done());
         });
 
         it("should return account by id", (done: (arg?: any) => void) => {
-            api.getAll([ChainObject.parse("1.2.35")])
+            api.getAll([Helpers.ACCOUNT2])
                 .subscribe((value) => value.should.include.one.instanceOf(Account), (error) => done(error), () => done());
         });
 
         it("should return full account by id", (done: (arg?: any) => void) => {
-            api.getFullAccounts(["1.2.35"], false)
-                .subscribe((value) => value.get("1.2.35")!.should.be.instanceof(FullAccount), (error) => done(error), () => done());
+            api.getFullAccounts([Helpers.ACCOUNT2.objectId], false)
+                .subscribe((value) => value.get("1.2.28")!.should.be.instanceof(FullAccount), (error) => done(error), () => done());
         });
 
         it("should return accounts by lookup term", (done: (arg?: any) => void) => {
@@ -88,12 +87,12 @@ chai.use(chaiThings);
         });
 
         it("should return accounts by name lookup", (done: (arg?: any) => void) => {
-            api.listAllRelative("alx-customer")
+            api.listAllRelative("public")
                 .subscribe((value) => undefined, (error) => done(error), () => done());
         });
 
         it("should return accounts by search term", (done: (arg?: any) => void) => {
-            api.findAll("alax")
+            api.findAll("public")
                 .subscribe((value) => value.should.all.be.instanceOf(Account), (error) => done(error), () => done());
         });
 

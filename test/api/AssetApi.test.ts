@@ -39,7 +39,7 @@ chai.use(chaiThings);
             });
 
             it("should return assets", (done: (arg?: any) => void) => {
-                api.getAll([ChainObject.parse("1.3.54")])
+                api.getAll([ChainObject.parse("1.3.10")])
                     .subscribe((value) => value.should.include.one.instanceOf(Asset), (error) => done(error), () => done());
             });
 
@@ -54,7 +54,7 @@ chai.use(chaiThings);
             });
 
             it("should return assets by name lookup", (done: (arg?: any) => void) => {
-                api.getAllByName(["ALXT", "ALAT"])
+                api.getAllByName(["USD", "CAD"])
                     .subscribe((value) => value.should.all.be.instanceOf(Asset), (error) => done(error), () => done());
             });
 

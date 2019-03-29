@@ -5,6 +5,7 @@ import "mocha";
 import * as moment from "moment";
 import "reflect-metadata";
 import { Address } from "../../../src/crypto/Address";
+import { ECKeyPair } from "../../../src/crypto/ECKeyPair";
 import { DCoreConstants } from "../../../src/DCoreConstants";
 import { AssetAmount } from "../../../src/models/AssetAmount";
 import { BlockData } from "../../../src/models/BlockData";
@@ -179,10 +180,12 @@ describe("serialization test suite", () => {
         // tslint:disable-next-line:max-line-length
         const expected = "1222a1070000000000002201220100a0027b2266726f6d223a22312e322e3334222c227265636569766572735f64617461223a5b7b22746f223a22312e322e3335222c2264617461223a2266643731623963626530353038393933353832303435313366316362346634636364303131353830366431346230336631386437383764653136333366366332222c227075625f746f223a224443543662566d696d745953765751747764726b56565147486b5673544a5a564b74426955716634596d4a6e724a506e6b38395150222c226e6f6e6365223a2234373634323231333839333539393236323732227d5d2c227075625f66726f6d223a22444354364d41355451513655624d794d614c506d505845325379683547335a566876355362466564714c507164464368536571547a227d";
 
-        const memo = Memo.createEncrypted("hello messaging api", Helpers.KEY, Helpers.PUBLIC2, Long.fromString("4764221389359926272"));
-        const pr = new MessagePayloadReceiver(Helpers.ACCOUNT2, memo.message, Helpers.PUBLIC2, memo.nonce);
-        const p = new MessagePayload(Helpers.ACCOUNT, [pr], Helpers.PUBLIC);
-        const op = new SendMessageOperation(serialize(p), Helpers.ACCOUNT);
+        const key = ECKeyPair.parseWif("5Jd7zdvxXYNdUfnEXt5XokrE3zwJSs734yQ36a1YaqioRTGGLtn");
+        const to = Address.parse("DCT6bVmimtYSvWQtwdrkVVQGHkVsTJZVKtBiUqf4YmJnrJPnk89QP");
+        const memo = Memo.createEncrypted("hello messaging api", key, to, Long.fromString("4764221389359926272"));
+        const pr = new MessagePayloadReceiver(ChainObject.parse("1.2.35"), memo.message, to, memo.nonce);
+        const p = new MessagePayload(ChainObject.parse("1.2.34"), [pr], key.publicAddress);
+        const op = new SendMessageOperation(serialize(p), ChainObject.parse("1.2.34"));
         op.fee = new AssetAmount(500002);
 
         serializer.serialize(op).toString("hex").should.be.eq(expected);

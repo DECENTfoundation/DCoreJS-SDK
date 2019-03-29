@@ -30,9 +30,9 @@ import "reflect-metadata";
 import { DCoreSdk } from "../src/DCoreSdk";
 
 // create the API
-const api = DCoreSdk.createForHttp({ baseUrl: "https://stagesocket.decentgo.com:8090/rpc"})
-// get account by name, resolves to account id '1.2.34'
-const disposable = api.accountApi.get("u961279ec8b7ae7bd62f304f7c1c3d345")
+const api = DCoreSdk.createForHttp({ baseUrl: "https://testnet-api.dcore.io/"})
+// get account by name, resolves to account id '1.2.27'
+const disposable = api.accountApi.get("public-account-9")
     .subscribe((account) => console.log(account.id));
 ```
 
@@ -51,11 +51,11 @@ const spy = create();
 spy.log();
 
 // create api for websocket
-const api = DCoreSdk.createForWebSocket(() => new WebSocket("wss://stagesocket.decentgo.com:8090"));
+const api = DCoreSdk.createForWebSocket(() => new WebSocket("wss://testnet-api.dcore.io/"));
 // create account credentials
-const credentials = new Credentials(ChainObject.parse("1.2.34"), "..wif_private_key..");
-// send 1DCT to account id '1.2.35' with encrypted 'hello memo' memo
-const disposable = api.accountApi.transfer(credentials, "1.2.35", new AssetAmount(100000000), "hello memo")
+const credentials = new Credentials(ChainObject.parse("1.2.27"), "5Hxwqx6JJUBYWjQNt8DomTNJ6r6YK8wDJym4CMAH1zGctFyQtzt");
+// send 1DCT to account id '1.2.28 (public-account-10)' with encrypted 'hello memo' memo
+const disposable = api.accountApi.transfer(credentials, "public-account-10", new AssetAmount(100000000), "hello memo")
     .subscribe((confirmation) => console.log(confirmation.id));
 ```
 

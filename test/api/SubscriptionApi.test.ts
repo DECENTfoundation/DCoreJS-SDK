@@ -37,7 +37,8 @@ chai.use(chaiThings);
             spy.teardown();
         });
 
-        it("should return subscription by id", (done: (arg?: any) => void) => {
+        // no subscription
+        it.skip("should return subscription by id", (done: (arg?: any) => void) => {
             api.get(ChainObject.parse("2.15.6"))
                 .subscribe((value) => value.should.be.instanceOf(Subscription), (error) => done(error), () => done());
         });

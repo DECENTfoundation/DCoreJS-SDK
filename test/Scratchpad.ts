@@ -50,7 +50,7 @@ class Scratchpad {
 
     @test "get account balance"() {
 
-        this.apiRpc.balanceApi.getAllWithAsset(ChainObject.parse("1.2.1135"), ["DCT"]).subscribe(
+        this.apiRpc.balanceApi.getAllWithAsset("public-account-1", ["DCT"]).subscribe(
             (b) => console.log(b),
             (err) => console.error(err)
         );
@@ -382,6 +382,3 @@ class Scratchpad {
         console.log("defined" && "hello defined");
     }
 }
-
-// 02e4d03d9995ebb1b61b11e5e8631a70cdfdd2691df320ad3187751b256cccf808
-// e4d03d9995ebb1b61b11e5e8631a70cdfdd2691df320ad3187751b256cccf808

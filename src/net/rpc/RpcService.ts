@@ -18,7 +18,7 @@ export class RpcService {
     }
 
     public request<T>(request: BaseRequest<T>): Observable<T> {
-        return this.baseRequest.post("", { body: request.json() }).pipe(
+        return this.baseRequest.post("rpc", { body: request.json() }).pipe(
             filter((data) => data.response.statusCode === 200),
             map((data) => JSON.parse(data.response.body)),
             map((response) => {

@@ -7,11 +7,12 @@ import { ECKeyPair } from "../../src/crypto/ECKeyPair";
 import { ElGamal } from "../../src/crypto/ElGamal";
 import { Passphrase } from "../../src/crypto/Passphrase";
 import { Memo } from "../../src/models/Memo";
-import { Helpers } from "../Helpers";
 
 chai.should();
 
 describe("crypto tests", () => {
+    const key = ECKeyPair.parseWif("5Jd7zdvxXYNdUfnEXt5XokrE3zwJSs734yQ36a1YaqioRTGGLtn");
+
     it("should generate credentials", () => {
         const phrase = Passphrase.generate();
         chai.expect(phrase.words).to.have.lengthOf(16);
@@ -38,7 +39,7 @@ describe("crypto tests", () => {
         const nonce = Long.fromString("10872523688190906880", true);
         const address = Address.parse("DCT6bVmimtYSvWQtwdrkVVQGHkVsTJZVKtBiUqf4YmJnrJPnk89QP");
 
-        const ss = Helpers.KEY.secret(address, nonce).toString("hex");
+        const ss = key.secret(address, nonce).toString("hex");
 
         ss.should.be.equal(expected);
     });
@@ -48,24 +49,24 @@ describe("crypto tests", () => {
         const plain = "hello memo here i am";
         const address = Address.parse("DCT6bVmimtYSvWQtwdrkVVQGHkVsTJZVKtBiUqf4YmJnrJPnk89QP");
         const nonce = Long.fromString("10872523688190906880", true);
-        const memo = Memo.createEncrypted(plain, Helpers.KEY, address, nonce);
+        const memo = Memo.createEncrypted(plain, key, address, nonce);
 
         memo.message.should.be.equal(expected);
-        memo.decrypt(Helpers.KEY).should.be.equal(plain);
+        memo.decrypt(key).should.be.equal(plain);
     });
 
     it("should decrypt public memo", () => {
         const plain = "hello memo here i am";
         const memo = Memo.createPublic(plain);
 
-        memo.decrypt(Helpers.KEY).should.be.equal(plain);
+        memo.decrypt(key).should.be.equal(plain);
     });
 
     it("should generate public el gamal", () => {
         const priv = "8149734503494312909116126763927194608124629667940168421251424974828815164868905638030541425377704620941193711130535974967507480114755414928915429397074890";
         const pub = "5182545488318095000498180568539728214545472470974958338942426759510121851708530625921436777555517288139787965253547588340803542762268721656138876002028437";
 
-        ElGamal.createPrivate(Helpers.KEY).toString().should.be.equal(priv);
-        ElGamal.createPublic(Helpers.KEY).toString().should.be.equal(pub);
+        ElGamal.createPrivate(key).toString().should.be.equal(priv);
+        ElGamal.createPublic(key).toString().should.be.equal(pub);
     });
 });

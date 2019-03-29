@@ -28,7 +28,7 @@ chai.use(chaiThings);
 
         before(() => {
             spy = create();
-            // this.spy.log(/^API\w+/);
+            // spy.log(/^API\w+/);
         });
 
         after(() => {
@@ -37,7 +37,7 @@ chai.use(chaiThings);
         });
 
         it("should return history operation", (done: (arg?: any) => void) => {
-            api.getOperation(Helpers.ACCOUNT, ChainObject.parse("1.7.7570"))
+            api.getOperation(Helpers.ACCOUNT, ChainObject.parse("1.7.915704"))
                 .subscribe((value) => value.should.be.instanceOf(BalanceChange), (error) => done(error), () => done());
         });
 
