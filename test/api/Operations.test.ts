@@ -69,6 +69,16 @@ describe("blockchain based operations", () => {
             .subscribe((value) => value.should.be.instanceOf(TransactionConfirmation), (error) => done(error), () => done());
     });
 
+    it.skip("should create account high level", (done: (arg?: any) => void) => {
+        api.accountApi.createNew(
+            Helpers.CREDENTIALS,
+            Helpers.ACCOUNT,
+            "unit-test-high-level",
+            Helpers.PUBLIC,
+        )
+            .subscribe((value) => value.should.be.instanceOf(TransactionConfirmation), (error) => done(error), () => done());
+    });
+
     it("should make a transfer high level", (done: (arg?: any) => void) => {
         api.accountApi.transfer(
             Helpers.CREDENTIALS,

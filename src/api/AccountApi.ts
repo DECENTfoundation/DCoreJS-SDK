@@ -16,6 +16,7 @@ import { ObjectNotFoundError } from "../models/error/ObjectNotFoundError";
 import { FullAccount } from "../models/FullAccount";
 import { Memo } from "../models/Memo";
 import { ObjectType } from "../models/ObjectType";
+import { AccountCreateOperation } from "../models/operation/AccountCreateOperation";
 import { TransferOperation } from "../models/operation/TransferOperation";
 import { SearchAccountsOrder } from "../models/order/SearchAccountsOrder";
 import { TransactionConfirmation } from "../models/TransactionConfirmation";
@@ -261,5 +262,27 @@ export class AccountApi extends BaseApi {
     ): Observable<TransactionConfirmation> {
         return this.createTransfer(credentials, account, amount, memo, encrypted, fee).pipe(flatMap((operation) =>
             this.api.broadcastApi.broadcastWithCallback(credentials.keyPair, [operation])));
+    }
+
+    /**
+     * Creates new account.
+     *
+     * @param credentials registrar account credentials
+     * @param registrar registrar account id
+     * @param name name of new account
+     * @param publicKey publicKey for new account
+     * @param fee {@link AssetAmount} fee for the operation, if left undefined the fee will be computed in DCT asset
+     *
+     * @return a transaction confirmation
+     */
+    public createNew(
+        credentials: Credentials,
+        registrar: ChainObject,
+        name: string,
+        publicKey: Address,
+        fee?: AssetAmount,
+    ): Observable<TransactionConfirmation> {
+        return scalar(AccountCreateOperation.create(registrar, name, publicKey, fee))
+            .pipe(flatMap((operation) => this.api.broadcastApi.broadcastWithCallback(credentials.keyPair, [operation])));
     }
 }
