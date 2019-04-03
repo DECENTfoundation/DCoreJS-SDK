@@ -268,7 +268,6 @@ export class AccountApi extends BaseApi {
      * Creates new account.
      *
      * @param credentials registrar account credentials
-     * @param registrar registrar account id
      * @param name name of new account
      * @param publicKey publicKey for new account
      * @param fee {@link AssetAmount} fee for the operation, if left undefined the fee will be computed in DCT asset
@@ -277,12 +276,10 @@ export class AccountApi extends BaseApi {
      */
     public createNew(
         credentials: Credentials,
-        registrar: ChainObject,
         name: string,
         publicKey: Address,
         fee?: AssetAmount,
     ): Observable<TransactionConfirmation> {
-        return scalar(AccountCreateOperation.create(registrar, name, publicKey, fee))
-            .pipe(flatMap((operation) => this.api.broadcastApi.broadcastWithCallback(credentials.keyPair, [operation])));
+        return this.api.broadcastApi.broadcastWithCallback(credentials.keyPair, [AccountCreateOperation.create(credentials.account, name, publicKey, fee)]);
     }
 }
