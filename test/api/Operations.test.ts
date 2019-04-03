@@ -72,7 +72,6 @@ describe("blockchain based operations", () => {
     it.skip("should create account high level", (done: (arg?: any) => void) => {
         api.accountApi.createNew(
             Helpers.CREDENTIALS,
-            Helpers.ACCOUNT,
             "unit-test-high-level",
             Helpers.PUBLIC,
         )
