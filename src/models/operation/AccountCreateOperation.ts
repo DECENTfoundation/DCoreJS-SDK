@@ -10,8 +10,18 @@ import { OperationType } from "./OperationType";
 
 export class AccountCreateOperation extends BaseOperation {
 
-    public static create(registrar: ChainObject, name: string, publicKey: Address, fee?: AssetAmount) {
-        return new this(registrar, name, new Authority(publicKey), new Authority(publicKey), new Options(publicKey), fee);
+    /**
+     * A new account create operation constructor.
+     *
+     * @param registrar existing account id used to register the new account
+     * @param name new account name
+     * @param address new account public key address
+     * @param fee {@link AssetAmount} fee for the operation, if left undefined the fee will be computed in DCT asset
+     *
+     * @return a transaction confirmation
+     */
+    public static create(registrar: ChainObject, name: string, address: Address, fee?: AssetAmount) {
+        return new this(registrar, name, new Authority(address), new Authority(address), new Options(address), fee);
     }
 
     @ChainObjectToClass

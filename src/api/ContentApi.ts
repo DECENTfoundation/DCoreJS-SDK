@@ -124,9 +124,25 @@ export class ContentApi extends BaseApi {
      *
      * @param credentials account credentials
      * @param content uri of the content or object id of the content, 2.13.*
+     *
+     * @return a purchase content operation
      */
-    public createPurchaseOperation(credentials: Credentials, content: ChainObject): Observable<PurchaseContentOperation> {
+    public createPurchaseOperation(credentials: Credentials, content: ChainObject | string): Observable<PurchaseContentOperation> {
         return this.get(content).pipe(map((c) => PurchaseContentOperation.create(credentials, c)));
+    }
+
+    /**
+     * Purchase a content.
+     *
+     * @param credentials account credentials
+     * @param content uri of the content or object id of the content, 2.13.*
+     *
+     * @return a transaction confirmation
+     */
+    public purchase(credentials: Credentials, content: ChainObject | string): Observable<TransactionConfirmation> {
+        return this.createPurchaseOperation(credentials, content).pipe(
+            flatMap((op) => this.api.broadcastApi.broadcastWithCallback(credentials.keyPair, [op])),
+        );
     }
 
     /**
