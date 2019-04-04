@@ -274,7 +274,7 @@ export class AccountApi extends BaseApi {
      *
      * @return a transaction confirmation
      */
-    public createNew(
+    public create(
         credentials: Credentials,
         name: string,
         publicKey: Address,
