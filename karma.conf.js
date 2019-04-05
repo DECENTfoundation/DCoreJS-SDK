@@ -1,6 +1,12 @@
 module.exports = function (config) {
     config.set({
-        browsers: ["ChromeHeadless"],
+        browsers: ["Chrome_without_security"],
+        customLaunchers:{
+            Chrome_without_security:{
+                base: 'ChromeHeadless',
+                flags: ['--disable-web-security']
+            }
+        },
         client: {
             mocha: {
                 timeout: "20000",
