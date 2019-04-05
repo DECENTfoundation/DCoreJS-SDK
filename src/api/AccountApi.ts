@@ -50,7 +50,7 @@ export class AccountApi extends BaseApi {
         return this.get(account).pipe(
             mapTo(true),
             catchError((err) => {
-                if (err instanceof ObjectNotFoundError || err instanceof TypeError) {
+                if (err instanceof ObjectNotFoundError) {
                     return of(false);
                 } else {
                     return throwError(err);
