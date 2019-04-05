@@ -95,14 +95,14 @@ describe("blockchain based operations", () => {
     });
 
     it("should send a message", (done: (arg?: any) => void) => {
-        api.messageApi.sendMessages(
+        api.messageApi.send(
             Helpers.CREDENTIALS,
             [[Helpers.ACCOUNT2, "test message"]])
             .subscribe((value) => value.should.be.instanceOf(TransactionConfirmation), (error) => done(error), () => done());
     });
 
     it("should send a message unencrypted", (done: (arg?: any) => void) => {
-        api.messageApi.sendMessagesUnencrypted(
+        api.messageApi.sendUnencrypted(
             Helpers.CREDENTIALS,
             [[Helpers.ACCOUNT2, "test message"]])
             .subscribe((value) => value.should.be.instanceOf(TransactionConfirmation), (error) => done(error), () => done());
