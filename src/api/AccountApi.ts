@@ -16,6 +16,7 @@ import { ObjectNotFoundError } from "../models/error/ObjectNotFoundError";
 import { FullAccount } from "../models/FullAccount";
 import { Memo } from "../models/Memo";
 import { ObjectType } from "../models/ObjectType";
+import { AccountCreateOperation } from "../models/operation/AccountCreateOperation";
 import { TransferOperation } from "../models/operation/TransferOperation";
 import { SearchAccountsOrder } from "../models/order/SearchAccountsOrder";
 import { TransactionConfirmation } from "../models/TransactionConfirmation";
@@ -247,7 +248,6 @@ export class AccountApi extends BaseApi {
      * @param amount amount to send with asset type
      * @param memo optional message
      * @param encrypted encrypted is visible only for sender and receiver, unencrypted is visible publicly
-     * @param fee {@link AssetAmount} fee for the operation, if left undefined the fee will be computed in DCT asset
      *
      * @return a transaction confirmation
      */
@@ -261,5 +261,26 @@ export class AccountApi extends BaseApi {
     ): Observable<TransactionConfirmation> {
         return this.createTransfer(credentials, account, amount, memo, encrypted, fee).pipe(flatMap((operation) =>
             this.api.broadcastApi.broadcastWithCallback(credentials.keyPair, [operation])));
+    }
+
+    /**
+     * Create a new account.
+     *
+     * @param registrar credentials used to register the new account
+     * @param name new account name
+     * @param address new account public key address
+     * @param fee {@link AssetAmount} fee for the operation, if left undefined the fee will be computed in DCT asset
+     *
+     * @return a transaction confirmation
+     */
+    public create(
+        registrar: Credentials,
+        name: string,
+        address: Address,
+        fee?: AssetAmount,
+    ): Observable<TransactionConfirmation> {
+        return this.api.broadcastApi.broadcastWithCallback(
+            registrar.keyPair, [AccountCreateOperation.create(registrar.account, name, address, fee)],
+        );
     }
 }

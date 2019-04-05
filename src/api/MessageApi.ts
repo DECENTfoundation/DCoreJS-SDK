@@ -146,7 +146,7 @@ export class MessageApi extends BaseApi {
      *
      * @return a transaction confirmation
      */
-    public sendMessages(
+    public send(
         credentials: Credentials,
         messages: Array<[ChainObject, string]>,
     ): Observable<TransactionConfirmation> {
@@ -163,7 +163,7 @@ export class MessageApi extends BaseApi {
      *
      * @return a transaction confirmation
      */
-    public sendMessagesUnencrypted(
+    public sendUnencrypted(
         credentials: Credentials,
         messages: Array<[ChainObject, string]>,
     ): Observable<TransactionConfirmation> {
