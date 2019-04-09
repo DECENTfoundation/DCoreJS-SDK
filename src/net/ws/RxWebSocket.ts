@@ -8,7 +8,7 @@ import { merge } from "rxjs/internal/observable/merge";
 import { scalar } from "rxjs/internal/observable/scalar";
 import { filter, first, flatMap, map, tap, timeout } from "rxjs/operators";
 import { DCoreError } from "../../models/error/DCoreError";
-import { ObjectNotFoundError } from "../../models/error/ObjectNotFoundError";
+// import { ObjectNotFoundError } from "../../models/error/ObjectNotFoundError";
 import { ObjectCheckOf } from "../../utils/ObjectCheckOf";
 import { BaseRequest } from "../models/request/BaseRequest";
 import { WithCallback } from "../models/request/WithCallback";
@@ -66,11 +66,11 @@ export class RxWebSocket {
         throw Error(`not supported response: ${value}`);
     }
 
-    private static checkEmpty(value: object, request: BaseRequest<any>): void {
-        if (_.isNil(value) || (_.isArray(value) && value.length === 1 && value[0] === null)) {
-            throw new ObjectNotFoundError(request.description());
-        }
-    }
+    // private static checkEmpty(value: object, request: BaseRequest<any>): void {
+    //     if (_.isNil(value) || (_.isArray(value) && value.length === 1 && value[0] === null)) {
+    //         throw new ObjectNotFoundError(request.description());
+    //     }
+    // }
 
     private static send(ws: WebSocketContract, request: string): void {
         // todo logging https://decentplatform.atlassian.net/browse/DSDK-587
@@ -171,7 +171,7 @@ export class RxWebSocket {
             ).pipe(
                 filter(([id, obj]: [number, object]) => id === (callbackId ? callbackId : callId)),
                 map(([id, obj]: [number, object]) => obj),
-                tap((obj: object) => RxWebSocket.checkEmpty(obj, request)),
+                // tap((obj: object) => RxWebSocket.checkEmpty(obj, request)),
                 map(request.transformer),
                 tag(`RxWebSocket_make_${request.method}`),
             );

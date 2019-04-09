@@ -16,6 +16,7 @@ import { RegionalPrice } from "../../src/models/RegionalPrice";
 import { Synopsis } from "../../src/models/Synopsis";
 import { TransactionConfirmation } from "../../src/models/TransactionConfirmation";
 import { Helpers } from "../Helpers";
+import { TransferOperation } from "./../../src/models/operation/TransferOperation";
 
 chai.should();
 
@@ -67,6 +68,15 @@ describe("blockchain based operations", () => {
 
         api.broadcastApi.broadcastWithCallback(Helpers.KEY, [op])
             .subscribe((value) => value.should.be.instanceOf(TransactionConfirmation), (error) => done(error), () => done());
+    });
+
+    it.only("should make a transfer async", (done: (arg?: any) => void) => {
+        const op = new TransferOperation(
+            Helpers.ACCOUNT,
+            Helpers.ACCOUNT2,
+            new AssetAmount(345),
+        );
+        api.broadcastApi.broadcast(Helpers.KEY, [op]).subscribe((value) => undefined, (error) => done(error), () => done());
     });
 
     it("should make a transfer high level", (done: (arg?: any) => void) => {
