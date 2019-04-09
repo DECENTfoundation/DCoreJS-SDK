@@ -3,6 +3,7 @@ import { Duration } from "moment";
 import { Observable } from "rxjs";
 import { DCoreApi } from "../DCoreApi";
 import { DCoreSdk } from "../DCoreSdk";
+import { DynamicGlobalProperties } from "../models";
 import { ChainObject } from "../models/ChainObject";
 import { BaseOperation } from "../models/operation/BaseOperation";
 import { ProcessedTransaction } from "../models/ProcessedTransaction";
@@ -26,10 +27,17 @@ export class TransactionApi extends BaseApi {
      *
      * @param operations operations to include in transaction
      * @param expiration transaction expiration in seconds, after the expiry the transaction is removed from recent pool
+     * @param chainIdGetter optional chain ID rxjs getter
+     * @param dynamicPropsGetter optional dynamic global properties getter
      * and will be dismissed if not included in DCore block
      */
-    public createTransaction(operations: BaseOperation[], expiration: Duration = this.api.transactionExpiration): Observable<Transaction> {
-        return this.core.prepareTransaction(operations, expiration);
+    public createTransaction(
+        operations: BaseOperation[],
+        expiration: Duration = this.api.transactionExpiration,
+        chainIdGetter?: Observable<string>,
+        dynamicPropsGetter?: Observable<DynamicGlobalProperties>,
+    ): Observable<Transaction> {
+        return this.core.prepareTransaction(operations, expiration, chainIdGetter, dynamicPropsGetter);
     }
 
     /**

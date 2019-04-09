@@ -86,7 +86,12 @@ export class DCoreSdk {
         }
     }
 
-    public prepareTransaction(operations: BaseOperation[], transactionExpiration: Duration): Observable<Transaction> {
+    public prepareTransaction(
+        operations: BaseOperation[],
+        transactionExpiration: Duration,
+        chainIdGetter = this.request(new GetChainId()),
+        dynamicPropsGetter = this.request(new GetDynamicGlobalProps()),
+    ): Observable<Transaction> {
         const [withoutFees, withFees] = operations.reduce((res: [BaseOperation[], BaseOperation[]], el) => {
             res[_.isNil(el.fee) ? 0 : 1].push(el);
             return res;
@@ -105,14 +110,14 @@ export class DCoreSdk {
         }
         let chainId: Observable<string>;
         if (_.isNil(this.chainId)) {
-            chainId = this.request(new GetChainId()).pipe(tap((id) => this.chainId = id));
+            chainId = chainIdGetter.pipe(tap((id) => this.chainId = id));
         } else {
             chainId = scalar(this.chainId);
         }
         return chainId.pipe(flatMap((id) =>
             zip(
                 finalOps,
-                this.request(new GetDynamicGlobalProps()),
+                dynamicPropsGetter,
             ).pipe(map(([ops, props]) => new Transaction(new BlockData(props, transactionExpiration), ops, id)))),
         );
     }
