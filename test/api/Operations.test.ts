@@ -5,6 +5,7 @@ import * as moment from "moment";
 import "reflect-metadata";
 import { create } from "rxjs-spy";
 import { Spy } from "rxjs-spy/spy-interface";
+import { flatMap } from "rxjs/operators";
 import { DCoreApi } from "../../src/DCoreApi";
 import { DCoreSdk } from "../../src/DCoreSdk";
 import { AssetAmount } from "../../src/models/AssetAmount";
@@ -25,7 +26,7 @@ describe("blockchain based operations", () => {
 
     before(() => {
         spy = create();
-        // spy.log(/^API\w+/);
+        spy.log();
         api = DCoreSdk.createForWebSocket(() => new WebSocket(Helpers.STAGE_WS));
     });
 
@@ -67,6 +68,15 @@ describe("blockchain based operations", () => {
 
         api.broadcastApi.broadcastWithCallback(Helpers.KEY, [op])
             .subscribe((value) => value.should.be.instanceOf(TransactionConfirmation), (error) => done(error), () => done());
+    });
+
+    it("should make a transfer broadcast", (done: (arg?: any) => void) => {
+        api.accountApi.createTransfer(
+            Helpers.CREDENTIALS,
+            Helpers.ACCOUNT2,
+            new AssetAmount(1),
+        ).pipe(flatMap((op) => api.broadcastApi.broadcast(Helpers.PRIVATE, [op])))
+            .subscribe((value: void) => undefined, (error) => done(error), () => done());
     });
 
     it("should make a transfer high level", (done: (arg?: any) => void) => {
