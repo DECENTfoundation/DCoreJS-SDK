@@ -26,7 +26,7 @@ describe("blockchain based operations", () => {
 
     before(() => {
         spy = create();
-        spy.log();
+        // spy.log();
         api = DCoreSdk.createForWebSocket(() => new WebSocket(Helpers.STAGE_WS));
     });
 
