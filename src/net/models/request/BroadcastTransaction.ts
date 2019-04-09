@@ -3,9 +3,8 @@ import { Transaction } from "../../../models/Transaction";
 import { assertThrow } from "../../../utils/Utils";
 import { ApiGroup } from "../ApiGroup";
 import { BaseRequest } from "./BaseRequest";
-import { Void } from "./Void";
 
-export class BroadcastTransaction extends BaseRequest<void> implements Void {
+export class BroadcastTransaction extends BaseRequest<void> {
     public void: any = {};
 
     constructor(
@@ -15,6 +14,8 @@ export class BroadcastTransaction extends BaseRequest<void> implements Void {
             ApiGroup.Broadcast,
             "broadcast_transaction",
             [transaction],
+            undefined,
+            true,
         );
         assertThrow(!_.isEmpty(transaction.signatures), () => "transaction not signed, forgot to call .withSignature(key) ?");
     }

@@ -26,7 +26,7 @@ describe("blockchain based operations", () => {
 
     before(() => {
         spy = create();
-        // spy.log();
+        // spy.log(/^API\w+/);
         api = DCoreSdk.createForWebSocket(() => new WebSocket(Helpers.STAGE_WS));
     });
 
@@ -70,15 +70,6 @@ describe("blockchain based operations", () => {
             .subscribe((value) => value.should.be.instanceOf(TransactionConfirmation), (error) => done(error), () => done());
     });
 
-    it("should make a transfer broadcast", (done: (arg?: any) => void) => {
-        api.accountApi.createTransfer(
-            Helpers.CREDENTIALS,
-            Helpers.ACCOUNT2,
-            new AssetAmount(1),
-        ).pipe(flatMap((op) => api.broadcastApi.broadcast(Helpers.PRIVATE, [op])))
-            .subscribe((value: void) => undefined, (error) => done(error), () => done());
-    });
-
     it("should make a transfer high level", (done: (arg?: any) => void) => {
         api.accountApi.transfer(
             Helpers.CREDENTIALS,
@@ -86,6 +77,15 @@ describe("blockchain based operations", () => {
             new AssetAmount(1),
         )
             .subscribe((value) => value.should.be.instanceOf(TransactionConfirmation), (error) => done(error), () => done());
+    });
+
+    it("should make a transfer broadcast", (done: (arg?: any) => void) => {
+        api.accountApi.createTransfer(
+            Helpers.CREDENTIALS,
+            Helpers.ACCOUNT2,
+            new AssetAmount(1),
+        ).pipe(flatMap((op) => api.broadcastApi.broadcast(Helpers.PRIVATE, [op])))
+            .subscribe((value: void) => undefined, (error) => done(error), () => done());
     });
 
     it("should make a transfer to content", (done: (arg?: any) => void) => {

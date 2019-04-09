@@ -1,8 +1,7 @@
 import { ApiGroup } from "../ApiGroup";
 import { BaseRequest } from "./BaseRequest";
-import { Void } from "./Void";
 
-export class CancelAllSubscriptions extends BaseRequest<void> implements Void {
+export class CancelAllSubscriptions extends BaseRequest<void> {
     public void: any = {};
 
     constructor() {
@@ -10,6 +9,8 @@ export class CancelAllSubscriptions extends BaseRequest<void> implements Void {
             ApiGroup.Database,
             "cancel_all_subscriptions",
             [],
+            undefined,
+            true,
         );
     }
 }

@@ -11,7 +11,6 @@ import { DCoreError } from "../../models/error/DCoreError";
 import { ObjectNotFoundError } from "../../models/error/ObjectNotFoundError";
 import { ObjectCheckOf } from "../../utils/ObjectCheckOf";
 import { BaseRequest } from "../models/request/BaseRequest";
-import { Void } from "../models/request/Void";
 import { WithCallback } from "../models/request/WithCallback";
 import { CallbackResponse } from "../models/response/CallbackResponse";
 import { DataResponse } from "../models/response/DataResponse";
@@ -68,7 +67,7 @@ export class RxWebSocket {
     }
 
     private static checkEmpty(value: object, request: BaseRequest<any>): void {
-        if ((_.isNil(value) && !ObjectCheckOf<Void>(request, "void")) || (_.isArray(value) && value.length === 1 && value[0] === null)) {
+        if (!request.allowNull && (_.isNil(value) || (_.isArray(value) && value.length === 1 && value[0] === null))) {
             throw new ObjectNotFoundError(request.description());
         }
     }
