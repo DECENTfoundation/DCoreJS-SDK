@@ -66,8 +66,9 @@ export class RxWebSocket {
         throw Error(`not supported response: ${value}`);
     }
 
-    private static checkEmpty(value: object, request: BaseRequest<any>): void {
-        if (_.isNil(value) || (_.isArray(value) && value.length === 1 && value[0] === null)) {
+    private static checkEmpty(value: object, request: BaseRequest<any>, callbackId?: number): void {
+        if (_.isNil(callbackId)) { return; }
+        if (_.isNil(value) || (_.isArray(value) && value.length === 1 && value[0] === null )) {
             throw new ObjectNotFoundError(request.description());
         }
     }
@@ -171,7 +172,7 @@ export class RxWebSocket {
             ).pipe(
                 filter(([id, obj]: [number, object]) => id === (callbackId ? callbackId : callId)),
                 map(([id, obj]: [number, object]) => obj),
-                tap((obj: object) => RxWebSocket.checkEmpty(obj, request)),
+                tap((obj: object) => RxWebSocket.checkEmpty(obj, request, callbackId)),
                 map(request.transformer),
                 tag(`RxWebSocket_make_${request.method}`),
             );
