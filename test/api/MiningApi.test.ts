@@ -67,6 +67,11 @@ chai.use(chaiThings);
                 .subscribe((value) => value.should.include.one.instanceOf(Miner), (error) => done(error), () => done());
         });
 
+        it("should return miner accounts to name", (done: (arg?: any) => void) => {
+            api.getMinersToName()
+                .subscribe((value) => value.get("init0")!.should.be.instanceOf(Miner), (error) => done(error), () => done());
+        });
+
         it("should return new reward for block", (done: (arg?: any) => void) => {
             api.getNewAssetPerBlock()
                 .subscribe((value) => value.should.be.instanceOf(Long), (error) => done(error), () => done());

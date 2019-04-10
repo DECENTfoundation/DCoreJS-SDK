@@ -1,14 +1,20 @@
 import { Observable } from "rxjs";
+import { flatMap, map } from "rxjs/operators";
+import { Credentials } from "../crypto/Credentials";
 import { DCoreApi } from "../DCoreApi";
 import { ChainObject } from "../models/ChainObject";
 import { ObjectType } from "../models/ObjectType";
+import { PurchaseContentOperation } from "../models/operation/PurchaseContentOperation";
 import { SearchPurchasesOrder } from "../models/order/SearchPurchasesOrder";
+import { PubKey } from "../models/PubKey";
 import { Purchase } from "../models/Purchase";
+import { TransactionConfirmation } from "../models/TransactionConfirmation";
 import { GetBuyingByUri } from "../net/models/request/GetBuyingByUri";
 import { GetHistoryBuyingsByConsumer } from "../net/models/request/GetHistoryBuyingsByConsumer";
 import { GetOpenBuyings } from "../net/models/request/GetOpenBuyings";
 import { GetOpenBuyingsByConsumer } from "../net/models/request/GetOpenBuyingsByConsumer";
 import { GetOpenBuyingsByUri } from "../net/models/request/GetOpenBuyingsByUri";
+import { RestoreEncryptionKey } from "../net/models/request/RestoreEncryptionKey";
 import { SearchBuyings } from "../net/models/request/SearchBuyings";
 import { SearchFeedback } from "../net/models/request/SearchFeedback";
 import { BaseApi } from "./BaseApi";
@@ -112,5 +118,43 @@ export class PurchaseApi extends BaseApi {
         startId: ChainObject = ObjectType.Null.genericId(),
     ): Observable<Purchase[]> {
         return this.request(new SearchFeedback(uri, user, startId, count));
+    }
+
+    /**
+     * Restores encryption key from key parts stored in buying object.
+     *
+     * @param elGamalPrivate the private El Gamal key
+     * @param purchaseId the purchase object
+     *
+     * @return AES encryption key
+     */
+    public restoreEncryptionKey(elGamalPrivate: PubKey, purchaseId: ChainObject): Observable<string> {
+        return this.request(new RestoreEncryptionKey(elGamalPrivate, purchaseId));
+    }
+
+    /**
+     * Create a purchase content operation.
+     *
+     * @param credentials account credentials
+     * @param content uri of the content or object id of the content, 2.13.*
+     *
+     * @return a purchase content operation
+     */
+    public createPurchaseOperation(credentials: Credentials, content: ChainObject | string): Observable<PurchaseContentOperation> {
+        return this.api.contentApi.get(content).pipe(map((c) => PurchaseContentOperation.create(credentials, c)));
+    }
+
+    /**
+     * Purchase a content.
+     *
+     * @param credentials account credentials
+     * @param content uri of the content or object id of the content, 2.13.*
+     *
+     * @return a transaction confirmation
+     */
+    public purchase(credentials: Credentials, content: ChainObject | string): Observable<TransactionConfirmation> {
+        return this.createPurchaseOperation(credentials, content).pipe(
+            flatMap((op) => this.api.broadcastApi.broadcastWithCallback(credentials.keyPair, [op])),
+        );
     }
 }

@@ -7,6 +7,7 @@ import { create } from "rxjs-spy";
 import { Spy } from "rxjs-spy/spy-interface";
 import { DCoreApi } from "../../src/DCoreApi";
 import { DCoreSdk } from "../../src/DCoreSdk";
+import { ChainObject } from "../../src/models/ChainObject";
 import { Message } from "../../src/models/Message";
 import { MessageResponse } from "../../src/models/MessageResponse";
 import { SendMessageOperation } from "../../src/models/operation/SendMessageOperation";
@@ -46,6 +47,21 @@ chai.use(chaiThings);
         it("should return all messages", (done: (arg?: any) => void) => {
             api.getAll(Helpers.ACCOUNT)
                 .subscribe((value) => value.should.all.be.instanceOf(Message), (error) => done(error), () => done());
+        });
+
+        it("should return all decrypted messages", (done: (arg?: any) => void) => {
+            api.getAllDecrypted(Helpers.CREDENTIALS, ChainObject.parse("1.2.19"), Helpers.ACCOUNT)
+                .subscribe((value) => value.map((msg) => msg.encrypted).should.all.be.eq(false), (error) => done(error), () => done());
+        });
+
+        it("should return all decrypted messages for sender", (done: (arg?: any) => void) => {
+            api.getAllDecryptedForSender(Helpers.CREDENTIALS)
+                .subscribe((value) => value.map((msg) => msg.encrypted).should.all.be.eq(false), (error) => done(error), () => done());
+        });
+
+        it("should return all decrypted messages for receiver", (done: (arg?: any) => void) => {
+            api.getAllDecryptedForReceiver(Helpers.CREDENTIALS)
+                .subscribe((value) => value.map((msg) => msg.encrypted).should.all.be.eq(false), (error) => done(error), () => done());
         });
 
         it("should return message operation", (done: (arg?: any) => void) => {

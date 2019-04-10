@@ -15,8 +15,9 @@ export class PurchaseContentOperation extends BaseOperation {
         return new PurchaseContentOperation(
             content.uri,
             credentials.account,
-            content.regionPrice(),
+            content.regionalPrice().price,
             content.uri.startsWith("ipfs") ? new PubKey(ElGamal.createPublic(credentials.keyPair).toString()) : new PubKey(),
+            content.regionalPrice().region,
         );
     }
 
@@ -48,7 +49,7 @@ export class PurchaseContentOperation extends BaseOperation {
      * @param publicElGamal public el gamal key
      * @param regionCode region code of the consumer
      */
-    constructor(uri: string, consumer: ChainObject, price: AssetAmount, publicElGamal: PubKey, regionCode: Regions = Regions.All) {
+    constructor(uri: string, consumer: ChainObject, price: AssetAmount, publicElGamal: PubKey, regionCode: Regions = 204) {
         super(OperationType.RequestToBuy);
         this.uri = uri;
         this.consumer = consumer;
