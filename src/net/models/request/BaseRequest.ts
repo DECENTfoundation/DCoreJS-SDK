@@ -21,11 +21,15 @@ export abstract class BaseRequest<T> {
     @Expose({ name: "id" })
     public id: number = 1;
 
-    protected constructor(apiGroup: ApiGroup, method: string, params: any[], transformer: (value: any) => T = (value) => value as T) {
+    @Exclude()
+    public allowNull: boolean;
+
+    protected constructor(apiGroup: ApiGroup, method: string, params: any[], transformer: (value: any) => T = (value) => value as T, allowNull: boolean = false) {
         this.apiGroup = apiGroup;
         this.transformer = transformer;
         this.method = method;
         this.params = params;
+        this.allowNull = allowNull;
     }
 
     public description(): string {

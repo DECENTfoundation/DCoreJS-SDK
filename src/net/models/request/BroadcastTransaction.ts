@@ -5,6 +5,8 @@ import { ApiGroup } from "../ApiGroup";
 import { BaseRequest } from "./BaseRequest";
 
 export class BroadcastTransaction extends BaseRequest<void> {
+    public void: any = {};
+
     constructor(
         transaction: Transaction,
     ) {
@@ -12,8 +14,9 @@ export class BroadcastTransaction extends BaseRequest<void> {
             ApiGroup.Broadcast,
             "broadcast_transaction",
             [transaction],
+            undefined,
+            true,
         );
-
         assertThrow(!_.isEmpty(transaction.signatures), () => "transaction not signed, forgot to call .withSignature(key) ?");
     }
 }
