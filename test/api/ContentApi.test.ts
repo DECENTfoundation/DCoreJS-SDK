@@ -7,7 +7,7 @@ import { create } from "rxjs-spy";
 import { Spy } from "rxjs-spy/spy-interface";
 import { DCoreApi } from "../../src/DCoreApi";
 import { DCoreSdk } from "../../src/DCoreSdk";
-import { AssetAmount, ChainObject, Content, ContentKeys, TransferOperation } from "../../src/models";
+import { AssetAmount, ChainObject, Content, ContentKeys, PurchaseContentOperation, TransferOperation } from "../../src/models";
 import { Helpers } from "../Helpers";
 
 chai.should();
@@ -69,6 +69,11 @@ chai.use(chaiThings);
         it("should create transfer operation", (done: (arg?: any) => void) => {
             api.createTransfer(Helpers.CREDENTIALS, ChainObject.parse("2.13.74"), new AssetAmount(1))
                 .subscribe((value) => value.should.be.instanceOf(TransferOperation), (error) => done(error), () => done());
+        });
+
+        it("should create purchase operation", (done: (arg?: any) => void) => {
+            api.createPurchaseOperation(Helpers.CREDENTIALS, ChainObject.parse("2.13.1"))
+                .subscribe((value) => value.should.be.instanceOf(PurchaseContentOperation), (error) => done(error), () => done());
         });
 
     });

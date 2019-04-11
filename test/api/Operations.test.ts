@@ -86,7 +86,7 @@ describe("blockchain based operations", () => {
     });
 
     it.skip("should make a purchase", (done: (arg?: any) => void) => {
-        api.purchaseApi.purchase(
+        api.contentApi.purchase(
             Helpers.CREDENTIALS,
             "2.13.1",
         ).subscribe((value) => value.should.be.instanceOf(TransactionConfirmation), (error) => done(error), () => done());

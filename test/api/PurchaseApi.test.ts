@@ -8,7 +8,7 @@ import { Spy } from "rxjs-spy/spy-interface";
 import { ElGamal } from "../../src/crypto/ElGamal";
 import { DCoreApi } from "../../src/DCoreApi";
 import { DCoreSdk } from "../../src/DCoreSdk";
-import { ChainObject, PubKey, Purchase, PurchaseContentOperation } from "../../src/models";
+import { ChainObject, PubKey, Purchase } from "../../src/models";
 import { Helpers } from "../Helpers";
 
 chai.should();
@@ -75,11 +75,6 @@ chai.use(chaiThings);
         it("should restore enc keys", (done: (arg?: any) => void) => {
             api.restoreEncryptionKey(new PubKey(ElGamal.createPrivate(Helpers.KEY).toString()), ChainObject.parse("2.12.56"))
                 .subscribe((value) => value.should.be.a("string"), (error) => done(error), () => done());
-        });
-
-        it("should create purchase operation", (done: (arg?: any) => void) => {
-            api.createPurchaseOperation(Helpers.CREDENTIALS, ChainObject.parse("2.13.1"))
-                .subscribe((value) => value.should.be.instanceOf(PurchaseContentOperation), (error) => done(error), () => done());
         });
 
     });

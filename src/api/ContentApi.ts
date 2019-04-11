@@ -11,6 +11,7 @@ import { ContentKeys } from "../models/ContentKeys";
 import { ApplicationType, CategoryType, contentType } from "../models/ContentTypes";
 import { Memo } from "../models/Memo";
 import { ObjectType } from "../models/ObjectType";
+import { PurchaseContentOperation } from "../models/operation/PurchaseContentOperation";
 import { TransferOperation } from "../models/operation/TransferOperation";
 import { SearchContentOrder } from "../models/order/SearchContentOrder";
 import { REGION_NAMES, Regions } from "../models/Regions";
@@ -146,6 +147,32 @@ export class ContentApi extends BaseApi {
         fee?: AssetAmount,
     ): Observable<TransactionConfirmation> {
         return this.createTransfer(credentials, id, amount, memo, fee).pipe(
+            flatMap((op) => this.api.broadcastApi.broadcastWithCallback(credentials.keyPair, [op])),
+        );
+    }
+
+    /**
+     * Create a purchase content operation.
+     *
+     * @param credentials account credentials
+     * @param content uri of the content or object id of the content, 2.13.*
+     *
+     * @return a purchase content operation
+     */
+    public createPurchaseOperation(credentials: Credentials, content: ChainObject | string): Observable<PurchaseContentOperation> {
+        return this.api.contentApi.get(content).pipe(map((c) => PurchaseContentOperation.create(credentials, c)));
+    }
+
+    /**
+     * Purchase a content.
+     *
+     * @param credentials account credentials
+     * @param content uri of the content or object id of the content, 2.13.*
+     *
+     * @return a transaction confirmation
+     */
+    public purchase(credentials: Credentials, content: ChainObject | string): Observable<TransactionConfirmation> {
+        return this.createPurchaseOperation(credentials, content).pipe(
             flatMap((op) => this.api.broadcastApi.broadcastWithCallback(credentials.keyPair, [op])),
         );
     }
