@@ -3,13 +3,16 @@ DCore SDK for JS
 
 Set of APIs for accessing the DCore Blockchain.
 
-Download
+Requirements
+--------
+
+- [add](https://add.org)
+
+
+Installation
 --------
 
 `npm install --save git+ssh://git@github.com/DECENTfoundation/DCoreJS-SDK`
-
-Setup
---------
 
 Make sure you import `reflect-metadata` in an entry class to your application, eg. `import "reflect-metadata";`
 
@@ -59,5 +62,9 @@ const disposable = api.accountApi.transfer(credentials, "public-account-10", new
     .subscribe((confirmation) => console.log(confirmation.id));
 ```
 
-References
+Official DCore SDKs for other platforms
 ----------
+
+- [iOS/Swift](https://github.com/DECENTfoundation/DCoreSwift-SDK)
+- [Android/Java/Kotlin](https://github.com/DECENTfoundation/DCoreKt-SDK)
+- [PHP](https://github.com/DECENTfoundation/DCorePHP-SDK)
