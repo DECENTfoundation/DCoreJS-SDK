@@ -49,7 +49,7 @@ export class PurchaseContentOperation extends BaseOperation {
      * @param publicElGamal public el gamal key
      * @param regionCode region code of the consumer
      */
-    constructor(uri: string, consumer: ChainObject, price: AssetAmount, publicElGamal: PubKey, regionCode: Regions = 204) {
+    constructor(uri: string, consumer: ChainObject, price: AssetAmount, publicElGamal: PubKey, regionCode: Regions = Regions.All) {
         super(OperationType.RequestToBuy);
         this.uri = uri;
         this.consumer = consumer;
