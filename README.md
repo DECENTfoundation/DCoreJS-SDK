@@ -1,7 +1,9 @@
 DCore SDK for JS
 ================
 
-Set of APIs for accessing the DCore Blockchain.
+Set of APIs for accessing the DCore Blockchain.<br>
+If you are looking for other platforms you can find info [below](#official-dcore-sdks-for-other-platforms).
+
 
 Requirements
 --------
