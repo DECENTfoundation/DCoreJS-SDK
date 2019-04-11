@@ -1,6 +1,7 @@
 import * as chai from "chai";
 import * as chaiThings from "chai-things";
 import * as WebSocket from "isomorphic-ws";
+import * as _ from "lodash";
 import "mocha";
 import "reflect-metadata";
 import { create } from "rxjs-spy";
@@ -58,6 +59,16 @@ chai.use(chaiThings);
                     .subscribe((value) => value[0].symbol.should.match(/^C.*/) && value.length.should.eq(20), (error) => done(error), () => done());
             });
 
+            it("should list all assets with monitored", (done: (arg?: any) => void) => {
+                api.listAll(true)
+                    .subscribe((value) => value.some((asset) => !_.isNil(asset.monitoredAssetOpts)).should.be.true, (error) => done(error), () => done());
+            });
+
+            it("should list all assets without monitored", (done: (arg?: any) => void) => {
+                api.listAll()
+                    .subscribe((value) => value.every((asset) => _.isNil(asset.monitoredAssetOpts)).should.be.true, (error) => done(error), () => done());
+            });
+
             it("should return assets by name lookup", (done: (arg?: any) => void) => {
                 api.getAllByName(["USD", "CAD"])
                     .subscribe((value) => value.should.all.be.instanceOf(Asset), (error) => done(error), () => done());
@@ -73,15 +84,14 @@ chai.use(chaiThings);
                     .subscribe((value) => value.should.all.be.instanceOf(AssetData), (error) => done(error), () => done());
             });
 
-            // no data on testnet
-            it.skip("should convert asset to DCT", (done: (arg?: any) => void) => {
-                api.convertToDCT(ChainObject.parse("1.3.10"), 3)
-                    .subscribe((value) => undefined, (error) => done(error), () => done());
+            it("should convert asset to DCT", (done: (arg?: any) => void) => {
+                api.convertToDCT(ChainObject.parse("1.3.33"), 3000000)
+                    .subscribe((value) => value.amount.toNumber().should.be.eq(3), (error) => done(error), () => done());
             });
 
-            it.skip("should convert asset from DCT", (done: (arg?: any) => void) => {
-                api.convertFromDCT(ChainObject.parse("1.3.10"), 3)
-                    .subscribe((value) => undefined, (error) => done(error), () => done());
+            it("should convert asset from DCT", (done: (arg?: any) => void) => {
+                api.convertFromDCT(ChainObject.parse("1.3.33"), 3)
+                    .subscribe((value) => value.amount.toNumber().should.be.eq(3000000), (error) => done(error), () => done());
             });
 
         });

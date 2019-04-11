@@ -16,13 +16,13 @@ export class AccountCreateOperation extends BaseOperation {
      * @param registrar existing account id used to register the new account
      * @param name new account name
      * @param address new account public key address
-     * @param feeAssetId fee asset id for the operation, if left undefined the fee will be computed in DCT asset.
+     * @param fee {@link AssetAmount} fee for the operation or asset id, if left undefined the fee will be computed in DCT asset.
      * When set, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough
      *
      * @return a transaction confirmation
      */
-    public static create(registrar: ChainObject, name: string, address: Address, feeAssetId?: ChainObject) {
-        return new this(registrar, name, new Authority(address), new Authority(address), new Options(address), feeAssetId);
+    public static create(registrar: ChainObject, name: string, address: Address, fee?: AssetAmount | ChainObject) {
+        return new this(registrar, name, new Authority(address), new Authority(address), new Options(address), fee);
     }
 
     @ChainObjectToClass

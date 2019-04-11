@@ -11,14 +11,14 @@ import { BaseOperation } from "./BaseOperation";
 import { OperationType } from "./OperationType";
 
 export class PurchaseContentOperation extends BaseOperation {
-    public static create(credentials: Credentials, content: Content, feeAssetId?: ChainObject): PurchaseContentOperation {
+    public static create(credentials: Credentials, content: Content, fee?: AssetAmount | ChainObject): PurchaseContentOperation {
         return new PurchaseContentOperation(
             content.uri,
             credentials.account,
             content.regionalPrice().price,
             content.uri.startsWith("ipfs") ? new PubKey(ElGamal.createPublic(credentials.keyPair).toString()) : new PubKey(),
             content.regionalPrice().region,
-            feeAssetId,
+            fee,
         );
     }
 

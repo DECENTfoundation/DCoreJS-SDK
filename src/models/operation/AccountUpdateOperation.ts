@@ -10,10 +10,11 @@ import { BaseOperation } from "./BaseOperation";
 import { OperationType } from "./OperationType";
 
 export class AccountUpdateOperation extends BaseOperation {
-    public static create(account: Account, votes: VoteId[], feeAssetId?: ChainObject) {
+
+    public static create(account: Account, votes: VoteId[], fee?: AssetAmount | ChainObject) {
         const options = account.options;
         options.votes = votes;
-        return new AccountUpdateOperation(account.id, undefined, undefined, options, feeAssetId);
+        return new AccountUpdateOperation(account.id, undefined, undefined, options, fee);
     }
 
     @ChainObjectToClass

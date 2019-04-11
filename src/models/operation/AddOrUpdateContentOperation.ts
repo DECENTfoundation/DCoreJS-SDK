@@ -32,7 +32,7 @@ export class AddOrUpdateContentOperation extends BaseOperation {
         price: RegionalPrice,
         expiration: Moment,
         synopsis: Synopsis,
-        fee?: AssetAmount,
+        fee?: AssetAmount | ChainObject,
     ): AddOrUpdateContentOperation {
         return new this(Long.fromNumber(1), author, coAuthors, uri, 0, [price],
             Utils.ripemd160(Buffer.from(uri)).toString("hex"), [], [], expiration, new AssetAmount(), serialize(synopsis), undefined, fee);

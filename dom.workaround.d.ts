@@ -1,3 +1,4 @@
+/* tslint:disable */
 /**
  * These are fake dom type definitions that rxjs depends on
  */
