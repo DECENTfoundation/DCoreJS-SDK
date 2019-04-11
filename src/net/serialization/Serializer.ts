@@ -15,6 +15,7 @@ import { AccountCreateOperation } from "../../models/operation/AccountCreateOper
 import { AccountUpdateOperation } from "../../models/operation/AccountUpdateOperation";
 import { AddOrUpdateContentOperation } from "../../models/operation/AddOrUpdateContentOperation";
 import { CustomOperation } from "../../models/operation/CustomOperation";
+import { LeaveRatingAndCommentOperation } from "../../models/operation/LeaveRatingAndCommentOperation";
 import { PurchaseContentOperation } from "../../models/operation/PurchaseContentOperation";
 import { RemoveContentOperation } from "../../models/operation/RemoveContentOperation";
 import { SendMessageOperation } from "../../models/operation/SendMessageOperation";
@@ -59,6 +60,7 @@ export class Serializer {
         this.adapters.set(AddOrUpdateContentOperation.name, this.addOrUpdateContentOperationAdapter);
         this.adapters.set(RemoveContentOperation.name, this.removeContentOperationAdapter);
         this.adapters.set(SendMessageOperation.name, this.customOperationAdapter);
+        this.adapters.set(LeaveRatingAndCommentOperation.name, this.rateAndCommentOperationAdapter);
     }
 
     public serialize(obj: any): Buffer {
@@ -263,7 +265,7 @@ export class Serializer {
         this.append(buffer, obj.keyParts);
         this.momentAdapter(buffer, obj.expiration);
         this.append(buffer, obj.publishingFee);
-        this.stringAdapter(buffer, obj.synopsis);
+        this.append(buffer, obj.synopsis);
         this.appendOptional(buffer, obj.custodyData);
     }
 
@@ -281,5 +283,14 @@ export class Serializer {
         this.append(buffer, obj.requiredAuths);
         buffer.writeUint16(obj.id);
         this.append(buffer, Buffer.from(obj.data, "hex"));
+    }
+
+    private rateAndCommentOperationAdapter = (buffer: ByteBuffer, obj: LeaveRatingAndCommentOperation) => {
+        buffer.writeByte(obj.type);
+        this.append(buffer, obj.fee);
+        this.append(buffer, obj.uri);
+        this.append(buffer, obj.consumer);
+        this.append(buffer, obj.comment);
+        buffer.writeUint64(obj.rating);
     }
 }

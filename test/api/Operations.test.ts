@@ -34,6 +34,7 @@ describe("blockchain based operations", () => {
         spy.teardown();
     });
 
+    // create fails on exist, update fails on expiration update
     it.skip("should add or update a content", (done: (arg?: any) => void) => {
         const op = AddOrUpdateContentOperation.create(
             Helpers.ACCOUNT,
@@ -48,6 +49,7 @@ describe("blockchain based operations", () => {
             .subscribe((value) => value.should.be.instanceOf(TransactionConfirmation), (error) => done(error), () => done());
     });
 
+    // already expired
     it.skip("should remove a content", (done: (arg?: any) => void) => {
         const op = new RemoveContentOperation(
             Helpers.ACCOUNT,
@@ -58,6 +60,7 @@ describe("blockchain based operations", () => {
             .subscribe((value) => value.should.be.instanceOf(TransactionConfirmation), (error) => done(error), () => done());
     });
 
+    // account exist
     it.skip("should create an account", (done: (arg?: any) => void) => {
         const op = AccountCreateOperation.create(
             Helpers.ACCOUNT,
@@ -97,6 +100,7 @@ describe("blockchain based operations", () => {
         ).subscribe((value) => value.should.be.instanceOf(TransactionConfirmation), (error) => done(error), () => done());
     });
 
+    // already purchased
     it.skip("should make a purchase", (done: (arg?: any) => void) => {
         api.contentApi.purchase(
             Helpers.CREDENTIALS,
@@ -122,6 +126,16 @@ describe("blockchain based operations", () => {
         api.messageApi.sendUnencrypted(
             Helpers.CREDENTIALS,
             [[Helpers.ACCOUNT2, "test message"]],
+        ).subscribe((value) => value.should.be.instanceOf(TransactionConfirmation), (error) => done(error), () => done());
+    });
+
+    // already commented
+    it.skip("should rate and comment a purchased content", (done: (arg?: any) => void) => {
+        api.purchaseApi.rateAndComment(
+            Helpers.CREDENTIALS,
+            "ipfs:QmWBoRBYuxzH5a8d3gssRbMS5scs6fqLKgapBfqVNUFUtZ",
+            4,
+            "hello comment",
         ).subscribe((value) => value.should.be.instanceOf(TransactionConfirmation), (error) => done(error), () => done());
     });
 

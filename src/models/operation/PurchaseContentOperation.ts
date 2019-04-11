@@ -52,7 +52,14 @@ export class PurchaseContentOperation extends BaseOperation {
      * @param fee {@link AssetAmount} fee for the operation or asset id, if left undefined the fee will be computed in DCT asset.
      * When set, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough
      */
-    constructor(uri: string, consumer: ChainObject, price: AssetAmount, publicElGamal: PubKey, regionCode: Regions = Regions.All, fee?: AssetAmount | ChainObject) {
+    constructor(
+        uri: string,
+        consumer: ChainObject,
+        price: AssetAmount,
+        publicElGamal: PubKey,
+        regionCode: Regions = Regions.All,
+        fee?: AssetAmount | ChainObject,
+    ) {
         super(OperationType.RequestToBuy);
         this.uri = uri;
         this.consumer = consumer;
