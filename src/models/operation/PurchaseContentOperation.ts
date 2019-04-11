@@ -11,13 +11,14 @@ import { BaseOperation } from "./BaseOperation";
 import { OperationType } from "./OperationType";
 
 export class PurchaseContentOperation extends BaseOperation {
-    public static create(credentials: Credentials, content: Content): PurchaseContentOperation {
+    public static create(credentials: Credentials, content: Content, feeAssetId?: ChainObject): PurchaseContentOperation {
         return new PurchaseContentOperation(
             content.uri,
             credentials.account,
             content.regionalPrice().price,
             content.uri.startsWith("ipfs") ? new PubKey(ElGamal.createPublic(credentials.keyPair).toString()) : new PubKey(),
             content.regionalPrice().region,
+            feeAssetId,
         );
     }
 
@@ -48,14 +49,20 @@ export class PurchaseContentOperation extends BaseOperation {
      * @param price price of content, can be equal to or higher then specified in content
      * @param publicElGamal public el gamal key
      * @param regionCode region code of the consumer
+     * @param fee {@link AssetAmount} fee for the operation or asset id, if left undefined the fee will be computed in DCT asset.
+     * When set, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough
      */
-    constructor(uri: string, consumer: ChainObject, price: AssetAmount, publicElGamal: PubKey, regionCode: Regions = Regions.All) {
+    constructor(uri: string, consumer: ChainObject, price: AssetAmount, publicElGamal: PubKey, regionCode: Regions = Regions.All, fee?: AssetAmount | ChainObject) {
         super(OperationType.RequestToBuy);
         this.uri = uri;
         this.consumer = consumer;
         this.price = price;
         this.publicElGamal = publicElGamal;
         this.regionCode = regionCode;
-        this.fee = new AssetAmount(); // fee for this OP is 0
+        if (fee instanceof AssetAmount) {
+            this.fee = fee;
+        } else {
+            this.feeAssetId = fee;
+        }
     }
 }
