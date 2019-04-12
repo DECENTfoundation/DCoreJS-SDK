@@ -1,6 +1,5 @@
 import { Expose } from "class-transformer";
-import { ChainObjectToClass, ChainObjectToPlain } from "../utils/TypeAdapters";
-import { ChainObject } from "./ChainObject";
+import { ApplicationType, CategoryType, contentType } from "./ContentTypes";
 
 export class Synopsis {
     @Expose({ name: "title" })
@@ -9,12 +8,17 @@ export class Synopsis {
     @Expose({ name: "description" })
     public description: string;
 
-    @ChainObjectToClass
-    @ChainObjectToPlain
     @Expose({ name: "content_type_id" })
-    public type: ChainObject;
+    public type: string;
 
-    constructor(title: string, description: string, type: ChainObject = ChainObject.parse("1.5.5")) {
+    /**
+     * Searchable content metadata
+     *
+     * @param title
+     * @param description
+     * @param type the application and content type to be filtered, use {@link contentType} method
+     */
+    constructor(title: string, description: string, type: string = contentType(ApplicationType.DecentCore, CategoryType.None)) {
         this.title = title;
         this.description = description;
         this.type = type;

@@ -1,4 +1,4 @@
-import { Expose } from "class-transformer";
+import { Expose, Type } from "class-transformer";
 import { Moment } from "moment";
 import { Address } from "../crypto/Address";
 import { AddressToClass, ChainObjectToClass, MomentToClass } from "../utils/TypeAdapters";
@@ -15,6 +15,7 @@ export class MessageResponse {
     @Expose({ name: "created" })
     public created: Moment;
 
+    @ChainObjectToClass
     @Expose({ name: "sender" })
     public sender: ChainObject;
 
@@ -22,6 +23,7 @@ export class MessageResponse {
     @Expose({ name: "sender_pubkey" })
     public senderAddress?: Address;
 
+    @Type(() => MessageReceiver)
     @Expose({ name: "receivers_data" })
     public receiversData: MessageReceiver[];
 

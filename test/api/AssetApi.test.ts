@@ -43,6 +43,11 @@ chai.use(chaiThings);
                     .subscribe((value) => value.should.include.one.instanceOf(Asset), (error) => done(error), () => done());
             });
 
+            it("should return asset", (done: (arg?: any) => void) => {
+                api.get(ChainObject.parse("1.3.10"))
+                    .subscribe((value) => value.should.be.instanceOf(Asset), (error) => done(error), () => done());
+            });
+
             it("should get real supply", (done: (arg?: any) => void) => {
                 api.getRealSupply()
                     .subscribe((value) => value.should.be.instanceOf(RealSupply), (error) => done(error), () => done());
@@ -58,9 +63,25 @@ chai.use(chaiThings);
                     .subscribe((value) => value.should.all.be.instanceOf(Asset), (error) => done(error), () => done());
             });
 
+            it("should return asset by name lookup", (done: (arg?: any) => void) => {
+                api.getByName("USD")
+                    .subscribe((value) => value.should.be.instanceOf(Asset), (error) => done(error), () => done());
+            });
+
             it("should return asset data", (done: (arg?: any) => void) => {
                 api.getAssetsData([ChainObject.parse("2.3.0")])
                     .subscribe((value) => value.should.all.be.instanceOf(AssetData), (error) => done(error), () => done());
+            });
+
+            // no data on testnet
+            it.skip("should convert asset to DCT", (done: (arg?: any) => void) => {
+                api.convertToDCT(ChainObject.parse("1.3.10"), 3)
+                    .subscribe((value) => undefined, (error) => done(error), () => done());
+            });
+
+            it.skip("should convert asset from DCT", (done: (arg?: any) => void) => {
+                api.convertFromDCT(ChainObject.parse("1.3.10"), 3)
+                    .subscribe((value) => undefined, (error) => done(error), () => done());
             });
 
         });

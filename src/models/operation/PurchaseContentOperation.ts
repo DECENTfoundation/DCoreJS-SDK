@@ -15,8 +15,9 @@ export class PurchaseContentOperation extends BaseOperation {
         return new PurchaseContentOperation(
             content.uri,
             credentials.account,
-            content.regionPrice(),
+            content.regionalPrice().price,
             content.uri.startsWith("ipfs") ? new PubKey(ElGamal.createPublic(credentials.keyPair).toString()) : new PubKey(),
+            content.regionalPrice().region,
         );
     }
 

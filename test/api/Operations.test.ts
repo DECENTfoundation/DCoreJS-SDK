@@ -5,7 +5,6 @@ import * as moment from "moment";
 import "reflect-metadata";
 import { create } from "rxjs-spy";
 import { Spy } from "rxjs-spy/spy-interface";
-import { flatMap } from "rxjs/operators";
 import { DCoreApi } from "../../src/DCoreApi";
 import { DCoreSdk } from "../../src/DCoreSdk";
 import { AssetAmount } from "../../src/models/AssetAmount";
@@ -70,22 +69,12 @@ describe("blockchain based operations", () => {
             .subscribe((value) => value.should.be.instanceOf(TransactionConfirmation), (error) => done(error), () => done());
     });
 
-    it("should make a transfer high level", (done: (arg?: any) => void) => {
+    it("should make a transfer", (done: (arg?: any) => void) => {
         api.accountApi.transfer(
             Helpers.CREDENTIALS,
             Helpers.ACCOUNT2,
             new AssetAmount(1),
-        )
-            .subscribe((value) => value.should.be.instanceOf(TransactionConfirmation), (error) => done(error), () => done());
-    });
-
-    it("should make a transfer broadcast", (done: (arg?: any) => void) => {
-        api.accountApi.createTransfer(
-            Helpers.CREDENTIALS,
-            Helpers.ACCOUNT2,
-            new AssetAmount(1),
-        ).pipe(flatMap((op) => api.broadcastApi.broadcast(Helpers.PRIVATE, [op])))
-            .subscribe((value: void) => undefined, (error) => done(error), () => done());
+        ).subscribe((value) => value.should.be.instanceOf(TransactionConfirmation), (error) => done(error), () => done());
     });
 
     it("should make a transfer to content", (done: (arg?: any) => void) => {
@@ -93,29 +82,35 @@ describe("blockchain based operations", () => {
             Helpers.CREDENTIALS,
             ChainObject.parse("2.13.3"),
             new AssetAmount(1),
-        )
-            .subscribe((value) => value.should.be.instanceOf(TransactionConfirmation), (error) => done(error), () => done());
+        ).subscribe((value) => value.should.be.instanceOf(TransactionConfirmation), (error) => done(error), () => done());
+    });
+
+    it.skip("should make a purchase", (done: (arg?: any) => void) => {
+        api.contentApi.purchase(
+            Helpers.CREDENTIALS,
+            "2.13.1",
+        ).subscribe((value) => value.should.be.instanceOf(TransactionConfirmation), (error) => done(error), () => done());
     });
 
     it("should vote", (done: (arg?: any) => void) => {
         api.miningApi.vote(
             Helpers.CREDENTIALS,
-            [ChainObject.parse("1.4.5")])
-            .subscribe((value) => value.should.be.instanceOf(TransactionConfirmation), (error) => done(error), () => done());
+            [ChainObject.parse("1.4.5")],
+        ).subscribe((value) => value.should.be.instanceOf(TransactionConfirmation), (error) => done(error), () => done());
     });
 
     it("should send a message", (done: (arg?: any) => void) => {
         api.messageApi.send(
             Helpers.CREDENTIALS,
-            [[Helpers.ACCOUNT2, "test message"]])
-            .subscribe((value) => value.should.be.instanceOf(TransactionConfirmation), (error) => done(error), () => done());
+            [[Helpers.ACCOUNT2, "test message"]],
+        ).subscribe((value) => value.should.be.instanceOf(TransactionConfirmation), (error) => done(error), () => done());
     });
 
     it("should send a message unencrypted", (done: (arg?: any) => void) => {
         api.messageApi.sendUnencrypted(
             Helpers.CREDENTIALS,
-            [[Helpers.ACCOUNT2, "test message"]])
-            .subscribe((value) => value.should.be.instanceOf(TransactionConfirmation), (error) => done(error), () => done());
+            [[Helpers.ACCOUNT2, "test message"]],
+        ).subscribe((value) => value.should.be.instanceOf(TransactionConfirmation), (error) => done(error), () => done());
     });
 
 });

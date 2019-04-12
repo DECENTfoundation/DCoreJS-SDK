@@ -34,7 +34,7 @@ export class BalanceApi extends BaseApi {
      * Get account balances.
      *
      * @param account account name or account object id, 1.2.*
-     * @param assets object ids of the assets, 1.3.*
+     * @param assets object ids of the assets, 1.3.*, or undefined to get all nonzero
      *
      * @return list of amounts for different assets
      */
@@ -58,15 +58,22 @@ export class BalanceApi extends BaseApi {
      * Get account balance with asset.
      *
      * @param account account name or account object id, 1.2.*
-     * @param assetSymbols asset symbols, eg. DCT
+     * @param assetSymbols asset symbols, eg. DCT, or undefined to get all nonzero
      *
      * @return a list of pairs of assets to amounts
      */
-    public getAllWithAsset(account: AccountRef, assetSymbols: string[]): Observable<AssetWithAmount[]> {
-        return this.api.assetApi.getAllByName(assetSymbols)
-            .pipe(flatMap((assets) => this.getAll(account, assets.map((asset) => asset.id))
-                .pipe(map((balances) => this.createTuple(assets, balances))),
-            ));
+    public getAllWithAsset(account: AccountRef, assetSymbols?: string[]): Observable<AssetWithAmount[]> {
+        if (assetSymbols) {
+            return this.api.assetApi.getAllByName(assetSymbols)
+                .pipe(flatMap((assets) => this.getAll(account, assets.map((asset) => asset.id))
+                    .pipe(map((balances) => this.createTuple(assets, balances))),
+                ));
+        } else {
+            return this.getAll(account)
+                .pipe(flatMap((balances) => this.api.assetApi.getAll(balances.map((asset) => asset.assetId))
+                    .pipe(map((assets) => this.createTuple(assets, balances))),
+                ));
+        }
     }
 
     /**

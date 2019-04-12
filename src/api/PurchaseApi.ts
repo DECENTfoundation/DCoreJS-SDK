@@ -3,12 +3,14 @@ import { DCoreApi } from "../DCoreApi";
 import { ChainObject } from "../models/ChainObject";
 import { ObjectType } from "../models/ObjectType";
 import { SearchPurchasesOrder } from "../models/order/SearchPurchasesOrder";
+import { PubKey } from "../models/PubKey";
 import { Purchase } from "../models/Purchase";
 import { GetBuyingByUri } from "../net/models/request/GetBuyingByUri";
 import { GetHistoryBuyingsByConsumer } from "../net/models/request/GetHistoryBuyingsByConsumer";
 import { GetOpenBuyings } from "../net/models/request/GetOpenBuyings";
 import { GetOpenBuyingsByConsumer } from "../net/models/request/GetOpenBuyingsByConsumer";
 import { GetOpenBuyingsByUri } from "../net/models/request/GetOpenBuyingsByUri";
+import { RestoreEncryptionKey } from "../net/models/request/RestoreEncryptionKey";
 import { SearchBuyings } from "../net/models/request/SearchBuyings";
 import { SearchFeedback } from "../net/models/request/SearchFeedback";
 import { BaseApi } from "./BaseApi";
@@ -112,5 +114,17 @@ export class PurchaseApi extends BaseApi {
         startId: ChainObject = ObjectType.Null.genericId(),
     ): Observable<Purchase[]> {
         return this.request(new SearchFeedback(uri, user, startId, count));
+    }
+
+    /**
+     * Restores encryption key from key parts stored in buying object.
+     *
+     * @param elGamalPrivate the private El Gamal key
+     * @param purchaseId the purchase object
+     *
+     * @return AES encryption key
+     */
+    public restoreEncryptionKey(elGamalPrivate: PubKey, purchaseId: ChainObject): Observable<string> {
+        return this.request(new RestoreEncryptionKey(elGamalPrivate, purchaseId));
     }
 }

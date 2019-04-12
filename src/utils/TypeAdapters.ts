@@ -40,7 +40,7 @@ export function MomentToPlain(target: any, key: string): void {
 }
 
 export function AddressToClass(target: any, key: string): void {
-    return Transform((value: string) => Address.parse(value), { toClassOnly: true })(target, key);
+    return Transform((value: string) => Address.parseCheckNull(value), { toClassOnly: true })(target, key);
 }
 
 export function AddressToPlain(target: any, key: string): void {

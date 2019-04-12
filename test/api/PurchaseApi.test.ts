@@ -5,9 +5,10 @@ import "mocha";
 import "reflect-metadata";
 import { create } from "rxjs-spy";
 import { Spy } from "rxjs-spy/spy-interface";
+import { ElGamal } from "../../src/crypto/ElGamal";
 import { DCoreApi } from "../../src/DCoreApi";
 import { DCoreSdk } from "../../src/DCoreSdk";
-import { Purchase } from "../../src/models";
+import { ChainObject, PubKey, Purchase } from "../../src/models";
 import { Helpers } from "../Helpers";
 
 chai.should();
@@ -47,7 +48,7 @@ chai.use(chaiThings);
         });
 
         it("should return all open purchases by uri", (done: (arg?: any) => void) => {
-            api.getAllOpenByUri("http://alax.io/?scheme=alax%3A%2F%2F1%2F1&version=b711dc9b-3627-4f37-93f3-6f6f3137bcca")
+            api.getAllOpenByUri("ipfs:QmWBoRBYuxzH5a8d3gssRbMS5scs6fqLKgapBfqVNUFUtZ")
                 .subscribe((value) => value.should.all.be.instanceOf(Purchase), (error) => done(error), () => done());
         });
 
@@ -56,20 +57,24 @@ chai.use(chaiThings);
                 .subscribe((value) => value.should.all.be.instanceOf(Purchase), (error) => done(error), () => done());
         });
 
-        // no data
-        it.skip("should return purchase by URI", (done: (arg?: any) => void) => {
-            api.get(Helpers.ACCOUNT2, "http://alax.io/?scheme=alax%3A%2F%2F1%2F1&version=b711dc9b-3627-4f37-93f3-6f6f3137bcca")
+        it("should return purchase by URI", (done: (arg?: any) => void) => {
+            api.get(Helpers.ACCOUNT, "ipfs:QmWBoRBYuxzH5a8d3gssRbMS5scs6fqLKgapBfqVNUFUtZ")
                 .subscribe((value) => value.should.be.instanceOf(Purchase), (error) => done(error), () => done());
         });
 
         it("should return purchases by search", (done: (arg?: any) => void) => {
-            api.findAll(Helpers.ACCOUNT2, "")
+            api.findAll(Helpers.ACCOUNT, "")
                 .subscribe((value) => value.should.all.be.instanceOf(Purchase), (error) => done(error), () => done());
         });
 
         it("should find purchases feedback", (done: (arg?: any) => void) => {
-            api.findAllForFeedback("http://alax.io/?scheme=alax%3A%2F%2F1%2F1&version=b711dc9b-3627-4f37-93f3-6f6f3137bcca")
+            api.findAllForFeedback("ipfs:QmWBoRBYuxzH5a8d3gssRbMS5scs6fqLKgapBfqVNUFUtZ")
                 .subscribe((value) => value.should.all.be.instanceOf(Purchase), (error) => done(error), () => done());
+        });
+
+        it("should restore enc keys", (done: (arg?: any) => void) => {
+            api.restoreEncryptionKey(new PubKey(ElGamal.createPrivate(Helpers.KEY).toString()), ChainObject.parse("2.12.56"))
+                .subscribe((value) => value.should.be.a("string"), (error) => done(error), () => done());
         });
 
     });

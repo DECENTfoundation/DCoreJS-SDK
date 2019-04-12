@@ -1,14 +1,15 @@
 import * as chai from "chai";
 import * as chaiThings from "chai-things";
 import * as WebSocket from "isomorphic-ws";
+import * as Long from "long";
 import "mocha";
 import "reflect-metadata";
 import { create } from "rxjs-spy";
 import { Spy } from "rxjs-spy/spy-interface";
-import { flatMap } from "rxjs/operators";
+import { flatMap, map } from "rxjs/operators";
 import { DCoreApi } from "../../src/DCoreApi";
 import { DCoreSdk } from "../../src/DCoreSdk";
-import { AssetAmount, ObjectNotFoundError, ProcessedTransaction, Transaction, TransferOperation } from "../../src/models";
+import { AssetAmount, ObjectNotFoundError, ProcessedTransaction, Transaction, TransactionConfirmation, TransferOperation } from "../../src/models";
 import { Helpers } from "../Helpers";
 
 chai.should();
@@ -48,24 +49,39 @@ chai.use(chaiThings);
         });
         // will not work after `expiration: '2018-07-26T11:27:07'` since the transaction will be removed from recent poo
         it("should return recent transaction", (done: (arg?: any) => void) => {
-            api.getRecent("95914695085f08b84218e39cdea6f910f380e469")
+            api.getRecent("abb2c83679c2217bd20bed723f3a9ffa8653a953")
                 .subscribe(undefined, (error) => {
                     error.should.be.instanceOf(ObjectNotFoundError);
                     done();
                 }, () => done());
         });
 
-        it.skip("should return transaction by id", (done: (arg?: any) => void) => {
-            api.getById("95914695085f08b84218e39cdea6f910f380e469")
+        it("should return transaction by id", (done: (arg?: any) => void) => {
+            api.getById("abb2c83679c2217bd20bed723f3a9ffa8653a953")
                 .subscribe((value) => value.should.be.instanceOf(ProcessedTransaction), (error) => done(error), () => done());
         });
 
-        it.skip("should return transaction", (done: (arg?: any) => void) => {
-            api.get(1370282, 0)
+        it("should return transaction", (done: (arg?: any) => void) => {
+            api.get(446532, 0)
                 .subscribe((value) => value.should.be.instanceOf(ProcessedTransaction), (error) => done(error), () => done());
         });
 
-        it("should create transaction", (done: (arg?: any) => void) => {
+        it("should return transaction by confirmation", (done: (arg?: any) => void) => {
+            api.get(446532, 0).pipe(
+                map((trx) => {
+                    const tc = new TransactionConfirmation();
+                    tc.blockNum = Long.fromNumber(446532);
+                    tc.transaction = trx;
+                    tc.trxNum = Long.ZERO;
+                    tc.id = "abb2c83679c2217bd20bed723f3a9ffa8653a953";
+                    return tc;
+                }),
+                flatMap((tc) => api.getByConfirmation(tc)),
+            )
+                .subscribe((value) => value.should.be.instanceOf(ProcessedTransaction), (error) => done(error), () => done());
+        });
+
+        it("should get transaction hex", (done: (arg?: any) => void) => {
             api.createTransaction([new TransferOperation(Helpers.ACCOUNT, Helpers.ACCOUNT2, new AssetAmount(10))]).pipe(
                 flatMap((trx) => api.getHexDump(trx)),
             )

@@ -26,7 +26,7 @@ export class RpcService {
                     if (!_.isNil(response.error)) {
                         throw new DCoreError(response.error);
                     }
-                    if (_.isNil(response.result) || (_.isArray(response.result) && response.result.length === 1 && response.result[0] === null)) {
+                    if (!request.allowNull && (_.isNil(response.result) || (_.isArray(response.result) && response.result.length === 1 && response.result[0] === null))) {
                         throw new ObjectNotFoundError(request.description());
                     }
                     return request.transformer(response.result);
