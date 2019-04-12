@@ -17,6 +17,7 @@ import { MessagePayloadReceiver } from "../../../src/models/MessagePayloadReceiv
 import { AccountCreateOperation } from "../../../src/models/operation/AccountCreateOperation";
 import { AccountUpdateOperation } from "../../../src/models/operation/AccountUpdateOperation";
 import { AddOrUpdateContentOperation } from "../../../src/models/operation/AddOrUpdateContentOperation";
+import { LeaveRatingAndCommentOperation } from "../../../src/models/operation/LeaveRatingAndCommentOperation";
 import { PurchaseContentOperation } from "../../../src/models/operation/PurchaseContentOperation";
 import { RemoveContentOperation } from "../../../src/models/operation/RemoveContentOperation";
 import { SendMessageOperation } from "../../../src/models/operation/SendMessageOperation";
@@ -189,6 +190,17 @@ describe("serialization test suite", () => {
         const p = new MessagePayload(ChainObject.parse("1.2.34"), [pr], key.publicAddress);
         const op = new SendMessageOperation(serialize(p), ChainObject.parse("1.2.34"));
         op.fee = new AssetAmount(500002);
+
+        serializer.serialize(op).toString("hex").should.be.eq(expected);
+    });
+
+    it("should serialize rate and comment operation", () => {
+        // tslint:disable-next-line:max-line-length
+        const expected = "1600000000000000000033697066733a516d57426f52425975787a48356138643367737352624d53357363733666714c4b676170426671564e554655745a1b07636f6d6d656e740100000000000000";
+
+        const op = new LeaveRatingAndCommentOperation(
+            "ipfs:QmWBoRBYuxzH5a8d3gssRbMS5scs6fqLKgapBfqVNUFUtZ", Helpers.ACCOUNT, 1, "comment", new AssetAmount(0),
+        );
 
         serializer.serialize(op).toString("hex").should.be.eq(expected);
     });

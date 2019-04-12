@@ -9,6 +9,7 @@ import { ElGamal } from "../../src/crypto/ElGamal";
 import { DCoreApi } from "../../src/DCoreApi";
 import { DCoreSdk } from "../../src/DCoreSdk";
 import { ChainObject, PubKey, Purchase } from "../../src/models";
+import { LeaveRatingAndCommentOperation } from "../../src/models/operation/LeaveRatingAndCommentOperation";
 import { Helpers } from "../Helpers";
 
 chai.should();
@@ -75,6 +76,11 @@ chai.use(chaiThings);
         it("should restore enc keys", (done: (arg?: any) => void) => {
             api.restoreEncryptionKey(new PubKey(ElGamal.createPrivate(Helpers.KEY).toString()), ChainObject.parse("2.12.56"))
                 .subscribe((value) => value.should.be.a("string"), (error) => done(error), () => done());
+        });
+
+        it("should create rate and comment operation", (done: (arg?: any) => void) => {
+            api.createRateAndCommentOperation("ipfs:QmWBoRBYuxzH5a8d3gssRbMS5scs6fqLKgapBfqVNUFUtZ", Helpers.ACCOUNT, 1, "comment")
+                .subscribe((value) => value.should.be.instanceOf(LeaveRatingAndCommentOperation), (error) => done(error), () => done());
         });
 
     });
