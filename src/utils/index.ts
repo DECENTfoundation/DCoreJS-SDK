@@ -1,5 +1,5 @@
 // created from "create-ts-index"
 
 export * from "./ObjectCheckOf";
-export * from "./TypeAdapters";
+export * from "../net/adapter/TypeAdapters";
 export * from "./Utils";

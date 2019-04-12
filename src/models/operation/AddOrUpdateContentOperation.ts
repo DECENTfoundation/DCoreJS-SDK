@@ -12,7 +12,7 @@ import {
     LongToPlain,
     MomentToClass,
     MomentToPlain,
-} from "../../utils/TypeAdapters";
+} from "../../net/adapter/TypeAdapters";
 import { Utils } from "../../utils/Utils";
 import { AssetAmount } from "../AssetAmount";
 import { ChainObject } from "../ChainObject";

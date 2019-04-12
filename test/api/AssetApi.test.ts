@@ -40,8 +40,8 @@ chai.use(chaiThings);
             });
 
             it("should return assets", (done: (arg?: any) => void) => {
-                api.getAll([ChainObject.parse("1.3.10")])
-                    .subscribe((value) => value.should.include.one.instanceOf(Asset), (error) => done(error), () => done());
+                api.getAll([ChainObject.parse("1.3.10"), ChainObject.parse("1.3.33")])
+                    .subscribe((value) => value.should.all.be.instanceOf(Asset), (error) => done(error), () => done());
             });
 
             it("should return asset", (done: (arg?: any) => void) => {

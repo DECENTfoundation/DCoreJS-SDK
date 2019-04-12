@@ -1,5 +1,5 @@
 import { Expose, Type } from "class-transformer";
-import { ChainObjectToClass, ChainObjectToPlain } from "../../utils/TypeAdapters";
+import { ChainObjectToClass, ChainObjectToPlain } from "../../net/adapter/TypeAdapters";
 import { Account } from "../Account";
 import { AssetAmount } from "../AssetAmount";
 import { Authority } from "../Authority";

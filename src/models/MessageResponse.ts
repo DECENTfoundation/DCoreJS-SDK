@@ -1,7 +1,7 @@
 import { Expose, Type } from "class-transformer";
 import { Moment } from "moment";
 import { Address } from "../crypto/Address";
-import { AddressToClass, ChainObjectToClass, MomentToClass } from "../utils/TypeAdapters";
+import { AddressToClass, ChainObjectToClass, MomentToClass } from "../net/adapter/TypeAdapters";
 import { ChainObject } from "./ChainObject";
 import { MessageReceiver } from "./MessageReceiver";
 

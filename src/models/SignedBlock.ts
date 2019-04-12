@@ -1,6 +1,6 @@
 import { Expose, Type } from "class-transformer";
 import { Moment } from "moment";
-import { ChainObjectToClass, MomentToClass } from "../utils/TypeAdapters";
+import { ChainObjectToClass, MomentToClass } from "../net/adapter/TypeAdapters";
 import { ChainObject } from "./ChainObject";
 import { ProcessedTransaction } from "./ProcessedTransaction";
 

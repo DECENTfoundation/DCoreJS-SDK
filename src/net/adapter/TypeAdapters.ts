@@ -3,8 +3,8 @@ import * as _ from "lodash";
 import * as Long from "long";
 import * as moment from "moment";
 import { Moment } from "moment";
-import { Address } from "../crypto/Address";
-import { ChainObject } from "../models/ChainObject";
+import { Address } from "../../crypto/Address";
+import { ChainObject } from "../../models/ChainObject";
 
 export function ChainObjectToClass(target: any, key: string): void {
     return Transform((value: string) => ChainObject.parse(value), { toClassOnly: true })(target, key);

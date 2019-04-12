@@ -86,7 +86,7 @@ export class RxWebSocket {
     private webSocketAsync?: AsyncSubject<WebSocketContract>;
     private messages: Subject<object | Error> = new Subject();
 
-    private events: Observable<string> = Observable.create((emitter: Subscriber<string>) => {
+    private events: Observable<any> = new Observable((emitter: Subscriber<string>) => {
         const socket = this.webSocketFactory();
         socket.onopen = () => {
             this.webSocketAsync!.next(socket);

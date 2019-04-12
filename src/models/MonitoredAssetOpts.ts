@@ -1,7 +1,7 @@
 import { Expose, Type } from "class-transformer";
 import * as Long from "long";
 import { Moment } from "moment";
-import { LongToClass, MomentToClass } from "../utils/TypeAdapters";
+import { LongToClass, MomentToClass } from "../net/adapter/TypeAdapters";
 import { CurrentFeed } from "./CurrentFeed";
 
 export class MonitoredAssetOpts {

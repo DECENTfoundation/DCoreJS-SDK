@@ -7,6 +7,7 @@ import { tag } from "rxjs-spy/operators";
 import { scalar } from "rxjs/internal/observable/scalar";
 import { flatMap, map, tap } from "rxjs/operators";
 import { DCoreApi } from "./DCoreApi";
+import { DCoreConstants } from "./DCoreConstants";
 import { Asset } from "./models/Asset";
 import { AssetAmount } from "./models/AssetAmount";
 import { BlockData } from "./models/BlockData";
@@ -93,13 +94,22 @@ export class DCoreSdk {
         }, [[], []]);
         let finalOps: Observable<BaseOperation[]>;
         if (withoutFees.length > 0) {
-            finalOps = this.request(new GetRequiredFees(operations)).pipe(
-                map((fees) => withoutFees.map((op, idx) => {
-                    op.fee = fees[idx];
-                    return op;
-                })),
-                map((ops) => ops.concat(withFees)),
-            );
+            const forId = withoutFees.reduce((res: Map<string, BaseOperation[]>, el) => {
+                const feeAssetId = (el.feeAssetId ? el.feeAssetId : DCoreConstants.DCT_ASSET_ID).objectId;
+                if (!res.has(feeAssetId)) {
+                    res.set(feeAssetId, []);
+                }
+                res.get(feeAssetId)!.push(el);
+                return res;
+            }, new Map());
+            const feeRequests = Array.from(forId.entries()).map(([feeId, ops]) =>
+                this.request(new GetRequiredFees(ops, ChainObject.parse(feeId))).pipe(
+                    map((fees) => ops.map((op, idx) => {
+                        op.fee = fees[idx];
+                        return op;
+                    })),
+                ));
+            finalOps = zip(...feeRequests).pipe(map((ops) => _.flatten(ops).concat(withFees)));
         } else {
             finalOps = scalar(withFees);
         }

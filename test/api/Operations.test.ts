@@ -77,6 +77,18 @@ describe("blockchain based operations", () => {
         ).subscribe((value) => value.should.be.instanceOf(TransactionConfirmation), (error) => done(error), () => done());
     });
 
+    // todo no token balance, fails, wait for asset issue operation then fix
+    it.skip("should make a transfer with fee", (done: (arg?: any) => void) => {
+        api.accountApi.transfer(
+            Helpers.CREDENTIALS,
+            Helpers.ACCOUNT2,
+            new AssetAmount(1),
+            undefined,
+            undefined,
+            ChainObject.parse("1.3.33"),
+        ).subscribe((value) => value.transaction.operations[0].fee!.assetId.objectId.should.be.eq("1.3.33"), (error) => done(error), () => done());
+    });
+
     it("should make a transfer to content", (done: (arg?: any) => void) => {
         api.contentApi.transfer(
             Helpers.CREDENTIALS,

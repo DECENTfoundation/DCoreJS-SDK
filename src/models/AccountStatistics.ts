@@ -1,6 +1,6 @@
 import { Expose } from "class-transformer";
 import * as Long from "long";
-import { ChainObjectToClass, LongToClass } from "../utils/TypeAdapters";
+import { ChainObjectToClass, LongToClass } from "../net/adapter/TypeAdapters";
 import { ChainObject } from "./ChainObject";
 
 export class AccountStatistics {
