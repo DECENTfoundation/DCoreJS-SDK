@@ -3,7 +3,7 @@ import * as _ from "lodash/fp";
 import * as Long from "long";
 import { Address } from "../crypto/Address";
 import { ECKeyPair } from "../crypto/ECKeyPair";
-import { AddressToClass, AddressToPlain, LongToClass, LongToPlain } from "../utils/TypeAdapters";
+import { AddressToClass, AddressToPlain, LongToClass, LongToPlain } from "../net/adapter/TypeAdapters";
 import { Utils } from "../utils/Utils";
 
 export class Memo {

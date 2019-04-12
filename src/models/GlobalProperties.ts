@@ -1,6 +1,6 @@
 import { Expose, Type } from "class-transformer";
 import * as Long from "long";
-import { ChainObjectArrayToClass, ChainObjectToClass, LongToClass } from "../utils/TypeAdapters";
+import { ChainObjectArrayToClass, ChainObjectToClass, LongToClass } from "../net/adapter/TypeAdapters";
 import { ChainObject } from "./ChainObject";
 import { GlobalParameters } from "./GlobalParameters";
 

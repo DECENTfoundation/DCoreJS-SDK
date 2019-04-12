@@ -1,7 +1,7 @@
 import { Expose } from "class-transformer";
 import * as Long from "long";
 import { DCoreConstants } from "../DCoreConstants";
-import { ChainObjectToClass, ChainObjectToPlain, LongToClass, LongToPlain } from "../utils/TypeAdapters";
+import { ChainObjectToClass, ChainObjectToPlain, LongToClass, LongToPlain } from "../net/adapter/TypeAdapters";
 import { assertThrow } from "../utils/Utils";
 import { ChainObject } from "./ChainObject";
 import { ObjectType } from "./ObjectType";

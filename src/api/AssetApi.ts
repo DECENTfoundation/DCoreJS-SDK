@@ -1,7 +1,9 @@
 import { Decimal } from "decimal.js";
+import * as _ from "lodash";
 import * as Long from "long";
 import { Observable } from "rxjs";
-import { map } from "rxjs/operators";
+import { scalar } from "rxjs/internal/observable/scalar";
+import { flatMap, map } from "rxjs/operators";
 import { DCoreApi } from "../DCoreApi";
 import { Asset } from "../models/Asset";
 import { AssetAmount } from "../models/AssetAmount";
@@ -64,6 +66,11 @@ export class AssetApi extends BaseApi {
         return this.api.request(new ListAssets(lowerBound, limit));
     }
 
+    public listAll(includeMonitored: boolean = false): Observable<Asset[]> {
+        return includeMonitored ? this.pageAll("") : this.pageAll("")
+            .pipe(map((assets) => assets.filter((asset) => _.isNil(asset.monitoredAssetOpts))));
+    }
+
     /**
      * Get asset by symbol
      *
@@ -123,4 +130,16 @@ export class AssetApi extends BaseApi {
         );
     }
 
+    private pageAll(lowerBound: string): Observable<Asset[]> {
+        const limit = 100;
+        return this.listAllRelative(lowerBound, limit).pipe(
+            flatMap((prev) => {
+                if (prev.length < limit) {
+                    return scalar(prev);
+                } else {
+                    return this.pageAll(_.last(prev)!.symbol)
+                        .pipe(map((next) => _.concat(prev, _.drop(next, 1))));
+                }
+            }));
+    }
 }

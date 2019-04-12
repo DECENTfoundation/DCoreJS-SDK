@@ -7,7 +7,7 @@ import "mocha";
 import { Moment } from "moment";
 import "reflect-metadata";
 import { ChainObject } from "../../../src/models/ChainObject";
-import { ChainObjectToClass, ChainObjectToPlain, LongToClass, LongToPlain, MomentToClass, MomentToPlain } from "../../../src/utils/TypeAdapters";
+import { ChainObjectToClass, ChainObjectToPlain, LongToClass, LongToPlain, MomentToClass, MomentToPlain } from "../../../src/net/adapter/TypeAdapters";
 
 chai.should();
 chai.use(chaiThings);

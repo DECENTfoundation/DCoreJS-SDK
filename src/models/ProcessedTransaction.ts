@@ -1,7 +1,8 @@
 import { Expose } from "class-transformer";
 import * as Long from "long";
 import { Moment } from "moment";
-import { LongToClass, MomentToClass } from "../utils/TypeAdapters";
+import { OperationsToClass } from "../net/adapter/OperationAdapter";
+import { LongToClass, MomentToClass } from "../net/adapter/TypeAdapters";
 import { BaseOperation } from "./operation/BaseOperation";
 
 export class ProcessedTransaction {
@@ -11,6 +12,7 @@ export class ProcessedTransaction {
     @Expose({ name: "extensions" })
     public extensions: any[];
 
+    @OperationsToClass
     @Expose({ name: "operations" })
     public operations: BaseOperation[];
 

@@ -2,12 +2,13 @@ import { Expose, Type } from "class-transformer";
 import { Decimal } from "decimal.js";
 import * as Long from "long";
 import { DCoreConstants } from "../DCoreConstants";
-import { ChainObjectToClass } from "../utils/TypeAdapters";
+import { ChainObjectToClass } from "../net/adapter/TypeAdapters";
 import { assertThrow } from "../utils/Utils";
 import { AssetAmount } from "./AssetAmount";
 import { AssetOptions } from "./AssetOptions";
 import { ChainObject } from "./ChainObject";
 import { IllegalArgumentError } from "./error/IllegalArgumentError";
+import { MonitoredAssetOpts } from "./MonitoredAssetOpts";
 
 export class Asset {
 
@@ -27,6 +28,10 @@ export class Asset {
 
     @Expose({ name: "description" })
     public description: string;
+
+    @Type(() => MonitoredAssetOpts)
+    @Expose({ name: "monitored_asset_opts" })
+    public monitoredAssetOpts?: MonitoredAssetOpts;
 
     @Type(() => AssetOptions)
     @Expose({ name: "options" })

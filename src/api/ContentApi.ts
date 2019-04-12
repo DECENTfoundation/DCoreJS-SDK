@@ -113,7 +113,8 @@ export class ContentApi extends BaseApi {
      * @param id content id
      * @param amount amount to send with asset type
      * @param memo optional unencrypted message
-     * @param fee {@link AssetAmount} fee for the operation, if left undefined the fee will be computed in DCT asset
+     * @param feeAssetId fee asset id for the operation, if left undefined the fee will be computed in DCT asset.
+     * When set, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough
      *
      * @return a transfer operation
      */
@@ -122,9 +123,9 @@ export class ContentApi extends BaseApi {
         id: ChainObject,
         amount: AssetAmount,
         memo?: string,
-        fee?: AssetAmount,
+        feeAssetId?: AssetAmount,
     ): Observable<TransferOperation> {
-        return scalar(new TransferOperation(credentials.account, id, amount, _.isNil(memo) ? memo : Memo.createPublic(memo), fee));
+        return scalar(new TransferOperation(credentials.account, id, amount, _.isNil(memo) ? memo : Memo.createPublic(memo), feeAssetId));
     }
 
     /**
@@ -135,7 +136,8 @@ export class ContentApi extends BaseApi {
      * @param id content id
      * @param amount amount to send with asset type
      * @param memo optional unencrypted message
-     * @param fee {@link AssetAmount} fee for the operation, if left undefined the fee will be computed in DCT asset
+     * @param feeAssetId fee asset id for the operation, if left undefined the fee will be computed in DCT asset.
+     * When set, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough
      *
      * @return a transaction confirmation
      */
@@ -144,9 +146,9 @@ export class ContentApi extends BaseApi {
         id: ChainObject,
         amount: AssetAmount,
         memo?: string,
-        fee?: AssetAmount,
+        feeAssetId?: AssetAmount,
     ): Observable<TransactionConfirmation> {
-        return this.createTransfer(credentials, id, amount, memo, fee).pipe(
+        return this.createTransfer(credentials, id, amount, memo, feeAssetId).pipe(
             flatMap((op) => this.api.broadcastApi.broadcastWithCallback(credentials.keyPair, [op])),
         );
     }
@@ -156,11 +158,13 @@ export class ContentApi extends BaseApi {
      *
      * @param credentials account credentials
      * @param content uri of the content or object id of the content, 2.13.*
+     * @param feeAssetId fee asset id for the operation, if left undefined the fee will be computed in DCT asset.
+     * When set, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough
      *
      * @return a purchase content operation
      */
-    public createPurchaseOperation(credentials: Credentials, content: ChainObject | string): Observable<PurchaseContentOperation> {
-        return this.api.contentApi.get(content).pipe(map((c) => PurchaseContentOperation.create(credentials, c)));
+    public createPurchaseOperation(credentials: Credentials, content: ChainObject | string, feeAssetId?: ChainObject): Observable<PurchaseContentOperation> {
+        return this.api.contentApi.get(content).pipe(map((c) => PurchaseContentOperation.create(credentials, c, feeAssetId)));
     }
 
     /**
@@ -168,11 +172,13 @@ export class ContentApi extends BaseApi {
      *
      * @param credentials account credentials
      * @param content uri of the content or object id of the content, 2.13.*
+     * @param feeAssetId fee asset id for the operation, if left undefined the fee will be computed in DCT asset.
+     * When set, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough
      *
      * @return a transaction confirmation
      */
-    public purchase(credentials: Credentials, content: ChainObject | string): Observable<TransactionConfirmation> {
-        return this.createPurchaseOperation(credentials, content).pipe(
+    public purchase(credentials: Credentials, content: ChainObject | string, feeAssetId?: ChainObject): Observable<TransactionConfirmation> {
+        return this.createPurchaseOperation(credentials, content, feeAssetId).pipe(
             flatMap((op) => this.api.broadcastApi.broadcastWithCallback(credentials.keyPair, [op])),
         );
     }

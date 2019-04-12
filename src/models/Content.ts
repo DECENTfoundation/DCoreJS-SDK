@@ -1,7 +1,7 @@
 import { deserialize, Expose, Transform, Type } from "class-transformer";
 import * as Long from "long";
 import { Moment } from "moment";
-import { ChainObjectToClass, CoAuthorsToClass, LongToClass, MomentToClass } from "../utils/TypeAdapters";
+import { ChainObjectToClass, CoAuthorsToClass, LongToClass, MomentToClass } from "../net/adapter/TypeAdapters";
 import { AssetAmount } from "./AssetAmount";
 import { ChainObject } from "./ChainObject";
 import { PricePerRegion } from "./PricePerRegion";

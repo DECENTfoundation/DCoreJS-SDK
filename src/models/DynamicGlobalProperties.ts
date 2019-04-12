@@ -1,7 +1,7 @@
 import { Expose } from "class-transformer";
 import * as Long from "long";
 import { Moment } from "moment";
-import { ChainObjectToClass, LongToClass, MomentToClass } from "../utils/TypeAdapters";
+import { ChainObjectToClass, LongToClass, MomentToClass } from "../net/adapter/TypeAdapters";
 import { ChainObject } from "./ChainObject";
 
 export class DynamicGlobalProperties {

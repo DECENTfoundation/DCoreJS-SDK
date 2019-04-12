@@ -1,6 +1,6 @@
 import { Expose } from "class-transformer";
 import * as Long from "long";
-import { LongToClass } from "../utils/TypeAdapters";
+import { LongToClass } from "../net/adapter/TypeAdapters";
 
 export class MinerVotes {
 

@@ -1,7 +1,7 @@
 import { Expose, Transform } from "class-transformer";
 import * as Long from "long";
 import { Address } from "../crypto/Address";
-import { AddressToClass, ChainObjectToClass } from "../utils/TypeAdapters";
+import { AddressToClass, ChainObjectToClass } from "../net/adapter/TypeAdapters";
 import { ChainObject } from "./ChainObject";
 import { VoteId } from "./VoteId";
 

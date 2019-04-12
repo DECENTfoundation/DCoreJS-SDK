@@ -12,7 +12,7 @@ import {
     LongToPlain,
     MomentToClass,
     MomentToPlain,
-} from "../../utils/TypeAdapters";
+} from "../../net/adapter/TypeAdapters";
 import { Utils } from "../../utils/Utils";
 import { AssetAmount } from "../AssetAmount";
 import { ChainObject } from "../ChainObject";
@@ -32,7 +32,7 @@ export class AddOrUpdateContentOperation extends BaseOperation {
         price: RegionalPrice,
         expiration: Moment,
         synopsis: Synopsis,
-        fee?: AssetAmount,
+        fee?: AssetAmount | ChainObject,
     ): AddOrUpdateContentOperation {
         return new this(Long.fromNumber(1), author, coAuthors, uri, 0, [price],
             Utils.ripemd160(Buffer.from(uri)).toString("hex"), [], [], expiration, new AssetAmount(), serialize(synopsis), undefined, fee);
@@ -108,7 +108,8 @@ export class AddOrUpdateContentOperation extends BaseOperation {
      * @param publishingFee fee must be greater than the sum of seeders' publishing prices * number of days. Is paid by author
      * @param synopsis JSON formatted structure containing content information
      * @param custodyData if cd.n == 0 then no custody is submitted, and simplified verification is done.
-     * @param fee [AssetAmount] fee for the operation, if left [BaseOperation.FEE_UNSET] the fee will be computed in DCT asset
+     * @param fee {@link AssetAmount} fee for the operation or asset id, if left undefined the fee will be computed in DCT asset.
+     * When set, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough
      */
     constructor(
         size: Long,
@@ -124,7 +125,7 @@ export class AddOrUpdateContentOperation extends BaseOperation {
         publishingFee: AssetAmount,
         synopsis: string,
         custodyData?: CustodyData,
-        fee?: AssetAmount,
+        fee?: AssetAmount | ChainObject,
     ) {
         super(OperationType.ContentSubmit);
         this.size = size;
@@ -140,6 +141,10 @@ export class AddOrUpdateContentOperation extends BaseOperation {
         this.publishingFee = publishingFee;
         this.synopsis = synopsis;
         this.custodyData = custodyData;
-        this.fee = fee;
+        if (fee instanceof AssetAmount) {
+            this.fee = fee;
+        } else {
+            this.feeAssetId = fee;
+        }
     }
 }
