@@ -23,6 +23,8 @@ To enable debug logging you can use [`rxjs-spy`](https://www.npmjs.com/package/r
 Usage
 --------
 
+You can find example project with SDK usage [here](https://github.com/DECENTfoundation/DCore-SDK-Examples/tree/master/sdk-ts).
+
 Use `DCoreSdk` to initialize the API.
 The `DCoreApi` provides different groups of APIs for accessing the blockchain and default configuration values.
 
