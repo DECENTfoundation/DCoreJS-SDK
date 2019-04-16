@@ -40,6 +40,20 @@ export class ECKeyPair {
         return new ECKeyPair(random);
     }
 
+    /*
+    https://github.com/steemit/steem/issues/1944
+    bool public_key::is_canonical( const compact_signature& c ) {
+        return !(c.data[1] & 0x80)
+               && !(c.data[1] == 0 && !(c.data[2] & 0x80))
+               && !(c.data[33] & 0x80)
+               && !(c.data[33] == 0 && !(c.data[34] & 0x80));
+    }
+     */
+    public static checkCanonicalSignature(sigData: Buffer): boolean {
+        return sigData[1] < 0x80 && !(sigData[1] === 0 && sigData[2] < 0x80)
+            && sigData[33] < 0x80 && !(sigData[33] === 0 && sigData[34] < 0x80);
+    }
+
     private static VERSION: number = 0x80;
     private static COMPRESSED: number = 4;
     private static COMPACT: number = 27;
@@ -67,15 +81,7 @@ export class ECKeyPair {
         const sig = sign(Utils.hash256(data), this.privateKey);
         const head = Buffer.alloc(1, sig.recovery + ECKeyPair.COMPRESSED + ECKeyPair.COMPACT);
         const sigData = Buffer.concat([head, sig.signature]);
-        // tslint:disable:no-bitwise
-        if ((sigData[0] & 0x80) !== 0 || sigData[0] === 0 ||
-            (sigData[1] & 0x80) !== 0 ||
-            (sigData[32] & 0x80) !== 0 || sigData[32] === 0 ||
-            (sigData[33] & 0x80) !== 0) {
-            return;
-        } else {
-            return sigData.toString("hex");
-        }
+        return ECKeyPair.checkCanonicalSignature(sigData) ? sigData.toString("hex") : undefined;
     }
 
     public secret(recipient: Address, nonce: Long): Buffer {

@@ -69,13 +69,24 @@ describe("blockchain based operations", () => {
             .subscribe((value) => value.should.be.instanceOf(TransactionConfirmation), (error) => done(error), () => done());
     });
 
-    it("should make a transfer high level", (done: (arg?: any) => void) => {
+    it("should make a transfer", (done: (arg?: any) => void) => {
         api.accountApi.transfer(
             Helpers.CREDENTIALS,
             Helpers.ACCOUNT2,
             new AssetAmount(1),
-        )
-            .subscribe((value) => value.should.be.instanceOf(TransactionConfirmation), (error) => done(error), () => done());
+        ).subscribe((value) => value.should.be.instanceOf(TransactionConfirmation), (error) => done(error), () => done());
+    });
+
+    // todo no token balance, fails, wait for asset issue operation then fix
+    it.skip("should make a transfer with fee", (done: (arg?: any) => void) => {
+        api.accountApi.transfer(
+            Helpers.CREDENTIALS,
+            Helpers.ACCOUNT2,
+            new AssetAmount(1),
+            undefined,
+            undefined,
+            ChainObject.parse("1.3.33"),
+        ).subscribe((value) => value.transaction.operations[0].fee!.assetId.objectId.should.be.eq("1.3.33"), (error) => done(error), () => done());
     });
 
     it("should make a transfer to content", (done: (arg?: any) => void) => {
@@ -83,29 +94,35 @@ describe("blockchain based operations", () => {
             Helpers.CREDENTIALS,
             ChainObject.parse("2.13.3"),
             new AssetAmount(1),
-        )
-            .subscribe((value) => value.should.be.instanceOf(TransactionConfirmation), (error) => done(error), () => done());
+        ).subscribe((value) => value.should.be.instanceOf(TransactionConfirmation), (error) => done(error), () => done());
+    });
+
+    it.skip("should make a purchase", (done: (arg?: any) => void) => {
+        api.contentApi.purchase(
+            Helpers.CREDENTIALS,
+            "2.13.1",
+        ).subscribe((value) => value.should.be.instanceOf(TransactionConfirmation), (error) => done(error), () => done());
     });
 
     it("should vote", (done: (arg?: any) => void) => {
         api.miningApi.vote(
             Helpers.CREDENTIALS,
-            [ChainObject.parse("1.4.5")])
-            .subscribe((value) => value.should.be.instanceOf(TransactionConfirmation), (error) => done(error), () => done());
+            [ChainObject.parse("1.4.5")],
+        ).subscribe((value) => value.should.be.instanceOf(TransactionConfirmation), (error) => done(error), () => done());
     });
 
     it("should send a message", (done: (arg?: any) => void) => {
         api.messageApi.send(
             Helpers.CREDENTIALS,
-            [[Helpers.ACCOUNT2, "test message"]])
-            .subscribe((value) => value.should.be.instanceOf(TransactionConfirmation), (error) => done(error), () => done());
+            [[Helpers.ACCOUNT2, "test message"]],
+        ).subscribe((value) => value.should.be.instanceOf(TransactionConfirmation), (error) => done(error), () => done());
     });
 
     it("should send a message unencrypted", (done: (arg?: any) => void) => {
         api.messageApi.sendUnencrypted(
             Helpers.CREDENTIALS,
-            [[Helpers.ACCOUNT2, "test message"]])
-            .subscribe((value) => value.should.be.instanceOf(TransactionConfirmation), (error) => done(error), () => done());
+            [[Helpers.ACCOUNT2, "test message"]],
+        ).subscribe((value) => value.should.be.instanceOf(TransactionConfirmation), (error) => done(error), () => done());
     });
 
 });

@@ -210,7 +210,8 @@ export class AccountApi extends BaseApi {
      * @param amount amount to send with asset type
      * @param memo optional message
      * @param encrypted encrypted is visible only for sender and receiver, unencrypted is visible publicly
-     * @param fee {@link AssetAmount} fee for the operation, if left undefined the fee will be computed in DCT asset
+     * @param feeAssetId fee asset id for the operation, if left undefined the fee will be computed in DCT asset.
+     * When set, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough
      *
      * @return a transaction confirmation
      */
@@ -220,7 +221,7 @@ export class AccountApi extends BaseApi {
         amount: AssetAmount,
         memo?: string,
         encrypted: boolean = true,
-        fee?: AssetAmount,
+        feeAssetId?: ChainObject,
     ): Observable<TransferOperation> {
         if ((_.isNil(memo) || !encrypted) && (typeof account !== "string" || ChainObject.isValid(account))) {
             return scalar(new TransferOperation(
@@ -228,14 +229,14 @@ export class AccountApi extends BaseApi {
                 (typeof account === "string") ? ChainObject.parse(account) : account,
                 amount,
                 _.isNil(memo) ? memo : Memo.createPublic(memo),
-                fee));
+                feeAssetId));
         } else {
             return this.get(account).pipe(map((acc) => new TransferOperation(
                 credentials.account,
                 acc.id,
                 amount,
                 _.isNil(memo) ? memo : (encrypted ? Memo.createEncrypted(memo, credentials.keyPair, acc.primaryAddress) : Memo.createPublic(memo)),
-                fee,
+                feeAssetId,
             )));
         }
     }
@@ -248,6 +249,8 @@ export class AccountApi extends BaseApi {
      * @param amount amount to send with asset type
      * @param memo optional message
      * @param encrypted encrypted is visible only for sender and receiver, unencrypted is visible publicly
+     * @param feeAssetId fee asset id for the operation, if left undefined the fee will be computed in DCT asset.
+     * When set, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough
      *
      * @return a transaction confirmation
      */
@@ -257,9 +260,9 @@ export class AccountApi extends BaseApi {
         amount: AssetAmount,
         memo?: string,
         encrypted: boolean = true,
-        fee?: AssetAmount,
+        feeAssetId?: ChainObject,
     ): Observable<TransactionConfirmation> {
-        return this.createTransfer(credentials, account, amount, memo, encrypted, fee).pipe(flatMap((operation) =>
+        return this.createTransfer(credentials, account, amount, memo, encrypted, feeAssetId).pipe(flatMap((operation) =>
             this.api.broadcastApi.broadcastWithCallback(credentials.keyPair, [operation])));
     }
 
@@ -269,7 +272,8 @@ export class AccountApi extends BaseApi {
      * @param registrar credentials used to register the new account
      * @param name new account name
      * @param address new account public key address
-     * @param fee {@link AssetAmount} fee for the operation, if left undefined the fee will be computed in DCT asset
+     * @param feeAssetId fee asset id for the operation, if left undefined the fee will be computed in DCT asset.
+     * When set, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough
      *
      * @return a transaction confirmation
      */
@@ -277,10 +281,10 @@ export class AccountApi extends BaseApi {
         registrar: Credentials,
         name: string,
         address: Address,
-        fee?: AssetAmount,
+        feeAssetId?: ChainObject,
     ): Observable<TransactionConfirmation> {
         return this.api.broadcastApi.broadcastWithCallback(
-            registrar.keyPair, [AccountCreateOperation.create(registrar.account, name, address, fee)],
+            registrar.keyPair, [AccountCreateOperation.create(registrar.account, name, address, feeAssetId)],
         );
     }
 }

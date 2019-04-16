@@ -61,6 +61,7 @@ describe("serialization test suite", () => {
             // tslint:disable-next-line:max-line-length
             new PubKey("9108409595926410618584909688806123815350070889187120060090262698305971998526501009804554058758289676257609340949615914583138841456997698133991004991473670"),
             Regions.None,
+            new AssetAmount(0),
         );
 
         serializer.serialize(op).toString("hex").should.be.equal(expected);
@@ -77,6 +78,7 @@ describe("serialization test suite", () => {
             // tslint:disable-next-line:max-line-length
             new PubKey("5182545488318095000498180568539728214545472470974958338942426759510121851708530625921436777555517288139787965253547588340803542762268721656138876002028437"),
             Regions.None,
+            new AssetAmount(0),
         );
 
         serializer.serialize(op).toString("hex").should.be.equal(expected);
@@ -139,7 +141,7 @@ describe("serialization test suite", () => {
             "http://hello.io/world2",
             new RegionalPrice(new AssetAmount(1000), Regions.None),
             moment.utc("2019-05-28T13:32:34"),
-            new Synopsis("Game Title", "Description"),
+            new Synopsis("Game Title", "Description", "1.5.5"),
             new AssetAmount(),
         );
         op.hash = "2222222222222222222222222222222222222222";

@@ -5,10 +5,9 @@ import "mocha";
 import "reflect-metadata";
 import { create } from "rxjs-spy";
 import { Spy } from "rxjs-spy/spy-interface";
-import { ElGamal } from "../../src/crypto/ElGamal";
 import { DCoreApi } from "../../src/DCoreApi";
 import { DCoreSdk } from "../../src/DCoreSdk";
-import { AssetAmount, ChainObject, Content, ContentKeys, PubKey, PurchaseContentOperation, TransferOperation } from "../../src/models";
+import { AssetAmount, ChainObject, Content, ContentKeys, PurchaseContentOperation, TransferOperation } from "../../src/models";
 import { Helpers } from "../Helpers";
 
 chai.should();
@@ -20,8 +19,7 @@ chai.use(chaiThings);
 ] as Array<[string, DCoreApi]>).forEach(([name, sdk]) => {
     const api = sdk.contentApi;
 
-    // todo no content data on testnet
-    describe.skip(`content API test suite for ${name}`, () => {
+    describe(`content API test suite for ${name}`, () => {
         after(() => {
             // wtf.dump();
         });
@@ -39,17 +37,22 @@ chai.use(chaiThings);
         });
 
         it("should generate content keys", (done: (arg?: any) => void) => {
-            api.generateKeys([])
+            api.generateKeys([ChainObject.parse("1.2.17"), ChainObject.parse("1.2.18")])
                 .subscribe((value) => value.should.be.instanceOf(ContentKeys), (error) => done(error), () => done());
         });
 
         it("should return content by id", (done: (arg?: any) => void) => {
-            api.get(ChainObject.parse("2.13.74"))
+            api.get(ChainObject.parse("2.13.30"))
                 .subscribe((value) => value.should.be.instanceOf(Content), (error) => done(error), () => done());
         });
 
+        it("should return content by ids", (done: (arg?: any) => void) => {
+            api.getAll([ChainObject.parse("2.13.1"), ChainObject.parse("2.13.2")])
+                .subscribe((value) => value.should.all.be.instanceOf(Content), (error) => done(error), () => done());
+        });
+
         it("should return content by URI", (done: (arg?: any) => void) => {
-            api.get("http://alax.io/?scheme=alax%3A%2F%2F1%2F1&version=b711dc9b-3627-4f37-93f3-6f6f3137bcca")
+            api.get("ipfs:QmWBoRBYuxzH5a8d3gssRbMS5scs6fqLKgapBfqVNUFUtZ")
                 .subscribe((value) => value.should.be.instanceOf(Content), (error) => done(error), () => done());
         });
 
@@ -58,24 +61,19 @@ chai.use(chaiThings);
                 .subscribe((value) => value.should.all.be.instanceOf(ChainObject), (error) => done(error), () => done());
         });
 
-        it("should restore enc keys", (done: (arg?: any) => void) => {
-            api.restoreEncryptionKey(new PubKey(ElGamal.createPrivate(Helpers.KEY).toString()), ChainObject.parse("2.12.3"))
-                .subscribe((value) => value.should.be.a("string"), (error) => done(error), () => done());
-        });
-
         it("should find a content", (done: (arg?: any) => void) => {
             api.findAll("")
                 .subscribe((value) => value.should.all.be.instanceOf(Content), (error) => done(error), () => done());
         });
 
-        it("should create purchase operation", (done: (arg?: any) => void) => {
-            api.createPurchaseOperation(Helpers.CREDENTIALS, ChainObject.parse("2.13.74"))
-                .subscribe((value) => value.should.be.instanceOf(PurchaseContentOperation), (error) => done(error), () => done());
-        });
-
         it("should create transfer operation", (done: (arg?: any) => void) => {
             api.createTransfer(Helpers.CREDENTIALS, ChainObject.parse("2.13.74"), new AssetAmount(1))
                 .subscribe((value) => value.should.be.instanceOf(TransferOperation), (error) => done(error), () => done());
+        });
+
+        it("should create purchase operation", (done: (arg?: any) => void) => {
+            api.createPurchaseOperation(Helpers.CREDENTIALS, ChainObject.parse("2.13.1"))
+                .subscribe((value) => value.should.be.instanceOf(PurchaseContentOperation), (error) => done(error), () => done());
         });
 
     });

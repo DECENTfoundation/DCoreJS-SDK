@@ -1,6 +1,6 @@
 import { Expose, Type } from "class-transformer";
 import * as Long from "long";
-import { LongToClass } from "../utils/TypeAdapters";
+import { LongToClass } from "../net/adapter/TypeAdapters";
 import { FeeSchedule } from "./FeeSchedule";
 
 export class GlobalParameters {

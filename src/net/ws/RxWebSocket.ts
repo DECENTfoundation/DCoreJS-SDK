@@ -66,9 +66,8 @@ export class RxWebSocket {
         throw Error(`not supported response: ${value}`);
     }
 
-    private static checkEmpty(value: object, request: BaseRequest<any>, callbackId?: number): void {
-        if (_.isNil(callbackId)) { return; }
-        if (_.isNil(value) || (_.isArray(value) && value.length === 1 && value[0] === null )) {
+    private static checkEmpty(value: object, request: BaseRequest<any>): void {
+        if (!request.allowNull && (_.isNil(value) || (_.isArray(value) && value.length === 1 && value[0] === null))) {
             throw new ObjectNotFoundError(request.description());
         }
     }
@@ -87,7 +86,7 @@ export class RxWebSocket {
     private webSocketAsync?: AsyncSubject<WebSocketContract>;
     private messages: Subject<object | Error> = new Subject();
 
-    private events: Observable<string> = Observable.create((emitter: Subscriber<string>) => {
+    private events: Observable<any> = new Observable((emitter: Subscriber<string>) => {
         const socket = this.webSocketFactory();
         socket.onopen = () => {
             this.webSocketAsync!.next(socket);

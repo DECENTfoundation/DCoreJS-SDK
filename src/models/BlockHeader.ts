@@ -1,6 +1,6 @@
 import { Expose } from "class-transformer";
 import { Moment } from "moment";
-import { ChainObjectToClass, MomentToClass } from "../utils/TypeAdapters";
+import { ChainObjectToClass, MomentToClass } from "../net/adapter/TypeAdapters";
 import { ChainObject } from "./ChainObject";
 
 export class BlockHeader {

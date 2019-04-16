@@ -1,6 +1,6 @@
 import { Expose, Type } from "class-transformer";
 import { Address } from "../crypto/Address";
-import { AddressToClass, AddressToPlain, ChainObjectToClass, ChainObjectToPlain } from "../utils/TypeAdapters";
+import { AddressToClass, AddressToPlain, ChainObjectToClass, ChainObjectToPlain } from "../net/adapter/TypeAdapters";
 import { ChainObject } from "./ChainObject";
 import { Memo } from "./Memo";
 import { MessagePayloadReceiver } from "./MessagePayloadReceiver";

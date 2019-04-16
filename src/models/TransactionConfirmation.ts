@@ -1,6 +1,6 @@
-import { Expose } from "class-transformer";
+import { Expose, Type } from "class-transformer";
 import * as Long from "long";
-import { LongToClass } from "../utils/TypeAdapters";
+import { LongToClass } from "../net/adapter/TypeAdapters";
 import { ProcessedTransaction } from "./ProcessedTransaction";
 
 export class TransactionConfirmation {
@@ -15,6 +15,7 @@ export class TransactionConfirmation {
     @Expose({ name: "trx_num" })
     public trxNum: Long;
 
+    @Type(() => ProcessedTransaction)
     @Expose({ name: "trx" })
     public transaction: ProcessedTransaction;
 }

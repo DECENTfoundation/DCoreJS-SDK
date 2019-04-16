@@ -1,11 +1,11 @@
 import { deserialize, Expose, Transform, Type } from "class-transformer";
 import * as Long from "long";
 import { Moment } from "moment";
-import { ChainObjectToClass, CoAuthorsToClass, LongToClass, MomentToClass } from "../utils/TypeAdapters";
+import { ChainObjectToClass, CoAuthorsToClass, LongToClass, MomentToClass } from "../net/adapter/TypeAdapters";
 import { AssetAmount } from "./AssetAmount";
 import { ChainObject } from "./ChainObject";
 import { PricePerRegion } from "./PricePerRegion";
-import { Regions } from "./Regions";
+import { RegionalPrice } from "./RegionalPrice";
 import { Synopsis } from "./Synopsis";
 
 export class Content {
@@ -76,7 +76,18 @@ export class Content {
     @Expose({ name: "seeder_price" })
     public seederPrice: object[];
 
-    public regionPrice(region: number = Regions.All): AssetAmount {
-        return this.price.prices.has(region) ? this.price.prices.get(region)! : this.price.prices.values().next().value;
+    /**
+     * Get regional price for region or first defined
+     *
+     * @param forRegion
+     * @return regional price
+     */
+    public regionalPrice(forRegion?: number): RegionalPrice {
+        if (forRegion) {
+            return new RegionalPrice(this.price.prices.get(forRegion)!, forRegion);
+        } else {
+            const [region, price] = this.price.prices.entries().next().value;
+            return new RegionalPrice(price, region);
+        }
     }
 }

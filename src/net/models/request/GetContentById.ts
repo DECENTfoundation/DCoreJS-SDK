@@ -6,7 +6,7 @@ import { GetObjects } from "./GetObjects";
 
 export class GetContentById extends GetObjects<Content> {
     constructor(
-        contentIds: [ChainObject],
+        contentIds: ChainObject[],
     ) {
         super(
             Content,

@@ -1,7 +1,7 @@
 import { Expose } from "class-transformer";
 import * as Long from "long";
 import { Address } from "../crypto/Address";
-import { AddressToClass, AddressToPlain, ChainObjectToClass, ChainObjectToPlain, LongToClass, LongToPlain } from "../utils/TypeAdapters";
+import { AddressToClass, AddressToPlain, ChainObjectToClass, ChainObjectToPlain, LongToClass, LongToPlain } from "../net/adapter/TypeAdapters";
 import { ChainObject } from "./ChainObject";
 
 export class MessagePayloadReceiver {

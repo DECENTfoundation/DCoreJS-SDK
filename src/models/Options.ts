@@ -1,7 +1,7 @@
 import { Expose, Transform, Type } from "class-transformer";
 import { Address } from "../crypto/Address";
 import { DCoreConstants } from "../DCoreConstants";
-import { AddressToClass, AddressToPlain, ChainObjectToClass, ChainObjectToPlain } from "../utils/TypeAdapters";
+import { AddressToClass, AddressToPlain, ChainObjectToClass, ChainObjectToPlain } from "../net/adapter/TypeAdapters";
 import { AssetAmount } from "./AssetAmount";
 import { ChainObject } from "./ChainObject";
 import { VoteId } from "./VoteId";

@@ -20,7 +20,8 @@ chai.use(chaiThings);
 ] as Array<[string, DCoreApi]>).forEach(([name, sdk]) => {
     const api = sdk.subscriptionApi;
 
-    describe(`subscription API test suite for ${name}`, () => {
+        // no subscriptions
+    describe.skip(`subscription API test suite for ${name}`, () => {
         after(() => {
             // wtf.dump();
         });
@@ -37,9 +38,8 @@ chai.use(chaiThings);
             spy.teardown();
         });
 
-        // no subscription
-        it.skip("should return subscription by id", (done: (arg?: any) => void) => {
-            api.get(ChainObject.parse("2.15.6"))
+        it("should return subscription by id", (done: (arg?: any) => void) => {
+            api.get(ChainObject.parse("2.15.1"))
                 .subscribe((value) => value.should.be.instanceOf(Subscription), (error) => done(error), () => done());
         });
 

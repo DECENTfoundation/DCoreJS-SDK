@@ -101,12 +101,15 @@ export class MessageApi extends BaseApi {
      *
      * @param credentials sender account credentials
      * @param messages a list of pairs of receiver account id and message
+     * @param feeAssetId fee asset id for the operation, if left undefined the fee will be computed in DCT asset.
+     * When set, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough
      *
      * @return send message operation
      */
     public createMessageOperation(
         credentials: Credentials,
         messages: Array<[ChainObject, string]>,
+        feeAssetId?: ChainObject,
     ): Observable<SendMessageOperation> {
         return zip(
             this.api.accountApi.get(credentials.account),
@@ -118,7 +121,7 @@ export class MessageApi extends BaseApi {
                     return new MessagePayloadReceiver(r.id, memo.message, memo.to, memo.nonce);
                 });
                 const data = new MessagePayload(sender.id, payloadRecipients, sender.options.memoKey);
-                return new SendMessageOperation(serialize(data), credentials.account);
+                return new SendMessageOperation(serialize(data), credentials.account, undefined, feeAssetId);
             }),
         );
     }
@@ -128,14 +131,17 @@ export class MessageApi extends BaseApi {
      *
      * @param credentials sender account credentials
      * @param messages a list of pairs of receiver account id and message
+     * @param feeAssetId fee asset id for the operation, if left undefined the fee will be computed in DCT asset.
+     * When set, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough
      *
      * @return send message operation
      */
     public createMessageOperationUnencrypted(
         credentials: Credentials,
         messages: Array<[ChainObject, string]>,
+        feeAssetId?: ChainObject,
     ): Observable<SendMessageOperation> {
-        return scalar(new SendMessageOperation(serialize(MessagePayload.createUnencrypted(credentials.account, messages)), credentials.account));
+        return scalar(new SendMessageOperation(serialize(MessagePayload.createUnencrypted(credentials.account, messages)), credentials.account, undefined, feeAssetId));
     }
 
     /**
@@ -143,14 +149,17 @@ export class MessageApi extends BaseApi {
      *
      * @param credentials sender account credentials
      * @param messages a list of pairs of receiver account id and message
+     * @param feeAssetId fee asset id for the operation, if left undefined the fee will be computed in DCT asset.
+     * When set, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough
      *
      * @return a transaction confirmation
      */
     public send(
         credentials: Credentials,
         messages: Array<[ChainObject, string]>,
+        feeAssetId?: ChainObject,
     ): Observable<TransactionConfirmation> {
-        return this.createMessageOperation(credentials, messages).pipe(
+        return this.createMessageOperation(credentials, messages, feeAssetId).pipe(
             flatMap((operation) => this.api.broadcastApi.broadcastWithCallback(credentials.keyPair, [operation])),
         );
     }
@@ -160,14 +169,17 @@ export class MessageApi extends BaseApi {
      *
      * @param credentials sender account credentials
      * @param messages a list of pairs of receiver account id and message
+     * @param feeAssetId fee asset id for the operation, if left undefined the fee will be computed in DCT asset.
+     * When set, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough
      *
      * @return a transaction confirmation
      */
     public sendUnencrypted(
         credentials: Credentials,
         messages: Array<[ChainObject, string]>,
+        feeAssetId?: ChainObject,
     ): Observable<TransactionConfirmation> {
-        return this.createMessageOperationUnencrypted(credentials, messages).pipe(
+        return this.createMessageOperationUnencrypted(credentials, messages, feeAssetId).pipe(
             flatMap((operation) => this.api.broadcastApi.broadcastWithCallback(credentials.keyPair, [operation])),
         );
     }
