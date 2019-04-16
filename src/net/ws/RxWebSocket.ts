@@ -171,7 +171,7 @@ export class RxWebSocket {
             ).pipe(
                 filter(([id, obj]: [number, object]) => id === (callbackId ? callbackId : callId)),
                 map(([id, obj]: [number, object]) => obj),
-                tap((obj: object) => RxWebSocket.checkEmpty(obj, request, callbackId)),
+                tap((obj: object) => RxWebSocket.checkEmpty(obj, request)),
                 map(request.transformer),
                 tag(`RxWebSocket_make_${request.method}`),
             );
