@@ -127,7 +127,7 @@ export class AddOrUpdateContentOperation extends BaseOperation {
         custodyData?: CustodyData,
         fee?: AssetAmount | ChainObject,
     ) {
-        super(OperationType.ContentSubmit);
+        super(OperationType.ContentSubmit, fee);
         this.size = size;
         this.author = author;
         this.coAuthors = coAuthors;
@@ -141,10 +141,5 @@ export class AddOrUpdateContentOperation extends BaseOperation {
         this.publishingFee = publishingFee;
         this.synopsis = synopsis;
         this.custodyData = custodyData;
-        if (fee instanceof AssetAmount) {
-            this.fee = fee;
-        } else {
-            this.feeAssetId = fee;
-        }
     }
 }

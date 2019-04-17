@@ -28,13 +28,8 @@ export class RemoveContentOperation extends BaseOperation {
         uri: string,
         fee?: AssetAmount | ChainObject,
     ) {
-        super(OperationType.ContentCancellation);
+        super(OperationType.ContentCancellation, fee);
         this.author = author;
         this.uri = uri;
-        if (fee instanceof AssetAmount) {
-            this.fee = fee;
-        } else {
-            this.feeAssetId = fee;
-        }
     }
 }

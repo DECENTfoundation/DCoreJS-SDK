@@ -57,16 +57,11 @@ export class AccountCreateOperation extends BaseOperation {
      * When set, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough
      */
     constructor(registrar: ChainObject, name: string, owner: Authority, active: Authority, options: Options, fee?: AssetAmount | ChainObject) {
-        super(OperationType.AccountCreate);
+        super(OperationType.AccountCreate, fee);
         this.registrar = registrar;
         this.name = name;
         this.owner = owner;
         this.active = active;
         this.options = options;
-        if (fee instanceof AssetAmount) {
-            this.fee = fee;
-        } else {
-            this.feeAssetId = fee;
-        }
     }
 }

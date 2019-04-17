@@ -4,12 +4,20 @@ import * as Long from "long";
 import { Observable } from "rxjs";
 import { scalar } from "rxjs/internal/observable/scalar";
 import { flatMap, map } from "rxjs/operators";
+import { Credentials } from "../crypto/Credentials";
 import { DCoreApi } from "../DCoreApi";
 import { Asset } from "../models/Asset";
 import { AssetAmount } from "../models/AssetAmount";
 import { AssetData } from "../models/AssetData";
+import { AssetOptions } from "../models/AssetOptions";
 import { ChainObject } from "../models/ChainObject";
+import { ExchangeRate } from "../models/ExchangeRate";
+import { MonitoredAssetOpts } from "../models/MonitoredAssetOpts";
+import { AssetCreateOperation } from "../models/operation/AssetCreateOperation";
+import { AssetUpdateAdvancedOperation } from "../models/operation/AssetUpdateAdvancedOperation";
+import { AssetUpdateOperation } from "../models/operation/AssetUpdateOperation";
 import { RealSupply } from "../models/RealSupply";
+import { TransactionConfirmation } from "../models/TransactionConfirmation";
 import { GetAssetData } from "../net/models/request/GetAssetData";
 import { GetAssets } from "../net/models/request/GetAssets";
 import { GetRealSupply } from "../net/models/request/GetRealSupply";
@@ -127,6 +135,121 @@ export class AssetApi extends BaseApi {
     public convertToDCT(assetId: ChainObject, amount: number | Long, roundingMode: Decimal.Rounding = Decimal.ROUND_CEIL): Observable<AssetAmount> {
         return this.get(assetId).pipe(
             map((asset: Asset) => asset.convertToDCT(amount, roundingMode)),
+        );
+    }
+
+    public createAssetCreateOperation(
+        issuer: ChainObject,
+        symbol: string,
+        precision: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12,
+        description: string,
+        options: AssetOptions,
+        monitoredOptions?: MonitoredAssetOpts,
+        fee?: AssetAmount | ChainObject,
+    ): Observable<AssetCreateOperation> {
+        return scalar(new AssetCreateOperation(issuer, symbol, precision, description, options, monitoredOptions, fee));
+    }
+
+    public createAsset(
+        credentials: Credentials,
+        symbol: string,
+        precision: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12,
+        description: string,
+        options: AssetOptions = new AssetOptions(ExchangeRate.forCreateOp(1, 1)),
+        fee?: AssetAmount | ChainObject,
+    ): Observable<TransactionConfirmation> {
+        return this.createAssetCreateOperation(
+            credentials.account, symbol, precision, description, options, undefined, fee,
+        ).pipe(flatMap((op) => this.api.broadcastApi.broadcastWithCallback(credentials.keyPair, [op])));
+    }
+
+    public createMonitoredAsset(
+        credentials: Credentials,
+        symbol: string,
+        precision: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12,
+        description: string,
+        options: MonitoredAssetOpts = new MonitoredAssetOpts(),
+        fee?: AssetAmount | ChainObject,
+    ): Observable<TransactionConfirmation> {
+        return this.createAssetCreateOperation(
+            credentials.account, symbol, precision, description, new AssetOptions(ExchangeRate.empty(), 0), options, fee,
+        ).pipe(flatMap((op) => this.api.broadcastApi.broadcastWithCallback(credentials.keyPair, [op])));
+    }
+
+    public createAssetUpdateOperation(
+        issuer: ChainObject,
+        assetId: ChainObject,
+        coreExchangeRate?: ExchangeRate,
+        newDescription?: string,
+        exchangeable?: boolean,
+        maxSupply?: number,
+        newIssuer?: ChainObject,
+        fee?: AssetAmount | ChainObject,
+    ): Observable<AssetUpdateOperation> {
+        return this.get(assetId).pipe(
+            map((asset) => AssetUpdateOperation.create(asset)),
+            map((op) => {
+                op.newDescription = newDescription ? newDescription : op.newDescription;
+                op.newIssuer = newIssuer ? newIssuer : op.newIssuer;
+                op.maxSupply = maxSupply ? maxSupply : op.maxSupply;
+                op.coreExchangeRate = coreExchangeRate ? coreExchangeRate : op.coreExchangeRate;
+                op.exchangeable = exchangeable ? exchangeable : op.exchangeable;
+                op.setFee(fee);
+                return op;
+            }),
+        );
+    }
+
+    public updateAsset(
+        credentials: Credentials,
+        assetId: ChainObject,
+        coreExchangeRate?: ExchangeRate,
+        newDescription?: string,
+        exchangeable?: boolean,
+        maxSupply?: number,
+        newIssuer?: ChainObject,
+        fee?: AssetAmount | ChainObject,
+    ): Observable<TransactionConfirmation> {
+        return this.createAssetUpdateOperation(credentials.account, assetId, coreExchangeRate, newDescription, exchangeable, maxSupply, newIssuer, fee).pipe(
+            flatMap((op) => this.api.broadcastApi.broadcastWithCallback(credentials.keyPair, [op])),
+        );
+    }
+
+    public createAssetUpdateAdvancedOperation(
+        issuer: ChainObject,
+        assetId: ChainObject,
+        precision?: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12,
+        fixedMaxSupply?: boolean,
+        fee?: AssetAmount | ChainObject,
+    ): Observable<AssetUpdateAdvancedOperation> {
+        return this.get(assetId).pipe(
+            map((asset) => AssetUpdateAdvancedOperation.create(asset)),
+            map((op) => {
+                op.precision = precision ? precision : op.precision;
+                op.fixedMaxSupply = fixedMaxSupply ? fixedMaxSupply : op.fixedMaxSupply;
+                op.setFee(fee);
+                return op;
+            }),
+        );
+    }
+
+    /**
+     *
+     * @param credentials
+     * @param assetId
+     * @param precision
+     * @param fixedMaxSupply irreversible
+     * @param fee
+     */
+    public updateAdvancedAsset(
+        credentials: Credentials,
+        assetId: ChainObject,
+        precision?: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12,
+        fixedMaxSupply?: boolean,
+        fee?: AssetAmount | ChainObject,
+    ): Observable<TransactionConfirmation> {
+        return this.createAssetUpdateAdvancedOperation(credentials.account, assetId, precision, fixedMaxSupply, fee).pipe(
+            flatMap((op) => this.api.broadcastApi.broadcastWithCallback(credentials.keyPair, [op])),
         );
     }
 

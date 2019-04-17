@@ -60,16 +60,11 @@ export class PurchaseContentOperation extends BaseOperation {
         regionCode: Regions = Regions.All,
         fee?: AssetAmount | ChainObject,
     ) {
-        super(OperationType.RequestToBuy);
+        super(OperationType.RequestToBuy, fee);
         this.uri = uri;
         this.consumer = consumer;
         this.price = price;
         this.publicElGamal = publicElGamal;
         this.regionCode = regionCode;
-        if (fee instanceof AssetAmount) {
-            this.fee = fee;
-        } else {
-            this.feeAssetId = fee;
-        }
     }
 }

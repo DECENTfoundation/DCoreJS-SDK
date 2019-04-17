@@ -2,6 +2,15 @@ import { plainToClass, Transform } from "class-transformer";
 import { AccountCreateOperation } from "../../models/operation/AccountCreateOperation";
 import { AccountUpdateOperation } from "../../models/operation/AccountUpdateOperation";
 import { AddOrUpdateContentOperation } from "../../models/operation/AddOrUpdateContentOperation";
+import { AssetClaimFeesOperation } from "../../models/operation/AssetClaimFeesOperation";
+import { AssetCreateOperation } from "../../models/operation/AssetCreateOperation";
+import { AssetFundPoolsOperation } from "../../models/operation/AssetFundPoolsOperation";
+import { AssetIssueOperation } from "../../models/operation/AssetIssueOperation";
+import { AssetPublishFeedOperation } from "../../models/operation/AssetPublishFeedOperation";
+import { AssetReserveOperation } from "../../models/operation/AssetReserveOperation";
+import { AssetUpdateAdvancedOperation } from "../../models/operation/AssetUpdateAdvancedOperation";
+import { AssetUpdateMonitoredOperation } from "../../models/operation/AssetUpdateMonitoredOperation";
+import { AssetUpdateOperation } from "../../models/operation/AssetUpdateOperation";
 import { CustomOperation } from "../../models/operation/CustomOperation";
 import { EmptyOperation } from "../../models/operation/EmptyOperation";
 import { PurchaseContentOperation } from "../../models/operation/PurchaseContentOperation";
@@ -10,16 +19,16 @@ import { TransferOperation } from "../../models/operation/TransferOperation";
 
 export function OperationsToClass(target: any, key: string): void {
     return Transform((value: Array<[number, object]>) =>
-        value.map(([id, op]) => plainToClass(OPERATIONS_CTR[id], op)), { toClassOnly: true })(target, key);
+        value.map(([id, op]) => plainToClass(OPERATIONS_CTOR[id], op)), { toClassOnly: true })(target, key);
 }
 
-export const OPERATIONS_CTR = [
+export const OPERATIONS_CTOR = [
     TransferOperation, // 0
     AccountCreateOperation,
     AccountUpdateOperation,
-    EmptyOperation,
-    EmptyOperation,
-    EmptyOperation, // 5
+    AssetCreateOperation,
+    AssetIssueOperation,
+    AssetPublishFeedOperation, // 5
     EmptyOperation,
     EmptyOperation,
     EmptyOperation,
@@ -47,11 +56,12 @@ export const OPERATIONS_CTR = [
     EmptyOperation, // 30
     EmptyOperation,
     RemoveContentOperation,
+    AssetFundPoolsOperation,
+    AssetReserveOperation,
+    AssetClaimFeesOperation, // 35
+    AssetUpdateOperation,
+    AssetUpdateMonitoredOperation,
     EmptyOperation,
-    EmptyOperation,
-    EmptyOperation, // 35
-    EmptyOperation,
-    EmptyOperation,
-    EmptyOperation,
-    TransferOperation, // 39
+    TransferOperation,
+    AssetUpdateAdvancedOperation, // 40
 ];

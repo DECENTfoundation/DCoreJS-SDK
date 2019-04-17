@@ -37,15 +37,10 @@ export class TransferOperation extends BaseOperation {
      * When set, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough
      */
     constructor(from: ChainObject, to: ChainObject, amount: AssetAmount, memo?: Memo, fee?: AssetAmount | ChainObject) {
-        super(OperationType.Transfer2);
+        super(OperationType.Transfer2, fee);
         this.from = from;
         this.to = to;
         this.amount = amount;
         this.memo = memo;
-        if (fee instanceof AssetAmount) {
-            this.fee = fee;
-        } else {
-            this.feeAssetId = fee;
-        }
     }
 }

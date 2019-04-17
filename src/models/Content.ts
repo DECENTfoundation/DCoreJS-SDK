@@ -34,7 +34,6 @@ export class Content {
     @Expose({ name: "size" })
     public size: Long;
 
-    @Type(() => Synopsis)
     @Transform((value: string) => deserialize(Synopsis, value), { toClassOnly: true })
     @Expose({ name: "synopsis" })
     public synopsis: Synopsis;

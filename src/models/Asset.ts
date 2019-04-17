@@ -12,6 +12,12 @@ import { MonitoredAssetOpts } from "./MonitoredAssetOpts";
 
 export class Asset {
 
+    public static isValidSymbol(symbol: string) {
+        return Asset.regexp.test(symbol);
+    }
+
+    private static regexp: RegExp = /(?=.{3,16}$)^[A-Z][A-Z0-9]+(\.[A-Z0-9]*)?[A-Z]$/;
+
     @ChainObjectToClass
     @Expose({ name: "id" })
     public id: ChainObject;
@@ -20,7 +26,7 @@ export class Asset {
     public symbol: string;
 
     @Expose({ name: "precision" })
-    public precision: number;
+    public precision: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12;
 
     @ChainObjectToClass
     @Expose({ name: "issuer" })

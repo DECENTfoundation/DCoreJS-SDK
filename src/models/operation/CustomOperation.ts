@@ -35,15 +35,10 @@ export class CustomOperation extends BaseOperation {
      * When set, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough
      */
     constructor(type: CustomOperationType, payer: ChainObject, requiredAuths: ChainObject[], data: string, fee?: AssetAmount | ChainObject) {
-        super(OperationType.Custom);
+        super(OperationType.Custom, fee);
         this.payer = payer;
         this.requiredAuths = requiredAuths;
         this.data = data;
         this.id = type;
-        if (fee instanceof AssetAmount) {
-            this.fee = fee;
-        } else {
-            this.feeAssetId = fee;
-        }
     }
 }

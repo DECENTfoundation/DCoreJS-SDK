@@ -6,6 +6,7 @@ import { AsyncSubject } from "rxjs/internal/AsyncSubject";
 import { defer } from "rxjs/internal/observable/defer";
 import { merge } from "rxjs/internal/observable/merge";
 import { scalar } from "rxjs/internal/observable/scalar";
+import { zip } from "rxjs/internal/observable/zip";
 import { filter, first, flatMap, map, tap, timeout } from "rxjs/operators";
 import { DCoreError } from "../../models/error/DCoreError";
 import { ObjectNotFoundError } from "../../models/error/ObjectNotFoundError";
@@ -73,9 +74,6 @@ export class RxWebSocket {
     }
 
     private static send(ws: WebSocketContract, request: string): void {
-        // todo logging https://decentplatform.atlassian.net/browse/DSDK-587
-        // tslint:disable-next-line
-        // console.log(request);
         ws.send(request);
     }
 
@@ -159,10 +157,14 @@ export class RxWebSocket {
     private makeStream<T>(request: BaseRequest<T>, callId: number, callbackId?: number): Observable<T> {
         return merge(
             this.messages,
-            defer(() => this.webSocket()).pipe(
-                tap((socket) => RxWebSocket.send(socket, request.json(callId, callbackId))),
+            zip(
+                defer(() => this.webSocket()),
+                scalar(request.json(callId, callbackId)).pipe(tag((`API_send_${request.method}`))),
+            ).pipe(
+                tap(([socket, serialized]) => RxWebSocket.send(socket, serialized)),
                 flatMap(() => NEVER),
-            ))
+            ),
+        )
             .pipe(
                 tag(`RxWebSocket_make_${request.method}_plain`),
                 flatMap((value) => value instanceof Error ? throwError(value) : scalar(value)),

@@ -7,11 +7,11 @@ import { Address } from "../../crypto/Address";
 import { ChainObject } from "../../models/ChainObject";
 
 export function ChainObjectToClass(target: any, key: string): void {
-    return Transform((value: string) => ChainObject.parse(value), { toClassOnly: true })(target, key);
+    return Transform((value?: string) => _.isNil(value) ? value : ChainObject.parse(value), { toClassOnly: true })(target, key);
 }
 
 export function ChainObjectToPlain(target: any, key: string): void {
-    return Transform((value: ChainObject) => value.objectId, { toPlainOnly: true })(target, key);
+    return Transform((value?: ChainObject) => _.isNil(value) ? value : value.objectId, { toPlainOnly: true })(target, key);
 }
 
 export function ChainObjectArrayToClass(target: any, key: string): void {

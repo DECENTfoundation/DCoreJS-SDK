@@ -17,7 +17,16 @@ export abstract class BaseOperation {
     @Exclude()
     public feeAssetId?: ChainObject;
 
-    protected constructor(type: OperationType) {
+    protected constructor(type: OperationType, fee?: AssetAmount | ChainObject) {
         this.type = type;
+        this.setFee(fee);
+    }
+
+    public setFee(fee?: AssetAmount | ChainObject) {
+        if (fee instanceof AssetAmount) {
+            this.fee = fee;
+        } else {
+            this.feeAssetId = fee;
+        }
     }
 }

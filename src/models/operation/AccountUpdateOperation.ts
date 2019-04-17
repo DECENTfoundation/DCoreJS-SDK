@@ -45,15 +45,10 @@ export class AccountUpdateOperation extends BaseOperation {
      * When set, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough
      */
     constructor(accountId: ChainObject, owner?: Authority, active?: Authority, options?: Options, fee?: AssetAmount | ChainObject) {
-        super(OperationType.AccountUpdate);
+        super(OperationType.AccountUpdate, fee);
         this.accountId = accountId;
         this.owner = owner;
         this.active = active;
         this.options = options;
-        if (fee instanceof AssetAmount) {
-            this.fee = fee;
-        } else {
-            this.feeAssetId = fee;
-        }
     }
 }

@@ -9,6 +9,7 @@ import { DCoreApi } from "../../src/DCoreApi";
 import { DCoreSdk } from "../../src/DCoreSdk";
 import { AssetAmount } from "../../src/models/AssetAmount";
 import { ChainObject } from "../../src/models/ChainObject";
+import { ExchangeRate } from "../../src/models/ExchangeRate";
 import { AccountCreateOperation } from "../../src/models/operation/AccountCreateOperation";
 import { AddOrUpdateContentOperation } from "../../src/models/operation/AddOrUpdateContentOperation";
 import { RemoveContentOperation } from "../../src/models/operation/RemoveContentOperation";
@@ -25,7 +26,7 @@ describe("blockchain based operations", () => {
 
     before(() => {
         spy = create();
-        // spy.log(/^API\w+/);
+        spy.log(/^API\w+/);
         api = DCoreSdk.createForWebSocket(() => new WebSocket(Helpers.STAGE_WS));
     });
 
@@ -136,6 +137,50 @@ describe("blockchain based operations", () => {
             "ipfs:QmWBoRBYuxzH5a8d3gssRbMS5scs6fqLKgapBfqVNUFUtZ",
             4,
             "hello comment",
+        ).subscribe((value) => value.should.be.instanceOf(TransactionConfirmation), (error) => done(error), () => done());
+    });
+
+    // asset 'SDK' is 1.3.35
+    it("should create an asset", (done: (arg?: any) => void) => {
+        api.assetApi.createAsset(
+            Helpers.CREDENTIALS,
+            "SDK.7T",
+            12,
+            "hello api",
+        ).subscribe((value) => value.should.be.instanceOf(TransactionConfirmation), (error) => done(error), () => done());
+    });
+
+    // account_id_type fee_payer()const { return monitored_asset_opts.valid() ? account_id_type() : issuer; }
+    // therefore Missing Active Authority 1.2.0
+    it.skip("should create a monitored asset", (done: (arg?: any) => void) => {
+        api.assetApi.createMonitoredAsset(
+            Helpers.CREDENTIALS,
+            "MSDK",
+            4,
+            "hello api monitored",
+        ).subscribe((value) => value.should.be.instanceOf(TransactionConfirmation), (error) => done(error), () => done());
+    });
+
+    it("should update an asset", (done: (arg?: any) => void) => {
+        const asset = ChainObject.parse("1.3.37");
+        const ex = new ExchangeRate(new AssetAmount(1), new AssetAmount(2, asset));
+        api.assetApi.updateAsset(
+            Helpers.CREDENTIALS,
+            asset,
+            ex,
+            "hello new api",
+            false,
+            2000,
+        ).subscribe((value) => value.should.be.instanceOf(TransactionConfirmation), (error) => done(error), () => done());
+    });
+
+    it("should update advanced an asset", (done: (arg?: any) => void) => {
+        const asset = ChainObject.parse("1.3.36");
+        api.assetApi.updateAdvancedAsset(
+            Helpers.CREDENTIALS,
+            asset,
+            5,
+            false,
         ).subscribe((value) => value.should.be.instanceOf(TransactionConfirmation), (error) => done(error), () => done());
     });
 
