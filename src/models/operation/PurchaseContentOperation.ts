@@ -1,6 +1,7 @@
 import { Expose, Type } from "class-transformer";
 import { Credentials } from "../../crypto/Credentials";
 import { ElGamal } from "../../crypto/ElGamal";
+import { Fee } from "../../DCoreSdk";
 import { ChainObjectToClass, ChainObjectToPlain } from "../../net/adapter/TypeAdapters";
 import { AssetAmount } from "../AssetAmount";
 import { ChainObject } from "../ChainObject";
@@ -11,7 +12,7 @@ import { BaseOperation } from "./BaseOperation";
 import { OperationType } from "./OperationType";
 
 export class PurchaseContentOperation extends BaseOperation {
-    public static create(credentials: Credentials, content: Content, fee?: AssetAmount | ChainObject): PurchaseContentOperation {
+    public static create(credentials: Credentials, content: Content, fee?: Fee): PurchaseContentOperation {
         return new PurchaseContentOperation(
             content.uri,
             credentials.account,
@@ -58,7 +59,7 @@ export class PurchaseContentOperation extends BaseOperation {
         price: AssetAmount,
         publicElGamal: PubKey,
         regionCode: Regions = Regions.All,
-        fee?: AssetAmount | ChainObject,
+        fee?: Fee,
     ) {
         super(OperationType.RequestToBuy, fee);
         this.uri = uri;

@@ -1,6 +1,6 @@
 import { Expose } from "class-transformer";
+import { Fee } from "../../DCoreSdk";
 import { ChainObjectArrayToClass, ChainObjectArrayToPlain, ChainObjectToClass, ChainObjectToPlain } from "../../net/adapter/TypeAdapters";
-import { AssetAmount } from "../AssetAmount";
 import { ChainObject } from "../ChainObject";
 import { BaseOperation } from "./BaseOperation";
 import { CustomOperationType } from "./CustomOperationType";
@@ -34,7 +34,7 @@ export class CustomOperation extends BaseOperation {
      * @param fee {@link AssetAmount} fee for the operation or asset id, if left undefined the fee will be computed in DCT asset.
      * When set, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough
      */
-    constructor(type: CustomOperationType, payer: ChainObject, requiredAuths: ChainObject[], data: string, fee?: AssetAmount | ChainObject) {
+    constructor(type: CustomOperationType, payer: ChainObject, requiredAuths: ChainObject[], data: string, fee?: Fee) {
         super(OperationType.Custom, fee);
         this.payer = payer;
         this.requiredAuths = requiredAuths;

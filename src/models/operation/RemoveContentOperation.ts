@@ -1,6 +1,6 @@
 import { Expose } from "class-transformer";
+import { Fee } from "../../DCoreSdk";
 import { ChainObjectToClass, ChainObjectToPlain } from "../../net/adapter/TypeAdapters";
-import { AssetAmount } from "../AssetAmount";
 import { ChainObject } from "../ChainObject";
 import { BaseOperation } from "./BaseOperation";
 import { OperationType } from "./OperationType";
@@ -26,7 +26,7 @@ export class RemoveContentOperation extends BaseOperation {
     constructor(
         author: ChainObject,
         uri: string,
-        fee?: AssetAmount | ChainObject,
+        fee?: Fee,
     ) {
         super(OperationType.ContentCancellation, fee);
         this.author = author;

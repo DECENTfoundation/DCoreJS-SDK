@@ -1,4 +1,4 @@
-import { AssetAmount } from "../AssetAmount";
+import { Fee } from "../../DCoreSdk";
 import { ChainObject } from "../ChainObject";
 import { CustomOperation } from "./CustomOperation";
 import { CustomOperationType } from "./CustomOperationType";
@@ -18,7 +18,7 @@ export class SendMessageOperation extends CustomOperation {
         messagePayloadJson: string,
         payer: ChainObject,
         requiredAuths: ChainObject[] = [payer],
-        fee?: AssetAmount | ChainObject,
+        fee?: Fee,
     ) {
         super(CustomOperationType.Messaging, payer, requiredAuths, Buffer.from(messagePayloadJson).toString("hex"), fee);
     }

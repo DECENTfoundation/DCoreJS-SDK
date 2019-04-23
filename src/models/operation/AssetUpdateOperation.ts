@@ -1,7 +1,7 @@
 import { Expose, Type } from "class-transformer";
+import { Fee } from "../../DCoreSdk";
 import { ChainObjectToClass, ChainObjectToPlain } from "../../net/adapter/TypeAdapters";
 import { Asset } from "../Asset";
-import { AssetAmount } from "../AssetAmount";
 import { ChainObject } from "../ChainObject";
 import { ExchangeRate } from "../ExchangeRate";
 import { BaseOperation } from "./BaseOperation";
@@ -41,6 +41,19 @@ export class AssetUpdateOperation extends BaseOperation {
     @Expose({ name: "is_exchangeable" })
     public exchangeable: boolean;
 
+    /**
+     * Update asset operation constructor.
+     *
+     * @param issuer account id issuing the asset
+     * @param assetToUpdate asset to update
+     * @param coreExchangeRate new exchange rate
+     * @param newDescription new description
+     * @param exchangeable enable converting the asset to DCT, so it can be used to pay for fees
+     * @param maxSupply new max supply
+     * @param newIssuer a new issuer account id
+     * @param fee {@link AssetAmount} fee for the operation or asset id, if left undefined the fee will be computed in DCT asset.
+     * When set, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough
+     */
     constructor(
         issuer: ChainObject,
         assetToUpdate: ChainObject,
@@ -49,7 +62,7 @@ export class AssetUpdateOperation extends BaseOperation {
         exchangeable: boolean,
         maxSupply: number,
         newIssuer?: ChainObject,
-        fee?: AssetAmount | ChainObject,
+        fee?: Fee,
     ) {
         super(OperationType.UpdateUserIssuedAsset, fee);
         this.issuer = issuer;

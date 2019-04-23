@@ -1,19 +1,26 @@
 import { Decimal } from "decimal.js";
 import * as _ from "lodash";
 import * as Long from "long";
-import { Observable } from "rxjs";
+import { Observable, throwError } from "rxjs";
 import { scalar } from "rxjs/internal/observable/scalar";
 import { flatMap, map } from "rxjs/operators";
 import { Credentials } from "../crypto/Credentials";
 import { DCoreApi } from "../DCoreApi";
+import { AssetPrecision, AssetRef, Fee } from "../DCoreSdk";
 import { Asset } from "../models/Asset";
 import { AssetAmount } from "../models/AssetAmount";
 import { AssetData } from "../models/AssetData";
 import { AssetOptions } from "../models/AssetOptions";
 import { ChainObject } from "../models/ChainObject";
+import { IllegalArgumentError } from "../models/error/IllegalArgumentError";
 import { ExchangeRate } from "../models/ExchangeRate";
+import { Memo } from "../models/Memo";
 import { MonitoredAssetOpts } from "../models/MonitoredAssetOpts";
+import { AssetClaimFeesOperation } from "../models/operation/AssetClaimFeesOperation";
 import { AssetCreateOperation } from "../models/operation/AssetCreateOperation";
+import { AssetFundPoolsOperation } from "../models/operation/AssetFundPoolsOperation";
+import { AssetIssueOperation } from "../models/operation/AssetIssueOperation";
+import { AssetReserveOperation } from "../models/operation/AssetReserveOperation";
 import { AssetUpdateAdvancedOperation } from "../models/operation/AssetUpdateAdvancedOperation";
 import { AssetUpdateOperation } from "../models/operation/AssetUpdateOperation";
 import { RealSupply } from "../models/RealSupply";
@@ -23,6 +30,7 @@ import { GetAssets } from "../net/models/request/GetAssets";
 import { GetRealSupply } from "../net/models/request/GetRealSupply";
 import { ListAssets } from "../net/models/request/ListAssets";
 import { LookupAssetSymbols } from "../net/models/request/LookupAssetSymbols";
+import { ObjectCheckOf } from "../utils/ObjectCheckOf";
 import { BaseApi } from "./BaseApi";
 
 export class AssetApi extends BaseApi {
@@ -32,14 +40,25 @@ export class AssetApi extends BaseApi {
     }
 
     /**
-     * Get asset by id.
+     * Get asset by id or symbol.
      *
-     * @param assetId asset id eg. DCT id is 1.3.0
+     * @param asset asset id eg. DCT or id 1.3.0
      *
      * @return asset or {@link ObjectNotFoundError}
      */
-    public get(assetId: ChainObject): Observable<Asset> {
-        return this.getAll([assetId]).pipe(map((list) => list[0]));
+    public get(asset: AssetRef): Observable<Asset> {
+        if (typeof asset === "string") {
+            if (ChainObject.isValid(asset)) {
+                return this.get(ChainObject.parse(asset));
+            }
+            if (Asset.isValidSymbol(asset)) {
+                return this.getByName(asset);
+            }
+        }
+        if (ObjectCheckOf<ChainObject>(asset, "instance")) {
+            return this.getAll([asset]).pipe(map((list) => list[0]));
+        }
+        return throwError(new IllegalArgumentError("not a valid asset symbol or id"));
     }
 
     /**
@@ -138,56 +157,95 @@ export class AssetApi extends BaseApi {
         );
     }
 
+    /**
+     * Create asset create operation.
+     *
+     * @param issuer account id issuing the asset
+     * @param symbol the string symbol, 3-16 uppercase chars
+     * @param precision base unit precision, todo reference to AssetFormatter once done describing the 'raw' value
+     * @param description optional description
+     * @param options asset options
+     * @param monitoredOptions options for monitored asset
+     * @param fee {@link AssetAmount} fee for the operation or asset id, if left undefined the fee will be computed in DCT asset.
+     * When set, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough
+     */
     public createAssetCreateOperation(
         issuer: ChainObject,
         symbol: string,
-        precision: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12,
+        precision: AssetPrecision,
         description: string,
         options: AssetOptions,
         monitoredOptions?: MonitoredAssetOpts,
-        fee?: AssetAmount | ChainObject,
+        fee?: Fee,
     ): Observable<AssetCreateOperation> {
         return scalar(new AssetCreateOperation(issuer, symbol, precision, description, options, monitoredOptions, fee));
     }
 
-    public createAsset(
+    /**
+     * Create a new Asset.
+     *
+     * @param credentials account credentials issuing the asset
+     * @param symbol the string symbol, 3-16 uppercase chars
+     * @param precision base unit precision, todo reference to AssetFormatter once done describing the 'raw' value
+     * @param description optional description
+     * @param options asset options
+     * @param fee {@link AssetAmount} fee for the operation or asset id, if left undefined the fee will be computed in DCT asset.
+     * When set, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough
+     */
+    public create(
         credentials: Credentials,
         symbol: string,
-        precision: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12,
+        precision: AssetPrecision,
         description: string,
         options: AssetOptions = new AssetOptions(ExchangeRate.forCreateOp(1, 1)),
-        fee?: AssetAmount | ChainObject,
+        fee?: Fee,
     ): Observable<TransactionConfirmation> {
         return this.createAssetCreateOperation(
             credentials.account, symbol, precision, description, options, undefined, fee,
         ).pipe(flatMap((op) => this.api.broadcastApi.broadcastWithCallback(credentials.keyPair, [op])));
     }
 
+    /**
+     * cannot create
+     * asset_create_op has account_id_type fee_payer()const { return monitored_asset_opts.valid() ? account_id_type() : issuer; }
+     * therefore throws Missing Active Authority 1.2.0
+     */
     public createMonitoredAsset(
         credentials: Credentials,
         symbol: string,
-        precision: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12,
+        precision: AssetPrecision,
         description: string,
         options: MonitoredAssetOpts = new MonitoredAssetOpts(),
-        fee?: AssetAmount | ChainObject,
+        fee?: Fee,
     ): Observable<TransactionConfirmation> {
         return this.createAssetCreateOperation(
             credentials.account, symbol, precision, description, new AssetOptions(ExchangeRate.empty(), 0), options, fee,
         ).pipe(flatMap((op) => this.api.broadcastApi.broadcastWithCallback(credentials.keyPair, [op])));
     }
 
+    /**
+     * Create update asset operation.
+     *
+     * @param asset asset to update
+     * @param coreExchangeRate new exchange rate
+     * @param newDescription new description
+     * @param exchangeable enable converting the asset to DCT, so it can be used to pay for fees
+     * @param maxSupply new max supply
+     * @param newIssuer a new issuer account id
+     * @param fee {@link AssetAmount} fee for the operation or asset id, if left undefined the fee will be computed in DCT asset.
+     * When set, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough
+     */
     public createAssetUpdateOperation(
-        issuer: ChainObject,
-        assetId: ChainObject,
+        asset: AssetRef,
         coreExchangeRate?: ExchangeRate,
         newDescription?: string,
         exchangeable?: boolean,
         maxSupply?: number,
         newIssuer?: ChainObject,
-        fee?: AssetAmount | ChainObject,
+        fee?: Fee,
     ): Observable<AssetUpdateOperation> {
-        return this.get(assetId).pipe(
-            map((asset) => AssetUpdateOperation.create(asset)),
+        return this.get(asset).pipe(
+            map((obj) => AssetUpdateOperation.create(obj)),
             map((op) => {
                 op.newDescription = newDescription ? newDescription : op.newDescription;
                 op.newIssuer = newIssuer ? newIssuer : op.newIssuer;
@@ -200,30 +258,51 @@ export class AssetApi extends BaseApi {
         );
     }
 
-    public updateAsset(
+    /**
+     * Update asset.
+     *
+     * @param credentials account credentials issuing the asset
+     * @param asset asset to update
+     * @param coreExchangeRate new exchange rate
+     * @param newDescription new description
+     * @param exchangeable enable converting the asset to DCT, so it can be used to pay for fees
+     * @param maxSupply new max supply
+     * @param newIssuer a new issuer account id
+     * @param fee {@link AssetAmount} fee for the operation or asset id, if left undefined the fee will be computed in DCT asset.
+     * When set, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough
+     */
+    public update(
         credentials: Credentials,
-        assetId: ChainObject,
+        asset: ChainObject,
         coreExchangeRate?: ExchangeRate,
         newDescription?: string,
         exchangeable?: boolean,
         maxSupply?: number,
         newIssuer?: ChainObject,
-        fee?: AssetAmount | ChainObject,
+        fee?: Fee,
     ): Observable<TransactionConfirmation> {
-        return this.createAssetUpdateOperation(credentials.account, assetId, coreExchangeRate, newDescription, exchangeable, maxSupply, newIssuer, fee).pipe(
+        return this.createAssetUpdateOperation(asset, coreExchangeRate, newDescription, exchangeable, maxSupply, newIssuer, fee).pipe(
             flatMap((op) => this.api.broadcastApi.broadcastWithCallback(credentials.keyPair, [op])),
         );
     }
 
+    /**
+     * Create update advanced options operation for the asset.
+     *
+     * @param asset asset to update
+     * @param precision new precision
+     * @param fixedMaxSupply whether it should be allowed to change max supply, cannot be reverted once set to true
+     * @param fee {@link AssetAmount} fee for the operation or asset id, if left undefined the fee will be computed in DCT asset.
+     * When set, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough
+     */
     public createAssetUpdateAdvancedOperation(
-        issuer: ChainObject,
-        assetId: ChainObject,
-        precision?: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12,
+        asset: AssetRef,
+        precision?: AssetPrecision,
         fixedMaxSupply?: boolean,
-        fee?: AssetAmount | ChainObject,
+        fee?: Fee,
     ): Observable<AssetUpdateAdvancedOperation> {
-        return this.get(assetId).pipe(
-            map((asset) => AssetUpdateAdvancedOperation.create(asset)),
+        return this.get(asset).pipe(
+            map((obj) => AssetUpdateAdvancedOperation.create(obj)),
             map((op) => {
                 op.precision = precision ? precision : op.precision;
                 op.fixedMaxSupply = fixedMaxSupply ? fixedMaxSupply : op.fixedMaxSupply;
@@ -234,21 +313,185 @@ export class AssetApi extends BaseApi {
     }
 
     /**
+     * Update advanced options for the asset.
      *
-     * @param credentials
-     * @param assetId
-     * @param precision
-     * @param fixedMaxSupply irreversible
-     * @param fee
+     * @param credentials account credentials issuing the asset
+     * @param asset asset to update
+     * @param precision new precision
+     * @param fixedMaxSupply whether it should be allowed to change max supply, cannot be reverted once set to true
+     * @param fee {@link AssetAmount} fee for the operation or asset id, if left undefined the fee will be computed in DCT asset.
+     * When set, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough
      */
-    public updateAdvancedAsset(
+    public updateAdvanced(
         credentials: Credentials,
-        assetId: ChainObject,
-        precision?: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12,
+        asset: AssetRef,
+        precision?: AssetPrecision,
         fixedMaxSupply?: boolean,
-        fee?: AssetAmount | ChainObject,
+        fee?: Fee,
     ): Observable<TransactionConfirmation> {
-        return this.createAssetUpdateAdvancedOperation(credentials.account, assetId, precision, fixedMaxSupply, fee).pipe(
+        return this.createAssetUpdateAdvancedOperation(asset, precision, fixedMaxSupply, fee).pipe(
+            flatMap((op) => this.api.broadcastApi.broadcastWithCallback(credentials.keyPair, [op])),
+        );
+    }
+
+    /**
+     * Create issue asset operation. Only the issuer of the asset can issue some funds until maxSupply is reached.
+     *
+     * @param asset asset to issue
+     * @param amount amount to issue
+     * @param to optional account id receiving the created funds, issuer account id is used if not defined
+     * @param memo optional memo for receiver
+     * @param fee {@link AssetAmount} fee for the operation or asset id, if left undefined the fee will be computed in DCT asset.
+     * When set, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough
+     */
+    public createAssetIssueOperation(
+        asset: AssetRef,
+        amount: Long | number,
+        to?: ChainObject,
+        memo?: Memo,
+        fee?: Fee,
+    ): Observable<AssetIssueOperation> {
+        return this.get(asset).pipe(
+            map((obj) => new AssetIssueOperation(obj.issuer, new AssetAmount(amount, obj.id), to ? to : obj.issuer, memo, fee)),
+        );
+    }
+
+    /**
+     * Issue asset. Only the issuer of the asset can issue some funds until maxSupply is reached.
+     *
+     * @param credentials account credentials issuing the asset
+     * @param asset asset to issue
+     * @param amount amount to issue
+     * @param to optional account id receiving the created funds, issuer account id is used if not defined
+     * @param memo optional memo for receiver
+     * @param fee {@link AssetAmount} fee for the operation or asset id, if left undefined the fee will be computed in DCT asset.
+     * When set, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough
+     */
+    public issue(
+        credentials: Credentials,
+        asset: AssetRef,
+        amount: Long | number,
+        to?: ChainObject,
+        memo?: Memo,
+        fee?: Fee,
+    ): Observable<TransactionConfirmation> {
+        return this.createAssetIssueOperation(asset, amount, to, memo, fee).pipe(
+            flatMap((op) => this.api.broadcastApi.broadcastWithCallback(credentials.keyPair, [op])),
+        );
+    }
+
+    /**
+     * Create fund asset pool operation. Any account can fund a pool.
+     *
+     * @param asset which asset to fund
+     * @param uia the uia value
+     * @param dct the dct value
+     * @param fee {@link AssetAmount} fee for the operation or asset id, if left undefined the fee will be computed in DCT asset.
+     * When set, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough
+     */
+    public createFundPoolsOperation(
+        asset: AssetRef,
+        uia: Long | number,
+        dct: Long | number,
+        fee?: Fee,
+    ): Observable<AssetFundPoolsOperation> {
+        return this.get(asset).pipe(map((obj) => new AssetFundPoolsOperation(obj.issuer, new AssetAmount(uia, obj.id), new AssetAmount(dct), fee)));
+    }
+
+    /**
+     * Fund asset pool. Any account can fund a pool.
+     *
+     * @param credentials account credentials funding the pool
+     * @param asset which asset to fund
+     * @param uia the uia value
+     * @param dct the dct value
+     * @param fee {@link AssetAmount} fee for the operation or asset id, if left undefined the fee will be computed in DCT asset.
+     * When set, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough
+     */
+    public fund(
+        credentials: Credentials,
+        asset: AssetRef,
+        uia: Long | number,
+        dct: Long | number,
+        fee?: Fee,
+    ): Observable<TransactionConfirmation> {
+        return this.createFundPoolsOperation(asset, uia, dct, fee).pipe(
+            flatMap((op) => this.api.broadcastApi.broadcastWithCallback(credentials.keyPair, [op])),
+        );
+    }
+
+    /**
+     * Create claim fees operation. Claim funds from asset pool, only the asset issuer can claim.
+     *
+     * @param asset which asset to claim from
+     * @param uia the uia value to claim
+     * @param dct the dct value to claim
+     * @param fee {@link AssetAmount} fee for the operation or asset id, if left undefined the fee will be computed in DCT asset.
+     * When set, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough
+     */
+    public createClaimFeesOperation(
+        asset: AssetRef,
+        uia: Long | number,
+        dct: Long | number,
+        fee?: Fee,
+    ): Observable<AssetClaimFeesOperation> {
+        return this.get(asset).pipe(map((obj) => new AssetClaimFeesOperation(obj.issuer, new AssetAmount(uia, obj.id), new AssetAmount(dct), fee)));
+    }
+
+    /**
+     * Claim fees. Claim funds from asset pool, only the asset issuer can claim.
+     *
+     * @param credentials account credentials issuing the asset
+     * @param asset which asset to claim from
+     * @param uia the uia value to claim
+     * @param dct the dct value to claim
+     * @param fee {@link AssetAmount} fee for the operation or asset id, if left undefined the fee will be computed in DCT asset.
+     * When set, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough
+     */
+    public claim(
+        credentials: Credentials,
+        asset: AssetRef,
+        uia: Long | number,
+        dct: Long | number,
+        fee?: Fee,
+    ): Observable<TransactionConfirmation> {
+        return this.createClaimFeesOperation(asset, uia, dct, fee).pipe(
+            flatMap((op) => this.api.broadcastApi.broadcastWithCallback(credentials.keyPair, [op])),
+        );
+    }
+
+    /**
+     * Create reserve funds operation. Return issued funds to the issuer of the asset.
+     *
+     * @param asset which asset to reserve from
+     * @param amount amount to remove from current supply
+     * @param fee {@link AssetAmount} fee for the operation or asset id, if left undefined the fee will be computed in DCT asset.
+     * When set, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough
+     */
+    public createReserveOperation(
+        asset: AssetRef,
+        amount: Long | number,
+        fee?: Fee,
+    ): Observable<AssetReserveOperation> {
+        return this.get(asset).pipe(map((obj) => new AssetReserveOperation(obj.issuer, new AssetAmount(amount, obj.id), fee)));
+    }
+
+    /**
+     * Reserve funds. Return issued funds to the issuer of the asset.
+     *
+     * @param credentials account credentials returning the asset
+     * @param asset which asset to reserve from
+     * @param amount amount to remove from current supply
+     * @param fee {@link AssetAmount} fee for the operation or asset id, if left undefined the fee will be computed in DCT asset.
+     * When set, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough
+     */
+    public reserve(
+        credentials: Credentials,
+        asset: AssetRef,
+        amount: Long | number,
+        fee?: Fee,
+    ): Observable<TransactionConfirmation> {
+        return this.createReserveOperation(asset, amount, fee).pipe(
             flatMap((op) => this.api.broadcastApi.broadcastWithCallback(credentials.keyPair, [op])),
         );
     }

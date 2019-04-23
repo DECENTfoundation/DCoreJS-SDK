@@ -17,7 +17,11 @@ import { MonitoredAssetOpts } from "../../models/MonitoredAssetOpts";
 import { AccountCreateOperation } from "../../models/operation/AccountCreateOperation";
 import { AccountUpdateOperation } from "../../models/operation/AccountUpdateOperation";
 import { AddOrUpdateContentOperation } from "../../models/operation/AddOrUpdateContentOperation";
+import { AssetClaimFeesOperation } from "../../models/operation/AssetClaimFeesOperation";
 import { AssetCreateOperation } from "../../models/operation/AssetCreateOperation";
+import { AssetFundPoolsOperation } from "../../models/operation/AssetFundPoolsOperation";
+import { AssetIssueOperation } from "../../models/operation/AssetIssueOperation";
+import { AssetReserveOperation } from "../../models/operation/AssetReserveOperation";
 import { AssetUpdateAdvancedOperation } from "../../models/operation/AssetUpdateAdvancedOperation";
 import { AssetUpdateOperation } from "../../models/operation/AssetUpdateOperation";
 import { CustomOperation } from "../../models/operation/CustomOperation";
@@ -73,6 +77,10 @@ export class Serializer {
         this.adapters.set(AssetCreateOperation.name, this.assetCreateAdapter);
         this.adapters.set(AssetUpdateOperation.name, this.assetUpdateAdapter);
         this.adapters.set(AssetUpdateAdvancedOperation.name, this.assetUpdateAdvAdapter);
+        this.adapters.set(AssetIssueOperation.name, this.assetIssueAdapter);
+        this.adapters.set(AssetFundPoolsOperation.name, this.assetFundAdapter);
+        this.adapters.set(AssetReserveOperation.name, this.assetReserveAdapter);
+        this.adapters.set(AssetClaimFeesOperation.name, this.assetClaimAdapter);
     }
 
     public serialize(obj: any): Buffer {
@@ -368,6 +376,42 @@ export class Serializer {
         this.append(buffer, obj.assetToUpdate);
         buffer.writeUint8(obj.precision);
         this.append(buffer, obj.fixedMaxSupply);
+        this.append(buffer, obj.extensions);
+    }
+
+    private assetIssueAdapter = (buffer: ByteBuffer, obj: AssetIssueOperation) => {
+        buffer.writeByte(obj.type);
+        this.append(buffer, obj.fee);
+        this.append(buffer, obj.issuer);
+        this.append(buffer, obj.assetToIssue);
+        this.append(buffer, obj.issueToAccount);
+        this.appendOptional(buffer, obj.memo);
+        this.append(buffer, obj.extensions);
+    }
+
+    private assetFundAdapter = (buffer: ByteBuffer, obj: AssetFundPoolsOperation) => {
+        buffer.writeByte(obj.type);
+        this.append(buffer, obj.fee);
+        this.append(buffer, obj.from);
+        this.append(buffer, obj.uia);
+        this.append(buffer, obj.dct);
+        this.append(buffer, obj.extensions);
+    }
+
+    private assetReserveAdapter = (buffer: ByteBuffer, obj: AssetReserveOperation) => {
+        buffer.writeByte(obj.type);
+        this.append(buffer, obj.fee);
+        this.append(buffer, obj.payer);
+        this.append(buffer, obj.amount);
+        this.append(buffer, obj.extensions);
+    }
+
+    private assetClaimAdapter = (buffer: ByteBuffer, obj: AssetClaimFeesOperation) => {
+        buffer.writeByte(obj.type);
+        this.append(buffer, obj.fee);
+        this.append(buffer, obj.issuer);
+        this.append(buffer, obj.uia);
+        this.append(buffer, obj.dct);
         this.append(buffer, obj.extensions);
     }
 }

@@ -3,15 +3,22 @@ import * as WebSocket from "isomorphic-ws";
 import "mocha";
 import * as moment from "moment";
 import "reflect-metadata";
+import { throwError } from "rxjs";
 import { create } from "rxjs-spy";
 import { Spy } from "rxjs-spy/spy-interface";
+import { scalar } from "rxjs/internal/observable/scalar";
+import { catchError } from "rxjs/operators";
+import { ECKeyPair } from "../../src/crypto/ECKeyPair";
 import { DCoreApi } from "../../src/DCoreApi";
 import { DCoreSdk } from "../../src/DCoreSdk";
 import { AssetAmount } from "../../src/models/AssetAmount";
 import { ChainObject } from "../../src/models/ChainObject";
+import { DCoreError } from "../../src/models/error/DCoreError";
 import { ExchangeRate } from "../../src/models/ExchangeRate";
 import { AccountCreateOperation } from "../../src/models/operation/AccountCreateOperation";
 import { AddOrUpdateContentOperation } from "../../src/models/operation/AddOrUpdateContentOperation";
+import { AssetClaimFeesOperation } from "../../src/models/operation/AssetClaimFeesOperation";
+import { AssetFundPoolsOperation } from "../../src/models/operation/AssetFundPoolsOperation";
 import { RemoveContentOperation } from "../../src/models/operation/RemoveContentOperation";
 import { RegionalPrice } from "../../src/models/RegionalPrice";
 import { Synopsis } from "../../src/models/Synopsis";
@@ -102,10 +109,10 @@ describe("blockchain based operations", () => {
     });
 
     // already purchased
-    it.skip("should make a purchase", (done: (arg?: any) => void) => {
+    it("should make a purchase", (done: (arg?: any) => void) => {
         api.contentApi.purchase(
             Helpers.CREDENTIALS,
-            "2.13.1",
+            "2.13.3",
         ).subscribe((value) => value.should.be.instanceOf(TransactionConfirmation), (error) => done(error), () => done());
     });
 
@@ -142,7 +149,7 @@ describe("blockchain based operations", () => {
 
     // asset 'SDK' is 1.3.35
     it("should create an asset", (done: (arg?: any) => void) => {
-        api.assetApi.createAsset(
+        api.assetApi.create(
             Helpers.CREDENTIALS,
             "SDK.7T",
             12,
@@ -152,19 +159,21 @@ describe("blockchain based operations", () => {
 
     // account_id_type fee_payer()const { return monitored_asset_opts.valid() ? account_id_type() : issuer; }
     // therefore Missing Active Authority 1.2.0
-    it.skip("should create a monitored asset", (done: (arg?: any) => void) => {
-        api.assetApi.createMonitoredAsset(
-            Helpers.CREDENTIALS,
-            "MSDK",
-            4,
-            "hello api monitored",
-        ).subscribe((value) => value.should.be.instanceOf(TransactionConfirmation), (error) => done(error), () => done());
-    });
+    /*
+        it.skip("should create a monitored asset", (done: (arg?: any) => void) => {
+            api.assetApi.createMonitoredAsset(
+                Helpers.CREDENTIALS,
+                "MSDK",
+                4,
+                "hello api monitored",
+            ).subscribe((value) => value.should.be.instanceOf(TransactionConfirmation), (error) => done(error), () => done());
+        });
+    */
 
     it("should update an asset", (done: (arg?: any) => void) => {
         const asset = ChainObject.parse("1.3.37");
         const ex = new ExchangeRate(new AssetAmount(1), new AssetAmount(2, asset));
-        api.assetApi.updateAsset(
+        api.assetApi.update(
             Helpers.CREDENTIALS,
             asset,
             ex,
@@ -176,11 +185,64 @@ describe("blockchain based operations", () => {
 
     it("should update advanced an asset", (done: (arg?: any) => void) => {
         const asset = ChainObject.parse("1.3.36");
-        api.assetApi.updateAdvancedAsset(
+        api.assetApi.updateAdvanced(
             Helpers.CREDENTIALS,
             asset,
             5,
             false,
+        ).subscribe((value) => value.should.be.instanceOf(TransactionConfirmation), (error) => done(error), () => done());
+    });
+
+    it("should issue an asset", (done: (arg?: any) => void) => {
+        const asset = ChainObject.parse("1.3.36");
+        api.assetApi.issue(
+            Helpers.CREDENTIALS,
+            asset,
+            1000,
+        ).subscribe((value) => value.should.be.instanceOf(TransactionConfirmation), (error) => done(error), () => done());
+    });
+
+    it("should fund an asset pool", (done: (arg?: any) => void) => {
+        const asset = ChainObject.parse("1.3.36");
+        api.assetApi.fund(
+            Helpers.CREDENTIALS,
+            asset,
+            10,
+            100,
+        ).subscribe((value) => value.should.be.instanceOf(TransactionConfirmation), (error) => done(error), () => done());
+    });
+
+    it("should fund an asset pool from non-issuer account", (done: (arg?: any) => void) => {
+        const asset = ChainObject.parse("1.3.36");
+        const op = new AssetFundPoolsOperation(Helpers.ACCOUNT2, new AssetAmount(0, asset), new AssetAmount(500));
+        api.broadcastApi.broadcastWithCallback(ECKeyPair.parseWif(Helpers.PRIVATE2), [op])
+            .subscribe((value) => value.should.be.instanceOf(TransactionConfirmation), (error) => done(error), () => done());
+    });
+
+    it("should claim an asset pool", (done: (arg?: any) => void) => {
+        const asset = ChainObject.parse("1.3.36");
+        api.assetApi.claim(
+            Helpers.CREDENTIALS,
+            asset,
+            10,
+            100,
+        ).subscribe((value) => value.should.be.instanceOf(TransactionConfirmation), (error) => done(error), () => done());
+    });
+
+    it("should claim an asset pool from non-issuer account is not allowed", (done: (arg?: any) => void) => {
+        const asset = ChainObject.parse("1.3.36");
+        const op = new AssetClaimFeesOperation(Helpers.ACCOUNT2, new AssetAmount(0, asset), new AssetAmount(500));
+        api.broadcastApi.broadcastWithCallback(ECKeyPair.parseWif(Helpers.PRIVATE2), [op])
+            .pipe(catchError((err) => err instanceof DCoreError ? scalar(true) : throwError(err)))
+            .subscribe((value) => value.should.be.true, (error) => done(error), () => done());
+    });
+
+    it("should reserve an asset", (done: (arg?: any) => void) => {
+        const asset = ChainObject.parse("1.3.36");
+        api.assetApi.reserve(
+            Helpers.CREDENTIALS,
+            asset,
+            10,
         ).subscribe((value) => value.should.be.instanceOf(TransactionConfirmation), (error) => done(error), () => done());
     });
 

@@ -47,12 +47,12 @@ chai.use(chaiThings);
         });
 
         it("should return account history relative", (done: (arg?: any) => void) => {
-            api.listOperationsRelative(Helpers.ACCOUNT)
+            api.listOperationsRelative(Helpers.ACCOUNT, 0)
                 .subscribe((value) => value.should.all.be.instanceOf(OperationHistory), (error) => done(error), () => done());
         });
 
         it("should find account history", (done: (arg?: any) => void) => {
-            api.findAllOperations(Helpers.ACCOUNT)
+            api.findAllOperations(Helpers.ACCOUNT, )
                 .subscribe((value) => value.should.all.be.instanceOf(BalanceChange), (error) => done(error), () => done());
         });
 

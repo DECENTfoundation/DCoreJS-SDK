@@ -1,6 +1,6 @@
 import { Expose } from "class-transformer";
+import { Fee } from "../../DCoreSdk";
 import { ChainObjectToClass, ChainObjectToPlain } from "../../net/adapter/TypeAdapters";
-import { AssetAmount } from "../AssetAmount";
 import { ChainObject } from "../ChainObject";
 import { BaseOperation } from "./BaseOperation";
 import { OperationType } from "./OperationType";
@@ -37,7 +37,7 @@ export class AssetUpdateMonitoredOperation extends BaseOperation {
         description: string,
         newFeedLifetime: number,
         newMinimumFeeds: number,
-        fee?: AssetAmount | ChainObject,
+        fee?: Fee,
     ) {
         super(OperationType.UpdateMonitoredAsset, fee);
         this.issuer = issuer;

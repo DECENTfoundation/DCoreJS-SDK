@@ -5,6 +5,7 @@ import { scalar } from "rxjs/internal/observable/scalar";
 import { catchError, flatMap, map, mapTo } from "rxjs/operators";
 import { Address } from "../crypto/Address";
 import { Credentials } from "../crypto/Credentials";
+import { ECKeyPair } from "../crypto/ECKeyPair";
 import { DCoreApi } from "../DCoreApi";
 import { AccountRef } from "../DCoreSdk";
 import { Account } from "../models/Account";
@@ -200,6 +201,21 @@ export class AccountApi extends BaseApi {
      */
     public createCredentials(accountName: string, privateKey: string): Observable<Credentials> {
         return this.getByName(accountName).pipe(map((acc) => new Credentials(acc.id, privateKey)));
+    }
+
+    /**
+     * Create a memo. Can be used in {@link TransferOperation} or {@link AssetIssueOperation}
+     *
+     * @param message text message to send
+     * @param recipient account name or id, mandatory for encrypted message
+     * @param keyPair sender's key pair, mandatory for encrypted message
+     */
+    public createMemo(message: string, recipient?: AccountRef, keyPair?: ECKeyPair) {
+        if (keyPair && recipient) {
+            return this.get(recipient).pipe(map((acc) => Memo.createEncrypted(message, keyPair, acc.primaryAddress)));
+        } else {
+            return scalar(Memo.createPublic(message));
+        }
     }
 
     /**

@@ -1,7 +1,7 @@
 import { Expose } from "class-transformer";
+import { AssetPrecision, Fee } from "../../DCoreSdk";
 import { ChainObjectToClass, ChainObjectToPlain } from "../../net/adapter/TypeAdapters";
 import { Asset } from "../Asset";
-import { AssetAmount } from "../AssetAmount";
 import { ChainObject } from "../ChainObject";
 import { BaseOperation } from "./BaseOperation";
 import { OperationType } from "./OperationType";
@@ -28,12 +28,22 @@ export class AssetUpdateAdvancedOperation extends BaseOperation {
     @Expose({ name: "set_fixed_max_supply" })
     public fixedMaxSupply: boolean;
 
+    /**
+     * Update advanced options for the asset.
+     *
+     * @param issuer account id issuing the asset
+     * @param assetToUpdate asset to update
+     * @param precision new precision
+     * @param fixedMaxSupply whether it should be allowed to change max supply, cannot be reverted once set to true
+     * @param fee {@link AssetAmount} fee for the operation or asset id, if left undefined the fee will be computed in DCT asset.
+     * When set, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough
+     */
     constructor(
         issuer: ChainObject,
         assetToUpdate: ChainObject,
-        precision: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12,
+        precision: AssetPrecision,
         fixedMaxSupply?: boolean,
-        fee?: AssetAmount | ChainObject,
+        fee?: Fee,
     ) {
         super(OperationType.UpdateUserIssuedAssetAdvanced, fee);
         this.issuer = issuer;
