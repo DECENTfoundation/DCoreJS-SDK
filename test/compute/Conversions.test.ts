@@ -1,6 +1,5 @@
 import * as chai from "chai";
 import { Decimal } from "decimal.js";
-import * as Long from "long";
 import "mocha";
 import "reflect-metadata";
 import { Asset, AssetAmount, AssetOptions, ChainObject, ExchangeRate } from "../../src/models";
@@ -10,8 +9,8 @@ chai.should();
 const getTestAsset = (assetId: string, baseAmount: number, baseId: string, quoteAmount: number, quoteId: string): Asset => {
     const asset = new Asset();
     asset.id = ChainObject.parse(assetId);
-    const base = new AssetAmount(Long.fromNumber(baseAmount), ChainObject.parse(baseId));
-    const quote = new AssetAmount(Long.fromNumber(quoteAmount), ChainObject.parse(quoteId));
+    const base = new AssetAmount(baseAmount, ChainObject.parse(baseId));
+    const quote = new AssetAmount(quoteAmount, ChainObject.parse(quoteId));
     asset.options = new AssetOptions(new ExchangeRate(base, quote));
     return asset;
 };

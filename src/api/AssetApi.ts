@@ -161,7 +161,7 @@ export class AssetApi extends BaseApi {
      *
      * @param issuer account id issuing the asset
      * @param symbol the string symbol, 3-16 uppercase chars
-     * @param precision base unit precision, todo reference to AssetFormatter once done describing the 'raw' value
+     * @param precision base unit precision, decimal places used in string representation
      * @param description optional description
      * @param options asset options
      * @param monitoredOptions options for monitored asset
@@ -185,7 +185,7 @@ export class AssetApi extends BaseApi {
      *
      * @param credentials account credentials issuing the asset
      * @param symbol the string symbol, 3-16 uppercase chars
-     * @param precision base unit precision, todo reference to AssetFormatter once done describing the 'raw' value
+     * @param precision base unit precision, decimal places used in string representation
      * @param description optional description
      * @param options asset options
      * @param fee {@link AssetAmount} fee for the operation or asset id, if left undefined the fee will be computed in DCT asset.
@@ -337,7 +337,7 @@ export class AssetApi extends BaseApi {
      * Create issue asset operation. Only the issuer of the asset can issue some funds until maxSupply is reached.
      *
      * @param asset asset to issue
-     * @param amount amount to issue
+     * @param amount raw amount to issue
      * @param to optional account id receiving the created funds, issuer account id is used if not defined
      * @param memo optional memo for receiver
      * @param fee {@link AssetAmount} fee for the operation or asset id, if left undefined the fee will be computed in DCT asset.
@@ -360,7 +360,7 @@ export class AssetApi extends BaseApi {
      *
      * @param credentials account credentials issuing the asset
      * @param asset asset to issue
-     * @param amount amount to issue
+     * @param amount raw amount to issue
      * @param to optional account id receiving the created funds, issuer account id is used if not defined
      * @param memo optional memo for receiver
      * @param fee {@link AssetAmount} fee for the operation or asset id, if left undefined the fee will be computed in DCT asset.
@@ -383,8 +383,8 @@ export class AssetApi extends BaseApi {
      * Create fund asset pool operation. Any account can fund a pool.
      *
      * @param asset which asset to fund
-     * @param uia the uia value
-     * @param dct the dct value
+     * @param uia UIA raw amount
+     * @param dct DCT raw amount
      * @param fee {@link AssetAmount} fee for the operation or asset id, if left undefined the fee will be computed in DCT asset.
      * When set, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough
      */
@@ -402,8 +402,8 @@ export class AssetApi extends BaseApi {
      *
      * @param credentials account credentials funding the pool
      * @param asset which asset to fund
-     * @param uia the uia value
-     * @param dct the dct value
+     * @param uia UIA raw amount
+     * @param dct DCT raw amount
      * @param fee {@link AssetAmount} fee for the operation or asset id, if left undefined the fee will be computed in DCT asset.
      * When set, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough
      */
@@ -423,8 +423,8 @@ export class AssetApi extends BaseApi {
      * Create claim fees operation. Claim funds from asset pool, only the asset issuer can claim.
      *
      * @param asset which asset to claim from
-     * @param uia the uia value to claim
-     * @param dct the dct value to claim
+     * @param uia UIA raw amount
+     * @param dct DCT raw amount
      * @param fee {@link AssetAmount} fee for the operation or asset id, if left undefined the fee will be computed in DCT asset.
      * When set, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough
      */
@@ -442,8 +442,8 @@ export class AssetApi extends BaseApi {
      *
      * @param credentials account credentials issuing the asset
      * @param asset which asset to claim from
-     * @param uia the uia value to claim
-     * @param dct the dct value to claim
+     * @param uia UIA raw amount
+     * @param dct DCT raw amount
      * @param fee {@link AssetAmount} fee for the operation or asset id, if left undefined the fee will be computed in DCT asset.
      * When set, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough
      */
@@ -463,7 +463,7 @@ export class AssetApi extends BaseApi {
      * Create reserve funds operation. Return issued funds to the issuer of the asset.
      *
      * @param asset which asset to reserve from
-     * @param amount amount to remove from current supply
+     * @param amount raw amount to remove from current supply
      * @param fee {@link AssetAmount} fee for the operation or asset id, if left undefined the fee will be computed in DCT asset.
      * When set, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough
      */
@@ -480,7 +480,7 @@ export class AssetApi extends BaseApi {
      *
      * @param credentials account credentials returning the asset
      * @param asset which asset to reserve from
-     * @param amount amount to remove from current supply
+     * @param amount raw amount to remove from current supply
      * @param fee {@link AssetAmount} fee for the operation or asset id, if left undefined the fee will be computed in DCT asset.
      * When set, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough
      */

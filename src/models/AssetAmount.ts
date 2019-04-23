@@ -18,7 +18,13 @@ export class AssetAmount {
     @Expose({ name: "asset_id" })
     public assetId: ChainObject;
 
-    constructor(amount: Long | number | string = Long.ZERO, assetId: ChainObject = DCoreConstants.DCT_ASSET_ID) {
+    /**
+     * asset amount defines value and asset id
+     *
+     * @param amount raw value
+     * @param assetId asset object id
+     */
+    constructor(amount: Long | number = Long.ZERO, assetId: ChainObject = DCoreConstants.DCT_ASSET_ID) {
         this.amount = Long.fromValue(amount).toUnsigned();
         this.assetId = assetId;
 

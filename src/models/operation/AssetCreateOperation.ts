@@ -38,7 +38,7 @@ export class AssetCreateOperation extends BaseOperation {
      *
      * @param issuer account id issuing the asset
      * @param symbol the string symbol, 3-16 uppercase chars
-     * @param precision base unit precision, todo reference to AssetFormatter once done describing the 'raw' value
+     * @param precision base unit precision, decimal places used in string representation
      * @param description optional description
      * @param options asset options
      * @param monitoredOptions options for monitored asset

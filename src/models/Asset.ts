@@ -51,7 +51,7 @@ export class Asset {
     /**
      * Convert amount in DCT to this asset
      *
-     * @param amount amount to convert
+     * @param amount raw amount to convert
      * @param roundingMode rounding mode to use when rounding to target asset precision
      */
     public convertFromDCT(amount: Long | number, roundingMode: Decimal.Rounding = Decimal.ROUND_CEIL) {
@@ -61,7 +61,7 @@ export class Asset {
     /**
      * Convert amount in this asset to DCT
      *
-     * @param amount amount to convert
+     * @param amount raw amount to convert
      * @param roundingMode rounding mode to use when rounding to target asset precision
      */
     public convertToDCT(amount: Long | number, roundingMode: Decimal.Rounding = Decimal.ROUND_CEIL) {
