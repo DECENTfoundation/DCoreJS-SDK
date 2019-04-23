@@ -1,7 +1,6 @@
 import * as _ from "lodash";
 import * as Long from "long";
 import { Observable, of, throwError } from "rxjs";
-import { scalar } from "rxjs/internal/observable/scalar";
 import { catchError, flatMap, map, mapTo } from "rxjs/operators";
 import { Address } from "../crypto/Address";
 import { Credentials } from "../crypto/Credentials";
@@ -214,7 +213,7 @@ export class AccountApi extends BaseApi {
         if (keyPair && recipient) {
             return this.get(recipient).pipe(map((acc) => Memo.createEncrypted(message, keyPair, acc.primaryAddress)));
         } else {
-            return scalar(Memo.createPublic(message));
+            return of(Memo.createPublic(message));
         }
     }
 
@@ -240,7 +239,7 @@ export class AccountApi extends BaseApi {
         feeAssetId?: ChainObject,
     ): Observable<TransferOperation> {
         if ((_.isNil(memo) || !encrypted) && (typeof account !== "string" || ChainObject.isValid(account))) {
-            return scalar(new TransferOperation(
+            return of(new TransferOperation(
                 credentials.account,
                 (typeof account === "string") ? ChainObject.parse(account) : account,
                 amount,

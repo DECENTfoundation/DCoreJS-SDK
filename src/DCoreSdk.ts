@@ -2,9 +2,8 @@ import Decimal from "decimal.js";
 import * as _ from "lodash";
 import { Duration } from "moment";
 import { CoreOptions } from "request";
-import { Observable, throwError, zip } from "rxjs";
+import { Observable, of, throwError, zip } from "rxjs";
 import { tag } from "rxjs-spy/operators";
-import { scalar } from "rxjs/internal/observable/scalar";
 import { flatMap, map, tap } from "rxjs/operators";
 import { DCoreApi } from "./DCoreApi";
 import { DCoreConstants } from "./DCoreConstants";
@@ -114,13 +113,13 @@ export class DCoreSdk {
                 ));
             finalOps = zip(...feeRequests).pipe(map((ops) => _.flatten(ops).concat(withFees)));
         } else {
-            finalOps = scalar(withFees);
+            finalOps = of(withFees);
         }
         let chainId: Observable<string>;
         if (_.isNil(this.chainId)) {
             chainId = this.request(new GetChainId()).pipe(tap((id) => this.chainId = id));
         } else {
-            chainId = scalar(this.chainId);
+            chainId = of(this.chainId);
         }
         return chainId.pipe(flatMap((id) =>
             zip(

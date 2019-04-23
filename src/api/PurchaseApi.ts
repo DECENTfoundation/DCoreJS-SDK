@@ -1,5 +1,4 @@
-import { Observable } from "rxjs";
-import { scalar } from "rxjs/internal/observable/scalar";
+import { Observable, of } from "rxjs";
 import { flatMap } from "rxjs/operators";
 import { Credentials } from "../crypto/Credentials";
 import { DCoreApi } from "../DCoreApi";
@@ -152,7 +151,7 @@ export class PurchaseApi extends BaseApi {
         comment: string,
         feeAssetId?: ChainObject,
     ): Observable<LeaveRatingAndCommentOperation> {
-        return scalar(new LeaveRatingAndCommentOperation(uri, consumer, rating, comment, feeAssetId));
+        return of(new LeaveRatingAndCommentOperation(uri, consumer, rating, comment, feeAssetId));
     }
 
     /**

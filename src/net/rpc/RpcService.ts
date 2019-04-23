@@ -1,9 +1,8 @@
 import { RxHR, RxHttpRequest } from "@akanass/rx-http-request";
 import * as _ from "lodash";
 import { CoreOptions } from "request";
+import { Observable, of } from "rxjs";
 import { tag } from "rxjs-spy/operators";
-import { Observable } from "rxjs/internal/Observable";
-import { scalar } from "rxjs/internal/observable/scalar";
 import { filter, flatMap, map } from "rxjs/operators";
 import { DCoreError } from "../../models/error/DCoreError";
 import { ObjectNotFoundError } from "../../models/error/ObjectNotFoundError";
@@ -19,7 +18,7 @@ export class RpcService {
     }
 
     public request<T>(request: BaseRequest<T>): Observable<T> {
-        return scalar(request.json()).pipe(
+        return of(request.json()).pipe(
             tag(`API_send_${request.method}`),
             flatMap((serialized) => this.baseRequest.post("rpc", { body: serialized })),
             filter((data) => data.response.statusCode === 200),

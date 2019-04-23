@@ -1,6 +1,5 @@
 import * as _ from "lodash";
-import { Observable } from "rxjs";
-import { scalar } from "rxjs/internal/observable/scalar";
+import { Observable, of } from "rxjs";
 import { flatMap, map } from "rxjs/operators";
 import { Credentials } from "../crypto/Credentials";
 import { DCoreApi } from "../DCoreApi";
@@ -125,7 +124,7 @@ export class ContentApi extends BaseApi {
         memo?: string,
         feeAssetId?: AssetAmount,
     ): Observable<TransferOperation> {
-        return scalar(new TransferOperation(credentials.account, id, amount, _.isNil(memo) ? memo : Memo.createPublic(memo), feeAssetId));
+        return of(new TransferOperation(credentials.account, id, amount, _.isNil(memo) ? memo : Memo.createPublic(memo), feeAssetId));
     }
 
     /**

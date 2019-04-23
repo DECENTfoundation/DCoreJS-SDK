@@ -1,8 +1,7 @@
 import { Decimal } from "decimal.js";
 import * as _ from "lodash";
 import * as Long from "long";
-import { Observable, throwError } from "rxjs";
-import { scalar } from "rxjs/internal/observable/scalar";
+import { Observable, of, throwError } from "rxjs";
 import { flatMap, map } from "rxjs/operators";
 import { Credentials } from "../crypto/Credentials";
 import { DCoreApi } from "../DCoreApi";
@@ -178,7 +177,7 @@ export class AssetApi extends BaseApi {
         monitoredOptions?: MonitoredAssetOpts,
         fee?: Fee,
     ): Observable<AssetCreateOperation> {
-        return scalar(new AssetCreateOperation(issuer, symbol, precision, description, options, monitoredOptions, fee));
+        return of(new AssetCreateOperation(issuer, symbol, precision, description, options, monitoredOptions, fee));
     }
 
     /**
@@ -501,7 +500,7 @@ export class AssetApi extends BaseApi {
         return this.listAllRelative(lowerBound, limit).pipe(
             flatMap((prev) => {
                 if (prev.length < limit) {
-                    return scalar(prev);
+                    return of(prev);
                 } else {
                     return this.pageAll(_.last(prev)!.symbol)
                         .pipe(map((next) => _.concat(prev, _.drop(next, 1))));

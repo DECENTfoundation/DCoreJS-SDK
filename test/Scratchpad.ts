@@ -8,10 +8,8 @@ import * as Long from "long";
 import { suite, test, timeout } from "mocha-typescript";
 import * as moment from "moment";
 import "reflect-metadata";
-import { from, zip } from "rxjs";
+import { of, zip } from "rxjs";
 import { create } from "rxjs-spy";
-import { scalar } from "rxjs/internal/observable/scalar";
-import { flatMap, map } from "rxjs/operators";
 import { ecdhUnsafe, publicKeyTweakMul } from "secp256k1";
 import { Address } from "../src/crypto/Address";
 import { ECKeyPair } from "../src/crypto/ECKeyPair";
@@ -386,7 +384,7 @@ class Scratchpad {
     }
 
     @test "zip"() {
-        zip(zip(...[scalar("hello"), scalar(" "), scalar("world")]), scalar("foo"))
+        zip(zip(...[of("hello"), of(" "), of("world")]), of("foo"))
             .subscribe((value) => console.log(value));
     }
 }

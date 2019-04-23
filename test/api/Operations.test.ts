@@ -3,10 +3,9 @@ import * as WebSocket from "isomorphic-ws";
 import "mocha";
 import * as moment from "moment";
 import "reflect-metadata";
-import { throwError } from "rxjs";
+import { of, throwError } from "rxjs";
 import { create } from "rxjs-spy";
 import { Spy } from "rxjs-spy/spy-interface";
-import { scalar } from "rxjs/internal/observable/scalar";
 import { catchError } from "rxjs/operators";
 import { ECKeyPair } from "../../src/crypto/ECKeyPair";
 import { DCoreApi } from "../../src/DCoreApi";
@@ -233,7 +232,7 @@ describe("blockchain based operations", () => {
         const asset = ChainObject.parse("1.3.36");
         const op = new AssetClaimFeesOperation(Helpers.ACCOUNT2, new AssetAmount(0, asset), new AssetAmount(500));
         api.broadcastApi.broadcastWithCallback(ECKeyPair.parseWif(Helpers.PRIVATE2), [op])
-            .pipe(catchError((err) => err instanceof DCoreError ? scalar(true) : throwError(err)))
+            .pipe(catchError((err) => err instanceof DCoreError ? of(true) : throwError(err)))
             .subscribe((value) => value.should.be.true, (error) => done(error), () => done());
     });
 
