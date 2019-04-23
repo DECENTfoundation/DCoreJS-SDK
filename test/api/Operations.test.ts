@@ -32,7 +32,7 @@ describe("blockchain based operations", () => {
 
     before(() => {
         spy = create();
-        spy.log(/^API\w+/);
+        // spy.log(/^API\w+/);
         api = DCoreSdk.createForWebSocket(() => new WebSocket(Helpers.STAGE_WS));
     });
 
@@ -87,18 +87,6 @@ describe("blockchain based operations", () => {
         ).subscribe((value) => value.should.be.instanceOf(TransactionConfirmation), (error) => done(error), () => done());
     });
 
-    // todo no token balance, fails, wait for asset issue operation then fix
-    it.skip("should make a transfer with fee", (done: (arg?: any) => void) => {
-        api.accountApi.transfer(
-            Helpers.CREDENTIALS,
-            Helpers.ACCOUNT2,
-            new AssetAmount(1),
-            undefined,
-            undefined,
-            ChainObject.parse("1.3.33"),
-        ).subscribe((value) => value.transaction.operations[0].fee!.assetId.objectId.should.be.eq("1.3.33"), (error) => done(error), () => done());
-    });
-
     it("should make a transfer to content", (done: (arg?: any) => void) => {
         api.contentApi.transfer(
             Helpers.CREDENTIALS,
@@ -108,7 +96,7 @@ describe("blockchain based operations", () => {
     });
 
     // already purchased
-    it("should make a purchase", (done: (arg?: any) => void) => {
+    it.skip("should make a purchase", (done: (arg?: any) => void) => {
         api.contentApi.purchase(
             Helpers.CREDENTIALS,
             "2.13.3",
@@ -147,10 +135,10 @@ describe("blockchain based operations", () => {
     });
 
     // asset 'SDK' is 1.3.35
-    it("should create an asset", (done: (arg?: any) => void) => {
+    it.skip("should create an asset", (done: (arg?: any) => void) => {
         api.assetApi.create(
             Helpers.CREDENTIALS,
-            "SDK.7T",
+            "SDK",
             12,
             "hello api",
         ).subscribe((value) => value.should.be.instanceOf(TransactionConfirmation), (error) => done(error), () => done());
@@ -170,44 +158,45 @@ describe("blockchain based operations", () => {
     */
 
     it("should update an asset", (done: (arg?: any) => void) => {
-        const asset = ChainObject.parse("1.3.37");
+        const asset = ChainObject.parse("1.3.40");
         const ex = new ExchangeRate(new AssetAmount(1), new AssetAmount(2, asset));
         api.assetApi.update(
             Helpers.CREDENTIALS,
             asset,
             ex,
             "hello new api",
-            false,
-            2000,
+            true,
+            500000,
         ).subscribe((value) => value.should.be.instanceOf(TransactionConfirmation), (error) => done(error), () => done());
     });
 
-    it("should update advanced an asset", (done: (arg?: any) => void) => {
-        const asset = ChainObject.parse("1.3.36");
+    // fails on old values
+    it.skip("should update advanced asset", (done: (arg?: any) => void) => {
+        const asset = ChainObject.parse("1.3.41");
         api.assetApi.updateAdvanced(
             Helpers.CREDENTIALS,
             asset,
-            5,
+            6,
             false,
         ).subscribe((value) => value.should.be.instanceOf(TransactionConfirmation), (error) => done(error), () => done());
     });
 
     it("should issue an asset", (done: (arg?: any) => void) => {
-        const asset = ChainObject.parse("1.3.36");
+        const asset = ChainObject.parse("1.3.40");
         api.assetApi.issue(
             Helpers.CREDENTIALS,
             asset,
-            1000,
+            200000,
         ).subscribe((value) => value.should.be.instanceOf(TransactionConfirmation), (error) => done(error), () => done());
     });
 
     it("should fund an asset pool", (done: (arg?: any) => void) => {
-        const asset = ChainObject.parse("1.3.36");
+        const asset = ChainObject.parse("1.3.40");
         api.assetApi.fund(
             Helpers.CREDENTIALS,
             asset,
-            10,
-            100,
+            0,
+            100000, // 0.01 dct fee
         ).subscribe((value) => value.should.be.instanceOf(TransactionConfirmation), (error) => done(error), () => done());
     });
 
@@ -218,13 +207,24 @@ describe("blockchain based operations", () => {
             .subscribe((value) => value.should.be.instanceOf(TransactionConfirmation), (error) => done(error), () => done());
     });
 
+    it("should make a transfer with fee", (done: (arg?: any) => void) => {
+        api.accountApi.transfer(
+            Helpers.CREDENTIALS,
+            Helpers.ACCOUNT2,
+            new AssetAmount(1),
+            undefined,
+            undefined,
+            ChainObject.parse("1.3.40"),
+        ).subscribe((value) => value.transaction.operations[0].fee!.assetId.objectId.should.be.eq("1.3.40"), (error) => done(error), () => done());
+    });
+
     it("should claim an asset pool", (done: (arg?: any) => void) => {
-        const asset = ChainObject.parse("1.3.36");
+        const asset = ChainObject.parse("1.3.40");
         api.assetApi.claim(
             Helpers.CREDENTIALS,
             asset,
-            10,
-            100,
+            200000,
+            0,
         ).subscribe((value) => value.should.be.instanceOf(TransactionConfirmation), (error) => done(error), () => done());
     });
 
@@ -237,11 +237,11 @@ describe("blockchain based operations", () => {
     });
 
     it("should reserve an asset", (done: (arg?: any) => void) => {
-        const asset = ChainObject.parse("1.3.36");
+        const asset = ChainObject.parse("1.3.40");
         api.assetApi.reserve(
             Helpers.CREDENTIALS,
             asset,
-            10,
+            200000,
         ).subscribe((value) => value.should.be.instanceOf(TransactionConfirmation), (error) => done(error), () => done());
     });
 
