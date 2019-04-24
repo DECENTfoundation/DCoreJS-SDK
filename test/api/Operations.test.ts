@@ -18,7 +18,6 @@ import { AccountCreateOperation } from "../../src/models/operation/AccountCreate
 import { AddOrUpdateContentOperation } from "../../src/models/operation/AddOrUpdateContentOperation";
 import { AssetClaimFeesOperation } from "../../src/models/operation/AssetClaimFeesOperation";
 import { AssetFundPoolsOperation } from "../../src/models/operation/AssetFundPoolsOperation";
-import { RemoveContentOperation } from "../../src/models/operation/RemoveContentOperation";
 import { RegionalPrice } from "../../src/models/RegionalPrice";
 import { Synopsis } from "../../src/models/Synopsis";
 import { TransactionConfirmation } from "../../src/models/TransactionConfirmation";
@@ -56,14 +55,9 @@ describe("blockchain based operations", () => {
             .subscribe((value) => value.should.be.instanceOf(TransactionConfirmation), (error) => done(error), () => done());
     });
 
-    // already expired
+    // already expired/removed
     it.skip("should remove a content", (done: (arg?: any) => void) => {
-        const op = new RemoveContentOperation(
-            Helpers.ACCOUNT,
-            "http://hello.world",
-        );
-
-        api.broadcastApi.broadcastWithCallback(Helpers.KEY, [op])
+        api.contentApi.remove(Helpers.CREDENTIALS, "http://hello.world")
             .subscribe((value) => value.should.be.instanceOf(TransactionConfirmation), (error) => done(error), () => done());
     });
 
