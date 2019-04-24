@@ -16,7 +16,6 @@ import { ChainObject } from "../../src/models/ChainObject";
 import { DCoreError } from "../../src/models/error/DCoreError";
 import { ExchangeRate } from "../../src/models/ExchangeRate";
 import { AccountCreateOperation } from "../../src/models/operation/AccountCreateOperation";
-import { AddOrUpdateContentOperation } from "../../src/models/operation/AddOrUpdateContentOperation";
 import { AssetClaimFeesOperation } from "../../src/models/operation/AssetClaimFeesOperation";
 import { AssetFundPoolsOperation } from "../../src/models/operation/AssetFundPoolsOperation";
 import { TransferOperation } from "../../src/models/operation/TransferOperation";
@@ -53,18 +52,25 @@ describe("blockchain based operations", () => {
             .subscribe((value) => value.should.be.instanceOf(TransactionConfirmation), (error) => done(error), () => done());
     });
 
-    // create fails on exist, update fails on expiration update
-    it.skip("should add or update a content", (done: (arg?: any) => void) => {
-        const op = AddOrUpdateContentOperation.create(
-            Helpers.ACCOUNT,
+    // create skips on exist, update fails on expiration update
+    it.skip("should add a content", (done: (arg?: any) => void) => {
+        api.contentApi.add(
+            Helpers.CREDENTIALS,
             [[Helpers.ACCOUNT2, 50]],
-            "http://hello.world",
-            new RegionalPrice(new AssetAmount(100)),
-            moment.utc().add(10, "days"),
+            "http://hello.world.io",
+            [new RegionalPrice(new AssetAmount(2))],
+            moment.utc().add(100, "days"),
             new Synopsis("hello", "world"),
-        );
+        )
+            .subscribe((value) => value.should.be.instanceOf(TransactionConfirmation), (error) => done(error), () => done());
+    });
 
-        api.broadcastApi.broadcastWithCallback(Helpers.KEY, [op])
+    it("should update a content", (done: (arg?: any) => void) => {
+        api.contentApi.update(
+            Helpers.CREDENTIALS,
+            "http://hello.world.io",
+            (old) => new Synopsis(old.title, "update"),
+        )
             .subscribe((value) => value.should.be.instanceOf(TransactionConfirmation), (error) => done(error), () => done());
     });
 

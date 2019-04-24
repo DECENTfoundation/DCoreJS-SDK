@@ -148,7 +148,7 @@ describe("serialization test suite", () => {
             ChainObject.parse("1.2.34"),
             [],
             "http://hello.io/world2",
-            new RegionalPrice(new AssetAmount(1000), Regions.None),
+            [new RegionalPrice(new AssetAmount(1000), Regions.None)],
             moment.utc("2019-05-28T13:32:34"),
             new Synopsis("Game Title", "Description", "1.5.5"),
             new AssetAmount(),
