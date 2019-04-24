@@ -14,7 +14,6 @@ import { AssetAmount } from "../../src/models/AssetAmount";
 import { ChainObject } from "../../src/models/ChainObject";
 import { DCoreError } from "../../src/models/error/DCoreError";
 import { ExchangeRate } from "../../src/models/ExchangeRate";
-import { AccountCreateOperation } from "../../src/models/operation/AccountCreateOperation";
 import { AddOrUpdateContentOperation } from "../../src/models/operation/AddOrUpdateContentOperation";
 import { AssetClaimFeesOperation } from "../../src/models/operation/AssetClaimFeesOperation";
 import { AssetFundPoolsOperation } from "../../src/models/operation/AssetFundPoolsOperation";
@@ -68,14 +67,8 @@ describe("blockchain based operations", () => {
     });
 
     // account exist
-    it.skip("should create an account", (done: (arg?: any) => void) => {
-        const op = AccountCreateOperation.create(
-            Helpers.ACCOUNT,
-            "marian",
-            Helpers.PUBLIC,
-        );
-
-        api.broadcastApi.broadcastWithCallback(Helpers.KEY, [op])
+    it("should create an account", (done: (arg?: any) => void) => {
+        api.accountApi.create(Helpers.CREDENTIALS, "sdk-account", Helpers.PUBLIC)
             .subscribe((value) => value.should.be.instanceOf(TransactionConfirmation), (error) => done(error), () => done());
     });
 
