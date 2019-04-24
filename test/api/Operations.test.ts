@@ -79,6 +79,16 @@ describe("blockchain based operations", () => {
             .subscribe((value) => value.should.be.instanceOf(TransactionConfirmation), (error) => done(error), () => done());
     });
 
+    it("should update an account", (done: (arg?: any) => void) => {
+        api.accountApi.update(Helpers.CREDENTIALS, (old) => {
+            old.allowSubscription = !old.allowSubscription;
+            old.subscriptionPeriod = 1;
+            old.pricePerSubscribe = new AssetAmount(1);
+            return old;
+        })
+            .subscribe((value) => value.should.be.instanceOf(TransactionConfirmation), (error) => done(error), () => done());
+    });
+
     it("should make a transfer", (done: (arg?: any) => void) => {
         api.accountApi.transfer(
             Helpers.CREDENTIALS,
