@@ -8,13 +8,16 @@ If you are looking for other platforms you can find info [below](#official-dcore
 Requirements
 --------
 
-- [add](https://add.org)
+- [Node.js & NPM](https://nodejs.org/)
+- [secp256k1-node](https://github.com/cryptocoinjs/secp256k1-node)
+- [RxJS](https://github.com/ReactiveX/RxJS)
 
 
 Installation
 --------
 
-`npm install --save git+ssh://git@github.com/DECENTfoundation/DCoreJS-SDK`
+`npm install --save rxjs`<br>
+`npm install --save git://git@github.com/DECENTfoundation/DCoreJS-SDK`
 
 Make sure you import `reflect-metadata` in an entry class to your application, eg. `import "reflect-metadata";`
 
