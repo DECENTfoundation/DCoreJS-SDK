@@ -1,0 +1,5 @@
+--colors
+--timeout 20000
+--ui mocha-typescript
+--require source-map-support/register
+--require ts-node/register

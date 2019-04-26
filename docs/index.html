@@ -1,0 +1,895 @@
+<!doctype html>
+<html class="default no-js">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>dcorejs-sdk</title>
+	<meta name="description" content="">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="assets/css/main.css">
+</head>
+<body>
+<header>
+	<div class="tsd-page-toolbar">
+		<div class="container">
+			<div class="table-wrap">
+				<div class="table-cell" id="tsd-search" data-index="assets/js/search.js" data-base=".">
+					<div class="field">
+						<label for="tsd-search-field" class="tsd-widget search no-caption">Search</label>
+						<input id="tsd-search-field" type="text" />
+					</div>
+					<ul class="results">
+						<li class="state loading">Preparing search index...</li>
+						<li class="state failure">The search index is not available</li>
+					</ul>
+					<a href="index.html" class="title">dcorejs-sdk</a>
+				</div>
+				<div class="table-cell" id="tsd-widgets">
+					<div id="tsd-filter">
+						<a href="#" class="tsd-widget options no-caption" data-toggle="options">Options</a>
+						<div class="tsd-filter-group">
+							<div class="tsd-select" id="tsd-filter-visibility">
+								<span class="tsd-select-label">All</span>
+								<ul class="tsd-select-list">
+									<li data-value="public">Public</li>
+									<li data-value="protected">Public/Protected</li>
+									<li data-value="private" class="selected">All</li>
+								</ul>
+							</div>
+							<input type="checkbox" id="tsd-filter-inherited" checked />
+							<label class="tsd-widget" for="tsd-filter-inherited">Inherited</label>
+							<input type="checkbox" id="tsd-filter-externals" checked />
+							<label class="tsd-widget" for="tsd-filter-externals">Externals</label>
+							<input type="checkbox" id="tsd-filter-only-exported" />
+							<label class="tsd-widget" for="tsd-filter-only-exported">Only exported</label>
+						</div>
+					</div>
+					<a href="#" class="tsd-widget menu no-caption" data-toggle="menu">Menu</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="tsd-page-title">
+		<div class="container">
+			<ul class="tsd-breadcrumb">
+				<li>
+					<a href="globals.html">Globals</a>
+				</li>
+			</ul>
+			<h1> dcorejs-sdk</h1>
+		</div>
+	</div>
+</header>
+<div class="container container-main">
+	<div class="row">
+		<div class="col-8 col-content">
+			<div class="tsd-panel tsd-typography">
+				<h1 id="dcore-sdk-for-js">DCore SDK for JS</h1>
+				<p>Set of APIs for accessing the DCore Blockchain.<br>
+				If you are looking for other platforms you can find info <a href="#official-dcore-sdks-for-other-platforms">below</a>.</p>
+				<h2 id="requirements">Requirements</h2>
+				<ul>
+					<li><a href="https://nodejs.org/">Node.js &amp; NPM</a></li>
+					<li><a href="https://github.com/cryptocoinjs/secp256k1-node">secp256k1-node</a></li>
+					<li><a href="https://github.com/ReactiveX/RxJS">RxJS</a></li>
+				</ul>
+				<h2 id="installation">Installation</h2>
+				<p><code>npm install --save rxjs</code><br>
+				<code>npm install --save git://git@github.com/DECENTfoundation/DCoreJS-SDK</code></p>
+				<p>Make sure you import <code>reflect-metadata</code> in an entry class to your application, eg. <code>import &quot;reflect-metadata&quot;;</code></p>
+				<p>To enable debug logging you can use <a href="https://www.npmjs.com/package/rxjs-spy"><code>rxjs-spy</code></a>.</p>
+				<h2 id="usage">Usage</h2>
+				<p>You can find example project with SDK usage <a href="https://github.com/DECENTfoundation/DCore-SDK-Examples/tree/master/sdk-ts">here</a>.</p>
+				<p>Use <code>DCoreSdk</code> to initialize the API.
+				The <code>DCoreApi</code> provides different groups of APIs for accessing the blockchain and default configuration values.</p>
+				<p>The supported operations are located in <code>ch.decent.sdk.model.operation</code> package, suffixed with <code>Operation</code> eg. <code>TransferOperation(...)</code>.
+				Use the <code>BroadcastApi</code> to apply the operations to DCore or use appropriate methods in APIs.</p>
+				<p>Access api using rest</p>
+				<pre><code class="language-typescript"><span class="hljs-keyword">import</span> <span class="hljs-string">"reflect-metadata"</span>;
+<span class="hljs-keyword">import</span> { DCoreSdk } <span class="hljs-keyword">from</span> <span class="hljs-string">"../src/DCoreSdk"</span>;
+
+<span class="hljs-comment">// create the API</span>
+<span class="hljs-keyword">const</span> api = DCoreSdk.createForHttp({ baseUrl: <span class="hljs-string">"https://testnet-api.dcore.io/"</span>})
+<span class="hljs-comment">// get account by name, resolves to account id '1.2.27'</span>
+<span class="hljs-keyword">const</span> disposable = api.accountApi.get(<span class="hljs-string">"public-account-9"</span>)
+    .subscribe(<span class="hljs-function">(<span class="hljs-params">account</span>) =&gt;</span> <span class="hljs-built_in">console</span>.log(account.id));</code></pre>
+				<p>Access api using websocket</p>
+				<pre><code class="language-typescript"><span class="hljs-keyword">import</span> <span class="hljs-string">"reflect-metadata"</span>;
+<span class="hljs-keyword">import</span> * <span class="hljs-keyword">as</span> WebSocket <span class="hljs-keyword">from</span> <span class="hljs-string">"isomorphic-ws"</span>;
+<span class="hljs-keyword">import</span> { Credentials } <span class="hljs-keyword">from</span> <span class="hljs-string">"../src/crypto/Credentials"</span>;
+<span class="hljs-keyword">import</span> { DCoreSdk } <span class="hljs-keyword">from</span> <span class="hljs-string">"../src/DCoreSdk"</span>;
+<span class="hljs-keyword">import</span> { AssetAmount } <span class="hljs-keyword">from</span> <span class="hljs-string">"../src/models/AssetAmount"</span>;
+<span class="hljs-keyword">import</span> { ChainObject } <span class="hljs-keyword">from</span> <span class="hljs-string">"../src/models/ChainObject"</span>;
+<span class="hljs-keyword">import</span> { create } <span class="hljs-keyword">from</span> <span class="hljs-string">"rxjs-spy"</span>;
+
+<span class="hljs-comment">// init rxjs-spy and log all tags</span>
+<span class="hljs-keyword">const</span> spy = create();
+spy.log();
+
+<span class="hljs-comment">// create api for websocket</span>
+<span class="hljs-keyword">const</span> api = DCoreSdk.createForWebSocket(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> <span class="hljs-keyword">new</span> WebSocket(<span class="hljs-string">"wss://testnet-api.dcore.io/"</span>));
+<span class="hljs-comment">// create account credentials</span>
+<span class="hljs-keyword">const</span> credentials = <span class="hljs-keyword">new</span> Credentials(ChainObject.parse(<span class="hljs-string">"1.2.27"</span>), <span class="hljs-string">"5Hxwqx6JJUBYWjQNt8DomTNJ6r6YK8wDJym4CMAH1zGctFyQtzt"</span>);
+<span class="hljs-comment">// send 1DCT to account id '1.2.28 (public-account-10)' with encrypted 'hello memo' memo</span>
+<span class="hljs-keyword">const</span> disposable = api.accountApi.transfer(credentials, <span class="hljs-string">"public-account-10"</span>, <span class="hljs-keyword">new</span> AssetAmount(<span class="hljs-number">100000000</span>), <span class="hljs-string">"hello memo"</span>)
+    .subscribe(<span class="hljs-function">(<span class="hljs-params">confirmation</span>) =&gt;</span> <span class="hljs-built_in">console</span>.log(confirmation.id));</code></pre>
+				<h2 id="official-dcore-sdks-for-other-platforms">Official DCore SDKs for other platforms</h2>
+				<ul>
+					<li><a href="https://github.com/DECENTfoundation/DCoreSwift-SDK">iOS/Swift</a></li>
+					<li><a href="https://github.com/DECENTfoundation/DCoreKt-SDK">Android/Java/Kotlin</a></li>
+					<li><a href="https://github.com/DECENTfoundation/DCorePHP-SDK">PHP</a></li>
+				</ul>
+			</div>
+		</div>
+		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
+			<nav class="tsd-navigation primary">
+				<ul>
+					<li class="globals  ">
+						<a href="globals.html"><em>Globals</em></a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_dcoreapi_.html">"DCore<wbr>Api"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_dcoreconstants_.html">"DCore<wbr>Constants"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_dcoresdk_.html">"DCore<wbr>Sdk"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_api_accountapi_.html">"api/<wbr>Account<wbr>Api"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_api_assetapi_.html">"api/<wbr>Asset<wbr>Api"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_api_balanceapi_.html">"api/<wbr>Balance<wbr>Api"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_api_baseapi_.html">"api/<wbr>Base<wbr>Api"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_api_blockapi_.html">"api/<wbr>Block<wbr>Api"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_api_broadcastapi_.html">"api/<wbr>Broadcast<wbr>Api"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_api_callbackapi_.html">"api/<wbr>Callback<wbr>Api"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_api_contentapi_.html">"api/<wbr>Content<wbr>Api"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_api_generalapi_.html">"api/<wbr>General<wbr>Api"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_api_historyapi_.html">"api/<wbr>History<wbr>Api"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_api_messageapi_.html">"api/<wbr>Message<wbr>Api"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_api_miningapi_.html">"api/<wbr>Mining<wbr>Api"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_api_purchaseapi_.html">"api/<wbr>Purchase<wbr>Api"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_api_seedersapi_.html">"api/<wbr>Seeders<wbr>Api"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_api_subscriptionapi_.html">"api/<wbr>Subscription<wbr>Api"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_api_transactionapi_.html">"api/<wbr>Transaction<wbr>Api"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_api_validationapi_.html">"api/<wbr>Validation<wbr>Api"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_api_index_.html">"api/index"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_crypto_address_.html">"crypto/<wbr>Address"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_crypto_credentials_.html">"crypto/<wbr>Credentials"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_crypto_eckeypair_.html">"crypto/ECKey<wbr>Pair"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_crypto_elgamal_.html">"crypto/<wbr>ElGamal"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_crypto_passphrase_.html">"crypto/<wbr>Passphrase"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_crypto_wif_.html">"crypto/<wbr>Wif"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_crypto_dictionaries_seeddictionary_.html">"crypto/dictionaries/<wbr>Seed<wbr>Dictionary"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_crypto_dictionaries_index_.html">"crypto/dictionaries/index"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_crypto_index_.html">"crypto/index"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_index_.html">"index"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_models_account_.html">"models/<wbr>Account"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_models_accountbalance_.html">"models/<wbr>Account<wbr>Balance"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_models_accountstatistics_.html">"models/<wbr>Account<wbr>Statistics"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_models_asset_.html">"models/<wbr>Asset"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_models_assetamount_.html">"models/<wbr>Asset<wbr>Amount"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_models_assetdata_.html">"models/<wbr>Asset<wbr>Data"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_models_assetoptions_.html">"models/<wbr>Asset<wbr>Options"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_models_authority_.html">"models/<wbr>Authority"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_models_authoritymap_.html">"models/<wbr>Authority<wbr>Map"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_models_balancechange_.html">"models/<wbr>Balance<wbr>Change"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_models_blockdata_.html">"models/<wbr>Block<wbr>Data"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_models_blockheader_.html">"models/<wbr>Block<wbr>Header"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_models_chainobject_.html">"models/<wbr>Chain<wbr>Object"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_models_chainparameters_.html">"models/<wbr>Chain<wbr>Parameters"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_models_chainproperties_.html">"models/<wbr>Chain<wbr>Properties"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_models_content_.html">"models/<wbr>Content"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_models_contentkeys_.html">"models/<wbr>Content<wbr>Keys"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_models_contenttypes_.html">"models/<wbr>Content<wbr>Types"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_models_custodydata_.html">"models/<wbr>Custody<wbr>Data"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_models_dynamicglobalproperties_.html">"models/<wbr>Dynamic<wbr>Global<wbr>Properties"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_models_exchangerate_.html">"models/<wbr>Exchange<wbr>Rate"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_models_feeparameter_.html">"models/<wbr>Fee<wbr>Parameter"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_models_feeschedule_.html">"models/<wbr>Fee<wbr>Schedule"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_models_fullaccount_.html">"models/<wbr>Full<wbr>Account"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_models_globalparameters_.html">"models/<wbr>Global<wbr>Parameters"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_models_globalproperties_.html">"models/<wbr>Global<wbr>Properties"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_models_keypart_.html">"models/<wbr>Key<wbr>Part"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_models_memo_.html">"models/<wbr>Memo"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_models_message_.html">"models/<wbr>Message"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_models_messagepayload_.html">"models/<wbr>Message<wbr>Payload"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_models_messagepayloadreceiver_.html">"models/<wbr>Message<wbr>Payload<wbr>Receiver"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_models_messagereceiver_.html">"models/<wbr>Message<wbr>Receiver"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_models_messageresponse_.html">"models/<wbr>Message<wbr>Response"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_models_miner_.html">"models/<wbr>Miner"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_models_minerid_.html">"models/<wbr>Miner<wbr>Id"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_models_minerrewardinput_.html">"models/<wbr>Miner<wbr>Reward<wbr>Input"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_models_minervotes_.html">"models/<wbr>Miner<wbr>Votes"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_models_minervotinginfo_.html">"models/<wbr>Miner<wbr>Voting<wbr>Info"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_models_monitoredassetopts_.html">"models/<wbr>Monitored<wbr>Asset<wbr>Opts"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_models_objecttype_.html">"models/<wbr>Object<wbr>Type"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_models_operationhistory_.html">"models/<wbr>Operation<wbr>History"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_models_options_.html">"models/<wbr>Options"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_models_pricefeed_.html">"models/<wbr>Price<wbr>Feed"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_models_priceperregion_.html">"models/<wbr>Price<wbr>Per<wbr>Region"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_models_processedtransaction_.html">"models/<wbr>Processed<wbr>Transaction"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_models_pubkey_.html">"models/<wbr>Pub<wbr>Key"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_models_publishing_.html">"models/<wbr>Publishing"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_models_purchase_.html">"models/<wbr>Purchase"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_models_realsupply_.html">"models/<wbr>Real<wbr>Supply"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_models_regionalprice_.html">"models/<wbr>Regional<wbr>Price"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_models_regions_.html">"models/<wbr>Regions"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_models_seeder_.html">"models/<wbr>Seeder"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_models_signedblock_.html">"models/<wbr>Signed<wbr>Block"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_models_subscription_.html">"models/<wbr>Subscription"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_models_synopsis_.html">"models/<wbr>Synopsis"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_models_transaction_.html">"models/<wbr>Transaction"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_models_transactionconfirmation_.html">"models/<wbr>Transaction<wbr>Confirmation"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_models_vestingbalance_.html">"models/<wbr>Vesting<wbr>Balance"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_models_voteid_.html">"models/<wbr>Vote<wbr>Id"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_models_error_apiaccesserror_.html">"models/error/<wbr>Api<wbr>Access<wbr>Error"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_models_error_dcoreerror_.html">"models/error/DCore<wbr>Error"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_models_error_illegalargumenterror_.html">"models/error/<wbr>Illegal<wbr>Argument<wbr>Error"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_models_error_objectnotfounderror_.html">"models/error/<wbr>Object<wbr>Not<wbr>Found<wbr>Error"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_models_error_unsupportedasseterror_.html">"models/error/<wbr>Unsupported<wbr>Asset<wbr>Error"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_models_error_index_.html">"models/error/index"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_models_index_.html">"models/index"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_models_operation_accountcreateoperation_.html">"models/operation/<wbr>Account<wbr>Create<wbr>Operation"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_models_operation_accountupdateoperation_.html">"models/operation/<wbr>Account<wbr>Update<wbr>Operation"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_models_operation_addorupdatecontentoperation_.html">"models/operation/<wbr>Add<wbr>OrUpdate<wbr>Content<wbr>Operation"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_models_operation_assetclaimfeesoperation_.html">"models/operation/<wbr>Asset<wbr>Claim<wbr>Fees<wbr>Operation"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_models_operation_assetcreateoperation_.html">"models/operation/<wbr>Asset<wbr>Create<wbr>Operation"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_models_operation_assetfundpoolsoperation_.html">"models/operation/<wbr>Asset<wbr>Fund<wbr>Pools<wbr>Operation"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_models_operation_assetissueoperation_.html">"models/operation/<wbr>Asset<wbr>Issue<wbr>Operation"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_models_operation_assetpublishfeedoperation_.html">"models/operation/<wbr>Asset<wbr>Publish<wbr>Feed<wbr>Operation"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_models_operation_assetreserveoperation_.html">"models/operation/<wbr>Asset<wbr>Reserve<wbr>Operation"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_models_operation_assetupdateadvancedoperation_.html">"models/operation/<wbr>Asset<wbr>Update<wbr>Advanced<wbr>Operation"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_models_operation_assetupdatemonitoredoperation_.html">"models/operation/<wbr>Asset<wbr>Update<wbr>Monitored<wbr>Operation"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_models_operation_assetupdateoperation_.html">"models/operation/<wbr>Asset<wbr>Update<wbr>Operation"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_models_operation_baseoperation_.html">"models/operation/<wbr>Base<wbr>Operation"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_models_operation_customoperation_.html">"models/operation/<wbr>Custom<wbr>Operation"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_models_operation_customoperationtype_.html">"models/operation/<wbr>Custom<wbr>Operation<wbr>Type"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_models_operation_emptyoperation_.html">"models/operation/<wbr>Empty<wbr>Operation"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_models_operation_leaveratingandcommentoperation_.html">"models/operation/<wbr>Leave<wbr>Rating<wbr>And<wbr>Comment<wbr>Operation"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_models_operation_operationtype_.html">"models/operation/<wbr>Operation<wbr>Type"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_models_operation_purchasecontentoperation_.html">"models/operation/<wbr>Purchase<wbr>Content<wbr>Operation"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_models_operation_removecontentoperation_.html">"models/operation/<wbr>Remove<wbr>Content<wbr>Operation"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_models_operation_sendmessageoperation_.html">"models/operation/<wbr>Send<wbr>Message<wbr>Operation"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_models_operation_transferoperation_.html">"models/operation/<wbr>Transfer<wbr>Operation"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_models_operation_index_.html">"models/operation/index"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_models_order_searchaccounthistoryorder_.html">"models/order/<wbr>Search<wbr>Account<wbr>History<wbr>Order"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_models_order_searchaccountsorder_.html">"models/order/<wbr>Search<wbr>Accounts<wbr>Order"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_models_order_searchcontentorder_.html">"models/order/<wbr>Search<wbr>Content<wbr>Order"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_models_order_searchminervotingorder_.html">"models/order/<wbr>Search<wbr>Miner<wbr>Voting<wbr>Order"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_models_order_searchpurchasesorder_.html">"models/order/<wbr>Search<wbr>Purchases<wbr>Order"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_models_order_index_.html">"models/order/index"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_net_adapter_operationadapter_.html">"net/adapter/<wbr>Operation<wbr>Adapter"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_net_adapter_typeadapters_.html">"net/adapter/<wbr>Type<wbr>Adapters"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_net_models_apigroup_.html">"net/models/<wbr>Api<wbr>Group"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_net_models_requestjson_.html">"net/models/<wbr>Request<wbr>Json"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_net_models_websocketclosederror_.html">"net/models/<wbr>Web<wbr>Socket<wbr>Closed<wbr>Error"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_net_models_request_baserequest_.html">"net/models/request/<wbr>Base<wbr>Request"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_net_models_request_broadcasttransaction_.html">"net/models/request/<wbr>Broadcast<wbr>Transaction"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_net_models_request_broadcasttransactionsynchronous_.html">"net/models/request/<wbr>Broadcast<wbr>Transaction<wbr>Synchronous"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_net_models_request_broadcasttransactionwithcallback_.html">"net/models/request/<wbr>Broadcast<wbr>Transaction<wbr>With<wbr>Callback"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_net_models_request_cancelallsubscriptions_.html">"net/models/request/<wbr>Cancel<wbr>All<wbr>Subscriptions"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_net_models_request_generatecontentkeys_.html">"net/models/request/<wbr>Generate<wbr>Content<wbr>Keys"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_net_models_request_getaccountbalancefortransaction_.html">"net/models/request/<wbr>Get<wbr>Account<wbr>Balance<wbr>For<wbr>Transaction"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_net_models_request_getaccountbalances_.html">"net/models/request/<wbr>Get<wbr>Account<wbr>Balances"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_net_models_request_getaccountbyid_.html">"net/models/request/<wbr>Get<wbr>Account<wbr>ById"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_net_models_request_getaccountbyname_.html">"net/models/request/<wbr>Get<wbr>Account<wbr>ByName"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_net_models_request_getaccountcount_.html">"net/models/request/<wbr>Get<wbr>Account<wbr>Count"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_net_models_request_getaccounthistory_.html">"net/models/request/<wbr>Get<wbr>Account<wbr>History"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_net_models_request_getaccountreferences_.html">"net/models/request/<wbr>Get<wbr>Account<wbr>References"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_net_models_request_getactualvotes_.html">"net/models/request/<wbr>Get<wbr>Actual<wbr>Votes"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_net_models_request_getassetdata_.html">"net/models/request/<wbr>Get<wbr>Asset<wbr>Data"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_net_models_request_getassetperblock_.html">"net/models/request/<wbr>Get<wbr>Asset<wbr>Per<wbr>Block"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_net_models_request_getassets_.html">"net/models/request/<wbr>Get<wbr>Assets"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_net_models_request_getblock_.html">"net/models/request/<wbr>Get<wbr>Block"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_net_models_request_getblockheader_.html">"net/models/request/<wbr>Get<wbr>Block<wbr>Header"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_net_models_request_getbuyingbyuri_.html">"net/models/request/<wbr>Get<wbr>Buying<wbr>ByUri"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_net_models_request_getchainid_.html">"net/models/request/<wbr>Get<wbr>Chain<wbr>Id"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_net_models_request_getchainproperties_.html">"net/models/request/<wbr>Get<wbr>Chain<wbr>Properties"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_net_models_request_getconfig_.html">"net/models/request/<wbr>Get<wbr>Config"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_net_models_request_getcontentbyid_.html">"net/models/request/<wbr>Get<wbr>Content<wbr>ById"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_net_models_request_getcontentbyuri_.html">"net/models/request/<wbr>Get<wbr>Content<wbr>ByUri"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_net_models_request_getdynamicglobalprops_.html">"net/models/request/<wbr>Get<wbr>Dynamic<wbr>Global<wbr>Props"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_net_models_request_getfeedsbyminer_.html">"net/models/request/<wbr>Get<wbr>Feeds<wbr>ByMiner"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_net_models_request_getfullaccounts_.html">"net/models/request/<wbr>Get<wbr>Full<wbr>Accounts"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_net_models_request_getglobalproperties_.html">"net/models/request/<wbr>Get<wbr>Global<wbr>Properties"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_net_models_request_gethistorybuyingsbyconsumer_.html">"net/models/request/<wbr>Get<wbr>History<wbr>Buyings<wbr>ByConsumer"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_net_models_request_getkeyreferences_.html">"net/models/request/<wbr>Get<wbr>Key<wbr>References"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_net_models_request_getmessagesobjects_.html">"net/models/request/<wbr>Get<wbr>Messages<wbr>Objects"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_net_models_request_getminerbyaccount_.html">"net/models/request/<wbr>Get<wbr>Miner<wbr>ByAccount"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_net_models_request_getminercount_.html">"net/models/request/<wbr>Get<wbr>Miner<wbr>Count"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_net_models_request_getminers_.html">"net/models/request/<wbr>Get<wbr>Miners"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_net_models_request_getnamedaccountbalances_.html">"net/models/request/<wbr>Get<wbr>Named<wbr>Account<wbr>Balances"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_net_models_request_getnewassetperblock_.html">"net/models/request/<wbr>Get<wbr>New<wbr>Asset<wbr>Per<wbr>Block"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_net_models_request_getobjects_.html">"net/models/request/<wbr>Get<wbr>Objects"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_net_models_request_getopenbuyings_.html">"net/models/request/<wbr>Get<wbr>Open<wbr>Buyings"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_net_models_request_getopenbuyingsbyconsumer_.html">"net/models/request/<wbr>Get<wbr>Open<wbr>Buyings<wbr>ByConsumer"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_net_models_request_getopenbuyingsbyuri_.html">"net/models/request/<wbr>Get<wbr>Open<wbr>Buyings<wbr>ByUri"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_net_models_request_getpotentialsignatures_.html">"net/models/request/<wbr>Get<wbr>Potential<wbr>Signatures"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_net_models_request_getproposedtransactions_.html">"net/models/request/<wbr>Get<wbr>Proposed<wbr>Transactions"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_net_models_request_getrealsupply_.html">"net/models/request/<wbr>Get<wbr>Real<wbr>Supply"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_net_models_request_getrecenttransactionbyid_.html">"net/models/request/<wbr>Get<wbr>Recent<wbr>Transaction<wbr>ById"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_net_models_request_getrelativeaccounthistory_.html">"net/models/request/<wbr>Get<wbr>Relative<wbr>Account<wbr>History"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_net_models_request_getrequiredfees_.html">"net/models/request/<wbr>Get<wbr>Required<wbr>Fees"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_net_models_request_getrequiredsignatures_.html">"net/models/request/<wbr>Get<wbr>Required<wbr>Signatures"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_net_models_request_getseeder_.html">"net/models/request/<wbr>Get<wbr>Seeder"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_net_models_request_getstatisticsbyid_.html">"net/models/request/<wbr>Get<wbr>Statistics<wbr>ById"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_net_models_request_getsubscription_.html">"net/models/request/<wbr>Get<wbr>Subscription"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_net_models_request_gettimetomaintenance_.html">"net/models/request/<wbr>Get<wbr>Time<wbr>ToMaintenance"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_net_models_request_gettransaction_.html">"net/models/request/<wbr>Get<wbr>Transaction"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_net_models_request_gettransactionbyid_.html">"net/models/request/<wbr>Get<wbr>Transaction<wbr>ById"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_net_models_request_gettransactionhex_.html">"net/models/request/<wbr>Get<wbr>Transaction<wbr>Hex"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_net_models_request_getvestingbalances_.html">"net/models/request/<wbr>Get<wbr>Vesting<wbr>Balances"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_net_models_request_headblocktime_.html">"net/models/request/<wbr>Head<wbr>Block<wbr>Time"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_net_models_request_listactivesubscriptionsbyauthor_.html">"net/models/request/<wbr>List<wbr>Active<wbr>Subscriptions<wbr>ByAuthor"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_net_models_request_listactivesubscriptionsbyconsumer_.html">"net/models/request/<wbr>List<wbr>Active<wbr>Subscriptions<wbr>ByConsumer"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_net_models_request_listassets_.html">"net/models/request/<wbr>List<wbr>Assets"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_net_models_request_listpublishingmanagers_.html">"net/models/request/<wbr>List<wbr>Publishing<wbr>Managers"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_net_models_request_listseedersbyprice_.html">"net/models/request/<wbr>List<wbr>Seeders<wbr>ByPrice"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_net_models_request_listseedersbyrating_.html">"net/models/request/<wbr>List<wbr>Seeders<wbr>ByRating"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_net_models_request_listseedersbyregion_.html">"net/models/request/<wbr>List<wbr>Seeders<wbr>ByRegion"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_net_models_request_listseedersbyupload_.html">"net/models/request/<wbr>List<wbr>Seeders<wbr>ByUpload"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_net_models_request_listsubscriptionsbyauthor_.html">"net/models/request/<wbr>List<wbr>Subscriptions<wbr>ByAuthor"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_net_models_request_listsubscriptionsbyconsumer_.html">"net/models/request/<wbr>List<wbr>Subscriptions<wbr>ByConsumer"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_net_models_request_login_.html">"net/models/request/<wbr>Login"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_net_models_request_lookupaccountnames_.html">"net/models/request/<wbr>Lookup<wbr>Account<wbr>Names"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_net_models_request_lookupaccounts_.html">"net/models/request/<wbr>Lookup<wbr>Accounts"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_net_models_request_lookupassetsymbols_.html">"net/models/request/<wbr>Lookup<wbr>Asset<wbr>Symbols"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_net_models_request_lookupmineraccounts_.html">"net/models/request/<wbr>Lookup<wbr>Miner<wbr>Accounts"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_net_models_request_lookupvoteids_.html">"net/models/request/<wbr>Lookup<wbr>Vote<wbr>Ids"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_net_models_request_pricetodct_.html">"net/models/request/<wbr>Price<wbr>ToDct"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_net_models_request_requestapiaccess_.html">"net/models/request/<wbr>Request<wbr>Api<wbr>Access"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_net_models_request_restoreencryptionkey_.html">"net/models/request/<wbr>Restore<wbr>Encryption<wbr>Key"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_net_models_request_searchaccountbalancehistory_.html">"net/models/request/<wbr>Search<wbr>Account<wbr>Balance<wbr>History"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_net_models_request_searchaccounts_.html">"net/models/request/<wbr>Search<wbr>Accounts"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_net_models_request_searchbuyings_.html">"net/models/request/<wbr>Search<wbr>Buyings"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_net_models_request_searchcontent_.html">"net/models/request/<wbr>Search<wbr>Content"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_net_models_request_searchfeedback_.html">"net/models/request/<wbr>Search<wbr>Feedback"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_net_models_request_searchminervoting_.html">"net/models/request/<wbr>Search<wbr>Miner<wbr>Voting"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_net_models_request_setblockappliedcallback_.html">"net/models/request/<wbr>Set<wbr>Block<wbr>Applied<wbr>Callback"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_net_models_request_setcontentupdatecallback_.html">"net/models/request/<wbr>Set<wbr>Content<wbr>Update<wbr>Callback"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_net_models_request_setpendingtransactioncallback_.html">"net/models/request/<wbr>Set<wbr>Pending<wbr>Transaction<wbr>Callback"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_net_models_request_setsubscribecallback_.html">"net/models/request/<wbr>Set<wbr>Subscribe<wbr>Callback"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_net_models_request_validatetransaction_.html">"net/models/request/<wbr>Validate<wbr>Transaction"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_net_models_request_verifyaccountauthority_.html">"net/models/request/<wbr>Verify<wbr>Account<wbr>Authority"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_net_models_request_verifyauthority_.html">"net/models/request/<wbr>Verify<wbr>Authority"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_net_models_request_withcallback_.html">"net/models/request/<wbr>With<wbr>Callback"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_net_models_response_callbackresponse_.html">"net/models/response/<wbr>Callback<wbr>Response"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_net_models_response_dataresponse_.html">"net/models/response/<wbr>Data<wbr>Response"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_net_models_response_errorresponse_.html">"net/models/response/<wbr>Error<wbr>Response"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_net_rpc_rpcservice_.html">"net/rpc/<wbr>Rpc<wbr>Service"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_net_serialization_serializer_.html">"net/serialization/<wbr>Serializer"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_net_ws_rxwebsocket_.html">"net/ws/<wbr>RxWeb<wbr>Socket"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_utils_objectcheckof_.html">"utils/<wbr>Object<wbr>Check<wbr>Of"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_utils_utils_.html">"utils/<wbr>Utils"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_utils_index_.html">"utils/index"</a>
+					</li>
+				</ul>
+			</nav>
+			<nav class="tsd-navigation secondary menu-sticky">
+				<ul class="before-current">
+				</ul>
+			</nav>
+		</div>
+	</div>
+</div>
+<footer class="with-border-bottom">
+	<div class="container">
+		<h2>Legend</h2>
+		<div class="tsd-legend-group">
+			<ul class="tsd-legend">
+				<li class="tsd-kind-module"><span class="tsd-kind-icon">Module</span></li>
+				<li class="tsd-kind-object-literal"><span class="tsd-kind-icon">Object literal</span></li>
+				<li class="tsd-kind-variable"><span class="tsd-kind-icon">Variable</span></li>
+				<li class="tsd-kind-function"><span class="tsd-kind-icon">Function</span></li>
+				<li class="tsd-kind-function tsd-has-type-parameter"><span class="tsd-kind-icon">Function with type parameter</span></li>
+				<li class="tsd-kind-index-signature"><span class="tsd-kind-icon">Index signature</span></li>
+				<li class="tsd-kind-type-alias"><span class="tsd-kind-icon">Type alias</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-enum"><span class="tsd-kind-icon">Enumeration</span></li>
+				<li class="tsd-kind-enum-member"><span class="tsd-kind-icon">Enumeration member</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-enum"><span class="tsd-kind-icon">Property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-enum"><span class="tsd-kind-icon">Method</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-interface"><span class="tsd-kind-icon">Interface</span></li>
+				<li class="tsd-kind-interface tsd-has-type-parameter"><span class="tsd-kind-icon">Interface with type parameter</span></li>
+				<li class="tsd-kind-constructor tsd-parent-kind-interface"><span class="tsd-kind-icon">Constructor</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-interface"><span class="tsd-kind-icon">Property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-interface"><span class="tsd-kind-icon">Method</span></li>
+				<li class="tsd-kind-index-signature tsd-parent-kind-interface"><span class="tsd-kind-icon">Index signature</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-class"><span class="tsd-kind-icon">Class</span></li>
+				<li class="tsd-kind-class tsd-has-type-parameter"><span class="tsd-kind-icon">Class with type parameter</span></li>
+				<li class="tsd-kind-constructor tsd-parent-kind-class"><span class="tsd-kind-icon">Constructor</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-class"><span class="tsd-kind-icon">Property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class"><span class="tsd-kind-icon">Method</span></li>
+				<li class="tsd-kind-accessor tsd-parent-kind-class"><span class="tsd-kind-icon">Accessor</span></li>
+				<li class="tsd-kind-index-signature tsd-parent-kind-class"><span class="tsd-kind-icon">Index signature</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-constructor tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited constructor</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited method</span></li>
+				<li class="tsd-kind-accessor tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited accessor</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected method</span></li>
+				<li class="tsd-kind-accessor tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected accessor</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private method</span></li>
+				<li class="tsd-kind-accessor tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private accessor</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-static"><span class="tsd-kind-icon">Static property</span></li>
+				<li class="tsd-kind-call-signature tsd-parent-kind-class tsd-is-static"><span class="tsd-kind-icon">Static method</span></li>
+			</ul>
+		</div>
+	</div>
+</footer>
+<div class="container tsd-generator">
+	<p>Generated using <a href="http://typedoc.org/" target="_blank">TypeDoc</a></p>
+</div>
+<div class="overlay"></div>
+<script src="assets/js/main.js"></script>
+<script>if (location.protocol == 'file:') document.write('<script src="assets/js/search.js"><' + '/script>');</script>
+</body>
+</html>
