@@ -73,6 +73,7 @@ export class BroadcastApi extends BaseApi {
     ): Observable<TransactionConfirmation> {
         return this.api.transactionApi.createTransaction(operations, expiration).pipe(
             map((trx) => trx.withSignature(BroadcastApi.getPrivate(privateKey))),
+            // flatMap((trx) => this.api.transactionApi.getHexDump(trx).pipe(mapTo(trx))),
             flatMap((trx) => this.broadcastTrxWithCallback(trx)),
         );
     }

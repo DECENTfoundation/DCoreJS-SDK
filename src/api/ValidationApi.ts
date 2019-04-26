@@ -114,10 +114,14 @@ export class ValidationApi extends BaseApi {
             return this.getFees([op], assetId).pipe(map((fee) => fee[0]));
         } else {
             assertThrow([
+                OperationType.AssetCreate,
+                OperationType.AssetIssue,
                 OperationType.ProposalCreate,
                 OperationType.ProposalUpdate,
                 OperationType.WithdrawPermissionClaim,
                 OperationType.Custom,
+                OperationType.Assert,
+                OperationType.ContentSubmit,
             ].indexOf(op) === -1, () => "operation type not allowed, pass full operation as arg");
             return this.getFee(new EmptyOperation(op), assetId);
         }

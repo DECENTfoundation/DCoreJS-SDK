@@ -1,7 +1,7 @@
 import { Expose } from "class-transformer";
+import { Fee } from "../../DCoreSdk";
 import { ChainObjectToClass, ChainObjectToPlain } from "../../net/adapter/TypeAdapters";
 import { assertThrow } from "../../utils/Utils";
-import { AssetAmount } from "../AssetAmount";
 import { ChainObject } from "../ChainObject";
 import { BaseOperation } from "./BaseOperation";
 import { OperationType } from "./OperationType";
@@ -35,23 +35,18 @@ export class LeaveRatingAndCommentOperation extends BaseOperation {
     constructor(
         uri: string,
         consumer: ChainObject,
-        rating: 1|2|3|4|5,
+        rating: 1 | 2 | 3 | 4 | 5,
         comment: string,
-        fee?: AssetAmount | ChainObject,
+        fee?: Fee,
     ) {
-        super(OperationType.LeaveRatingAndComment);
-
-        assertThrow(rating > 0 && rating <= 5, () => "rating must be between 0-5");
-        assertThrow(comment.length <= 100, () => "comment max length is 100 chars");
-
+        super(OperationType.LeaveRatingAndComment, fee);
         this.uri = uri;
         this.consumer = consumer;
         this.rating = rating;
         this.comment = comment;
-        if (fee instanceof AssetAmount) {
-            this.fee = fee;
-        } else {
-            this.feeAssetId = fee;
-        }
+
+        // plainToClass ctor passes undefined args so just skip
+        assertThrow(this.rating ? this.rating > 0 && this.rating <= 5 : true, () => "rating must be between 0-5");
+        assertThrow(this.comment ? this.comment.length <= 100 : true, () => "comment max length is 100 chars");
     }
 }

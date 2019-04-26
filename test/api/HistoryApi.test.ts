@@ -47,7 +47,7 @@ chai.use(chaiThings);
         });
 
         it("should return account history relative", (done: (arg?: any) => void) => {
-            api.listOperationsRelative(Helpers.ACCOUNT)
+            api.listOperationsRelative(Helpers.ACCOUNT, 0)
                 .subscribe((value) => value.should.all.be.instanceOf(OperationHistory), (error) => done(error), () => done());
         });
 

@@ -1,6 +1,7 @@
 import { Expose, serialize, Type } from "class-transformer";
 import * as Long from "long";
 import { Moment } from "moment";
+import { Fee } from "../../DCoreSdk";
 import {
     ChainObjectArrayToClass,
     ChainObjectArrayToPlain,
@@ -32,7 +33,7 @@ export class AddOrUpdateContentOperation extends BaseOperation {
         price: RegionalPrice,
         expiration: Moment,
         synopsis: Synopsis,
-        fee?: AssetAmount | ChainObject,
+        fee?: Fee,
     ): AddOrUpdateContentOperation {
         return new this(Long.fromNumber(1), author, coAuthors, uri, 0, [price],
             Utils.ripemd160(Buffer.from(uri)).toString("hex"), [], [], expiration, new AssetAmount(), serialize(synopsis), undefined, fee);
@@ -125,9 +126,9 @@ export class AddOrUpdateContentOperation extends BaseOperation {
         publishingFee: AssetAmount,
         synopsis: string,
         custodyData?: CustodyData,
-        fee?: AssetAmount | ChainObject,
+        fee?: Fee,
     ) {
-        super(OperationType.ContentSubmit);
+        super(OperationType.ContentSubmit, fee);
         this.size = size;
         this.author = author;
         this.coAuthors = coAuthors;
@@ -141,10 +142,5 @@ export class AddOrUpdateContentOperation extends BaseOperation {
         this.publishingFee = publishingFee;
         this.synopsis = synopsis;
         this.custodyData = custodyData;
-        if (fee instanceof AssetAmount) {
-            this.fee = fee;
-        } else {
-            this.feeAssetId = fee;
-        }
     }
 }

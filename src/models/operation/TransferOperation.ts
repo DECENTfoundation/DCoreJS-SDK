@@ -1,4 +1,5 @@
 import { Expose, Type } from "class-transformer";
+import { Fee } from "../../DCoreSdk";
 import { ChainObjectToClass, ChainObjectToPlain } from "../../net/adapter/TypeAdapters";
 import { AssetAmount } from "../AssetAmount";
 import { ChainObject } from "../ChainObject";
@@ -36,16 +37,11 @@ export class TransferOperation extends BaseOperation {
      *      * @param fee {@link AssetAmount} fee for the operation or asset id, if left undefined the fee will be computed in DCT asset.
      * When set, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough
      */
-    constructor(from: ChainObject, to: ChainObject, amount: AssetAmount, memo?: Memo, fee?: AssetAmount | ChainObject) {
-        super(OperationType.Transfer2);
+    constructor(from: ChainObject, to: ChainObject, amount: AssetAmount, memo?: Memo, fee?: Fee) {
+        super(OperationType.Transfer2, fee);
         this.from = from;
         this.to = to;
         this.amount = amount;
         this.memo = memo;
-        if (fee instanceof AssetAmount) {
-            this.fee = fee;
-        } else {
-            this.feeAssetId = fee;
-        }
     }
 }

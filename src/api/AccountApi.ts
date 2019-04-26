@@ -1,10 +1,10 @@
 import * as _ from "lodash";
 import * as Long from "long";
 import { Observable, of, throwError } from "rxjs";
-import { scalar } from "rxjs/internal/observable/scalar";
 import { catchError, flatMap, map, mapTo } from "rxjs/operators";
 import { Address } from "../crypto/Address";
 import { Credentials } from "../crypto/Credentials";
+import { ECKeyPair } from "../crypto/ECKeyPair";
 import { DCoreApi } from "../DCoreApi";
 import { AccountRef } from "../DCoreSdk";
 import { Account } from "../models/Account";
@@ -203,6 +203,21 @@ export class AccountApi extends BaseApi {
     }
 
     /**
+     * Create a memo. Can be used in {@link TransferOperation} or {@link AssetIssueOperation}
+     *
+     * @param message text message to send
+     * @param recipient account name or id, mandatory for encrypted message
+     * @param keyPair sender's key pair, mandatory for encrypted message
+     */
+    public createMemo(message: string, recipient?: AccountRef, keyPair?: ECKeyPair) {
+        if (keyPair && recipient) {
+            return this.get(recipient).pipe(map((acc) => Memo.createEncrypted(message, keyPair, acc.primaryAddress)));
+        } else {
+            return of(Memo.createPublic(message));
+        }
+    }
+
+    /**
      * Create a transfer operation.
      *
      * @param credentials account credentials
@@ -224,7 +239,7 @@ export class AccountApi extends BaseApi {
         feeAssetId?: ChainObject,
     ): Observable<TransferOperation> {
         if ((_.isNil(memo) || !encrypted) && (typeof account !== "string" || ChainObject.isValid(account))) {
-            return scalar(new TransferOperation(
+            return of(new TransferOperation(
                 credentials.account,
                 (typeof account === "string") ? ChainObject.parse(account) : account,
                 amount,

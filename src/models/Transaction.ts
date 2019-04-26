@@ -56,6 +56,7 @@ export class Transaction {
             sig = key.sign(Buffer.concat([this.chainId, data]));
         } while (!sig);
 
+        // console.log(serializer.serialize(this).toString("hex"));
         this.signatures = [sig];
         return this;
     }
