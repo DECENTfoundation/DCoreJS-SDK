@@ -4,14 +4,12 @@ DCore SDK for JS
 Set of APIs for accessing the DCore Blockchain.<br>
 If you are looking for other platforms you can find info [below](#official-dcore-sdks-for-other-platforms).
 
-
 Requirements
 --------
 
 - [Node.js & NPM](https://nodejs.org/)
 - [secp256k1-node](https://github.com/cryptocoinjs/secp256k1-node)
 - [RxJS](https://github.com/ReactiveX/RxJS)
-
 
 Installation
 --------
