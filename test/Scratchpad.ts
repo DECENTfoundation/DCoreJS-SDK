@@ -8,6 +8,7 @@ import * as Long from "long";
 import { suite, test, timeout } from "mocha-typescript";
 import * as moment from "moment";
 import "reflect-metadata";
+import { of, zip } from "rxjs";
 import { create } from "rxjs-spy";
 import { ecdhUnsafe, publicKeyTweakMul } from "secp256k1";
 import { Address } from "../src/crypto/Address";
@@ -330,7 +331,7 @@ class Scratchpad {
             "https://staging-resources.alax.io/apps/mobi.minicraft.three.mini.craft.building.games14",
             new RegionalPrice(new AssetAmount(0)),
             moment(now).add(7, "days"),
-            new Synopsis("nbnbj", "ádááá", ChainObject.parse("1.5.5")),
+            new Synopsis("nbnbj", "ádááá", "1.5.5"),
         );
         this.api.broadcastApi.broadcastWithCallback(Helpers.KEY, [diacriticsOperation]).subscribe();
     }
@@ -380,5 +381,10 @@ class Scratchpad {
     @test "undef"() {
         console.log(undefined && "hello undefined");
         console.log("defined" && "hello defined");
+    }
+
+    @test "zip"() {
+        zip(zip(...[of("hello"), of(" "), of("world")]), of("foo"))
+            .subscribe((value) => console.log(value));
     }
 }

@@ -1,7 +1,7 @@
 import { Expose, Type } from "class-transformer";
 import { Address } from "../../crypto/Address";
-import { ChainObjectToClass, ChainObjectToPlain } from "../../utils/TypeAdapters";
-import { AssetAmount } from "../AssetAmount";
+import { Fee } from "../../DCoreSdk";
+import { ChainObjectToClass, ChainObjectToPlain } from "../../net/adapter/TypeAdapters";
 import { Authority } from "../Authority";
 import { ChainObject } from "../ChainObject";
 import { Options } from "../Options";
@@ -16,11 +16,12 @@ export class AccountCreateOperation extends BaseOperation {
      * @param registrar existing account id used to register the new account
      * @param name new account name
      * @param address new account public key address
-     * @param fee {@link AssetAmount} fee for the operation, if left undefined the fee will be computed in DCT asset
+     * @param fee {@link AssetAmount} fee for the operation or asset id, if left undefined the fee will be computed in DCT asset.
+     * When set, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough
      *
      * @return a transaction confirmation
      */
-    public static create(registrar: ChainObject, name: string, address: Address, fee?: AssetAmount) {
+    public static create(registrar: ChainObject, name: string, address: Address, fee?: Fee) {
         return new this(registrar, name, new Authority(address), new Authority(address), new Options(address), fee);
     }
 
@@ -52,15 +53,15 @@ export class AccountCreateOperation extends BaseOperation {
      * @param owner owner authority
      * @param active active authority
      * @param options account options
-     * @param fee {@link AssetAmount} fee for the operation, if left undefined the fee will be computed in DCT asset
+     * @param fee {@link AssetAmount} fee for the operation or asset id, if left undefined the fee will be computed in DCT asset.
+     * When set, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough
      */
-    constructor(registrar: ChainObject, name: string, owner: Authority, active: Authority, options: Options, fee?: AssetAmount) {
-        super(OperationType.AccountCreate);
+    constructor(registrar: ChainObject, name: string, owner: Authority, active: Authority, options: Options, fee?: Fee) {
+        super(OperationType.AccountCreate, fee);
         this.registrar = registrar;
         this.name = name;
         this.owner = owner;
         this.active = active;
         this.options = options;
-        this.fee = fee;
     }
 }

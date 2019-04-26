@@ -1,7 +1,7 @@
 import { Expose, Transform } from "class-transformer";
 import * as _ from "lodash";
 import * as Long from "long";
-import { LongToClass } from "../utils/TypeAdapters";
+import { LongToClass } from "../net/adapter/TypeAdapters";
 import { AssetAmount } from "./AssetAmount";
 import { FeeParameter } from "./FeeParameter";
 import { OperationType } from "./operation/OperationType";

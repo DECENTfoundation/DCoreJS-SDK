@@ -8,15 +8,24 @@ import { Address } from "../../../src/crypto/Address";
 import { ECKeyPair } from "../../../src/crypto/ECKeyPair";
 import { DCoreConstants } from "../../../src/DCoreConstants";
 import { AssetAmount } from "../../../src/models/AssetAmount";
+import { AssetOptions } from "../../../src/models/AssetOptions";
 import { BlockData } from "../../../src/models/BlockData";
 import { ChainObject } from "../../../src/models/ChainObject";
 import { DynamicGlobalProperties } from "../../../src/models/DynamicGlobalProperties";
+import { ExchangeRate } from "../../../src/models/ExchangeRate";
 import { Memo } from "../../../src/models/Memo";
 import { MessagePayload } from "../../../src/models/MessagePayload";
 import { MessagePayloadReceiver } from "../../../src/models/MessagePayloadReceiver";
+import { MonitoredAssetOpts } from "../../../src/models/MonitoredAssetOpts";
 import { AccountCreateOperation } from "../../../src/models/operation/AccountCreateOperation";
 import { AccountUpdateOperation } from "../../../src/models/operation/AccountUpdateOperation";
 import { AddOrUpdateContentOperation } from "../../../src/models/operation/AddOrUpdateContentOperation";
+import { AssetClaimFeesOperation } from "../../../src/models/operation/AssetClaimFeesOperation";
+import { AssetCreateOperation } from "../../../src/models/operation/AssetCreateOperation";
+import { AssetFundPoolsOperation } from "../../../src/models/operation/AssetFundPoolsOperation";
+import { AssetIssueOperation } from "../../../src/models/operation/AssetIssueOperation";
+import { AssetReserveOperation } from "../../../src/models/operation/AssetReserveOperation";
+import { LeaveRatingAndCommentOperation } from "../../../src/models/operation/LeaveRatingAndCommentOperation";
 import { PurchaseContentOperation } from "../../../src/models/operation/PurchaseContentOperation";
 import { RemoveContentOperation } from "../../../src/models/operation/RemoveContentOperation";
 import { SendMessageOperation } from "../../../src/models/operation/SendMessageOperation";
@@ -61,6 +70,7 @@ describe("serialization test suite", () => {
             // tslint:disable-next-line:max-line-length
             new PubKey("9108409595926410618584909688806123815350070889187120060090262698305971998526501009804554058758289676257609340949615914583138841456997698133991004991473670"),
             Regions.None,
+            new AssetAmount(0),
         );
 
         serializer.serialize(op).toString("hex").should.be.equal(expected);
@@ -77,6 +87,7 @@ describe("serialization test suite", () => {
             // tslint:disable-next-line:max-line-length
             new PubKey("5182545488318095000498180568539728214545472470974958338942426759510121851708530625921436777555517288139787965253547588340803542762268721656138876002028437"),
             Regions.None,
+            new AssetAmount(0),
         );
 
         serializer.serialize(op).toString("hex").should.be.equal(expected);
@@ -139,7 +150,7 @@ describe("serialization test suite", () => {
             "http://hello.io/world2",
             new RegionalPrice(new AssetAmount(1000), Regions.None),
             moment.utc("2019-05-28T13:32:34"),
-            new Synopsis("Game Title", "Description"),
+            new Synopsis("Game Title", "Description", "1.5.5"),
             new AssetAmount(),
         );
         op.hash = "2222222222222222222222222222222222222222";
@@ -190,4 +201,70 @@ describe("serialization test suite", () => {
 
         serializer.serialize(op).toString("hex").should.be.eq(expected);
     });
+
+    it("should serialize rate and comment operation", () => {
+        // tslint:disable-next-line:max-line-length
+        const expected = "1600000000000000000033697066733a516d57426f52425975787a48356138643367737352624d53357363733666714c4b676170426671564e554655745a1b07636f6d6d656e740100000000000000";
+
+        const op = new LeaveRatingAndCommentOperation(
+            "ipfs:QmWBoRBYuxzH5a8d3gssRbMS5scs6fqLKgapBfqVNUFUtZ", Helpers.ACCOUNT, 1, "comment", new AssetAmount(0),
+        );
+
+        serializer.serialize(op).toString("hex").should.be.eq(expected);
+    });
+
+    it("should serialize create asset operation", () => {
+        // tslint:disable-next-line:max-line-length
+        const expected = "0320a1070000000000001b0353444b010968656c6c6f20617069fad456864c011a000100000000000000000100000000000000e70701010100000100";
+
+        const ex = new ExchangeRate(new AssetAmount(1), new AssetAmount(1, ChainObject.parse("1.3.999")));
+        const op = new AssetCreateOperation(Helpers.ACCOUNT, "SDK", 1, "hello api", new AssetOptions(ex));
+        op.fee = new AssetAmount(500000);
+
+        serializer.serialize(op).toString("hex").should.be.eq(expected);
+    });
+
+    it("should serialize create monitored asset operation", () => {
+        // tslint:disable-next-line:max-line-length
+        const expected = "03a086010000000000001b0453444b4d041368656c6c6f20617069206d6f6e69746f7265640000000000000000000000000000000000000000000000000000010101000100000000000000000000000000000000000000480fb65c80510100010100";
+
+        const opt = new MonitoredAssetOpts();
+        opt.currentFeedPublicationTime = moment.utc("2019-04-16T17:22:16");
+        const op = new AssetCreateOperation(Helpers.ACCOUNT, "SDKM", 4, "hello api monitored", new AssetOptions(ExchangeRate.empty(), 0), opt);
+        op.fee = new AssetAmount(100000);
+        serializer.serialize(op).toString("hex").should.be.eq(expected);
+    });
+
+    it("should serialize issue asset operation", () => {
+        // tslint:disable-next-line:max-line-length
+        const expected = "040a00000000000000001b0a00000000000000241b0000";
+
+        const op = new AssetIssueOperation(Helpers.ACCOUNT, new AssetAmount(10, ChainObject.parse("1.3.36")), Helpers.ACCOUNT, undefined, new AssetAmount(10));
+        serializer.serialize(op).toString("hex").should.be.eq(expected);
+    });
+
+    it("should serialize reserve asset operation", () => {
+        // tslint:disable-next-line:max-line-length
+        const expected = "220a00000000000000001b0a000000000000002400";
+
+        const op = new AssetReserveOperation(Helpers.ACCOUNT, new AssetAmount(10, ChainObject.parse("1.3.36")), new AssetAmount(10));
+        serializer.serialize(op).toString("hex").should.be.eq(expected);
+    });
+
+    it("should serialize fund asset pool operation", () => {
+        // tslint:disable-next-line:max-line-length
+        const expected = "210a00000000000000001b0a00000000000000240a000000000000000000";
+
+        const op = new AssetFundPoolsOperation(Helpers.ACCOUNT, new AssetAmount(10, ChainObject.parse("1.3.36")), new AssetAmount(10), new AssetAmount(10));
+        serializer.serialize(op).toString("hex").should.be.eq(expected);
+    });
+
+    it("should serialize claim asset pool operation", () => {
+        // tslint:disable-next-line:max-line-length
+        const expected = "230a00000000000000001b0a00000000000000240a000000000000000000";
+
+        const op = new AssetClaimFeesOperation(Helpers.ACCOUNT, new AssetAmount(10, ChainObject.parse("1.3.36")), new AssetAmount(10), new AssetAmount(10));
+        serializer.serialize(op).toString("hex").should.be.eq(expected);
+    });
+
 });

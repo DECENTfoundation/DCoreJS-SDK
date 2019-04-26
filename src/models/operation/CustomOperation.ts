@@ -1,6 +1,6 @@
 import { Expose } from "class-transformer";
-import { ChainObjectArrayToClass, ChainObjectArrayToPlain, ChainObjectToClass, ChainObjectToPlain } from "../../utils/TypeAdapters";
-import { AssetAmount } from "../AssetAmount";
+import { Fee } from "../../DCoreSdk";
+import { ChainObjectArrayToClass, ChainObjectArrayToPlain, ChainObjectToClass, ChainObjectToPlain } from "../../net/adapter/TypeAdapters";
 import { ChainObject } from "../ChainObject";
 import { BaseOperation } from "./BaseOperation";
 import { CustomOperationType } from "./CustomOperationType";
@@ -31,14 +31,14 @@ export class CustomOperation extends BaseOperation {
      * @param payer account which pays for the fee
      * @param requiredAuths accounts required to authorize this operation with signatures
      * @param data data payload encoded in hex string
-     * @param fee {@link AssetAmount} fee for the operation, if left undefined the fee will be computed in DCT asset
+     * @param fee {@link AssetAmount} fee for the operation or asset id, if left undefined the fee will be computed in DCT asset.
+     * When set, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough
      */
-    constructor(type: CustomOperationType, payer: ChainObject, requiredAuths: ChainObject[], data: string, fee?: AssetAmount) {
-        super(OperationType.Custom);
+    constructor(type: CustomOperationType, payer: ChainObject, requiredAuths: ChainObject[], data: string, fee?: Fee) {
+        super(OperationType.Custom, fee);
         this.payer = payer;
         this.requiredAuths = requiredAuths;
         this.data = data;
         this.id = type;
-        this.fee = fee;
     }
 }

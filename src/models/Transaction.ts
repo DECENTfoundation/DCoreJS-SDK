@@ -2,8 +2,8 @@ import { classToPlain, Exclude, Expose, Transform } from "class-transformer";
 import * as Long from "long";
 import { Moment } from "moment";
 import { ECKeyPair } from "../crypto/ECKeyPair";
+import { LongToPlain, MomentToPlain } from "../net/adapter/TypeAdapters";
 import { Serializer } from "../net/serialization/Serializer";
-import { LongToPlain, MomentToPlain } from "../utils/TypeAdapters";
 import { BlockData } from "./BlockData";
 import { BaseOperation } from "./operation/BaseOperation";
 
@@ -56,6 +56,7 @@ export class Transaction {
             sig = key.sign(Buffer.concat([this.chainId, data]));
         } while (!sig);
 
+        // console.log(serializer.serialize(this).toString("hex"));
         this.signatures = [sig];
         return this;
     }

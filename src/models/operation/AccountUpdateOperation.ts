@@ -1,7 +1,7 @@
 import { Expose, Type } from "class-transformer";
-import { ChainObjectToClass, ChainObjectToPlain } from "../../utils/TypeAdapters";
+import { Fee } from "../../DCoreSdk";
+import { ChainObjectToClass, ChainObjectToPlain } from "../../net/adapter/TypeAdapters";
 import { Account } from "../Account";
-import { AssetAmount } from "../AssetAmount";
 import { Authority } from "../Authority";
 import { ChainObject } from "../ChainObject";
 import { Options } from "../Options";
@@ -10,10 +10,11 @@ import { BaseOperation } from "./BaseOperation";
 import { OperationType } from "./OperationType";
 
 export class AccountUpdateOperation extends BaseOperation {
-    public static create(account: Account, votes: VoteId[]) {
+
+    public static create(account: Account, votes: VoteId[], fee?: Fee) {
         const options = account.options;
         options.votes = votes;
-        return new AccountUpdateOperation(account.id, undefined, undefined, options);
+        return new AccountUpdateOperation(account.id, undefined, undefined, options, fee);
     }
 
     @ChainObjectToClass
@@ -40,14 +41,14 @@ export class AccountUpdateOperation extends BaseOperation {
      * @param owner owner authority
      * @param active active authority
      * @param options account options
-     * @param fee {@link AssetAmount} fee for the operation, if left undefined the fee will be computed in DCT asset
+     * @param fee {@link AssetAmount} fee for the operation or asset id, if left undefined the fee will be computed in DCT asset.
+     * When set, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough
      */
-    constructor(accountId: ChainObject, owner?: Authority, active?: Authority, options?: Options, fee?: AssetAmount) {
-        super(OperationType.AccountUpdate);
+    constructor(accountId: ChainObject, owner?: Authority, active?: Authority, options?: Options, fee?: Fee) {
+        super(OperationType.AccountUpdate, fee);
         this.accountId = accountId;
         this.owner = owner;
         this.active = active;
         this.options = options;
-        this.fee = fee;
     }
 }

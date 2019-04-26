@@ -1,7 +1,7 @@
 import { plainToClass } from "class-transformer";
 import { Moment } from "moment";
 import { MinerRewardInput } from "../../../models/MinerRewardInput";
-import { TypeAdapters } from "../../../utils/TypeAdapters";
+import { TypeAdapters } from "../../adapter/TypeAdapters";
 import { ApiGroup } from "../ApiGroup";
 import { BaseRequest } from "./BaseRequest";
 

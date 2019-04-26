@@ -7,6 +7,7 @@ import { BaseOperation } from "../models/operation/BaseOperation";
 import { Transaction } from "../models/Transaction";
 import { TransactionConfirmation } from "../models/TransactionConfirmation";
 import { BroadcastTransaction } from "../net/models/request/BroadcastTransaction";
+import { BroadcastTransactionSynchronous } from "../net/models/request/BroadcastTransactionSynchronous";
 import { BroadcastTransactionWithCallback } from "../net/models/request/BroadcastTransactionWithCallback";
 import { BaseApi } from "./BaseApi";
 
@@ -72,7 +73,40 @@ export class BroadcastApi extends BaseApi {
     ): Observable<TransactionConfirmation> {
         return this.api.transactionApi.createTransaction(operations, expiration).pipe(
             map((trx) => trx.withSignature(BroadcastApi.getPrivate(privateKey))),
+            // flatMap((trx) => this.api.transactionApi.getHexDump(trx).pipe(mapTo(trx))),
             flatMap((trx) => this.broadcastTrxWithCallback(trx)),
         );
     }
+
+    /**
+     * Broadcast transaction to DCore and wait for result
+     *
+     * @param transaction transaction to broadcast
+     *
+     * @return a transaction confirmation
+     */
+    public broadcastTrxSynchronous(transaction: Transaction): Observable<TransactionConfirmation> {
+        return this.request(new BroadcastTransactionSynchronous(transaction)).pipe(first());
+    }
+
+    /**
+     * Broadcast operation to DCore and wait for result
+     *
+     * @param privateKey EC key pair or Base58 encoded private key
+     * @param operations operations to be submitted to DCore
+     * @param expiration transaction expiration in seconds, after the expiry the transaction is removed from recent pool and will be dismissed if not included in DCore block
+     *
+     * @return a transaction confirmation
+     */
+    public broadcastSynchronous(
+        privateKey: ECKeyPair | string,
+        operations: BaseOperation[],
+        expiration: Duration = this.api.transactionExpiration,
+    ): Observable<TransactionConfirmation> {
+        return this.api.transactionApi.createTransaction(operations, expiration).pipe(
+            map((trx) => trx.withSignature(BroadcastApi.getPrivate(privateKey))),
+            flatMap((trx) => this.broadcastTrxSynchronous(trx)),
+        );
+    }
+
 }

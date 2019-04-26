@@ -9,6 +9,7 @@ import { DCoreApi } from "../../src/DCoreApi";
 import { DCoreSdk } from "../../src/DCoreSdk";
 import { Asset } from "../../src/models/Asset";
 import { AssetAmount } from "../../src/models/AssetAmount";
+import { ChainObject } from "../../src/models/ChainObject";
 import { VestingBalance } from "../../src/models/VestingBalance";
 import { Helpers } from "../Helpers";
 
@@ -38,13 +39,23 @@ chai.use(chaiThings);
             spy.teardown();
         });
 
-        it("should return asset balances for the account", (done: (arg?: any) => void) => {
-            api.getAll("1.2.35")
+        it("should return asset balance for the account", (done: (arg?: any) => void) => {
+            api.get(Helpers.ACCOUNT, ChainObject.parse("1.3.0"))
+                .subscribe((value) => value.should.be.instanceOf(AssetAmount), (error) => done(error), () => done());
+        });
+
+        it("should return all asset balances for the account", (done: (arg?: any) => void) => {
+            api.getAll(Helpers.ACCOUNT)
                 .subscribe((value) => value.should.all.be.instanceOf(AssetAmount), (error) => done(error), () => done());
         });
 
-        it("should return asset balances with asset for the account", (done: (arg?: any) => void) => {
-            api.getAllWithAsset("1.2.35", ["DCT"])
+        it("should return asset balance with asset for the account", (done: (arg?: any) => void) => {
+            api.getWithAsset(Helpers.ACCOUNT, "DCT")
+                .subscribe((value) => value[0].should.be.instanceOf(Asset) && value[1].should.be.instanceOf(AssetAmount), (error) => done(error), () => done());
+        });
+
+        it("should return all asset balances with asset for the account", (done: (arg?: any) => void) => {
+            api.getAllWithAsset(Helpers.ACCOUNT)
                 .subscribe((value) => value[0][0].should.be.instanceOf(Asset) && value[0][1].should.be.instanceOf(AssetAmount), (error) => done(error), () => done());
         });
 

@@ -2,11 +2,11 @@ import Decimal from "decimal.js";
 import * as _ from "lodash";
 import { Duration } from "moment";
 import { CoreOptions } from "request";
-import { Observable, throwError, zip } from "rxjs";
+import { Observable, of, throwError, zip } from "rxjs";
 import { tag } from "rxjs-spy/operators";
-import { scalar } from "rxjs/internal/observable/scalar";
 import { flatMap, map, tap } from "rxjs/operators";
 import { DCoreApi } from "./DCoreApi";
+import { DCoreConstants } from "./DCoreConstants";
 import { Asset } from "./models/Asset";
 import { AssetAmount } from "./models/AssetAmount";
 import { BlockData } from "./models/BlockData";
@@ -25,7 +25,10 @@ import { ObjectCheckOf } from "./utils/ObjectCheckOf";
 import { assertThrow } from "./utils/Utils";
 
 export type AccountRef = ChainObject | string;
+export type AssetRef = ChainObject | string;
 export type AssetWithAmount = [Asset, AssetAmount];
+export type AssetPrecision = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12;
+export type Fee = ChainObject | AssetAmount;
 
 Decimal.set({
     // max amount have precision 16 (satoshi significant places) and we are doubling that for partial result from multiply/division operations
@@ -93,21 +96,30 @@ export class DCoreSdk {
         }, [[], []]);
         let finalOps: Observable<BaseOperation[]>;
         if (withoutFees.length > 0) {
-            finalOps = this.request(new GetRequiredFees(operations)).pipe(
-                map((fees) => withoutFees.map((op, idx) => {
-                    op.fee = fees[idx];
-                    return op;
-                })),
-                map((ops) => ops.concat(withFees)),
-            );
+            const forId = withoutFees.reduce((res: Map<string, BaseOperation[]>, el) => {
+                const feeAssetId = (el.feeAssetId ? el.feeAssetId : DCoreConstants.DCT_ASSET_ID).objectId;
+                if (!res.has(feeAssetId)) {
+                    res.set(feeAssetId, []);
+                }
+                res.get(feeAssetId)!.push(el);
+                return res;
+            }, new Map());
+            const feeRequests = Array.from(forId.entries()).map(([feeId, ops]) =>
+                this.request(new GetRequiredFees(ops, ChainObject.parse(feeId))).pipe(
+                    map((fees) => ops.map((op, idx) => {
+                        op.fee = fees[idx];
+                        return op;
+                    })),
+                ));
+            finalOps = zip(...feeRequests).pipe(map((ops) => _.flatten(ops).concat(withFees)));
         } else {
-            finalOps = scalar(withFees);
+            finalOps = of(withFees);
         }
         let chainId: Observable<string>;
         if (_.isNil(this.chainId)) {
             chainId = this.request(new GetChainId()).pipe(tap((id) => this.chainId = id));
         } else {
-            chainId = scalar(this.chainId);
+            chainId = of(this.chainId);
         }
         return chainId.pipe(flatMap((id) =>
             zip(

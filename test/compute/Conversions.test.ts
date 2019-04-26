@@ -12,13 +12,7 @@ const getTestAsset = (assetId: string, baseAmount: number, baseId: string, quote
     asset.id = ChainObject.parse(assetId);
     const base = new AssetAmount(Long.fromNumber(baseAmount), ChainObject.parse(baseId));
     const quote = new AssetAmount(Long.fromNumber(quoteAmount), ChainObject.parse(quoteId));
-    const exchangeRate = new ExchangeRate();
-    exchangeRate.base = base;
-    exchangeRate.quote = quote;
-    const assetOptions = new AssetOptions();
-    assetOptions.exchangeable = true;
-    assetOptions.exchangeRate = exchangeRate;
-    asset.options = assetOptions;
+    asset.options = new AssetOptions(new ExchangeRate(base, quote));
     return asset;
 };
 

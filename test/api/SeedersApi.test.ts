@@ -37,9 +37,8 @@ chai.use(chaiThings);
             spy.teardown();
         });
 
-        // no seeders
-        it.skip("should return seeder by id", (done: (arg?: any) => void) => {
-            api.get(ChainObject.parse("1.2.16"))
+        it("should return seeder by id", (done: (arg?: any) => void) => {
+            api.get(ChainObject.parse("1.2.17"))
                 .subscribe((value) => value.should.be.instanceOf(Seeder), (error) => done(error), () => done());
         });
 

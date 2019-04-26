@@ -17,7 +17,7 @@
     "strict": true,
     "alwaysStrict": true,
     "strictPropertyInitialization": false,
-    "types": [],
+    "typeRoots": ["./node_modules/@types"],
     "paths": {}
   },
   "exclude": [

@@ -1,5 +1,5 @@
 import { Expose, Type } from "class-transformer";
-import { ChainObjectToClass } from "../utils/TypeAdapters";
+import { ChainObjectToClass } from "../net/adapter/TypeAdapters";
 import { ChainObject } from "./ChainObject";
 import { ChainParameters } from "./ChainParameters";
 

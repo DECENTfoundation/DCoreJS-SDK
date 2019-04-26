@@ -3,8 +3,15 @@ import { assertThrow, Utils } from "../utils/Utils";
 
 export class Address {
 
+    // null address equals to buffer filled with zeros
+    public static NULL_ADDRESS: string = "DCT1111111111111111111111111111111114T1Anm";
+
     public static parse(value: string): Address {
         return new Address(this.decode(value), value);
+    }
+
+    public static parseCheckNull(value: string): Address | undefined {
+        return value === Address.NULL_ADDRESS ? undefined : new Address(this.decode(value), value);
     }
 
     private static PREFIX: string = "DCT";
