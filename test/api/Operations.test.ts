@@ -67,7 +67,7 @@ describe("blockchain based operations", () => {
     });
 
     // account exist
-    it("should create an account", (done: (arg?: any) => void) => {
+    it.skip("should create an account", (done: (arg?: any) => void) => {
         api.accountApi.create(Helpers.CREDENTIALS, "sdk-account", Helpers.PUBLIC)
             .subscribe((value) => value.should.be.instanceOf(TransactionConfirmation), (error) => done(error), () => done());
     });
