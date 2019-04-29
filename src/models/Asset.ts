@@ -6,6 +6,7 @@ import { AssetPrecision } from "../DCoreSdk";
 import { ChainObjectToClass } from "../net/adapter/TypeAdapters";
 import { assertThrow } from "../utils/Utils";
 import { AssetAmount } from "./AssetAmount";
+import { AssetFormatter } from "./AssetFormatter";
 import { AssetOptions } from "./AssetOptions";
 import { ChainObject } from "./ChainObject";
 import { IllegalArgumentError } from "./error/IllegalArgumentError";
@@ -47,6 +48,10 @@ export class Asset {
     @ChainObjectToClass
     @Expose({ name: "dynamic_asset_data_id" })
     public dynamicAssetDataId: ChainObject;
+
+    public get formatter(): AssetFormatter {
+        return AssetFormatter.with(this);
+    }
 
     /**
      * Convert amount in DCT to this asset

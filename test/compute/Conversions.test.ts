@@ -1,5 +1,6 @@
 import * as chai from "chai";
 import { Decimal } from "decimal.js";
+import * as Long from "long";
 import "mocha";
 import "reflect-metadata";
 import { Asset, AssetAmount, AssetOptions, ChainObject, ExchangeRate } from "../../src/models";
@@ -9,6 +10,8 @@ chai.should();
 const getTestAsset = (assetId: string, baseAmount: number, baseId: string, quoteAmount: number, quoteId: string): Asset => {
     const asset = new Asset();
     asset.id = ChainObject.parse(assetId);
+    asset.precision = 4;
+    asset.symbol = "TST";
     const base = new AssetAmount(baseAmount, ChainObject.parse(baseId));
     const quote = new AssetAmount(quoteAmount, ChainObject.parse(quoteId));
     asset.options = new AssetOptions(new ExchangeRate(base, quote));
@@ -32,5 +35,17 @@ describe("conversions tests", () => {
 
     it("should successfully round floor", () => {
         testAsset.convertFromDCT(1, Decimal.ROUND_FLOOR).amount.toNumber().should.be.eq(0);
+    });
+
+    it("should format raw value to string", () => {
+        testAsset.formatter.format(Long.fromNumber(1234567890)).should.be.eq("123456.789 TST");
+    });
+
+    it("should format unit value from string", () => {
+        testAsset.formatter.format(new Decimal(123456.7890)).should.be.eq("123456.789 TST");
+    });
+
+    it("should parse from string", () => {
+        testAsset.formatter.amount("123456.789").amount.toNumber().should.be.eq(1234567890);
     });
 });
