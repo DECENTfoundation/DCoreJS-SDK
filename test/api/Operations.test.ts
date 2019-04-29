@@ -1,4 +1,5 @@
 import * as chai from "chai";
+import { deserialize, serialize } from "class-transformer";
 import * as WebSocket from "isomorphic-ws";
 import "mocha";
 import * as moment from "moment";
@@ -6,7 +7,7 @@ import "reflect-metadata";
 import { of, throwError } from "rxjs";
 import { create } from "rxjs-spy";
 import { Spy } from "rxjs-spy/spy-interface";
-import { catchError } from "rxjs/operators";
+import { catchError, flatMap, map, tap } from "rxjs/operators";
 import { ECKeyPair } from "../../src/crypto/ECKeyPair";
 import { DCoreApi } from "../../src/DCoreApi";
 import { DCoreSdk } from "../../src/DCoreSdk";
@@ -18,8 +19,10 @@ import { AccountCreateOperation } from "../../src/models/operation/AccountCreate
 import { AddOrUpdateContentOperation } from "../../src/models/operation/AddOrUpdateContentOperation";
 import { AssetClaimFeesOperation } from "../../src/models/operation/AssetClaimFeesOperation";
 import { AssetFundPoolsOperation } from "../../src/models/operation/AssetFundPoolsOperation";
+import { TransferOperation } from "../../src/models/operation/TransferOperation";
 import { RegionalPrice } from "../../src/models/RegionalPrice";
 import { Synopsis } from "../../src/models/Synopsis";
+import { Transaction } from "../../src/models/Transaction";
 import { TransactionConfirmation } from "../../src/models/TransactionConfirmation";
 import { Helpers } from "../Helpers";
 
@@ -38,6 +41,16 @@ describe("blockchain based operations", () => {
     after(() => {
         api.disconnect();
         spy.teardown();
+    });
+
+    it("should re-create a transaction from plain and apply", (done: (arg?: any) => void) => {
+        api.transactionApi.createTransaction([new TransferOperation(Helpers.ACCOUNT, Helpers.ACCOUNT2, new AssetAmount(10))]).pipe(
+            map((trx) => trx.withSignature(Helpers.KEY)),
+            map((trx) => [trx, deserialize(Transaction, serialize(trx))]),
+            tap(([trx, sigTrx]) => serialize(trx).should.eq(serialize(sigTrx))),
+            flatMap(([trx, sigTrx]) => api.broadcastApi.broadcastTrxWithCallback(sigTrx)),
+        )
+            .subscribe((value) => value.should.be.instanceOf(TransactionConfirmation), (error) => done(error), () => done());
     });
 
     // create fails on exist, update fails on expiration update
