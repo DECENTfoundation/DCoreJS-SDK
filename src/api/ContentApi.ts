@@ -3,6 +3,7 @@ import { Observable, of } from "rxjs";
 import { flatMap, map } from "rxjs/operators";
 import { Credentials } from "../crypto/Credentials";
 import { DCoreApi } from "../DCoreApi";
+import { Fee } from "../DCoreSdk";
 import { AssetAmount } from "../models/AssetAmount";
 import { ChainObject } from "../models/ChainObject";
 import { Content } from "../models/Content";
@@ -11,6 +12,7 @@ import { ApplicationType, CategoryType, contentType } from "../models/ContentTyp
 import { Memo } from "../models/Memo";
 import { ObjectType } from "../models/ObjectType";
 import { PurchaseContentOperation } from "../models/operation/PurchaseContentOperation";
+import { RemoveContentOperation } from "../models/operation/RemoveContentOperation";
 import { TransferOperation } from "../models/operation/TransferOperation";
 import { SearchContentOrder } from "../models/order/SearchContentOrder";
 import { REGION_NAMES, Regions } from "../models/Regions";
@@ -112,7 +114,7 @@ export class ContentApi extends BaseApi {
      * @param id content id
      * @param amount amount to send with asset type
      * @param memo optional unencrypted message
-     * @param feeAssetId fee asset id for the operation, if left undefined the fee will be computed in DCT asset.
+     * @param fee {@link AssetAmount} fee for the operation or asset id, if left undefined the fee will be computed in DCT asset.
      * When set, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough
      *
      * @return a transfer operation
@@ -122,9 +124,9 @@ export class ContentApi extends BaseApi {
         id: ChainObject,
         amount: AssetAmount,
         memo?: string,
-        feeAssetId?: AssetAmount,
+        fee?: Fee,
     ): Observable<TransferOperation> {
-        return of(new TransferOperation(credentials.account, id, amount, _.isNil(memo) ? memo : Memo.createPublic(memo), feeAssetId));
+        return of(new TransferOperation(credentials.account, id, amount, _.isNil(memo) ? memo : Memo.createPublic(memo), fee));
     }
 
     /**
@@ -135,7 +137,7 @@ export class ContentApi extends BaseApi {
      * @param id content id
      * @param amount amount to send with asset type
      * @param memo optional unencrypted message
-     * @param feeAssetId fee asset id for the operation, if left undefined the fee will be computed in DCT asset.
+     * @param fee {@link AssetAmount} fee for the operation or asset id, if left undefined the fee will be computed in DCT asset.
      * When set, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough
      *
      * @return a transaction confirmation
@@ -145,9 +147,9 @@ export class ContentApi extends BaseApi {
         id: ChainObject,
         amount: AssetAmount,
         memo?: string,
-        feeAssetId?: AssetAmount,
+        fee?: Fee,
     ): Observable<TransactionConfirmation> {
-        return this.createTransfer(credentials, id, amount, memo, feeAssetId).pipe(
+        return this.createTransfer(credentials, id, amount, memo, fee).pipe(
             flatMap((op) => this.api.broadcastApi.broadcastWithCallback(credentials.keyPair, [op])),
         );
     }
@@ -157,13 +159,13 @@ export class ContentApi extends BaseApi {
      *
      * @param credentials account credentials
      * @param content uri of the content or object id of the content, 2.13.*
-     * @param feeAssetId fee asset id for the operation, if left undefined the fee will be computed in DCT asset.
+     * @param fee {@link AssetAmount} fee for the operation or asset id, if left undefined the fee will be computed in DCT asset.
      * When set, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough
      *
      * @return a purchase content operation
      */
-    public createPurchaseOperation(credentials: Credentials, content: ChainObject | string, feeAssetId?: ChainObject): Observable<PurchaseContentOperation> {
-        return this.api.contentApi.get(content).pipe(map((c) => PurchaseContentOperation.create(credentials, c, feeAssetId)));
+    public createPurchaseOperation(credentials: Credentials, content: ChainObject | string, fee?: Fee): Observable<PurchaseContentOperation> {
+        return this.api.contentApi.get(content).pipe(map((c) => PurchaseContentOperation.create(credentials, c, fee)));
     }
 
     /**
@@ -171,13 +173,39 @@ export class ContentApi extends BaseApi {
      *
      * @param credentials account credentials
      * @param content uri of the content or object id of the content, 2.13.*
-     * @param feeAssetId fee asset id for the operation, if left undefined the fee will be computed in DCT asset.
+     * @param fee {@link AssetAmount} fee for the operation or asset id, if left undefined the fee will be computed in DCT asset.
      * When set, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough
      *
      * @return a transaction confirmation
      */
-    public purchase(credentials: Credentials, content: ChainObject | string, feeAssetId?: ChainObject): Observable<TransactionConfirmation> {
-        return this.createPurchaseOperation(credentials, content, feeAssetId).pipe(
+    public purchase(credentials: Credentials, content: ChainObject | string, fee?: Fee): Observable<TransactionConfirmation> {
+        return this.createPurchaseOperation(credentials, content, fee).pipe(
+            flatMap((op) => this.api.broadcastApi.broadcastWithCallback(credentials.keyPair, [op])),
+        );
+    }
+
+    /**
+     * Create remove content operation. Sets expiration to head block time, so the content cannot be purchased, but remains in database.
+     *
+     * @param author content author
+     * @param uri content uri
+     * @param fee {@link AssetAmount} fee for the operation or asset id, if left undefined the fee will be computed in DCT asset.
+     * When set, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough
+     */
+    public createRemoveContentOperation(author: ChainObject, uri: string, fee?: Fee): Observable<RemoveContentOperation> {
+        return of(new RemoveContentOperation(author, uri, fee));
+    }
+
+    /**
+     * Remove content. Sets expiration to head block time, so the content cannot be purchased, but remains in database.
+     *
+     * @param credentials author credentials
+     * @param uri content uri
+     * @param fee {@link AssetAmount} fee for the operation or asset id, if left undefined the fee will be computed in DCT asset.
+     * When set, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough
+     */
+    public remove(credentials: Credentials, uri: string, fee?: Fee): Observable<TransactionConfirmation> {
+        return this.createRemoveContentOperation(credentials.account, uri, fee).pipe(
             flatMap((op) => this.api.broadcastApi.broadcastWithCallback(credentials.keyPair, [op])),
         );
     }
