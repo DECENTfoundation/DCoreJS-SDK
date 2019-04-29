@@ -26,6 +26,8 @@ Usage
 
 You can find example project with SDK usage [here](https://github.com/DECENTfoundation/DCore-SDK-Examples/tree/master/sdk-ts).
 
+You can find developer documentation for latest release [here](https://decentfoundation.github.io/DCoreJS-SDK/docs/).
+
 Use `DCoreSdk` to initialize the API.
 The `DCoreApi` provides different groups of APIs for accessing the blockchain and default configuration values.
 
