@@ -49,6 +49,9 @@ export class Asset {
     @Expose({ name: "dynamic_asset_data_id" })
     public dynamicAssetDataId: ChainObject;
 
+    /**
+     * @return default {@link AssetFormatter} used to format/parse string representation and asset values
+     */
     public get formatter(): AssetFormatter {
         return AssetFormatter.with(this);
     }

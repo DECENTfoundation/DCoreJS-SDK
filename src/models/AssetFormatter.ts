@@ -6,6 +6,9 @@ import { Asset } from "./Asset";
 import { AssetAmount } from "./AssetAmount";
 import { ChainObject } from "./ChainObject";
 
+/**
+ * Asset formatting/parsing defined by decimal precision and a symbol for/from string representation.
+ */
 export class AssetFormatter {
 
     public static DCT: AssetFormatter = new AssetFormatter(DCoreConstants.DCT_ASSET_ID, DCoreConstants.DCT_ASSET_SYMBOL, 8);
@@ -26,6 +29,11 @@ export class AssetFormatter {
         this.exp = new Decimal(10).pow(this.precision);
     }
 
+    /**
+     * Decimal number formatter.
+     *
+     * @param value new formatter function
+     */
     public defaultFormat: (n: Decimal) => string = (value) => value.toDecimalPlaces(this.precision, Decimal.ROUND_DOWN).toString();
 
     /**
