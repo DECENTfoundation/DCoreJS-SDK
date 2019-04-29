@@ -17,7 +17,7 @@ Installation
 --------
 
 `npm install --save rxjs`<br>
-`npm install --save git://git@github.com/DECENTfoundation/DCoreJS-SDK`
+`npm install --save git://github.com/DECENTfoundation/DCoreJS-SDK`
 
 Make sure you import `reflect-metadata` in an entry class to your application, eg. `import "reflect-metadata";`
 
