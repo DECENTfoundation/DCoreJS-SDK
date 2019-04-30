@@ -15,8 +15,6 @@ import { AssetAmount } from "../../src/models/AssetAmount";
 import { ChainObject } from "../../src/models/ChainObject";
 import { DCoreError } from "../../src/models/error/DCoreError";
 import { ExchangeRate } from "../../src/models/ExchangeRate";
-import { AccountCreateOperation } from "../../src/models/operation/AccountCreateOperation";
-import { AddOrUpdateContentOperation } from "../../src/models/operation/AddOrUpdateContentOperation";
 import { AssetClaimFeesOperation } from "../../src/models/operation/AssetClaimFeesOperation";
 import { AssetFundPoolsOperation } from "../../src/models/operation/AssetFundPoolsOperation";
 import { TransferOperation } from "../../src/models/operation/TransferOperation";
