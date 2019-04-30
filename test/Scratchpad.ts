@@ -402,4 +402,18 @@ class Scratchpad {
         console.log(d1.toFixed(5));
         console.log(d5.toDecimalPlaces(1));
     }
+
+    @test.only() "ref block"() {
+        const id = "003482ff012880f806baa6f220538425804136be";
+        const num = 3441407;
+        const refId = 4169148417;
+        const refNum = 33535;
+
+        const b = ByteBuffer.fromHex(id, true);
+
+        b.readUint32(4).should.equal(refId);
+        b.BE().readUint32(0).should.equal(num);
+        b.BE().readUint16(2).should.equal(refNum);
+
+    }
 }

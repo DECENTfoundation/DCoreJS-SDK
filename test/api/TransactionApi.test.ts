@@ -1,7 +1,6 @@
 import * as chai from "chai";
 import * as chaiThings from "chai-things";
 import * as WebSocket from "isomorphic-ws";
-import * as Long from "long";
 import "mocha";
 import "reflect-metadata";
 import { create } from "rxjs-spy";
@@ -30,7 +29,7 @@ chai.use(chaiThings);
 
         before(() => {
             spy = create();
-            // this.spy.log(/^API\w+/);
+            spy.log(/^API\w+/);
         });
 
         after(() => {
@@ -70,9 +69,9 @@ chai.use(chaiThings);
             api.get(446532, 0).pipe(
                 map((trx) => {
                     const tc = new TransactionConfirmation();
-                    tc.blockNum = Long.fromNumber(446532);
+                    tc.blockNum = 446532;
                     tc.transaction = trx;
-                    tc.trxNum = Long.ZERO;
+                    tc.trxNum = 0;
                     tc.id = "abb2c83679c2217bd20bed723f3a9ffa8653a953";
                     return tc;
                 }),

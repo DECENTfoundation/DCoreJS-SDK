@@ -13,7 +13,6 @@ export * from "./AssetOptions";
 export * from "./Authority";
 export * from "./AuthorityMap";
 export * from "./BalanceChange";
-export * from "./BlockData";
 export * from "./BlockHeader";
 export * from "./ChainObject";
 export * from "./ChainParameters";

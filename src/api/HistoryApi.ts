@@ -1,5 +1,6 @@
 import * as Long from "long";
-import { Observable } from "rxjs";
+import { Observable, zip } from "rxjs";
+import { map } from "rxjs/operators";
 import { DCoreApi } from "../DCoreApi";
 import { BalanceChange } from "../models/BalanceChange";
 import { ChainObject } from "../models/ChainObject";
@@ -7,6 +8,7 @@ import { ObjectType } from "../models/ObjectType";
 import { OperationHistory } from "../models/OperationHistory";
 import { GetAccountBalanceForTransaction } from "../net/models/request/GetAccountBalanceForTransaction";
 import { GetAccountHistory } from "../net/models/request/GetAccountHistory";
+import { GetObjects } from "../net/models/request/GetObjects";
 import { GetRelativeAccountHistory } from "../net/models/request/GetRelativeAccountHistory";
 import { SearchAccountBalanceHistory } from "../net/models/request/SearchAccountBalanceHistory";
 import { BaseApi } from "./BaseApi";
@@ -91,6 +93,19 @@ export class HistoryApi extends BaseApi {
         limit: number = 100,
     ): Observable<BalanceChange[]> {
         return this.request(new SearchAccountBalanceHistory(accountId, assets, recipientAccount, fromBlock, toBlock, startOffset, limit));
+    }
+
+    /**
+     * Check if the operation is confirmed and cannot be reverted.
+     *
+     * @param operationId object id of the history object, 1.7.*
+     */
+    public isConfirmed(operationId: ChainObject): Observable<boolean> {
+        return zip(
+            this.api.generalApi.getDynamicGlobalProperties(),
+            this.api.request(new GetObjects(OperationHistory, [operationId])).pipe(map((op) => op[0].blockNum)),
+        )
+            .pipe(map(([props, blockNum]) => blockNum <= props.lastIrreversibleBlockNum));
     }
 
 }

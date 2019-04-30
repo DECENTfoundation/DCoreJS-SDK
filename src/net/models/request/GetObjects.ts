@@ -4,8 +4,8 @@ import { ChainObject } from "../../../models/ChainObject";
 import { ApiGroup } from "../ApiGroup";
 import { BaseRequest } from "./BaseRequest";
 
-export abstract class GetObjects<T> extends BaseRequest<T[]> {
-    protected constructor(returnClass: ClassType<T>, objects: ChainObject[]) {
+export class GetObjects<T> extends BaseRequest<T[]> {
+    constructor(returnClass: ClassType<T>, objects: ChainObject[]) {
         super(
             ApiGroup.Database,
             "get_objects",

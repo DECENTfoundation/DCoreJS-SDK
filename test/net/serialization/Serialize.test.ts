@@ -9,7 +9,6 @@ import { ECKeyPair } from "../../../src/crypto/ECKeyPair";
 import { DCoreConstants } from "../../../src/DCoreConstants";
 import { AssetAmount } from "../../../src/models/AssetAmount";
 import { AssetOptions } from "../../../src/models/AssetOptions";
-import { BlockData } from "../../../src/models/BlockData";
 import { ChainObject } from "../../../src/models/ChainObject";
 import { DynamicGlobalProperties } from "../../../src/models/DynamicGlobalProperties";
 import { ExchangeRate } from "../../../src/models/ExchangeRate";
@@ -179,7 +178,7 @@ describe("serialization test suite", () => {
         const props = deserialize(DynamicGlobalProperties, rawProps);
         const op = deserialize(TransferOperation, rawOp);
         op.extensions = [];
-        const trx = Transaction.create(new BlockData(props, DCoreConstants.EXPIRATION_DEFAULT), [op], Helpers.DCT_CHAIN_ID_STAGE);
+        const trx = Transaction.create([op], Helpers.DCT_CHAIN_ID_STAGE, props, DCoreConstants.EXPIRATION_DEFAULT);
         trx.expiration = moment.utc("2018-08-01T10:14:36");
 
         // tslint:disable-next-line:max-line-length

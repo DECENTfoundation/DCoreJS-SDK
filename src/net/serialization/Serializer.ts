@@ -194,7 +194,7 @@ export class Serializer {
 
     private transactionAdapter = (buffer: ByteBuffer, obj: Transaction) => {
         buffer.writeUint16(obj.refBlockNum);
-        buffer.writeUint32(obj.refBlockPrefix.getLowBitsUnsigned());
+        buffer.writeUint32(obj.refBlockPrefix);
         this.momentAdapter(buffer, obj.expiration);
         this.append(buffer, obj.operations);
         this.append(buffer, obj.extensions);

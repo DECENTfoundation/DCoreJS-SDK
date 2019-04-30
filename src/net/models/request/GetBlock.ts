@@ -1,17 +1,16 @@
 import { plainToClass } from "class-transformer";
-import * as Long from "long";
 import { SignedBlock } from "../../../models/SignedBlock";
 import { ApiGroup } from "../ApiGroup";
 import { BaseRequest } from "./BaseRequest";
 
 export class GetBlock extends BaseRequest<SignedBlock> {
     constructor(
-        blockNumber: Long,
+        blockNumber: number,
     ) {
         super(
             ApiGroup.Database,
             "get_block",
-            [blockNumber.toString()],
+            [blockNumber],
             (value: object) => plainToClass(SignedBlock, value),
         );
     }
