@@ -30,12 +30,12 @@ export class AddOrUpdateContentOperation extends BaseOperation {
         author: ChainObject,
         coAuthors: Array<[ChainObject, number]>,
         uri: string,
-        price: RegionalPrice,
+        price: RegionalPrice[],
         expiration: Moment,
         synopsis: Synopsis,
         fee?: Fee,
     ): AddOrUpdateContentOperation {
-        return new this(Long.fromNumber(1), author, coAuthors, uri, 0, [price],
+        return new this(Long.fromNumber(1), author, coAuthors, uri, 0, price,
             Utils.ripemd160(Buffer.from(uri)).toString("hex"), [], [], expiration, new AssetAmount(), serialize(synopsis), undefined, fee);
     }
 

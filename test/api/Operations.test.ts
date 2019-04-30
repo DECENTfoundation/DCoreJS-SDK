@@ -1,4 +1,5 @@
 import * as chai from "chai";
+import { deserialize, serialize } from "class-transformer";
 import * as WebSocket from "isomorphic-ws";
 import "mocha";
 import * as moment from "moment";
@@ -6,7 +7,7 @@ import "reflect-metadata";
 import { of, throwError } from "rxjs";
 import { create } from "rxjs-spy";
 import { Spy } from "rxjs-spy/spy-interface";
-import { catchError } from "rxjs/operators";
+import { catchError, flatMap, map, tap } from "rxjs/operators";
 import { ECKeyPair } from "../../src/crypto/ECKeyPair";
 import { DCoreApi } from "../../src/DCoreApi";
 import { DCoreSdk } from "../../src/DCoreSdk";
@@ -14,12 +15,14 @@ import { AssetAmount } from "../../src/models/AssetAmount";
 import { ChainObject } from "../../src/models/ChainObject";
 import { DCoreError } from "../../src/models/error/DCoreError";
 import { ExchangeRate } from "../../src/models/ExchangeRate";
+import { AccountCreateOperation } from "../../src/models/operation/AccountCreateOperation";
 import { AddOrUpdateContentOperation } from "../../src/models/operation/AddOrUpdateContentOperation";
 import { AssetClaimFeesOperation } from "../../src/models/operation/AssetClaimFeesOperation";
 import { AssetFundPoolsOperation } from "../../src/models/operation/AssetFundPoolsOperation";
-import { RemoveContentOperation } from "../../src/models/operation/RemoveContentOperation";
+import { TransferOperation } from "../../src/models/operation/TransferOperation";
 import { RegionalPrice } from "../../src/models/RegionalPrice";
 import { Synopsis } from "../../src/models/Synopsis";
+import { Transaction } from "../../src/models/Transaction";
 import { TransactionConfirmation } from "../../src/models/TransactionConfirmation";
 import { Helpers } from "../Helpers";
 
@@ -40,35 +43,57 @@ describe("blockchain based operations", () => {
         spy.teardown();
     });
 
-    // create fails on exist, update fails on expiration update
-    it.skip("should add or update a content", (done: (arg?: any) => void) => {
-        const op = AddOrUpdateContentOperation.create(
-            Helpers.ACCOUNT,
-            [[Helpers.ACCOUNT2, 50]],
-            "http://hello.world",
-            new RegionalPrice(new AssetAmount(100)),
-            moment.utc().add(10, "days"),
-            new Synopsis("hello", "world"),
-        );
-
-        api.broadcastApi.broadcastWithCallback(Helpers.KEY, [op])
+    it("should re-create a transaction from plain and apply", (done: (arg?: any) => void) => {
+        api.transactionApi.createTransaction([new TransferOperation(Helpers.ACCOUNT, Helpers.ACCOUNT2, new AssetAmount(10))]).pipe(
+            map((trx) => trx.withSignature(Helpers.KEY)),
+            map((trx) => [trx, deserialize(Transaction, serialize(trx))]),
+            tap(([trx, sigTrx]) => serialize(trx).should.eq(serialize(sigTrx))),
+            flatMap(([trx, sigTrx]) => api.broadcastApi.broadcastTrxWithCallback(sigTrx)),
+        )
             .subscribe((value) => value.should.be.instanceOf(TransactionConfirmation), (error) => done(error), () => done());
     });
 
-    // already expired
-    it.skip("should remove a content", (done: (arg?: any) => void) => {
-        const op = new RemoveContentOperation(
-            Helpers.ACCOUNT,
-            "http://hello.world",
-        );
+    // create skips on exist, update fails on expiration update
+    it.skip("should add a content", (done: (arg?: any) => void) => {
+        api.contentApi.add(
+            Helpers.CREDENTIALS,
+            [[Helpers.ACCOUNT2, 50]],
+            "http://hello.world.io",
+            [new RegionalPrice(new AssetAmount(2))],
+            moment.utc().add(100, "days"),
+            new Synopsis("hello", "world"),
+        )
+            .subscribe((value) => value.should.be.instanceOf(TransactionConfirmation), (error) => done(error), () => done());
+    });
 
-        api.broadcastApi.broadcastWithCallback(Helpers.KEY, [op])
+    it("should update a content", (done: (arg?: any) => void) => {
+        api.contentApi.update(
+            Helpers.CREDENTIALS,
+            "http://hello.world.io",
+            (old) => new Synopsis(old.title, "update"),
+        )
+            .subscribe((value) => value.should.be.instanceOf(TransactionConfirmation), (error) => done(error), () => done());
+    });
+
+    // already expired/removed
+    it.skip("should remove a content", (done: (arg?: any) => void) => {
+        api.contentApi.remove(Helpers.CREDENTIALS, "http://hello.world")
             .subscribe((value) => value.should.be.instanceOf(TransactionConfirmation), (error) => done(error), () => done());
     });
 
     // account exist
     it.skip("should create an account", (done: (arg?: any) => void) => {
         api.accountApi.create(Helpers.CREDENTIALS, "sdk-account", Helpers.PUBLIC)
+            .subscribe((value) => value.should.be.instanceOf(TransactionConfirmation), (error) => done(error), () => done());
+    });
+
+    it("should update an account", (done: (arg?: any) => void) => {
+        api.accountApi.update(Helpers.CREDENTIALS, (old) => {
+            old.allowSubscription = !old.allowSubscription;
+            old.subscriptionPeriod = 1;
+            old.pricePerSubscribe = new AssetAmount(1);
+            return old;
+        })
             .subscribe((value) => value.should.be.instanceOf(TransactionConfirmation), (error) => done(error), () => done());
     });
 

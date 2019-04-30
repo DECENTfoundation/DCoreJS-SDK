@@ -1,15 +1,21 @@
 DCore SDK for JS
 ================
 
-Set of APIs for accessing the DCore Blockchain.
+Set of APIs for accessing the DCore Blockchain.<br>
+If you are looking for other platforms you can find info [below](#official-dcore-sdks-for-other-platforms).
 
-Download
+Requirements
 --------
 
-`npm install --save git+ssh://git@github.com/DECENTfoundation/DCoreJS-SDK`
+- [Node.js & NPM](https://nodejs.org/)
+- [secp256k1-node](https://github.com/cryptocoinjs/secp256k1-node)
+- [RxJS](https://github.com/ReactiveX/RxJS)
 
-Setup
+Installation
 --------
+
+`npm install --save rxjs`<br>
+`npm install --save git://github.com/DECENTfoundation/DCoreJS-SDK`
 
 Make sure you import `reflect-metadata` in an entry class to your application, eg. `import "reflect-metadata";`
 
@@ -17,6 +23,10 @@ To enable debug logging you can use [`rxjs-spy`](https://www.npmjs.com/package/r
 
 Usage
 --------
+
+You can find example project with SDK usage [here](https://github.com/DECENTfoundation/DCore-SDK-Examples/tree/master/sdk-ts).
+
+You can find developer documentation for latest release [here](https://decentfoundation.github.io/DCoreJS-SDK/docs/).
 
 Use `DCoreSdk` to initialize the API.
 The `DCoreApi` provides different groups of APIs for accessing the blockchain and default configuration values.
@@ -59,5 +69,9 @@ const disposable = api.accountApi.transfer(credentials, "public-account-10", new
     .subscribe((confirmation) => console.log(confirmation.id));
 ```
 
-References
+Official DCore SDKs for other platforms
 ----------
+
+- [iOS/Swift](https://github.com/DECENTfoundation/DCoreSwift-SDK)
+- [Android/Java/Kotlin](https://github.com/DECENTfoundation/DCoreKt-SDK)
+- [PHP](https://github.com/DECENTfoundation/DCorePHP-SDK)

@@ -52,7 +52,7 @@ chai.use(chaiThings);
         });
 
         it("should find account history", (done: (arg?: any) => void) => {
-            api.findAllOperations(Helpers.ACCOUNT, )
+            api.findAllOperations(Helpers.ACCOUNT)
                 .subscribe((value) => value.should.all.be.instanceOf(BalanceChange), (error) => done(error), () => done());
         });
 

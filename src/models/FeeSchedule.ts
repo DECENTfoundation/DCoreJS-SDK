@@ -16,8 +16,8 @@ export class FeeSchedule {
 
     @Transform((values: Array<[number, FeeParam]>) => new Map(values.map(([type, fee]) =>
         [type, new FeeParameter(
-            new AssetAmount(fee.fee || fee.basic_fee),
-            _.isNil(fee.price_per_kb) ? fee.price_per_kb : new AssetAmount(fee.price_per_kb),
+            new AssetAmount(_.toNumber(fee.fee || fee.basic_fee)),
+            _.isNil(fee.price_per_kb) ? fee.price_per_kb : new AssetAmount(_.toNumber(fee.price_per_kb)),
         )] as [OperationType, FeeParameter])), { toClassOnly: true })
     @Expose({ name: "parameters" })
     public parameters: Map<OperationType, FeeParameter>;

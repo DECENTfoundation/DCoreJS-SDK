@@ -6,10 +6,11 @@ import { Address } from "../crypto/Address";
 import { Credentials } from "../crypto/Credentials";
 import { ECKeyPair } from "../crypto/ECKeyPair";
 import { DCoreApi } from "../DCoreApi";
-import { AccountRef } from "../DCoreSdk";
+import { AccountRef, Fee } from "../DCoreSdk";
 import { Account } from "../models/Account";
 import { AccountStatistics } from "../models/AccountStatistics";
 import { AssetAmount } from "../models/AssetAmount";
+import { Authority } from "../models/Authority";
 import { ChainObject } from "../models/ChainObject";
 import { IllegalArgumentError } from "../models/error/IllegalArgumentError";
 import { ObjectNotFoundError } from "../models/error/ObjectNotFoundError";
@@ -17,7 +18,9 @@ import { FullAccount } from "../models/FullAccount";
 import { Memo } from "../models/Memo";
 import { ObjectType } from "../models/ObjectType";
 import { AccountCreateOperation } from "../models/operation/AccountCreateOperation";
+import { AccountUpdateOperation } from "../models/operation/AccountUpdateOperation";
 import { TransferOperation } from "../models/operation/TransferOperation";
+import { Options } from "../models/Options";
 import { SearchAccountsOrder } from "../models/order/SearchAccountsOrder";
 import { TransactionConfirmation } from "../models/TransactionConfirmation";
 import { GetAccountById } from "../net/models/request/GetAccountById";
@@ -225,7 +228,7 @@ export class AccountApi extends BaseApi {
      * @param amount amount to send with asset type
      * @param memo optional message
      * @param encrypted encrypted is visible only for sender and receiver, unencrypted is visible publicly
-     * @param feeAssetId fee asset id for the operation, if left undefined the fee will be computed in DCT asset.
+     * @param fee {@link AssetAmount} fee for the operation or asset id, if left undefined the fee will be computed in DCT asset.
      * When set, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough
      *
      * @return a transaction confirmation
@@ -236,7 +239,7 @@ export class AccountApi extends BaseApi {
         amount: AssetAmount,
         memo?: string,
         encrypted: boolean = true,
-        feeAssetId?: ChainObject,
+        fee?: Fee,
     ): Observable<TransferOperation> {
         if ((_.isNil(memo) || !encrypted) && (typeof account !== "string" || ChainObject.isValid(account))) {
             return of(new TransferOperation(
@@ -244,14 +247,14 @@ export class AccountApi extends BaseApi {
                 (typeof account === "string") ? ChainObject.parse(account) : account,
                 amount,
                 _.isNil(memo) ? memo : Memo.createPublic(memo),
-                feeAssetId));
+                fee));
         } else {
             return this.get(account).pipe(map((acc) => new TransferOperation(
                 credentials.account,
                 acc.id,
                 amount,
                 _.isNil(memo) ? memo : (encrypted ? Memo.createEncrypted(memo, credentials.keyPair, acc.primaryAddress) : Memo.createPublic(memo)),
-                feeAssetId,
+                fee,
             )));
         }
     }
@@ -264,7 +267,7 @@ export class AccountApi extends BaseApi {
      * @param amount amount to send with asset type
      * @param memo optional message
      * @param encrypted encrypted is visible only for sender and receiver, unencrypted is visible publicly
-     * @param feeAssetId fee asset id for the operation, if left undefined the fee will be computed in DCT asset.
+     * @param fee {@link AssetAmount} fee for the operation or asset id, if left undefined the fee will be computed in DCT asset.
      * When set, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough
      *
      * @return a transaction confirmation
@@ -275,9 +278,9 @@ export class AccountApi extends BaseApi {
         amount: AssetAmount,
         memo?: string,
         encrypted: boolean = true,
-        feeAssetId?: ChainObject,
+        fee?: Fee,
     ): Observable<TransactionConfirmation> {
-        return this.createTransfer(credentials, account, amount, memo, encrypted, feeAssetId).pipe(flatMap((operation) =>
+        return this.createTransfer(credentials, account, amount, memo, encrypted, fee).pipe(flatMap((operation) =>
             this.api.broadcastApi.broadcastWithCallback(credentials.keyPair, [operation])));
     }
 
@@ -307,7 +310,7 @@ export class AccountApi extends BaseApi {
      * @param registrar credentials used to register the new account
      * @param name new account name
      * @param address new account public key address
-     * @param feeAssetId fee asset id for the operation, if left undefined the fee will be computed in DCT asset.
+     * @param fee {@link AssetAmount} fee for the operation or asset id, if left undefined the fee will be computed in DCT asset.
      * When set, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough
      *
      * @return a transaction confirmation
@@ -316,10 +319,59 @@ export class AccountApi extends BaseApi {
         registrar: Credentials,
         name: string,
         address: Address,
-        feeAssetId?: ChainObject,
+        fee?: Fee,
     ): Observable<TransactionConfirmation> {
         return this.api.broadcastApi.broadcastWithCallback(
-            registrar.keyPair, [AccountCreateOperation.create(registrar.account, name, address, feeAssetId)],
+            registrar.keyPair, [AccountCreateOperation.create(registrar.account, name, address, fee)],
+        );
+    }
+
+    /**
+     * Create update account operation
+     *
+     * @param account account id or name
+     * @param options new account options
+     * @param active new active authority
+     * @param owner new owner authority
+     * @param fee {@link AssetAmount} fee for the operation or asset id, if left undefined the fee will be computed in DCT asset.
+     * When set, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough
+     */
+    public createUpdateOperation(
+        account: AccountRef,
+        options?: (old: Options) => Options,
+        active?: (old: Authority) => Authority,
+        owner?: (old: Authority) => Authority,
+        fee?: Fee,
+    ): Observable<AccountUpdateOperation> {
+        return this.get(account).pipe(
+            map((acc) => new AccountUpdateOperation(
+                acc.id,
+                owner ? owner(acc.owner) : undefined,
+                active ? active(acc.active) : undefined,
+                options ? options(acc.options) : undefined,
+                fee)),
+        );
+    }
+
+    /**
+     * Update account
+     *
+     * @param credentials account credentials
+     * @param options new account options
+     * @param active new active authority
+     * @param owner new owner authority
+     * @param fee {@link AssetAmount} fee for the operation or asset id, if left undefined the fee will be computed in DCT asset.
+     * When set, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough
+     */
+    public update(
+        credentials: Credentials,
+        options?: (old: Options) => Options,
+        active?: (old: Authority) => Authority,
+        owner?: (old: Authority) => Authority,
+        fee?: Fee,
+    ): Observable<TransactionConfirmation> {
+        return this.createUpdateOperation(credentials.account, options, active, owner, fee).pipe(
+            flatMap((op) => this.api.broadcastApi.broadcastWithCallback(credentials.keyPair, [op])),
         );
     }
 }
