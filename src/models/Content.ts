@@ -1,9 +1,12 @@
-import { deserialize, Expose, Transform, Type } from "class-transformer";
+import { deserialize, Expose, plainToClass, Transform, Type } from "class-transformer";
 import * as Long from "long";
+import * as moment from "moment";
 import { Moment } from "moment";
 import { ChainObjectToClass, CoAuthorsToClass, LongToClass, MomentToClass } from "../net/adapter/TypeAdapters";
 import { AssetAmount } from "./AssetAmount";
 import { ChainObject } from "./ChainObject";
+import { CustodyData } from "./CustodyData";
+import { KeyPart } from "./KeyPart";
 import { PricePerRegion } from "./PricePerRegion";
 import { RegionalPrice } from "./RegionalPrice";
 import { Synopsis } from "./Synopsis";
@@ -13,6 +16,10 @@ export class Content {
     @ChainObjectToClass
     @Expose({ name: "id" })
     public id: ChainObject;
+
+    @ChainObjectToClass
+    @Expose({ name: "author" })
+    public author: ChainObject;
 
     @CoAuthorsToClass
     @Expose({ name: "co_authors" })
@@ -47,14 +54,18 @@ export class Content {
     @Expose({ name: "quorum" })
     public quorum: number;
 
+    @Transform((values: Array<[string, object]>) =>
+        new Map(values.map(([id, keyPart]) => [ChainObject.parse(id), plainToClass(KeyPart, keyPart)])), { toClassOnly: true })
     @Expose({ name: "key_parts" })
-    public keyParts: object[];
+    public keyParts: Map<ChainObject, KeyPart>;
 
     @Expose({ name: "_hash" })
     public hash: string;
 
+    @Transform((values: Array<[string, string]>) =>
+        new Map(values.map(([id, timeSec]) => [ChainObject.parse(id), moment.utc(timeSec)])), { toClassOnly: true })
     @Expose({ name: "last_proof" })
-    public lastProof: object[];
+    public lastProof: Map<ChainObject, Moment>;
 
     @Expose({ name: "is_blocked" })
     public isBlocked: boolean;
@@ -72,8 +83,14 @@ export class Content {
     @Expose({ name: "publishing_fee_escrow" })
     public publishingFeeEscrow: AssetAmount;
 
+    @Transform((values: Array<[string, string | number]>) =>
+        new Map(values.map(([id, amount]) => [ChainObject.parse(id), Long.fromValue(amount)])), { toClassOnly: true })
     @Expose({ name: "seeder_price" })
-    public seederPrice: object[];
+    public seederPrice: Map<ChainObject, Long>;
+
+    @Type(() => CustodyData)
+    @Expose({ name: "cd" })
+    public custodyData: CustodyData;
 
     /**
      * Get regional price for region or first defined

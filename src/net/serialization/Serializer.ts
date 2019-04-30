@@ -7,7 +7,6 @@ import { AssetAmount } from "../../models/AssetAmount";
 import { AssetOptions } from "../../models/AssetOptions";
 import { Authority } from "../../models/Authority";
 import { AuthorityMap } from "../../models/AuthorityMap";
-import { BlockData } from "../../models/BlockData";
 import { ChainObject } from "../../models/ChainObject";
 import { CustodyData } from "../../models/CustodyData";
 import { ExchangeRate } from "../../models/ExchangeRate";
@@ -58,7 +57,6 @@ export class Serializer {
         this.adapters.set(Options.name, this.optionsAdapter);
         this.adapters.set(PubKey.name, this.pubKeyAdapter);
         this.adapters.set(Publishing.name, this.publishingAdapter);
-        this.adapters.set(BlockData.name, this.blockDataAdapter);
         this.adapters.set(Transaction.name, this.transactionAdapter);
         this.adapters.set(AccountCreateOperation.name, this.accountCreateOperationAdapter);
         this.adapters.set(AccountUpdateOperation.name, this.accountUpdateOperationAdapter);
@@ -194,14 +192,10 @@ export class Serializer {
         buffer.writeUint32(obj.utc().unix());
     }
 
-    private blockDataAdapter = (buffer: ByteBuffer, obj: BlockData) => {
+    private transactionAdapter = (buffer: ByteBuffer, obj: Transaction) => {
         buffer.writeUint16(obj.refBlockNum);
         buffer.writeUint32(obj.refBlockPrefix.getLowBitsUnsigned());
         this.momentAdapter(buffer, obj.expiration);
-    }
-
-    private transactionAdapter = (buffer: ByteBuffer, obj: Transaction) => {
-        this.append(buffer, obj.blockData);
         this.append(buffer, obj.operations);
         this.append(buffer, obj.extensions);
     }

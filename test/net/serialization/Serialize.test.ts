@@ -148,7 +148,7 @@ describe("serialization test suite", () => {
             ChainObject.parse("1.2.34"),
             [],
             "http://hello.io/world2",
-            new RegionalPrice(new AssetAmount(1000), Regions.None),
+            [new RegionalPrice(new AssetAmount(1000), Regions.None)],
             moment.utc("2019-05-28T13:32:34"),
             new Synopsis("Game Title", "Description", "1.5.5"),
             new AssetAmount(),
@@ -179,8 +179,7 @@ describe("serialization test suite", () => {
         const props = deserialize(DynamicGlobalProperties, rawProps);
         const op = deserialize(TransferOperation, rawOp);
         op.extensions = [];
-        const trx = new Transaction(new BlockData(props, DCoreConstants.EXPIRATION_DEFAULT), [op], Helpers.DCT_CHAIN_ID_STAGE);
-        trx.blockData.expiration = moment.utc("2018-08-01T10:14:36");
+        const trx = Transaction.create(new BlockData(props, DCoreConstants.EXPIRATION_DEFAULT), [op], Helpers.DCT_CHAIN_ID_STAGE);
         trx.expiration = moment.utc("2018-08-01T10:14:36");
 
         // tslint:disable-next-line:max-line-length

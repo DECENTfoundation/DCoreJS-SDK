@@ -3,6 +3,7 @@ import * as ByteBuffer from "bytebuffer";
 import * as chai from "chai";
 import { classToPlain, plainToClass } from "class-transformer";
 import { createHash } from "crypto";
+import Decimal from "decimal.js";
 import * as _ from "lodash";
 import * as Long from "long";
 import { suite, test, timeout } from "mocha-typescript";
@@ -386,5 +387,19 @@ class Scratchpad {
     @test "zip"() {
         zip(zip(...[of("hello"), of(" "), of("world")]), of("foo"))
             .subscribe((value) => console.log(value));
+    }
+
+    @test "decimals"() {
+        const max = Number.MAX_SAFE_INTEGER;
+        const d = new Decimal(`${max}.${max}`);
+        const d1 = new Decimal(1);
+        const d5 = new Decimal(0.05);
+        console.log(d.toString());
+        console.log(d.toPrecision(8));
+        console.log(d.toDecimalPlaces(4));
+        console.log(d.toFixed(5));
+        console.log(d1.toDecimalPlaces(4));
+        console.log(d1.toFixed(5));
+        console.log(d5.toDecimalPlaces(1));
     }
 }

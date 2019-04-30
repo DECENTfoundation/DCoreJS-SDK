@@ -125,7 +125,7 @@ export class DCoreSdk {
             zip(
                 finalOps,
                 this.request(new GetDynamicGlobalProps()),
-            ).pipe(map(([ops, props]) => new Transaction(new BlockData(props, transactionExpiration), ops, id)))),
+            ).pipe(map(([ops, props]) => Transaction.create(new BlockData(props, transactionExpiration), ops, id)))),
         );
     }
 }
