@@ -1,16 +1,20 @@
-import * as Long from "long";
-import { Observable, zip } from "rxjs";
-import { map } from "rxjs/operators";
+import * as _ from "lodash";
+import { forkJoin, Observable, of, zip } from "rxjs";
+import { flatMap, map } from "rxjs/operators";
 import { DCoreApi } from "../DCoreApi";
 import { BalanceChange } from "../models/BalanceChange";
 import { ChainObject } from "../models/ChainObject";
 import { ObjectType } from "../models/ObjectType";
+import { OperationType } from "../models/operation/OperationType";
+import { TransferOperation } from "../models/operation/TransferOperation";
 import { OperationHistory } from "../models/OperationHistory";
+import { TransferComposite } from "../models/TransferComposite";
 import { GetAccountBalanceForTransaction } from "../net/models/request/GetAccountBalanceForTransaction";
 import { GetAccountHistory } from "../net/models/request/GetAccountHistory";
 import { GetObjects } from "../net/models/request/GetObjects";
 import { GetRelativeAccountHistory } from "../net/models/request/GetRelativeAccountHistory";
 import { SearchAccountBalanceHistory } from "../net/models/request/SearchAccountBalanceHistory";
+import { toMap } from "../utils/Utils";
 import { BaseApi } from "./BaseApi";
 
 export class HistoryApi extends BaseApi {
@@ -87,9 +91,9 @@ export class HistoryApi extends BaseApi {
         accountId: ChainObject,
         assets: ChainObject[] = [],
         recipientAccount?: ChainObject,
-        fromBlock: Long = Long.ZERO,
-        toBlock: Long = Long.ZERO,
-        startOffset: Long = Long.ZERO,
+        fromBlock: number = 0,
+        toBlock: number = 0,
+        startOffset: number = 0,
         limit: number = 100,
     ): Observable<BalanceChange[]> {
         return this.request(new SearchAccountBalanceHistory(accountId, assets, recipientAccount, fromBlock, toBlock, startOffset, limit));
@@ -108,4 +112,77 @@ export class HistoryApi extends BaseApi {
             .pipe(map(([props, blockNum]) => blockNum <= props.lastIrreversibleBlockNum));
     }
 
+    /**
+     * Returns the most recent transfer operations on the named account.
+     * This returns a list of history composite objects, containing resolved accounts, assets and block.
+     * Pages through whole history and calls multiple apis to fetch all related data, experimental use only.
+     *
+     * @param accountId object id of the account whose history should be queried, 1.2.*
+     * @param assets list of asset object ids to filter or empty for all assets
+     * @param recipientAccount partner account object id to filter transfers to specific account, 1.2.* or null
+     * @param offset block number to search from
+     * @param limit the number of entries to return (starting from the most recent), max 100
+     *
+     * @return a list of balance changes
+     */
+    public findAllTransfers(
+        accountId: ChainObject,
+        assets: ChainObject[] = [],
+        recipientAccount?: ChainObject,
+        offset: number = Number.MAX_SAFE_INTEGER,
+        limit: number = 100,
+    ): Observable<TransferComposite[]> {
+        const isTransfer = (type: OperationType) => type === OperationType.Transfer || type === OperationType.Transfer2;
+        const onePage = (off: number) => this.findAllOperations(accountId, assets, recipientAccount, 1, off, 0, 100);
+        const paged = (off: number, lim: number): Observable<BalanceChange[]> => onePage(off).pipe(
+            flatMap((ops) => {
+                const trfs = ops.filter((op) => isTransfer(op.operation.op.type));
+                if (trfs.length >= lim) {
+                    return of(trfs.slice(0, lim));
+                } else {
+                    return paged(_.last(ops)!.operation.blockNum - 1, lim - trfs.length).pipe(map((next) => _.concat(trfs, next)));
+                }
+            }));
+
+        const merged = (ops: BalanceChange[]) => {
+            const ids = _.uniqWith(_.flatten(
+                ops.map((op) => (op.operation.op as TransferOperation)).map((op) => [op.from, op.to]),
+            ), ChainObject.comparator);
+            const accountIds = ids.filter((id) => id.objectType === ObjectType.Account);
+            const contentIds = ids.filter((id) => id.objectType === ObjectType.ContentObject);
+            const assetIds = _.uniqWith(_.concat(
+                ops.map((op) => (op.operation.op as TransferOperation).amount.assetId),
+                ops.map((op) => op.fee.assetId),
+            ), ChainObject.comparator);
+            const blockNums = _.uniq(ops.map((op) => op.operation.blockNum));
+
+            return zip(
+                of(ops),
+                this.api.accountApi.getAll(accountIds).pipe(map((list) => toMap(list, (acc) => acc.id.objectId))),
+                this.api.contentApi.getAll(contentIds).pipe(map((list) => toMap(list, (c) => c.id.objectId))),
+                this.api.assetApi.getAll(assetIds).pipe(map((list) => toMap(list, (asset) => asset.id.objectId))),
+                forkJoin(blockNums.map((b) => this.api.blockApi.getHeader(b)))
+                    .pipe(map((list, idx) => toMap(list, (b) => b.blockNum))),
+            );
+        };
+
+        return paged(offset, limit).pipe(
+            flatMap((ops) => merged(ops)),
+            map(([ops, account, content, asset, block]) => ops.map((op) => {
+                const trf = op.operation.op as TransferOperation;
+                return new TransferComposite(
+                    op.operation.id,
+                    trf,
+                    op.balance,
+                    op.fee,
+                    account.get(trf.from.objectId)!,
+                    asset.get(trf.amount.assetId.objectId)!,
+                    block.get(op.operation.blockNum)!,
+                    asset.get(op.fee.assetId.objectId)!,
+                    account.get(trf.to.objectId),
+                    content.get(trf.to.objectId),
+                );
+            })),
+        );
+    }
 }

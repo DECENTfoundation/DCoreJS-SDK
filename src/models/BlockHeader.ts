@@ -1,3 +1,4 @@
+import * as ByteBuffer from "bytebuffer";
 import { Expose } from "class-transformer";
 import { Moment } from "moment";
 import { ChainObjectToClass, MomentToClass } from "../net/adapter/TypeAdapters";
@@ -17,5 +18,9 @@ export class BlockHeader {
 
     @Expose({ name: "transaction_merkle_root" })
     public transactionMerkleRoot: string;
+
+    public get blockNum(): number {
+        return ByteBuffer.fromHex(this.previous).readUint32() + 1;
+    }
 
 }

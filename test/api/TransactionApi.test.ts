@@ -29,7 +29,7 @@ chai.use(chaiThings);
 
         before(() => {
             spy = create();
-            spy.log(/^API\w+/);
+            // spy.log(/^API\w+/);
         });
 
         after(() => {
