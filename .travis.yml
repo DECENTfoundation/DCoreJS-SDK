@@ -7,6 +7,7 @@ script:
 deploy:
   - provider: pages
     skip_cleanup: true
+    local_dir: docs/
     github_token: $GITHUB_TOKEN # Set in travis-ci.org dashboard
     keep_history: true
     on:  
@@ -18,12 +19,14 @@ deploy:
     on:
       tags: true  
   - provider: npm
+    skip_cleanup: true
     email: $NPM_EMAIL
     api_key: $NPM_API_KEY # Set in travis-ci.org dashboard
     on:
       tags: true  
 before_deploy:
   - echo ${TRAVIS_TAG}
+  - npm run build
   - npm run doc -- --name "DCore SDK for JS - API documentation - version ${TRAVIS_TAG}" --ignoreCompilerErrors
   - touch .nojekyll
   - sed -i '/docs/d' .gitignore
