@@ -226,8 +226,8 @@ export class AssetApi extends BaseApi {
      * Create update asset operation.
      *
      * @param asset asset to update
-     * @param coreExchangeRate new exchange rate
-     * @param newDescription new description
+     * @param exchangeRate new exchange rate
+     * @param description new description
      * @param exchangeable enable converting the asset to DCT, so it can be used to pay for fees
      * @param maxSupply new max supply
      * @param newIssuer a new issuer account id
@@ -236,24 +236,24 @@ export class AssetApi extends BaseApi {
      */
     public createAssetUpdateOperation(
         asset: AssetRef,
-        coreExchangeRate?: ExchangeRate,
-        newDescription?: string,
-        exchangeable?: boolean,
-        maxSupply?: number,
+        exchangeRate: (old: Asset) => ExchangeRate = (old) => old.options.exchangeRate,
+        description: (old: Asset) => string = (old) => old.description,
+        exchangeable: (old: Asset) => boolean = (old) => old.options.exchangeable,
+        maxSupply: (old: Asset) => number = (old) => old.options.maxSupply,
         newIssuer?: ChainObject,
         fee?: Fee,
     ): Observable<AssetUpdateOperation> {
         return this.get(asset).pipe(
-            map((obj) => AssetUpdateOperation.create(obj)),
-            map((op) => {
-                op.newDescription = newDescription ? newDescription : op.newDescription;
-                op.newIssuer = newIssuer ? newIssuer : op.newIssuer;
-                op.maxSupply = maxSupply ? maxSupply : op.maxSupply;
-                op.coreExchangeRate = coreExchangeRate ? coreExchangeRate : op.coreExchangeRate;
-                op.exchangeable = exchangeable ? exchangeable : op.exchangeable;
-                op.setFee(fee);
-                return op;
-            }),
+            map((obj) => new AssetUpdateOperation(
+                obj.issuer,
+                obj.id,
+                exchangeRate(obj),
+                description(obj),
+                exchangeable(obj),
+                maxSupply(obj),
+                newIssuer,
+                fee,
+            )),
         );
     }
 
@@ -262,8 +262,8 @@ export class AssetApi extends BaseApi {
      *
      * @param credentials account credentials issuing the asset
      * @param asset asset to update
-     * @param coreExchangeRate new exchange rate
-     * @param newDescription new description
+     * @param exchangeRate new exchange rate
+     * @param description new description
      * @param exchangeable enable converting the asset to DCT, so it can be used to pay for fees
      * @param maxSupply new max supply
      * @param newIssuer a new issuer account id
@@ -272,15 +272,15 @@ export class AssetApi extends BaseApi {
      */
     public update(
         credentials: Credentials,
-        asset: ChainObject,
-        coreExchangeRate?: ExchangeRate,
-        newDescription?: string,
-        exchangeable?: boolean,
-        maxSupply?: number,
+        asset: AssetRef,
+        exchangeRate: (old: Asset) => ExchangeRate = (old) => old.options.exchangeRate,
+        description: (old: Asset) => string = (old) => old.description,
+        exchangeable: (old: Asset) => boolean = (old) => old.options.exchangeable,
+        maxSupply: (old: Asset) => number = (old) => old.options.maxSupply,
         newIssuer?: ChainObject,
         fee?: Fee,
     ): Observable<TransactionConfirmation> {
-        return this.createAssetUpdateOperation(asset, coreExchangeRate, newDescription, exchangeable, maxSupply, newIssuer, fee).pipe(
+        return this.createAssetUpdateOperation(asset, exchangeRate, description, exchangeable, maxSupply, newIssuer, fee).pipe(
             flatMap((op) => this.api.broadcastApi.broadcastWithCallback(credentials.keyPair, [op])),
         );
     }
