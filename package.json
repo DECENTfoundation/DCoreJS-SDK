@@ -18,6 +18,9 @@
     "node": ">=8.11.4",
     "npm": ">=5.6.0"
   },
+  "files": [
+    "/dist"
+  ],
   "pre-commit": [
     "lint"
   ],
