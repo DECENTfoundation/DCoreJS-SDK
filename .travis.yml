@@ -19,6 +19,7 @@ deploy:
       tags: true  
   - provider: npm
     skip_cleanup: true
+    email: peter.vanderka@decent.ch
     api_key: $NPM_API_KEY # Set in travis-ci.org dashboard
     on:
       tags: true  
