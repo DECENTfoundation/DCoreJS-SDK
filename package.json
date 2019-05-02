@@ -1,6 +1,6 @@
 {
   "name": "dcorejs-sdk",
-  "version": "2.1.1",
+  "version": "2.3.0",
   "homepage": "https://decent.ch/",
   "description": "DcoreJS SDK.",
   "main": "./dist/index.js",
@@ -23,7 +23,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@github.com:DECENTfoundation/DCoreJS-SDK.git"
+    "url": "git://github.com:DECENTfoundation/DCoreJS-SDK.git"
   },
   "scripts": {
     "build": "sh ./scripts/build.sh",
