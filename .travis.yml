@@ -5,19 +5,23 @@ node_js:
 script:
   - npm test
 deploy:
-  provider: pages
-  skip_cleanup: true
-  github_token: $GITHUB_TOKEN # Set in travis-ci.org dashboard
-  keep_history: true
-  on:  
-    tags: true
-deploy:
-  skip_cleanup: true
-  provider: releases
-  api_key: $GITHUB_TOKEN # Set in travis-ci.org dashboard
-  file: DCoreJS-SDK-developer-docs-${TRAVIS_TAG}.zip
-  on:
-    tags: true  
+  - provider: pages
+    skip_cleanup: true
+    github_token: $GITHUB_TOKEN # Set in travis-ci.org dashboard
+    keep_history: true
+    on:  
+      tags: true
+  - provider: releases
+    skip_cleanup: true
+    api_key: $GITHUB_TOKEN # Set in travis-ci.org dashboard
+    file: DCoreJS-SDK-developer-docs-${TRAVIS_TAG}.zip
+    on:
+      tags: true  
+  - provider: npm
+    skip_cleanup: true
+    api_key: $NPM_API_KEY # Set in travis-ci.org dashboard
+    on:
+      tags: true  
 before_deploy:
   - echo ${TRAVIS_TAG}
   - npm run doc -- --name "DCore SDK for JS - API documentation - version ${TRAVIS_TAG}" --ignoreCompilerErrors
