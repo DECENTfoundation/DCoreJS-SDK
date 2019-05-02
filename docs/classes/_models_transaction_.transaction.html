@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>Transaction | DCore SDK for JS - API documentation v.test-travis-1.1.0</title>
+	<title>Transaction | DCore SDK for JS - API documentation - version 2.3.0</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -22,7 +22,7 @@
 						<li class="state loading">Preparing search index...</li>
 						<li class="state failure">The search index is not available</li>
 					</ul>
-					<a href="../index.html" class="title">DCore SDK for JS - API documentation v.test-travis-1.1.0</a>
+					<a href="../index.html" class="title">DCore SDK for JS - API documentation - version 2.3.0</a>
 				</div>
 				<div class="table-cell" id="tsd-widgets">
 					<div id="tsd-filter">
@@ -82,16 +82,9 @@
 				<section class="tsd-panel tsd-index-panel">
 					<div class="tsd-index-content">
 						<section class="tsd-index-section ">
-							<h3>Constructors</h3>
-							<ul class="tsd-index-list">
-								<li class="tsd-kind-constructor tsd-parent-kind-class"><a href="_models_transaction_.transaction.html#constructor" class="tsd-kind-icon">constructor</a></li>
-							</ul>
-						</section>
-						<section class="tsd-index-section ">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_models_transaction_.transaction.html#blockdata" class="tsd-kind-icon">block<wbr>Data</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="_models_transaction_.transaction.html#chainid" class="tsd-kind-icon">chain<wbr>Id</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_models_transaction_.transaction.html#chainid" class="tsd-kind-icon">chain<wbr>Id</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_models_transaction_.transaction.html#expiration" class="tsd-kind-icon">expiration</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_models_transaction_.transaction.html#extensions" class="tsd-kind-icon">extensions</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_models_transaction_.transaction.html#operations" class="tsd-kind-icon">operations</a></li>
@@ -103,25 +96,177 @@
 						<section class="tsd-index-section ">
 							<h3>Methods</h3>
 							<ul class="tsd-index-list">
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_models_transaction_.transaction.html#signature" class="tsd-kind-icon">signature</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_models_transaction_.transaction.html#withsignature" class="tsd-kind-icon">with<wbr>Signature</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-static"><a href="_models_transaction_.transaction.html#create" class="tsd-kind-icon">create</a></li>
 							</ul>
 						</section>
 					</div>
 				</section>
 			</section>
 			<section class="tsd-panel-group tsd-member-group ">
-				<h2>Constructors</h2>
-				<section class="tsd-panel tsd-member tsd-kind-constructor tsd-parent-kind-class">
-					<a name="constructor" class="tsd-anchor"></a>
-					<h3>constructor</h3>
-					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">new <wbr>Transaction<span class="tsd-signature-symbol">(</span>blockData<span class="tsd-signature-symbol">: </span><a href="_models_blockdata_.blockdata.html" class="tsd-signature-type">BlockData</a>, ops<span class="tsd-signature-symbol">: </span><a href="_models_operation_baseoperation_.baseoperation.html" class="tsd-signature-type">BaseOperation</a><span class="tsd-signature-symbol">[]</span>, chainId<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_models_transaction_.transaction.html" class="tsd-signature-type">Transaction</a></li>
+				<h2>Properties</h2>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="chainid" class="tsd-anchor"></a>
+					<h3>chain<wbr>Id</h3>
+					<div class="tsd-signature tsd-kind-icon">chain<wbr>Id<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/DECENTfoundation/DCoreJS-SDK/blob/e7802fc/src/models/Transaction.ts#L50">models/Transaction.ts:50</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="expiration" class="tsd-anchor"></a>
+					<h3>expiration</h3>
+					<div class="tsd-signature tsd-kind-icon">expiration<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Moment</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/DECENTfoundation/DCoreJS-SDK/blob/e7802fc/src/models/Transaction.ts#L36">models/Transaction.ts:36</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="extensions" class="tsd-anchor"></a>
+					<h3>extensions</h3>
+					<div class="tsd-signature tsd-kind-icon">extensions<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> =&nbsp;[]</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/DECENTfoundation/DCoreJS-SDK/blob/e7802fc/src/models/Transaction.ts#L47">models/Transaction.ts:47</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="operations" class="tsd-anchor"></a>
+					<h3>operations</h3>
+					<div class="tsd-signature tsd-kind-icon">operations<span class="tsd-signature-symbol">:</span> <a href="_models_operation_baseoperation_.baseoperation.html" class="tsd-signature-type">BaseOperation</a><span class="tsd-signature-symbol">[]</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/DECENTfoundation/DCoreJS-SDK/blob/e7802fc/src/models/Transaction.ts#L28">models/Transaction.ts:28</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="refblocknum" class="tsd-anchor"></a>
+					<h3>ref<wbr>Block<wbr>Num</h3>
+					<div class="tsd-signature tsd-kind-icon">ref<wbr>Block<wbr>Num<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/DECENTfoundation/DCoreJS-SDK/blob/e7802fc/src/models/Transaction.ts#L39">models/Transaction.ts:39</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="refblockprefix" class="tsd-anchor"></a>
+					<h3>ref<wbr>Block<wbr>Prefix</h3>
+					<div class="tsd-signature tsd-kind-icon">ref<wbr>Block<wbr>Prefix<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Long</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/DECENTfoundation/DCoreJS-SDK/blob/e7802fc/src/models/Transaction.ts#L44">models/Transaction.ts:44</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="signatures" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> signatures</h3>
+					<div class="tsd-signature tsd-kind-icon">signatures<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/DECENTfoundation/DCoreJS-SDK/blob/e7802fc/src/models/Transaction.ts#L31">models/Transaction.ts:31</a></li>
+						</ul>
+					</aside>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Methods</h2>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="signature" class="tsd-anchor"></a>
+					<h3>signature</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">signature<span class="tsd-signature-symbol">(</span>key<span class="tsd-signature-symbol">: </span><a href="_crypto_eckeypair_.eckeypair.html" class="tsd-signature-type">ECKeyPair</a>, chainId<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">undefined</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/DECENTfoundation/DCoreJS-SDK/blob/878dbc4/src/models/Transaction.ts#L36">models/Transaction.ts:36</a></li>
+									<li>Defined in <a href="https://github.com/DECENTfoundation/DCoreJS-SDK/blob/e7802fc/src/models/Transaction.ts#L58">models/Transaction.ts:58</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Generate signature on transaction data. May return undefined if the signature is not valid for DCore.</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>key: <a href="_crypto_eckeypair_.eckeypair.html" class="tsd-signature-type">ECKeyPair</a></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>private key</p>
+									</div>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> chainId: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> =&nbsp;this.chainId</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>id of the DCore chain, different for live/testnet/custom net...</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span>
+								<span class="tsd-signature-symbol"> | </span>
+								<span class="tsd-signature-type">undefined</span>
+							</h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="withsignature" class="tsd-anchor"></a>
+					<h3>with<wbr>Signature</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">with<wbr>Signature<span class="tsd-signature-symbol">(</span>key<span class="tsd-signature-symbol">: </span><a href="_crypto_eckeypair_.eckeypair.html" class="tsd-signature-type">ECKeyPair</a>, chainId<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_models_transaction_.transaction.html" class="tsd-signature-type">Transaction</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/DECENTfoundation/DCoreJS-SDK/blob/e7802fc/src/models/Transaction.ts#L75">models/Transaction.ts:75</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Set a single signature to transaction and return it. May change expiration time to meet valid signature checks for DCore.</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>key: <a href="_crypto_eckeypair_.eckeypair.html" class="tsd-signature-type">ECKeyPair</a></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>private key</p>
+									</div>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> chainId: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> =&nbsp;this.chainId</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>id of the DCore chain, different for live/testnet/custom net...</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="_models_transaction_.transaction.html" class="tsd-signature-type">Transaction</a></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-static">
+					<a name="create" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagStatic">Static</span> create</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-static">
+						<li class="tsd-signature tsd-kind-icon">create<span class="tsd-signature-symbol">(</span>blockData<span class="tsd-signature-symbol">: </span><a href="_models_blockdata_.blockdata.html" class="tsd-signature-type">BlockData</a>, ops<span class="tsd-signature-symbol">: </span><a href="_models_operation_baseoperation_.baseoperation.html" class="tsd-signature-type">BaseOperation</a><span class="tsd-signature-symbol">[]</span>, chainId<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_models_transaction_.transaction.html" class="tsd-signature-type">Transaction</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/DECENTfoundation/DCoreJS-SDK/blob/e7802fc/src/models/Transaction.ts#L15">models/Transaction.ts:15</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -134,115 +279,6 @@
 								</li>
 								<li>
 									<h5>chainId: <span class="tsd-signature-type">string</span></h5>
-								</li>
-							</ul>
-							<h4 class="tsd-returns-title">Returns <a href="_models_transaction_.transaction.html" class="tsd-signature-type">Transaction</a></h4>
-						</li>
-					</ul>
-				</section>
-			</section>
-			<section class="tsd-panel-group tsd-member-group ">
-				<h2>Properties</h2>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
-					<a name="blockdata" class="tsd-anchor"></a>
-					<h3>block<wbr>Data</h3>
-					<div class="tsd-signature tsd-kind-icon">block<wbr>Data<span class="tsd-signature-symbol">:</span> <a href="_models_blockdata_.blockdata.html" class="tsd-signature-type">BlockData</a></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/DECENTfoundation/DCoreJS-SDK/blob/878dbc4/src/models/Transaction.ts#L12">models/Transaction.ts:12</a></li>
-						</ul>
-					</aside>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
-					<a name="chainid" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagPrivate">Private</span> chain<wbr>Id</h3>
-					<div class="tsd-signature tsd-kind-icon">chain<wbr>Id<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Buffer</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/DECENTfoundation/DCoreJS-SDK/blob/878dbc4/src/models/Transaction.ts#L36">models/Transaction.ts:36</a></li>
-						</ul>
-					</aside>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
-					<a name="expiration" class="tsd-anchor"></a>
-					<h3>expiration</h3>
-					<div class="tsd-signature tsd-kind-icon">expiration<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Moment</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/DECENTfoundation/DCoreJS-SDK/blob/878dbc4/src/models/Transaction.ts#L23">models/Transaction.ts:23</a></li>
-						</ul>
-					</aside>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
-					<a name="extensions" class="tsd-anchor"></a>
-					<h3>extensions</h3>
-					<div class="tsd-signature tsd-kind-icon">extensions<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> =&nbsp;[]</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/DECENTfoundation/DCoreJS-SDK/blob/878dbc4/src/models/Transaction.ts#L33">models/Transaction.ts:33</a></li>
-						</ul>
-					</aside>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
-					<a name="operations" class="tsd-anchor"></a>
-					<h3>operations</h3>
-					<div class="tsd-signature tsd-kind-icon">operations<span class="tsd-signature-symbol">:</span> <a href="_models_operation_baseoperation_.baseoperation.html" class="tsd-signature-type">BaseOperation</a><span class="tsd-signature-symbol">[]</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/DECENTfoundation/DCoreJS-SDK/blob/878dbc4/src/models/Transaction.ts#L16">models/Transaction.ts:16</a></li>
-						</ul>
-					</aside>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
-					<a name="refblocknum" class="tsd-anchor"></a>
-					<h3>ref<wbr>Block<wbr>Num</h3>
-					<div class="tsd-signature tsd-kind-icon">ref<wbr>Block<wbr>Num<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/DECENTfoundation/DCoreJS-SDK/blob/878dbc4/src/models/Transaction.ts#L26">models/Transaction.ts:26</a></li>
-						</ul>
-					</aside>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
-					<a name="refblockprefix" class="tsd-anchor"></a>
-					<h3>ref<wbr>Block<wbr>Prefix</h3>
-					<div class="tsd-signature tsd-kind-icon">ref<wbr>Block<wbr>Prefix<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Long</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/DECENTfoundation/DCoreJS-SDK/blob/878dbc4/src/models/Transaction.ts#L30">models/Transaction.ts:30</a></li>
-						</ul>
-					</aside>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
-					<a name="signatures" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagOptional">Optional</span> signatures</h3>
-					<div class="tsd-signature tsd-kind-icon">signatures<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/DECENTfoundation/DCoreJS-SDK/blob/878dbc4/src/models/Transaction.ts#L19">models/Transaction.ts:19</a></li>
-						</ul>
-					</aside>
-				</section>
-			</section>
-			<section class="tsd-panel-group tsd-member-group ">
-				<h2>Methods</h2>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
-					<a name="withsignature" class="tsd-anchor"></a>
-					<h3>with<wbr>Signature</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">with<wbr>Signature<span class="tsd-signature-symbol">(</span>key<span class="tsd-signature-symbol">: </span><a href="_crypto_eckeypair_.eckeypair.html" class="tsd-signature-type">ECKeyPair</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_models_transaction_.transaction.html" class="tsd-signature-type">Transaction</a></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in <a href="https://github.com/DECENTfoundation/DCoreJS-SDK/blob/878dbc4/src/models/Transaction.ts#L47">models/Transaction.ts:47</a></li>
-								</ul>
-							</aside>
-							<h4 class="tsd-parameters-title">Parameters</h4>
-							<ul class="tsd-parameters">
-								<li>
-									<h5>key: <a href="_crypto_eckeypair_.eckeypair.html" class="tsd-signature-type">ECKeyPair</a></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <a href="_models_transaction_.transaction.html" class="tsd-signature-type">Transaction</a></h4>
@@ -269,13 +305,7 @@
 					<li class="current tsd-kind-class tsd-parent-kind-external-module">
 						<a href="_models_transaction_.transaction.html" class="tsd-kind-icon">Transaction</a>
 						<ul>
-							<li class=" tsd-kind-constructor tsd-parent-kind-class">
-								<a href="_models_transaction_.transaction.html#constructor" class="tsd-kind-icon">constructor</a>
-							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class">
-								<a href="_models_transaction_.transaction.html#blockdata" class="tsd-kind-icon">block<wbr>Data</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
 								<a href="_models_transaction_.transaction.html#chainid" class="tsd-kind-icon">chain<wbr>Id</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class">
@@ -297,7 +327,13 @@
 								<a href="_models_transaction_.transaction.html#signatures" class="tsd-kind-icon">signatures</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="_models_transaction_.transaction.html#signature" class="tsd-kind-icon">signature</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="_models_transaction_.transaction.html#withsignature" class="tsd-kind-icon">with<wbr>Signature</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-static">
+								<a href="_models_transaction_.transaction.html#create" class="tsd-kind-icon">create</a>
 							</li>
 						</ul>
 					</li>

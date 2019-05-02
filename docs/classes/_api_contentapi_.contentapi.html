@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>ContentApi | DCore SDK for JS - API documentation v.test-travis-1.1.0</title>
+	<title>ContentApi | DCore SDK for JS - API documentation - version 2.3.0</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -22,7 +22,7 @@
 						<li class="state loading">Preparing search index...</li>
 						<li class="state failure">The search index is not available</li>
 					</ul>
-					<a href="../index.html" class="title">DCore SDK for JS - API documentation v.test-travis-1.1.0</a>
+					<a href="../index.html" class="title">DCore SDK for JS - API documentation - version 2.3.0</a>
 				</div>
 				<div class="table-cell" id="tsd-widgets">
 					<div id="tsd-filter">
@@ -101,16 +101,22 @@
 						<section class="tsd-index-section ">
 							<h3>Methods</h3>
 							<ul class="tsd-index-list">
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_api_contentapi_.contentapi.html#add" class="tsd-kind-icon">add</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_api_contentapi_.contentapi.html#createaddcontentoperation" class="tsd-kind-icon">create<wbr>Add<wbr>Content<wbr>Operation</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_api_contentapi_.contentapi.html#createpurchaseoperation" class="tsd-kind-icon">create<wbr>Purchase<wbr>Operation</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_api_contentapi_.contentapi.html#createremovecontentoperation" class="tsd-kind-icon">create<wbr>Remove<wbr>Content<wbr>Operation</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_api_contentapi_.contentapi.html#createtransfer" class="tsd-kind-icon">create<wbr>Transfer</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_api_contentapi_.contentapi.html#createupdatecontentoperation" class="tsd-kind-icon">create<wbr>Update<wbr>Content<wbr>Operation</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_api_contentapi_.contentapi.html#findall" class="tsd-kind-icon">find<wbr>All</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_api_contentapi_.contentapi.html#generatekeys" class="tsd-kind-icon">generate<wbr>Keys</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_api_contentapi_.contentapi.html#get" class="tsd-kind-icon">get</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_api_contentapi_.contentapi.html#getall" class="tsd-kind-icon">get<wbr>All</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_api_contentapi_.contentapi.html#listallpublishersrelative" class="tsd-kind-icon">list<wbr>All<wbr>Publishers<wbr>Relative</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_api_contentapi_.contentapi.html#purchase" class="tsd-kind-icon">purchase</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_api_contentapi_.contentapi.html#remove" class="tsd-kind-icon">remove</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited tsd-is-protected"><a href="_api_contentapi_.contentapi.html#request" class="tsd-kind-icon">request</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_api_contentapi_.contentapi.html#transfer" class="tsd-kind-icon">transfer</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_api_contentapi_.contentapi.html#update" class="tsd-kind-icon">update</a></li>
 							</ul>
 						</section>
 					</div>
@@ -129,7 +135,7 @@
 							<aside class="tsd-sources">
 								<p>Overrides <a href="_api_baseapi_.baseapi.html">BaseApi</a>.<a href="_api_baseapi_.baseapi.html#constructor">constructor</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/DECENTfoundation/DCoreJS-SDK/blob/878dbc4/src/api/ContentApi.ts#L25">api/ContentApi.ts:25</a></li>
+									<li>Defined in <a href="https://github.com/DECENTfoundation/DCoreJS-SDK/blob/e7802fc/src/api/ContentApi.ts#L32">api/ContentApi.ts:32</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -152,7 +158,7 @@
 					<aside class="tsd-sources">
 						<p>Inherited from <a href="_api_baseapi_.baseapi.html">BaseApi</a>.<a href="_api_baseapi_.baseapi.html#api">api</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/DECENTfoundation/DCoreJS-SDK/blob/878dbc4/src/api/BaseApi.ts#L8">api/BaseApi.ts:8</a></li>
+							<li>Defined in <a href="https://github.com/DECENTfoundation/DCoreJS-SDK/blob/e7802fc/src/api/BaseApi.ts#L8">api/BaseApi.ts:8</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -160,16 +166,154 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Methods</h2>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
-					<a name="createpurchaseoperation" class="tsd-anchor"></a>
-					<h3>create<wbr>Purchase<wbr>Operation</h3>
+					<a name="add" class="tsd-anchor"></a>
+					<h3>add</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">create<wbr>Purchase<wbr>Operation<span class="tsd-signature-symbol">(</span>credentials<span class="tsd-signature-symbol">: </span><a href="_crypto_credentials_.credentials.html" class="tsd-signature-type">Credentials</a>, content<span class="tsd-signature-symbol">: </span><a href="_models_chainobject_.chainobject.html" class="tsd-signature-type">ChainObject</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span>, feeAssetId<span class="tsd-signature-symbol">?: </span><a href="_models_chainobject_.chainobject.html" class="tsd-signature-type">ChainObject</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Observable</span><span class="tsd-signature-symbol">&lt;</span><a href="_models_operation_purchasecontentoperation_.purchasecontentoperation.html" class="tsd-signature-type">PurchaseContentOperation</a><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">add<span class="tsd-signature-symbol">(</span>credentials<span class="tsd-signature-symbol">: </span><a href="_crypto_credentials_.credentials.html" class="tsd-signature-type">Credentials</a>, coAuthors<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Array</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-symbol">[</span><a href="_models_chainobject_.chainobject.html" class="tsd-signature-type">ChainObject</a><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">&gt;</span>, uri<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, price<span class="tsd-signature-symbol">: </span><a href="_models_regionalprice_.regionalprice.html" class="tsd-signature-type">RegionalPrice</a><span class="tsd-signature-symbol">[]</span>, expiration<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Moment</span>, synopsis<span class="tsd-signature-symbol">: </span><a href="_models_synopsis_.synopsis.html" class="tsd-signature-type">Synopsis</a>, fee<span class="tsd-signature-symbol">?: </span><a href="../modules/_dcoresdk_.html#fee" class="tsd-signature-type">Fee</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Observable</span><span class="tsd-signature-symbol">&lt;</span><a href="_models_transactionconfirmation_.transactionconfirmation.html" class="tsd-signature-type">TransactionConfirmation</a><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/DECENTfoundation/DCoreJS-SDK/blob/878dbc4/src/api/ContentApi.ts#L165">api/ContentApi.ts:165</a></li>
+									<li>Defined in <a href="https://github.com/DECENTfoundation/DCoreJS-SDK/blob/e7802fc/src/api/ContentApi.ts#L255">api/ContentApi.ts:255</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Add content.</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>credentials: <a href="_crypto_credentials_.credentials.html" class="tsd-signature-type">Credentials</a></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>author credentials. If co-authors is not filled, this account will receive full payout</p>
+									</div>
+								</li>
+								<li>
+									<h5>coAuthors: <span class="tsd-signature-type">Array</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-symbol">[</span><a href="_models_chainobject_.chainobject.html" class="tsd-signature-type">ChainObject</a><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">&gt;</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>if map is not empty, payout will be split - the parameter maps co-authors
+										to basis points split, e.g. author1:9000 (bp), author2:1000 (bp)</p>
+									</div>
+								</li>
+								<li>
+									<h5>uri: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>URI where the content can be found</p>
+									</div>
+								</li>
+								<li>
+									<h5>price: <a href="_models_regionalprice_.regionalprice.html" class="tsd-signature-type">RegionalPrice</a><span class="tsd-signature-symbol">[]</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>list of regional prices</p>
+									</div>
+								</li>
+								<li>
+									<h5>expiration: <span class="tsd-signature-type">Moment</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>content expiration time</p>
+									</div>
+								</li>
+								<li>
+									<h5>synopsis: <a href="_models_synopsis_.synopsis.html" class="tsd-signature-type">Synopsis</a></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>JSON formatted structure containing content information</p>
+									</div>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> fee: <a href="../modules/_dcoresdk_.html#fee" class="tsd-signature-type">Fee</a></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>fee for the operation or asset id, if left undefined the fee will be computed in DCT asset.
+										When set, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Observable</span><span class="tsd-signature-symbol">&lt;</span><a href="_models_transactionconfirmation_.transactionconfirmation.html" class="tsd-signature-type">TransactionConfirmation</a><span class="tsd-signature-symbol">&gt;</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="createaddcontentoperation" class="tsd-anchor"></a>
+					<h3>create<wbr>Add<wbr>Content<wbr>Operation</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">create<wbr>Add<wbr>Content<wbr>Operation<span class="tsd-signature-symbol">(</span>author<span class="tsd-signature-symbol">: </span><a href="_models_chainobject_.chainobject.html" class="tsd-signature-type">ChainObject</a>, coAuthors<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Array</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-symbol">[</span><a href="_models_chainobject_.chainobject.html" class="tsd-signature-type">ChainObject</a><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">&gt;</span>, uri<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, price<span class="tsd-signature-symbol">: </span><a href="_models_regionalprice_.regionalprice.html" class="tsd-signature-type">RegionalPrice</a><span class="tsd-signature-symbol">[]</span>, expiration<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Moment</span>, synopsis<span class="tsd-signature-symbol">: </span><a href="_models_synopsis_.synopsis.html" class="tsd-signature-type">Synopsis</a>, fee<span class="tsd-signature-symbol">?: </span><a href="../modules/_dcoresdk_.html#fee" class="tsd-signature-type">Fee</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Observable</span><span class="tsd-signature-symbol">&lt;</span><a href="_models_operation_addorupdatecontentoperation_.addorupdatecontentoperation.html" class="tsd-signature-type">AddOrUpdateContentOperation</a><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/DECENTfoundation/DCoreJS-SDK/blob/e7802fc/src/api/ContentApi.ts#L230">api/ContentApi.ts:230</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Create request to submit content operation.</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>author: <a href="_models_chainobject_.chainobject.html" class="tsd-signature-type">ChainObject</a></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>author of the content. If co-authors is not filled, this account will receive full payout</p>
+									</div>
+								</li>
+								<li>
+									<h5>coAuthors: <span class="tsd-signature-type">Array</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-symbol">[</span><a href="_models_chainobject_.chainobject.html" class="tsd-signature-type">ChainObject</a><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">&gt;</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>if map is not empty, payout will be split - the parameter maps co-authors
+										to basis points split, e.g. author1:9000 (bp), author2:1000 (bp)</p>
+									</div>
+								</li>
+								<li>
+									<h5>uri: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>URI where the content can be found</p>
+									</div>
+								</li>
+								<li>
+									<h5>price: <a href="_models_regionalprice_.regionalprice.html" class="tsd-signature-type">RegionalPrice</a><span class="tsd-signature-symbol">[]</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>list of regional prices</p>
+									</div>
+								</li>
+								<li>
+									<h5>expiration: <span class="tsd-signature-type">Moment</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>content expiration time</p>
+									</div>
+								</li>
+								<li>
+									<h5>synopsis: <a href="_models_synopsis_.synopsis.html" class="tsd-signature-type">Synopsis</a></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>JSON formatted structure containing content information</p>
+									</div>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> fee: <a href="../modules/_dcoresdk_.html#fee" class="tsd-signature-type">Fee</a></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>fee for the operation or asset id, if left undefined the fee will be computed in DCT asset.
+										When set, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Observable</span><span class="tsd-signature-symbol">&lt;</span><a href="_models_operation_addorupdatecontentoperation_.addorupdatecontentoperation.html" class="tsd-signature-type">AddOrUpdateContentOperation</a><span class="tsd-signature-symbol">&gt;</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="createpurchaseoperation" class="tsd-anchor"></a>
+					<h3>create<wbr>Purchase<wbr>Operation</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">create<wbr>Purchase<wbr>Operation<span class="tsd-signature-symbol">(</span>credentials<span class="tsd-signature-symbol">: </span><a href="_crypto_credentials_.credentials.html" class="tsd-signature-type">Credentials</a>, content<span class="tsd-signature-symbol">: </span><a href="_models_chainobject_.chainobject.html" class="tsd-signature-type">ChainObject</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span>, fee<span class="tsd-signature-symbol">?: </span><a href="../modules/_dcoresdk_.html#fee" class="tsd-signature-type">Fee</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Observable</span><span class="tsd-signature-symbol">&lt;</span><a href="_models_operation_purchasecontentoperation_.purchasecontentoperation.html" class="tsd-signature-type">PurchaseContentOperation</a><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/DECENTfoundation/DCoreJS-SDK/blob/e7802fc/src/api/ContentApi.ts#L172">api/ContentApi.ts:172</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -192,9 +336,9 @@
 									</div>
 								</li>
 								<li>
-									<h5><span class="tsd-flag ts-flagOptional">Optional</span> feeAssetId: <a href="_models_chainobject_.chainobject.html" class="tsd-signature-type">ChainObject</a></h5>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> fee: <a href="../modules/_dcoresdk_.html#fee" class="tsd-signature-type">Fee</a></h5>
 									<div class="tsd-comment tsd-typography">
-										<p>fee asset id for the operation, if left undefined the fee will be computed in DCT asset.
+										<p>fee for the operation or asset id, if left undefined the fee will be computed in DCT asset.
 										When set, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough</p>
 									</div>
 								</li>
@@ -205,16 +349,54 @@
 					</ul>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
-					<a name="createtransfer" class="tsd-anchor"></a>
-					<h3>create<wbr>Transfer</h3>
+					<a name="createremovecontentoperation" class="tsd-anchor"></a>
+					<h3>create<wbr>Remove<wbr>Content<wbr>Operation</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">create<wbr>Transfer<span class="tsd-signature-symbol">(</span>credentials<span class="tsd-signature-symbol">: </span><a href="_crypto_credentials_.credentials.html" class="tsd-signature-type">Credentials</a>, id<span class="tsd-signature-symbol">: </span><a href="_models_chainobject_.chainobject.html" class="tsd-signature-type">ChainObject</a>, amount<span class="tsd-signature-symbol">: </span><a href="_models_assetamount_.assetamount.html" class="tsd-signature-type">AssetAmount</a>, memo<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span>, feeAssetId<span class="tsd-signature-symbol">?: </span><a href="_models_assetamount_.assetamount.html" class="tsd-signature-type">AssetAmount</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Observable</span><span class="tsd-signature-symbol">&lt;</span><a href="_models_operation_transferoperation_.transferoperation.html" class="tsd-signature-type">TransferOperation</a><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">create<wbr>Remove<wbr>Content<wbr>Operation<span class="tsd-signature-symbol">(</span>content<span class="tsd-signature-symbol">: </span><a href="_models_chainobject_.chainobject.html" class="tsd-signature-type">ChainObject</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span>, fee<span class="tsd-signature-symbol">?: </span><a href="../modules/_dcoresdk_.html#fee" class="tsd-signature-type">Fee</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Observable</span><span class="tsd-signature-symbol">&lt;</span><a href="_models_operation_removecontentoperation_.removecontentoperation.html" class="tsd-signature-type">RemoveContentOperation</a><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/DECENTfoundation/DCoreJS-SDK/blob/878dbc4/src/api/ContentApi.ts#L120">api/ContentApi.ts:120</a></li>
+									<li>Defined in <a href="https://github.com/DECENTfoundation/DCoreJS-SDK/blob/e7802fc/src/api/ContentApi.ts#L199">api/ContentApi.ts:199</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Create remove content operation. Sets expiration to head block time, so the content cannot be purchased, but remains in database.</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>content: <a href="_models_chainobject_.chainobject.html" class="tsd-signature-type">ChainObject</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>content id or uri</p>
+									</div>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> fee: <a href="../modules/_dcoresdk_.html#fee" class="tsd-signature-type">Fee</a></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>fee for the operation or asset id, if left undefined the fee will be computed in DCT asset.
+										When set, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Observable</span><span class="tsd-signature-symbol">&lt;</span><a href="_models_operation_removecontentoperation_.removecontentoperation.html" class="tsd-signature-type">RemoveContentOperation</a><span class="tsd-signature-symbol">&gt;</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="createtransfer" class="tsd-anchor"></a>
+					<h3>create<wbr>Transfer</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">create<wbr>Transfer<span class="tsd-signature-symbol">(</span>credentials<span class="tsd-signature-symbol">: </span><a href="_crypto_credentials_.credentials.html" class="tsd-signature-type">Credentials</a>, id<span class="tsd-signature-symbol">: </span><a href="_models_chainobject_.chainobject.html" class="tsd-signature-type">ChainObject</a>, amount<span class="tsd-signature-symbol">: </span><a href="_models_assetamount_.assetamount.html" class="tsd-signature-type">AssetAmount</a>, memo<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span>, fee<span class="tsd-signature-symbol">?: </span><a href="../modules/_dcoresdk_.html#fee" class="tsd-signature-type">Fee</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Observable</span><span class="tsd-signature-symbol">&lt;</span><a href="_models_operation_transferoperation_.transferoperation.html" class="tsd-signature-type">TransferOperation</a><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/DECENTfoundation/DCoreJS-SDK/blob/e7802fc/src/api/ContentApi.ts#L127">api/ContentApi.ts:127</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -250,15 +432,72 @@
 									</div>
 								</li>
 								<li>
-									<h5><span class="tsd-flag ts-flagOptional">Optional</span> feeAssetId: <a href="_models_assetamount_.assetamount.html" class="tsd-signature-type">AssetAmount</a></h5>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> fee: <a href="../modules/_dcoresdk_.html#fee" class="tsd-signature-type">Fee</a></h5>
 									<div class="tsd-comment tsd-typography">
-										<p>fee asset id for the operation, if left undefined the fee will be computed in DCT asset.
+										<p>fee for the operation or asset id, if left undefined the fee will be computed in DCT asset.
 										When set, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough</p>
 									</div>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Observable</span><span class="tsd-signature-symbol">&lt;</span><a href="_models_operation_transferoperation_.transferoperation.html" class="tsd-signature-type">TransferOperation</a><span class="tsd-signature-symbol">&gt;</span></h4>
 							<p>a transfer operation</p>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="createupdatecontentoperation" class="tsd-anchor"></a>
+					<h3>create<wbr>Update<wbr>Content<wbr>Operation</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">create<wbr>Update<wbr>Content<wbr>Operation<span class="tsd-signature-symbol">(</span>content<span class="tsd-signature-symbol">: </span><a href="_models_chainobject_.chainobject.html" class="tsd-signature-type">ChainObject</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span>, coAuthors<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">function</span>, price<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">function</span>, synopsis<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">function</span>, fee<span class="tsd-signature-symbol">?: </span><a href="../modules/_dcoresdk_.html#fee" class="tsd-signature-type">Fee</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Observable</span><span class="tsd-signature-symbol">&lt;</span><a href="_models_operation_addorupdatecontentoperation_.addorupdatecontentoperation.html" class="tsd-signature-type">AddOrUpdateContentOperation</a><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/DECENTfoundation/DCoreJS-SDK/blob/e7802fc/src/api/ContentApi.ts#L280">api/ContentApi.ts:280</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Create request to update content operation. Update parameters are functions that have current values as arguments.</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>content: <a href="_models_chainobject_.chainobject.html" class="tsd-signature-type">ChainObject</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>content id or uri</p>
+									</div>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> coAuthors: <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">function</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>if map is not empty, payout will be split - the parameter maps co-authors
+										to basis points split, e.g. author1:9000 (bp), author2:1000 (bp)</p>
+									</div>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> price: <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">function</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>list of regional prices</p>
+									</div>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> synopsis: <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">function</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>JSON formatted structure containing content information</p>
+									</div>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> fee: <a href="../modules/_dcoresdk_.html#fee" class="tsd-signature-type">Fee</a></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>fee for the operation or asset id, if left undefined the fee will be computed in DCT asset.
+										When set, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Observable</span><span class="tsd-signature-symbol">&lt;</span><a href="_models_operation_addorupdatecontentoperation_.addorupdatecontentoperation.html" class="tsd-signature-type">AddOrUpdateContentOperation</a><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -272,7 +511,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/DECENTfoundation/DCoreJS-SDK/blob/878dbc4/src/api/ContentApi.ts#L95">api/ContentApi.ts:95</a></li>
+									<li>Defined in <a href="https://github.com/DECENTfoundation/DCoreJS-SDK/blob/e7802fc/src/api/ContentApi.ts#L102">api/ContentApi.ts:102</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -340,7 +579,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/DECENTfoundation/DCoreJS-SDK/blob/878dbc4/src/api/ContentApi.ts#L38">api/ContentApi.ts:38</a></li>
+									<li>Defined in <a href="https://github.com/DECENTfoundation/DCoreJS-SDK/blob/e7802fc/src/api/ContentApi.ts#L45">api/ContentApi.ts:45</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -372,7 +611,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/DECENTfoundation/DCoreJS-SDK/blob/878dbc4/src/api/ContentApi.ts#L49">api/ContentApi.ts:49</a></li>
+									<li>Defined in <a href="https://github.com/DECENTfoundation/DCoreJS-SDK/blob/e7802fc/src/api/ContentApi.ts#L56">api/ContentApi.ts:56</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -404,7 +643,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/DECENTfoundation/DCoreJS-SDK/blob/878dbc4/src/api/ContentApi.ts#L66">api/ContentApi.ts:66</a></li>
+									<li>Defined in <a href="https://github.com/DECENTfoundation/DCoreJS-SDK/blob/e7802fc/src/api/ContentApi.ts#L73">api/ContentApi.ts:73</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -436,7 +675,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/DECENTfoundation/DCoreJS-SDK/blob/878dbc4/src/api/ContentApi.ts#L78">api/ContentApi.ts:78</a></li>
+									<li>Defined in <a href="https://github.com/DECENTfoundation/DCoreJS-SDK/blob/e7802fc/src/api/ContentApi.ts#L85">api/ContentApi.ts:85</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -468,13 +707,13 @@
 					<a name="purchase" class="tsd-anchor"></a>
 					<h3>purchase</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">purchase<span class="tsd-signature-symbol">(</span>credentials<span class="tsd-signature-symbol">: </span><a href="_crypto_credentials_.credentials.html" class="tsd-signature-type">Credentials</a>, content<span class="tsd-signature-symbol">: </span><a href="_models_chainobject_.chainobject.html" class="tsd-signature-type">ChainObject</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span>, feeAssetId<span class="tsd-signature-symbol">?: </span><a href="_models_chainobject_.chainobject.html" class="tsd-signature-type">ChainObject</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Observable</span><span class="tsd-signature-symbol">&lt;</span><a href="_models_transactionconfirmation_.transactionconfirmation.html" class="tsd-signature-type">TransactionConfirmation</a><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">purchase<span class="tsd-signature-symbol">(</span>credentials<span class="tsd-signature-symbol">: </span><a href="_crypto_credentials_.credentials.html" class="tsd-signature-type">Credentials</a>, content<span class="tsd-signature-symbol">: </span><a href="_models_chainobject_.chainobject.html" class="tsd-signature-type">ChainObject</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span>, fee<span class="tsd-signature-symbol">?: </span><a href="../modules/_dcoresdk_.html#fee" class="tsd-signature-type">Fee</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Observable</span><span class="tsd-signature-symbol">&lt;</span><a href="_models_transactionconfirmation_.transactionconfirmation.html" class="tsd-signature-type">TransactionConfirmation</a><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/DECENTfoundation/DCoreJS-SDK/blob/878dbc4/src/api/ContentApi.ts#L179">api/ContentApi.ts:179</a></li>
+									<li>Defined in <a href="https://github.com/DECENTfoundation/DCoreJS-SDK/blob/e7802fc/src/api/ContentApi.ts#L186">api/ContentApi.ts:186</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -497,15 +736,59 @@
 									</div>
 								</li>
 								<li>
-									<h5><span class="tsd-flag ts-flagOptional">Optional</span> feeAssetId: <a href="_models_chainobject_.chainobject.html" class="tsd-signature-type">ChainObject</a></h5>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> fee: <a href="../modules/_dcoresdk_.html#fee" class="tsd-signature-type">Fee</a></h5>
 									<div class="tsd-comment tsd-typography">
-										<p>fee asset id for the operation, if left undefined the fee will be computed in DCT asset.
+										<p>fee for the operation or asset id, if left undefined the fee will be computed in DCT asset.
 										When set, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough</p>
 									</div>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Observable</span><span class="tsd-signature-symbol">&lt;</span><a href="_models_transactionconfirmation_.transactionconfirmation.html" class="tsd-signature-type">TransactionConfirmation</a><span class="tsd-signature-symbol">&gt;</span></h4>
 							<p>a transaction confirmation</p>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="remove" class="tsd-anchor"></a>
+					<h3>remove</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">remove<span class="tsd-signature-symbol">(</span>credentials<span class="tsd-signature-symbol">: </span><a href="_crypto_credentials_.credentials.html" class="tsd-signature-type">Credentials</a>, content<span class="tsd-signature-symbol">: </span><a href="_models_chainobject_.chainobject.html" class="tsd-signature-type">ChainObject</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span>, fee<span class="tsd-signature-symbol">?: </span><a href="../modules/_dcoresdk_.html#fee" class="tsd-signature-type">Fee</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Observable</span><span class="tsd-signature-symbol">&lt;</span><a href="_models_transactionconfirmation_.transactionconfirmation.html" class="tsd-signature-type">TransactionConfirmation</a><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/DECENTfoundation/DCoreJS-SDK/blob/e7802fc/src/api/ContentApi.ts#L211">api/ContentApi.ts:211</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Remove content. Sets expiration to head block time, so the content cannot be purchased, but remains in database.</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>credentials: <a href="_crypto_credentials_.credentials.html" class="tsd-signature-type">Credentials</a></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>author credentials</p>
+									</div>
+								</li>
+								<li>
+									<h5>content: <a href="_models_chainobject_.chainobject.html" class="tsd-signature-type">ChainObject</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>content id or uri</p>
+									</div>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> fee: <a href="../modules/_dcoresdk_.html#fee" class="tsd-signature-type">Fee</a></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>fee for the operation or asset id, if left undefined the fee will be computed in DCT asset.
+										When set, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Observable</span><span class="tsd-signature-symbol">&lt;</span><a href="_models_transactionconfirmation_.transactionconfirmation.html" class="tsd-signature-type">TransactionConfirmation</a><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -520,7 +803,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_api_baseapi_.baseapi.html">BaseApi</a>.<a href="_api_baseapi_.baseapi.html#request">request</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/DECENTfoundation/DCoreJS-SDK/blob/878dbc4/src/api/BaseApi.ts#L12">api/BaseApi.ts:12</a></li>
+									<li>Defined in <a href="https://github.com/DECENTfoundation/DCoreJS-SDK/blob/e7802fc/src/api/BaseApi.ts#L12">api/BaseApi.ts:12</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -543,13 +826,13 @@
 					<a name="transfer" class="tsd-anchor"></a>
 					<h3>transfer</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">transfer<span class="tsd-signature-symbol">(</span>credentials<span class="tsd-signature-symbol">: </span><a href="_crypto_credentials_.credentials.html" class="tsd-signature-type">Credentials</a>, id<span class="tsd-signature-symbol">: </span><a href="_models_chainobject_.chainobject.html" class="tsd-signature-type">ChainObject</a>, amount<span class="tsd-signature-symbol">: </span><a href="_models_assetamount_.assetamount.html" class="tsd-signature-type">AssetAmount</a>, memo<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span>, feeAssetId<span class="tsd-signature-symbol">?: </span><a href="_models_assetamount_.assetamount.html" class="tsd-signature-type">AssetAmount</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Observable</span><span class="tsd-signature-symbol">&lt;</span><a href="_models_transactionconfirmation_.transactionconfirmation.html" class="tsd-signature-type">TransactionConfirmation</a><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">transfer<span class="tsd-signature-symbol">(</span>credentials<span class="tsd-signature-symbol">: </span><a href="_crypto_credentials_.credentials.html" class="tsd-signature-type">Credentials</a>, id<span class="tsd-signature-symbol">: </span><a href="_models_chainobject_.chainobject.html" class="tsd-signature-type">ChainObject</a>, amount<span class="tsd-signature-symbol">: </span><a href="_models_assetamount_.assetamount.html" class="tsd-signature-type">AssetAmount</a>, memo<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span>, fee<span class="tsd-signature-symbol">?: </span><a href="../modules/_dcoresdk_.html#fee" class="tsd-signature-type">Fee</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Observable</span><span class="tsd-signature-symbol">&lt;</span><a href="_models_transactionconfirmation_.transactionconfirmation.html" class="tsd-signature-type">TransactionConfirmation</a><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/DECENTfoundation/DCoreJS-SDK/blob/878dbc4/src/api/ContentApi.ts#L143">api/ContentApi.ts:143</a></li>
+									<li>Defined in <a href="https://github.com/DECENTfoundation/DCoreJS-SDK/blob/e7802fc/src/api/ContentApi.ts#L150">api/ContentApi.ts:150</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -585,15 +868,78 @@
 									</div>
 								</li>
 								<li>
-									<h5><span class="tsd-flag ts-flagOptional">Optional</span> feeAssetId: <a href="_models_assetamount_.assetamount.html" class="tsd-signature-type">AssetAmount</a></h5>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> fee: <a href="../modules/_dcoresdk_.html#fee" class="tsd-signature-type">Fee</a></h5>
 									<div class="tsd-comment tsd-typography">
-										<p>fee asset id for the operation, if left undefined the fee will be computed in DCT asset.
+										<p>fee for the operation or asset id, if left undefined the fee will be computed in DCT asset.
 										When set, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough</p>
 									</div>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Observable</span><span class="tsd-signature-symbol">&lt;</span><a href="_models_transactionconfirmation_.transactionconfirmation.html" class="tsd-signature-type">TransactionConfirmation</a><span class="tsd-signature-symbol">&gt;</span></h4>
 							<p>a transaction confirmation</p>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="update" class="tsd-anchor"></a>
+					<h3>update</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">update<span class="tsd-signature-symbol">(</span>credentials<span class="tsd-signature-symbol">: </span><a href="_crypto_credentials_.credentials.html" class="tsd-signature-type">Credentials</a>, content<span class="tsd-signature-symbol">: </span><a href="_models_chainobject_.chainobject.html" class="tsd-signature-type">ChainObject</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span>, synopsis<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">function</span>, price<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">function</span>, coAuthors<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">function</span>, fee<span class="tsd-signature-symbol">?: </span><a href="../modules/_dcoresdk_.html#fee" class="tsd-signature-type">Fee</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Observable</span><span class="tsd-signature-symbol">&lt;</span><a href="_models_transactionconfirmation_.transactionconfirmation.html" class="tsd-signature-type">TransactionConfirmation</a><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/DECENTfoundation/DCoreJS-SDK/blob/e7802fc/src/api/ContentApi.ts#L318">api/ContentApi.ts:318</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Update content. Update parameters are functions that have current values as arguments.</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>credentials: <a href="_crypto_credentials_.credentials.html" class="tsd-signature-type">Credentials</a></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>author credentials</p>
+									</div>
+								</li>
+								<li>
+									<h5>content: <a href="_models_chainobject_.chainobject.html" class="tsd-signature-type">ChainObject</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>content id or uri</p>
+									</div>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> synopsis: <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">function</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>JSON formatted structure containing content information</p>
+									</div>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> price: <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">function</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>list of regional prices</p>
+									</div>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> coAuthors: <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">function</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>if map is not empty, payout will be split - the parameter maps co-authors
+										to basis points split, e.g. author1:9000 (bp), author2:1000 (bp)</p>
+									</div>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> fee: <a href="../modules/_dcoresdk_.html#fee" class="tsd-signature-type">Fee</a></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>fee for the operation or asset id, if left undefined the fee will be computed in DCT asset.
+										When set, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Observable</span><span class="tsd-signature-symbol">&lt;</span><a href="_models_transactionconfirmation_.transactionconfirmation.html" class="tsd-signature-type">TransactionConfirmation</a><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -624,10 +970,22 @@
 								<a href="_api_contentapi_.contentapi.html#api" class="tsd-kind-icon">api</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="_api_contentapi_.contentapi.html#add" class="tsd-kind-icon">add</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="_api_contentapi_.contentapi.html#createaddcontentoperation" class="tsd-kind-icon">create<wbr>Add<wbr>Content<wbr>Operation</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="_api_contentapi_.contentapi.html#createpurchaseoperation" class="tsd-kind-icon">create<wbr>Purchase<wbr>Operation</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="_api_contentapi_.contentapi.html#createremovecontentoperation" class="tsd-kind-icon">create<wbr>Remove<wbr>Content<wbr>Operation</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="_api_contentapi_.contentapi.html#createtransfer" class="tsd-kind-icon">create<wbr>Transfer</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="_api_contentapi_.contentapi.html#createupdatecontentoperation" class="tsd-kind-icon">create<wbr>Update<wbr>Content<wbr>Operation</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="_api_contentapi_.contentapi.html#findall" class="tsd-kind-icon">find<wbr>All</a>
@@ -647,11 +1005,17 @@
 							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="_api_contentapi_.contentapi.html#purchase" class="tsd-kind-icon">purchase</a>
 							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="_api_contentapi_.contentapi.html#remove" class="tsd-kind-icon">remove</a>
+							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited tsd-is-protected">
 								<a href="_api_contentapi_.contentapi.html#request" class="tsd-kind-icon">request</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="_api_contentapi_.contentapi.html#transfer" class="tsd-kind-icon">transfer</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="_api_contentapi_.contentapi.html#update" class="tsd-kind-icon">update</a>
 							</li>
 						</ul>
 					</li>

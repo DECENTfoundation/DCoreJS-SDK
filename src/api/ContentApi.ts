@@ -1,8 +1,11 @@
+import { serialize } from "class-transformer";
 import * as _ from "lodash";
+import { Moment } from "moment";
 import { Observable, of } from "rxjs";
 import { flatMap, map } from "rxjs/operators";
 import { Credentials } from "../crypto/Credentials";
 import { DCoreApi } from "../DCoreApi";
+import { Fee } from "../DCoreSdk";
 import { AssetAmount } from "../models/AssetAmount";
 import { ChainObject } from "../models/ChainObject";
 import { Content } from "../models/Content";
@@ -10,10 +13,14 @@ import { ContentKeys } from "../models/ContentKeys";
 import { ApplicationType, CategoryType, contentType } from "../models/ContentTypes";
 import { Memo } from "../models/Memo";
 import { ObjectType } from "../models/ObjectType";
+import { AddOrUpdateContentOperation } from "../models/operation/AddOrUpdateContentOperation";
 import { PurchaseContentOperation } from "../models/operation/PurchaseContentOperation";
+import { RemoveContentOperation } from "../models/operation/RemoveContentOperation";
 import { TransferOperation } from "../models/operation/TransferOperation";
 import { SearchContentOrder } from "../models/order/SearchContentOrder";
+import { RegionalPrice } from "../models/RegionalPrice";
 import { REGION_NAMES, Regions } from "../models/Regions";
+import { Synopsis } from "../models/Synopsis";
 import { TransactionConfirmation } from "../models/TransactionConfirmation";
 import { GenerateContentKeys } from "../net/models/request/GenerateContentKeys";
 import { GetContentById } from "../net/models/request/GetContentById";
@@ -112,7 +119,7 @@ export class ContentApi extends BaseApi {
      * @param id content id
      * @param amount amount to send with asset type
      * @param memo optional unencrypted message
-     * @param feeAssetId fee asset id for the operation, if left undefined the fee will be computed in DCT asset.
+     * @param fee {@link AssetAmount} fee for the operation or asset id, if left undefined the fee will be computed in DCT asset.
      * When set, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough
      *
      * @return a transfer operation
@@ -122,9 +129,9 @@ export class ContentApi extends BaseApi {
         id: ChainObject,
         amount: AssetAmount,
         memo?: string,
-        feeAssetId?: AssetAmount,
+        fee?: Fee,
     ): Observable<TransferOperation> {
-        return of(new TransferOperation(credentials.account, id, amount, _.isNil(memo) ? memo : Memo.createPublic(memo), feeAssetId));
+        return of(new TransferOperation(credentials.account, id, amount, _.isNil(memo) ? memo : Memo.createPublic(memo), fee));
     }
 
     /**
@@ -135,7 +142,7 @@ export class ContentApi extends BaseApi {
      * @param id content id
      * @param amount amount to send with asset type
      * @param memo optional unencrypted message
-     * @param feeAssetId fee asset id for the operation, if left undefined the fee will be computed in DCT asset.
+     * @param fee {@link AssetAmount} fee for the operation or asset id, if left undefined the fee will be computed in DCT asset.
      * When set, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough
      *
      * @return a transaction confirmation
@@ -145,9 +152,9 @@ export class ContentApi extends BaseApi {
         id: ChainObject,
         amount: AssetAmount,
         memo?: string,
-        feeAssetId?: AssetAmount,
+        fee?: Fee,
     ): Observable<TransactionConfirmation> {
-        return this.createTransfer(credentials, id, amount, memo, feeAssetId).pipe(
+        return this.createTransfer(credentials, id, amount, memo, fee).pipe(
             flatMap((op) => this.api.broadcastApi.broadcastWithCallback(credentials.keyPair, [op])),
         );
     }
@@ -157,13 +164,13 @@ export class ContentApi extends BaseApi {
      *
      * @param credentials account credentials
      * @param content uri of the content or object id of the content, 2.13.*
-     * @param feeAssetId fee asset id for the operation, if left undefined the fee will be computed in DCT asset.
+     * @param fee {@link AssetAmount} fee for the operation or asset id, if left undefined the fee will be computed in DCT asset.
      * When set, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough
      *
      * @return a purchase content operation
      */
-    public createPurchaseOperation(credentials: Credentials, content: ChainObject | string, feeAssetId?: ChainObject): Observable<PurchaseContentOperation> {
-        return this.api.contentApi.get(content).pipe(map((c) => PurchaseContentOperation.create(credentials, c, feeAssetId)));
+    public createPurchaseOperation(credentials: Credentials, content: ChainObject | string, fee?: Fee): Observable<PurchaseContentOperation> {
+        return this.api.contentApi.get(content).pipe(map((c) => PurchaseContentOperation.create(credentials, c, fee)));
     }
 
     /**
@@ -171,14 +178,154 @@ export class ContentApi extends BaseApi {
      *
      * @param credentials account credentials
      * @param content uri of the content or object id of the content, 2.13.*
-     * @param feeAssetId fee asset id for the operation, if left undefined the fee will be computed in DCT asset.
+     * @param fee {@link AssetAmount} fee for the operation or asset id, if left undefined the fee will be computed in DCT asset.
      * When set, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough
      *
      * @return a transaction confirmation
      */
-    public purchase(credentials: Credentials, content: ChainObject | string, feeAssetId?: ChainObject): Observable<TransactionConfirmation> {
-        return this.createPurchaseOperation(credentials, content, feeAssetId).pipe(
+    public purchase(credentials: Credentials, content: ChainObject | string, fee?: Fee): Observable<TransactionConfirmation> {
+        return this.createPurchaseOperation(credentials, content, fee).pipe(
             flatMap((op) => this.api.broadcastApi.broadcastWithCallback(credentials.keyPair, [op])),
         );
     }
+
+    /**
+     * Create remove content operation. Sets expiration to head block time, so the content cannot be purchased, but remains in database.
+     *
+     * @param content content id or uri
+     * @param fee {@link AssetAmount} fee for the operation or asset id, if left undefined the fee will be computed in DCT asset.
+     * When set, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough
+     */
+    public createRemoveContentOperation(content: ChainObject | string, fee?: Fee): Observable<RemoveContentOperation> {
+        return this.get(content).pipe(map((c) => new RemoveContentOperation(c.author, c.uri, fee)));
+    }
+
+    /**
+     * Remove content. Sets expiration to head block time, so the content cannot be purchased, but remains in database.
+     *
+     * @param credentials author credentials
+     * @param content content id or uri
+     * @param fee {@link AssetAmount} fee for the operation or asset id, if left undefined the fee will be computed in DCT asset.
+     * When set, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough
+     */
+    public remove(credentials: Credentials, content: ChainObject | string, fee?: Fee): Observable<TransactionConfirmation> {
+        return this.createRemoveContentOperation(content, fee).pipe(
+            flatMap((op) => this.api.broadcastApi.broadcastWithCallback(credentials.keyPair, [op])),
+        );
+    }
+
+    /**
+     * Create request to submit content operation.
+     *
+     * @param author author of the content. If co-authors is not filled, this account will receive full payout
+     * @param coAuthors if map is not empty, payout will be split - the parameter maps co-authors
+     * to basis points split, e.g. author1:9000 (bp), author2:1000 (bp)
+     * @param uri URI where the content can be found
+     * @param price list of regional prices
+     * @param expiration content expiration time
+     * @param synopsis JSON formatted structure containing content information
+     * @param fee {@link AssetAmount} fee for the operation or asset id, if left undefined the fee will be computed in DCT asset.
+     * When set, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough
+     */
+    public createAddContentOperation(
+        author: ChainObject,
+        coAuthors: Array<[ChainObject, number]>,
+        uri: string,
+        price: RegionalPrice[],
+        expiration: Moment,
+        synopsis: Synopsis,
+        fee?: Fee,
+    ): Observable<AddOrUpdateContentOperation> {
+        return of(AddOrUpdateContentOperation.create(author, coAuthors, uri, price, expiration, synopsis, fee));
+    }
+
+    /**
+     * Add content.
+     *
+     * @param credentials author credentials. If co-authors is not filled, this account will receive full payout
+     * @param coAuthors if map is not empty, payout will be split - the parameter maps co-authors
+     * to basis points split, e.g. author1:9000 (bp), author2:1000 (bp)
+     * @param uri URI where the content can be found
+     * @param price list of regional prices
+     * @param expiration content expiration time
+     * @param synopsis JSON formatted structure containing content information
+     * @param fee {@link AssetAmount} fee for the operation or asset id, if left undefined the fee will be computed in DCT asset.
+     * When set, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough
+     */
+    public add(
+        credentials: Credentials,
+        coAuthors: Array<[ChainObject, number]>,
+        uri: string,
+        price: RegionalPrice[],
+        expiration: Moment,
+        synopsis: Synopsis,
+        fee?: Fee,
+    ): Observable<TransactionConfirmation> {
+        return this.createAddContentOperation(credentials.account, coAuthors, uri, price, expiration, synopsis, fee).pipe(
+            flatMap((op) => this.api.broadcastApi.broadcastWithCallback(credentials.keyPair, [op])),
+        );
+    }
+
+    /**
+     * Create request to update content operation. Update parameters are functions that have current values as arguments.
+     *
+     * @param content content id or uri
+     * @param coAuthors if map is not empty, payout will be split - the parameter maps co-authors
+     * to basis points split, e.g. author1:9000 (bp), author2:1000 (bp)
+     * @param price list of regional prices
+     * @param synopsis JSON formatted structure containing content information
+     * @param fee {@link AssetAmount} fee for the operation or asset id, if left undefined the fee will be computed in DCT asset.
+     * When set, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough
+     */
+    public createUpdateContentOperation(
+        content: ChainObject | string,
+        coAuthors?: (old: Array<[ChainObject, number]>) => Array<[ChainObject, number]>,
+        price?: (old: RegionalPrice[]) => RegionalPrice[],
+        synopsis?: (old: Synopsis) => Synopsis,
+        fee?: Fee,
+    ): Observable<AddOrUpdateContentOperation> {
+        return this.get(content).pipe(
+            map((c) => new AddOrUpdateContentOperation(
+                c.size,
+                c.author,
+                coAuthors ? coAuthors(c.coAuthors) : c.coAuthors,
+                c.uri,
+                c.quorum,
+                price ? price(c.price.regionalPrices) : c.price.regionalPrices,
+                c.hash,
+                Array.from(c.seederPrice.keys()),
+                Array.from(c.keyParts.values()),
+                c.expiration,
+                c.publishingFeeEscrow,
+                serialize(synopsis ? synopsis(c.synopsis) : c.synopsis),
+                c.custodyData,
+                fee,
+            )));
+    }
+
+    /**
+     * Update content. Update parameters are functions that have current values as arguments.
+     *
+     * @param credentials author credentials
+     * @param content content id or uri
+     * @param coAuthors if map is not empty, payout will be split - the parameter maps co-authors
+     * to basis points split, e.g. author1:9000 (bp), author2:1000 (bp)
+     * @param price list of regional prices
+     * @param synopsis JSON formatted structure containing content information
+     * @param fee {@link AssetAmount} fee for the operation or asset id, if left undefined the fee will be computed in DCT asset.
+     * When set, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough
+     */
+    public update(
+        credentials: Credentials,
+        content: ChainObject | string,
+        synopsis?: (old: Synopsis) => Synopsis,
+        price?: (old: RegionalPrice[]) => RegionalPrice[],
+        coAuthors?: (old: Array<[ChainObject, number]>) => Array<[ChainObject, number]>,
+        fee?: Fee,
+    ): Observable<TransactionConfirmation> {
+        return this.createUpdateContentOperation(content, coAuthors, price, synopsis, fee).pipe(
+            flatMap((op) => this.api.broadcastApi.broadcastWithCallback(credentials.keyPair, [op])),
+        );
+    }
+
 }

@@ -15,7 +15,7 @@ Installation
 --------
 
 `npm install --save rxjs`<br>
-`npm install --save git://git@github.com/DECENTfoundation/DCoreJS-SDK`
+`npm install --save git://github.com/DECENTfoundation/DCoreJS-SDK`
 
 Make sure you import `reflect-metadata` in an entry class to your application, eg. `import "reflect-metadata";`
 
@@ -25,6 +25,8 @@ Usage
 --------
 
 You can find example project with SDK usage [here](https://github.com/DECENTfoundation/DCore-SDK-Examples/tree/master/sdk-ts).
+
+You can find developer documentation for latest release [here](https://decentfoundation.github.io/DCoreJS-SDK/docs/).
 
 Use `DCoreSdk` to initialize the API.
 The `DCoreApi` provides different groups of APIs for accessing the blockchain and default configuration values.
