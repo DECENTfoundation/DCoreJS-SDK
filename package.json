@@ -1,6 +1,6 @@
 {
   "name": "dcorejs-sdk",
-  "version": "2.3.0",
+  "version": "2.3.1",
   "homepage": "https://decent.ch/",
   "description": "DcoreJS SDK.",
   "main": "./dist/index.js",
@@ -32,7 +32,6 @@
     "test:node": "sh ./scripts/test:node.sh",
     "test:browser": "sh ./scripts/test:browser.sh",
     "test": "npm run test:node && npm run test:browser",
-    "postinstall": "tsc",
     "doc": "typedoc --out docs ./src"
   },
   "devDependencies": {
