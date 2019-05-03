@@ -50,7 +50,7 @@ export class AssetFormatter {
     /**
      * Get raw value, eg. 1DCT = 100000000
      *
-     * @param value asset decimal value
+     * @param value asset unit decimal value
      *
      * @return raw value
      */
@@ -61,7 +61,7 @@ export class AssetFormatter {
     /**
      * Get asset amount value, eg. 100000000 = 1DCT
      *
-     * @param value raw value
+     * @param value asset unit value
      *
      * @return asset amount value according to precision
      */

@@ -1,17 +1,14 @@
 import { Expose, Type } from "class-transformer";
+import { DCoreConstants } from "../../DCoreConstants";
 import { Fee } from "../../DCoreSdk";
 import { ChainObjectToClass, ChainObjectToPlain } from "../../net/adapter/TypeAdapters";
-import { Asset } from "../Asset";
+import { assertThrow } from "../../utils/Utils";
 import { ChainObject } from "../ChainObject";
 import { ExchangeRate } from "../ExchangeRate";
 import { BaseOperation } from "./BaseOperation";
 import { OperationType } from "./OperationType";
 
 export class AssetUpdateOperation extends BaseOperation {
-
-    public static create(asset: Asset): AssetUpdateOperation {
-        return new AssetUpdateOperation(asset.issuer, asset.id, asset.options.exchangeRate, asset.description, asset.options.exchangeable, asset.options.maxSupply);
-    }
 
     @ChainObjectToPlain
     @ChainObjectToClass
@@ -72,5 +69,8 @@ export class AssetUpdateOperation extends BaseOperation {
         this.maxSupply = maxSupply;
         this.coreExchangeRate = coreExchangeRate;
         this.exchangeable = exchangeable;
+
+        assertThrow(maxSupply ? maxSupply <= DCoreConstants.MAX_SHARE_SUPPLY : true, () => "max supply max value overflow");
+        assertThrow(newDescription ? newDescription.length <= 1000 : true, () => "description cannot be longer then 1000 chars");
     }
 }

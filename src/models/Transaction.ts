@@ -1,24 +1,26 @@
+import * as ByteBuffer from "bytebuffer";
 import { classToPlain, Exclude, Expose, Transform } from "class-transformer";
 import * as _ from "lodash";
-import * as Long from "long";
-import { Moment } from "moment";
+import { Duration, Moment } from "moment";
 import { ECKeyPair } from "../crypto/ECKeyPair";
+import { DCoreConstants } from "../DCoreConstants";
 import { OperationsToClass } from "../net/adapter/OperationAdapter";
-import { LongToClass, LongToPlain, MomentToClass, MomentToPlain } from "../net/adapter/TypeAdapters";
+import { MomentToClass, MomentToPlain } from "../net/adapter/TypeAdapters";
 import { Serializer } from "../net/serialization/Serializer";
 import { assertThrow } from "../utils/Utils";
-import { BlockData } from "./BlockData";
+import { DynamicGlobalProperties } from "./DynamicGlobalProperties";
 import { BaseOperation } from "./operation/BaseOperation";
 
 export class Transaction {
 
-    public static create(blockData: BlockData, ops: BaseOperation[], chainId: string): Transaction {
+    public static create(ops: BaseOperation[], chainId: string, props: DynamicGlobalProperties, transactionExpiration: Duration = DCoreConstants.EXPIRATION_DEFAULT): Transaction {
         const trx = new Transaction();
         trx.operations = ops;
         trx.chainId = chainId;
-        trx.refBlockNum = blockData.refBlockNum;
-        trx.refBlockPrefix = blockData.refBlockPrefix;
-        trx.expiration = blockData.expiration;
+        const blockId = ByteBuffer.fromHex(props.headBlockId, true);
+        trx.refBlockPrefix = blockId.readUint32(4);
+        trx.refBlockNum = blockId.BE().readUint16(2);
+        trx.expiration = props.time.add(transactionExpiration);
         return trx;
     }
 
@@ -38,10 +40,8 @@ export class Transaction {
     @Expose({ name: "ref_block_num" })
     public refBlockNum: number;
 
-    @LongToClass
-    @LongToPlain
     @Expose({ name: "ref_block_prefix" })
-    public refBlockPrefix: Long;
+    public refBlockPrefix: number;
 
     @Expose({ name: "extensions" })
     public extensions: any[] = [];

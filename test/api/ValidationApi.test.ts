@@ -2,6 +2,7 @@ import * as chai from "chai";
 import * as chaiThings from "chai-things";
 import * as WebSocket from "isomorphic-ws";
 import "mocha";
+import * as moment from "moment";
 import "reflect-metadata";
 import { create } from "rxjs-spy";
 import { Spy } from "rxjs-spy/spy-interface";
@@ -9,7 +10,7 @@ import { flatMap } from "rxjs/operators";
 import { Address } from "../../src/crypto/Address";
 import { DCoreApi } from "../../src/DCoreApi";
 import { DCoreSdk } from "../../src/DCoreSdk";
-import { OperationType, ProcessedTransaction, TransferOperation } from "../../src/models";
+import { Memo, OperationType, ProcessedTransaction, TransferOperation } from "../../src/models";
 import { AssetAmount } from "../../src/models/AssetAmount";
 import { Helpers } from "../Helpers";
 
@@ -21,7 +22,9 @@ chai.use(chaiThings);
     ["WebSocket", DCoreSdk.createForWebSocket(() => new WebSocket(Helpers.STAGE_WS))],
 ] as Array<[string, DCoreApi]>).forEach(([name, sdk]) => {
     const api = sdk.validationApi;
-    const trx = sdk.transactionApi.createTransaction([new TransferOperation(Helpers.ACCOUNT, Helpers.ACCOUNT2, new AssetAmount(10))]);
+    const trx = sdk.transactionApi.createTransaction([
+        new TransferOperation(Helpers.ACCOUNT, Helpers.ACCOUNT2, new AssetAmount(10), Memo.createPublic(moment.utc().unix().toString())),
+    ]);
 
     describe(`validation API test suite for ${name}`, () => {
         after(() => {

@@ -56,5 +56,10 @@ chai.use(chaiThings);
                 .subscribe((value) => value.should.all.be.instanceOf(BalanceChange), (error) => done(error), () => done());
         });
 
+        it("should pass confirm operation", (done: (arg?: any) => void) => {
+            api.isConfirmed(ChainObject.parse("1.7.20"))
+                .subscribe((value) => value.should.be.true, (error) => done(error), () => done());
+        });
+
     });
 });

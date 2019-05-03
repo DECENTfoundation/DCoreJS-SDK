@@ -10,9 +10,8 @@ export class DynamicGlobalProperties {
     @Expose({ name: "id" })
     public id: ChainObject;
 
-    @LongToClass
     @Expose({ name: "head_block_number" })
-    public headBlockNumber: Long;
+    public headBlockNumber: number;
 
     @Expose({ name: "head_block_id" })
     public headBlockId: string;
@@ -49,13 +48,11 @@ export class DynamicGlobalProperties {
     @Expose({ name: "miner_budget_from_rewards" })
     public minerBudgetFromRewards: Long;
 
-    @LongToClass
     @Expose({ name: "accounts_registered_this_interval" })
-    public accountsRegisteredThisInterval: Long;
+    public accountsRegisteredThisInterval: number;
 
-    @LongToClass
     @Expose({ name: "recently_missed_count" })
-    public recentlyMissedCount: Long;
+    public recentlyMissedCount: number;
 
     @LongToClass
     @Expose({ name: "current_aslot" })
@@ -67,7 +64,6 @@ export class DynamicGlobalProperties {
     @Expose({ name: "dynamic_flags" })
     public dynamicFlags: number;
 
-    @LongToClass
     @Expose({ name: "last_irreversible_block_num" })
-    public lastIrreversibleBlockNum: Long;
+    public lastIrreversibleBlockNum: number;
 }
