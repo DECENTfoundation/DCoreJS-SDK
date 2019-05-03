@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>DCore SDK for JS - API documentation - version 2.3.2</title>
+	<title>DCore SDK for JS - API documentation - version 2.4.0</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="assets/css/main.css">
@@ -22,7 +22,7 @@
 						<li class="state loading">Preparing search index...</li>
 						<li class="state failure">The search index is not available</li>
 					</ul>
-					<a href="index.html" class="title">DCore SDK for JS - API documentation - version 2.3.2</a>
+					<a href="index.html" class="title">DCore SDK for JS - API documentation - version 2.4.0</a>
 				</div>
 				<div class="table-cell" id="tsd-widgets">
 					<div id="tsd-filter">
@@ -56,7 +56,7 @@
 					<a href="globals.html">Globals</a>
 				</li>
 			</ul>
-			<h1> DCore SDK for JS - API documentation - version 2.3.2</h1>
+			<h1> DCore SDK for JS - API documentation - version 2.4.0</h1>
 		</div>
 	</div>
 </header>
@@ -80,30 +80,29 @@
 				<p>To enable debug logging you can use <a href="https://www.npmjs.com/package/rxjs-spy"><code>rxjs-spy</code></a>.</p>
 				<h2 id="usage">Usage</h2>
 				<p>You can find example project with SDK usage <a href="https://github.com/DECENTfoundation/DCore-SDK-Examples/tree/master/sdk-ts">here</a>.</p>
-				<p>You can find developer documentation for latest release <a href="https://decentfoundation.github.io/DCoreJS-SDK/docs/">here</a>.</p>
+				<p>You can find developer documentation for latest release <a href="https://decentfoundation.github.io/DCoreJS-SDK/">here</a>.</p>
 				<p>Use <code>DCoreSdk</code> to initialize the API.
 				The <code>DCoreApi</code> provides different groups of APIs for accessing the blockchain and default configuration values.</p>
 				<p>The supported operations are located in <code>ch.decent.sdk.model.operation</code> package, suffixed with <code>Operation</code> eg. <code>TransferOperation(...)</code>.
 				Use the <code>BroadcastApi</code> to apply the operations to DCore or use appropriate methods in APIs.</p>
 				<p>Access api using rest</p>
 				<pre><code class="language-typescript"><span class="hljs-keyword">import</span> <span class="hljs-string">"reflect-metadata"</span>;
-<span class="hljs-keyword">import</span> { DCoreSdk } <span class="hljs-keyword">from</span> <span class="hljs-string">"../src/DCoreSdk"</span>;
+<span class="hljs-keyword">import</span> { DCoreSdk } <span class="hljs-keyword">from</span> <span class="hljs-string">"dcorejs-sdk"</span>;
 
 <span class="hljs-comment">// create the API</span>
-<span class="hljs-keyword">const</span> api = DCoreSdk.createForHttp({ baseUrl: <span class="hljs-string">"https://testnet-api.dcore.io/"</span>})
+<span class="hljs-keyword">const</span> api = DCoreSdk.createForHttp({ baseUrl: <span class="hljs-string">"https://testnet-api.dcore.io/"</span> })
 <span class="hljs-comment">// get account by name, resolves to account id '1.2.27'</span>
 <span class="hljs-keyword">const</span> disposable = api.accountApi.get(<span class="hljs-string">"public-account-9"</span>)
     .subscribe(<span class="hljs-function">(<span class="hljs-params">account</span>) =&gt;</span> <span class="hljs-built_in">console</span>.log(account.id));</code></pre>
-				<p>Access api using websocket</p>
+				<p>Access api using websocket.
+					We need to install some websocket library beforehand if we are not running in the browser.
+				Eg. <code>npm install --save ws</code></p>
 				<pre><code class="language-typescript"><span class="hljs-keyword">import</span> <span class="hljs-string">"reflect-metadata"</span>;
-<span class="hljs-keyword">import</span> * <span class="hljs-keyword">as</span> WebSocket <span class="hljs-keyword">from</span> <span class="hljs-string">"isomorphic-ws"</span>;
-<span class="hljs-keyword">import</span> { Credentials } <span class="hljs-keyword">from</span> <span class="hljs-string">"../src/crypto/Credentials"</span>;
-<span class="hljs-keyword">import</span> { DCoreSdk } <span class="hljs-keyword">from</span> <span class="hljs-string">"../src/DCoreSdk"</span>;
-<span class="hljs-keyword">import</span> { AssetAmount } <span class="hljs-keyword">from</span> <span class="hljs-string">"../src/models/AssetAmount"</span>;
-<span class="hljs-keyword">import</span> { ChainObject } <span class="hljs-keyword">from</span> <span class="hljs-string">"../src/models/ChainObject"</span>;
+<span class="hljs-keyword">import</span> { AssetFormatter, ChainObject, Credentials, DCoreSdk } <span class="hljs-keyword">from</span> <span class="hljs-string">"dcorejs-sdk"</span>;
 <span class="hljs-keyword">import</span> { create } <span class="hljs-keyword">from</span> <span class="hljs-string">"rxjs-spy"</span>;
+<span class="hljs-keyword">import</span> * <span class="hljs-keyword">as</span> WebSocket <span class="hljs-keyword">from</span> <span class="hljs-string">"ws"</span>;
 
-<span class="hljs-comment">// init rxjs-spy and log all tags</span>
+<span class="hljs-comment">// debug logging: init rxjs-spy and log all tags</span>
 <span class="hljs-keyword">const</span> spy = create();
 spy.log();
 
@@ -112,7 +111,7 @@ spy.log();
 <span class="hljs-comment">// create account credentials</span>
 <span class="hljs-keyword">const</span> credentials = <span class="hljs-keyword">new</span> Credentials(ChainObject.parse(<span class="hljs-string">"1.2.27"</span>), <span class="hljs-string">"5Hxwqx6JJUBYWjQNt8DomTNJ6r6YK8wDJym4CMAH1zGctFyQtzt"</span>);
 <span class="hljs-comment">// send 1DCT to account id '1.2.28 (public-account-10)' with encrypted 'hello memo' memo</span>
-<span class="hljs-keyword">const</span> disposable = api.accountApi.transfer(credentials, <span class="hljs-string">"public-account-10"</span>, <span class="hljs-keyword">new</span> AssetAmount(<span class="hljs-number">100000000</span>), <span class="hljs-string">"hello memo"</span>)
+<span class="hljs-keyword">const</span> disposable = api.accountApi.transfer(credentials, <span class="hljs-string">"public-account-10"</span>, AssetFormatter.DCT.amount(<span class="hljs-number">1</span>), <span class="hljs-string">"hello memo"</span>)
     .subscribe(<span class="hljs-function">(<span class="hljs-params">confirmation</span>) =&gt;</span> <span class="hljs-built_in">console</span>.log(confirmation.id));</code></pre>
 				<h2 id="official-dcore-sdks-for-other-platforms">Official DCore SDKs for other platforms</h2>
 				<ul>
@@ -253,9 +252,6 @@ spy.log();
 					</li>
 					<li class=" tsd-kind-external-module">
 						<a href="modules/_models_balancechange_.html">"models/<wbr>Balance<wbr>Change"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="modules/_models_blockdata_.html">"models/<wbr>Block<wbr>Data"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
 						<a href="modules/_models_blockheader_.html">"models/<wbr>Block<wbr>Header"</a>
