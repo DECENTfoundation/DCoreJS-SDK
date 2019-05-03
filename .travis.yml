@@ -28,6 +28,6 @@ before_deploy:
   - echo ${TRAVIS_TAG}
   - npm run build
   - npm run doc -- --name "DCore SDK for JS - API documentation - version ${TRAVIS_TAG}" --ignoreCompilerErrors
-  - touch .nojekyll
+  - touch ./docs/.nojekyll
   - sed -i '/docs/d' .gitignore
   - zip DCoreJS-SDK-developer-docs-${TRAVIS_TAG}.zip -r ./docs
