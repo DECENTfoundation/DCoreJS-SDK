@@ -9,7 +9,6 @@ import { DCoreApi } from "./DCoreApi";
 import { DCoreConstants } from "./DCoreConstants";
 import { Asset } from "./models/Asset";
 import { AssetAmount } from "./models/AssetAmount";
-import { BlockData } from "./models/BlockData";
 import { ChainObject } from "./models/ChainObject";
 import { IllegalArgumentError } from "./models/error/IllegalArgumentError";
 import { BaseOperation } from "./models/operation/BaseOperation";
@@ -125,7 +124,7 @@ export class DCoreSdk {
             zip(
                 finalOps,
                 this.request(new GetDynamicGlobalProps()),
-            ).pipe(map(([ops, props]) => Transaction.create(new BlockData(props, transactionExpiration), ops, id)))),
+            ).pipe(map(([ops, props]) => Transaction.create(ops, id, props, transactionExpiration)))),
         );
     }
 }

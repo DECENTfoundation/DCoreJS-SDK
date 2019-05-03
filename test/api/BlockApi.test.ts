@@ -1,7 +1,6 @@
 import * as chai from "chai";
 import * as chaiThings from "chai-things";
 import * as WebSocket from "isomorphic-ws";
-import * as Long from "long";
 import "mocha";
 import "reflect-metadata";
 import { create } from "rxjs-spy";
@@ -39,12 +38,12 @@ chai.use(chaiThings);
         });
 
         it("should return block", (done: (arg?: any) => void) => {
-            api.get(Long.fromNumber(1))
+            api.get(1)
                 .subscribe((value) => value.should.be.instanceOf(SignedBlock), (error) => done(error), () => done());
         });
 
         it("should return block header", (done: (arg?: any) => void) => {
-            api.getHeader(Long.fromNumber(1))
+            api.getHeader(1)
                 .subscribe((value) => value.should.be.instanceOf(BlockHeader), (error) => done(error), () => done());
         });
 

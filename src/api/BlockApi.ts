@@ -1,4 +1,3 @@
-import * as Long from "long";
 import { Moment } from "moment";
 import { Observable } from "rxjs";
 import { DCoreApi } from "../DCoreApi";
@@ -22,7 +21,7 @@ export class BlockApi extends BaseApi {
      *
      * @return the referenced block, or {@link ObjectNotFoundError} if no matching block was found
      */
-    public get(blockNum: Long): Observable<SignedBlock> {
+    public get(blockNum: number): Observable<SignedBlock> {
         return this.request(new GetBlock(blockNum));
     }
 
@@ -33,7 +32,7 @@ export class BlockApi extends BaseApi {
      *
      * @return header of the referenced block, or {@link ObjectNotFoundError} if no matching block was found
      */
-    public getHeader(blockNum: Long): Observable<BlockHeader> {
+    public getHeader(blockNum: number): Observable<BlockHeader> {
         return this.request(new GetBlockHeader(blockNum));
     }
 

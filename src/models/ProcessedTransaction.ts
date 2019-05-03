@@ -1,8 +1,7 @@
 import { Expose } from "class-transformer";
-import * as Long from "long";
 import { Moment } from "moment";
 import { OperationsToClass } from "../net/adapter/OperationAdapter";
-import { LongToClass, MomentToClass } from "../net/adapter/TypeAdapters";
+import { MomentToClass } from "../net/adapter/TypeAdapters";
 import { BaseOperation } from "./operation/BaseOperation";
 
 export class ProcessedTransaction {
@@ -23,9 +22,8 @@ export class ProcessedTransaction {
     @Expose({ name: "ref_block_num" })
     public refBlockNum: number;
 
-    @LongToClass
     @Expose({ name: "ref_block_prefix" })
-    public refBlockPrefix: Long;
+    public refBlockPrefix: number;
 
     @Expose({ name: "operation_results" })
     public opResults: any[];
