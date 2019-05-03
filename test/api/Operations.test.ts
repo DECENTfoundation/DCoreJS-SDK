@@ -37,7 +37,7 @@ describe("blockchain based operations", () => {
 
     before(() => {
         spy = create();
-        spy.log(/^API\w+/);
+        // spy.log(/^API\w+/);
         api = DCoreSdk.createForWebSocket(() => new WebSocket(Helpers.STAGE_WS));
         // timestamp = "1556786841";
         timestamp = moment.utc().unix().toString();
