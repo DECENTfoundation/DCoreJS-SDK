@@ -9,6 +9,7 @@ export * from "./AccountStatistics";
 export * from "./Asset";
 export * from "./AssetAmount";
 export * from "./AssetData";
+export * from "./AssetFormatter";
 export * from "./AssetOptions";
 export * from "./Authority";
 export * from "./AuthorityMap";
