@@ -2,6 +2,8 @@ import { Expose, Type } from "class-transformer";
 import { Address } from "../../crypto/Address";
 import { Fee } from "../../DCoreSdk";
 import { ChainObjectToClass, ChainObjectToPlain } from "../../net/adapter/TypeAdapters";
+import { assertThrow } from "../../utils/Utils";
+import { Account } from "../Account";
 import { Authority } from "../Authority";
 import { ChainObject } from "../ChainObject";
 import { Options } from "../Options";
@@ -63,5 +65,8 @@ export class AccountCreateOperation extends BaseOperation {
         this.owner = owner;
         this.active = active;
         this.options = options;
+
+        // plainToClass ctor passes undefined args so just skip
+        assertThrow(name ? Account.isValidName(name) : true, () => "invalid account name: " + name);
     }
 }
