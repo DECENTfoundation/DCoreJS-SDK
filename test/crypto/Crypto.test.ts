@@ -68,4 +68,24 @@ class CryptoTest {
 
         memo.decrypt(Constants.KEY).should.be.equal(plain);
     }
+
+    @test
+    public "should check canonical on signature invalid"() {
+        const sig = [
+            "20136f5f01fb54076587670737cc350ef8c1d26d80006a62f28ce80b0df58d052b004fce54c9cc40f6191a94c617410434aab4f19ff35d296a47c1ad2ca6099a13",
+            "20c8d1f6ef03ec645b9c406431a325741a2247b25862a731993aa5dd3dbac723a66b73d75c5ba313dde012b499a6e1b1b48551e410a4e8758968b7bcdf64bd9a58",
+            "1fdbfd66ddf7c6cdd100568c15934e3bfef96022f2d335e161cff7ddeade802b5240c117706d004743296696b58138ef342a2cc2008fd5ff2ee3d76a60d2f09f05",
+        ];
+        sig.map((s) => ECKeyPair.checkCanonicalSignature(Buffer.from(s, "hex"))).should.all.be.equal(false);
+    }
+
+    @test
+    public "should check canonical on signature valid"() {
+        const sig = [
+            "1f595122744cc19263b8e73bc8e1d57a045a01c3b4b04bc08216cd8b9104c81f2b154875b1941cef6e76d1d3d89bcbf906d56d4c581807098663c600ab1b0050ef",
+            "1f62ef0c229f0208642735bf85f20f25550e62dcaacba861e55a477587bed6e8f0490884251bf04cfe116aef02dc82771bd65fa48a6bb599bb1c57e86bcfb8756b",
+            "202c177696d954a03798d287cc9d4e48a95745d180db012394f39a42a32bf8e2947a434b7c53a619817d3b5c7c3285c6438c26e203ac16c2fd0c3c7de2300cd86c",
+        ];
+        sig.map((s) => ECKeyPair.checkCanonicalSignature(Buffer.from(s, "hex"))).should.all.be.equal(true);
+    }
 }
