@@ -30,6 +30,7 @@ import { RemoveContentOperation } from "../../models/operation/RemoveContentOper
 import { SendMessageOperation } from "../../models/operation/SendMessageOperation";
 import { TransferOperation } from "../../models/operation/TransferOperation";
 import { Options } from "../../models/Options";
+import { ProcessedTransaction } from "../../models/ProcessedTransaction";
 import { PubKey } from "../../models/PubKey";
 import { Publishing } from "../../models/Publishing";
 import { RegionalPrice } from "../../models/RegionalPrice";
@@ -58,6 +59,7 @@ export class Serializer {
         this.adapters.set(PubKey.name, this.pubKeyAdapter);
         this.adapters.set(Publishing.name, this.publishingAdapter);
         this.adapters.set(Transaction.name, this.transactionAdapter);
+        this.adapters.set(ProcessedTransaction.name, this.transactionAdapter);
         this.adapters.set(AccountCreateOperation.name, this.accountCreateOperationAdapter);
         this.adapters.set(AccountUpdateOperation.name, this.accountUpdateOperationAdapter);
         this.adapters.set(PurchaseContentOperation.name, this.buyContentOperationAdapter);
@@ -192,7 +194,7 @@ export class Serializer {
         buffer.writeUint32(obj.utc().unix());
     }
 
-    private transactionAdapter = (buffer: ByteBuffer, obj: Transaction) => {
+    private transactionAdapter = (buffer: ByteBuffer, obj: Transaction | ProcessedTransaction) => {
         buffer.writeUint16(obj.refBlockNum);
         buffer.writeUint32(obj.refBlockPrefix);
         this.momentAdapter(buffer, obj.expiration);
