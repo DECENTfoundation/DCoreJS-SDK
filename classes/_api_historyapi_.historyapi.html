@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>HistoryApi | DCore SDK for JS - API documentation - version 2.4.0</title>
+	<title>HistoryApi | DCore SDK for JS - API documentation - version 2.5.0</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -22,7 +22,7 @@
 						<li class="state loading">Preparing search index...</li>
 						<li class="state failure">The search index is not available</li>
 					</ul>
-					<a href="../index.html" class="title">DCore SDK for JS - API documentation - version 2.4.0</a>
+					<a href="../index.html" class="title">DCore SDK for JS - API documentation - version 2.5.0</a>
 				</div>
 				<div class="table-cell" id="tsd-widgets">
 					<div id="tsd-filter">
@@ -102,6 +102,7 @@
 							<h3>Methods</h3>
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_api_historyapi_.historyapi.html#findalloperations" class="tsd-kind-icon">find<wbr>All<wbr>Operations</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_api_historyapi_.historyapi.html#findalltransfers" class="tsd-kind-icon">find<wbr>All<wbr>Transfers</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_api_historyapi_.historyapi.html#getoperation" class="tsd-kind-icon">get<wbr>Operation</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_api_historyapi_.historyapi.html#isconfirmed" class="tsd-kind-icon">is<wbr>Confirmed</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_api_historyapi_.historyapi.html#listoperations" class="tsd-kind-icon">list<wbr>Operations</a></li>
@@ -125,7 +126,7 @@
 							<aside class="tsd-sources">
 								<p>Overrides <a href="_api_baseapi_.baseapi.html">BaseApi</a>.<a href="_api_baseapi_.baseapi.html#constructor">constructor</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/DECENTfoundation/DCoreJS-SDK/blob/dd68fea/src/api/HistoryApi.ts#L16">api/HistoryApi.ts:16</a></li>
+									<li>Defined in <a href="https://github.com/DECENTfoundation/DCoreJS-SDK/blob/2e010f9/src/api/HistoryApi.ts#L20">api/HistoryApi.ts:20</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -148,7 +149,7 @@
 					<aside class="tsd-sources">
 						<p>Inherited from <a href="_api_baseapi_.baseapi.html">BaseApi</a>.<a href="_api_baseapi_.baseapi.html#api">api</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/DECENTfoundation/DCoreJS-SDK/blob/dd68fea/src/api/BaseApi.ts#L8">api/BaseApi.ts:8</a></li>
+							<li>Defined in <a href="https://github.com/DECENTfoundation/DCoreJS-SDK/blob/2e010f9/src/api/BaseApi.ts#L8">api/BaseApi.ts:8</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -159,13 +160,13 @@
 					<a name="findalloperations" class="tsd-anchor"></a>
 					<h3>find<wbr>All<wbr>Operations</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">find<wbr>All<wbr>Operations<span class="tsd-signature-symbol">(</span>accountId<span class="tsd-signature-symbol">: </span><a href="_models_chainobject_.chainobject.html" class="tsd-signature-type">ChainObject</a>, assets<span class="tsd-signature-symbol">?: </span><a href="_models_chainobject_.chainobject.html" class="tsd-signature-type">ChainObject</a><span class="tsd-signature-symbol">[]</span>, recipientAccount<span class="tsd-signature-symbol">?: </span><a href="_models_chainobject_.chainobject.html" class="tsd-signature-type">ChainObject</a>, fromBlock<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">Long</span>, toBlock<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">Long</span>, startOffset<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">Long</span>, limit<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Observable</span><span class="tsd-signature-symbol">&lt;</span><a href="_models_balancechange_.balancechange.html" class="tsd-signature-type">BalanceChange</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">find<wbr>All<wbr>Operations<span class="tsd-signature-symbol">(</span>accountId<span class="tsd-signature-symbol">: </span><a href="_models_chainobject_.chainobject.html" class="tsd-signature-type">ChainObject</a>, assets<span class="tsd-signature-symbol">?: </span><a href="_models_chainobject_.chainobject.html" class="tsd-signature-type">ChainObject</a><span class="tsd-signature-symbol">[]</span>, recipientAccount<span class="tsd-signature-symbol">?: </span><a href="_models_chainobject_.chainobject.html" class="tsd-signature-type">ChainObject</a>, fromBlock<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span>, toBlock<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span>, startOffset<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span>, limit<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Observable</span><span class="tsd-signature-symbol">&lt;</span><a href="_models_balancechange_.balancechange.html" class="tsd-signature-type">BalanceChange</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/DECENTfoundation/DCoreJS-SDK/blob/dd68fea/src/api/HistoryApi.ts#L86">api/HistoryApi.ts:86</a></li>
+									<li>Defined in <a href="https://github.com/DECENTfoundation/DCoreJS-SDK/blob/2e010f9/src/api/HistoryApi.ts#L90">api/HistoryApi.ts:90</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -195,19 +196,19 @@
 									</div>
 								</li>
 								<li>
-									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> fromBlock: <span class="tsd-signature-type">Long</span><span class="tsd-signature-symbol"> =&nbsp;Long.ZERO</span></h5>
+									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> fromBlock: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> =&nbsp;0</span></h5>
 									<div class="tsd-comment tsd-typography">
 										<p>filtering parameter, starting block number (can be determined from time) or zero when not used</p>
 									</div>
 								</li>
 								<li>
-									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> toBlock: <span class="tsd-signature-type">Long</span><span class="tsd-signature-symbol"> =&nbsp;Long.ZERO</span></h5>
+									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> toBlock: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> =&nbsp;0</span></h5>
 									<div class="tsd-comment tsd-typography">
 										<p>filtering parameter, ending block number or zero when not used</p>
 									</div>
 								</li>
 								<li>
-									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> startOffset: <span class="tsd-signature-type">Long</span><span class="tsd-signature-symbol"> =&nbsp;Long.ZERO</span></h5>
+									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> startOffset: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> =&nbsp;0</span></h5>
 									<div class="tsd-comment tsd-typography">
 										<p>starting offset from zero</p>
 									</div>
@@ -225,6 +226,64 @@
 					</ul>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="findalltransfers" class="tsd-anchor"></a>
+					<h3>find<wbr>All<wbr>Transfers</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">find<wbr>All<wbr>Transfers<span class="tsd-signature-symbol">(</span>accountId<span class="tsd-signature-symbol">: </span><a href="_models_chainobject_.chainobject.html" class="tsd-signature-type">ChainObject</a>, assets<span class="tsd-signature-symbol">?: </span><a href="_models_chainobject_.chainobject.html" class="tsd-signature-type">ChainObject</a><span class="tsd-signature-symbol">[]</span>, recipientAccount<span class="tsd-signature-symbol">?: </span><a href="_models_chainobject_.chainobject.html" class="tsd-signature-type">ChainObject</a>, offset<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span>, limit<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Observable</span><span class="tsd-signature-symbol">&lt;</span><a href="_models_transfercomposite_.transfercomposite.html" class="tsd-signature-type">TransferComposite</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/DECENTfoundation/DCoreJS-SDK/blob/2e010f9/src/api/HistoryApi.ts#L128">api/HistoryApi.ts:128</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Returns the most recent transfer operations on the named account.
+										This returns a list of history composite objects, containing resolved accounts, assets and block.
+									Pages through whole history and calls multiple apis to fetch all related data, experimental use only.</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>accountId: <a href="_models_chainobject_.chainobject.html" class="tsd-signature-type">ChainObject</a></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>object id of the account whose history should be queried, 1.2.*</p>
+									</div>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> assets: <a href="_models_chainobject_.chainobject.html" class="tsd-signature-type">ChainObject</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> =&nbsp;[]</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>list of asset object ids to filter or empty for all assets</p>
+									</div>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> recipientAccount: <a href="_models_chainobject_.chainobject.html" class="tsd-signature-type">ChainObject</a></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>partner account object id to filter transfers to specific account, 1.2.* or null</p>
+									</div>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> offset: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> =&nbsp;Number.MAX_SAFE_INTEGER</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>block number to search from</p>
+									</div>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> limit: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> =&nbsp;100</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>the number of entries to return (starting from the most recent), max 100</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Observable</span><span class="tsd-signature-symbol">&lt;</span><a href="_models_transfercomposite_.transfercomposite.html" class="tsd-signature-type">TransferComposite</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span></h4>
+							<p>a list of balance changes</p>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
 					<a name="getoperation" class="tsd-anchor"></a>
 					<h3>get<wbr>Operation</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
@@ -234,7 +293,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/DECENTfoundation/DCoreJS-SDK/blob/dd68fea/src/api/HistoryApi.ts#L29">api/HistoryApi.ts:29</a></li>
+									<li>Defined in <a href="https://github.com/DECENTfoundation/DCoreJS-SDK/blob/2e010f9/src/api/HistoryApi.ts#L33">api/HistoryApi.ts:33</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -272,7 +331,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/DECENTfoundation/DCoreJS-SDK/blob/dd68fea/src/api/HistoryApi.ts#L103">api/HistoryApi.ts:103</a></li>
+									<li>Defined in <a href="https://github.com/DECENTfoundation/DCoreJS-SDK/blob/2e010f9/src/api/HistoryApi.ts#L107">api/HistoryApi.ts:107</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -303,7 +362,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/DECENTfoundation/DCoreJS-SDK/blob/dd68fea/src/api/HistoryApi.ts#L46">api/HistoryApi.ts:46</a></li>
+									<li>Defined in <a href="https://github.com/DECENTfoundation/DCoreJS-SDK/blob/2e010f9/src/api/HistoryApi.ts#L50">api/HistoryApi.ts:50</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -353,7 +412,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/DECENTfoundation/DCoreJS-SDK/blob/dd68fea/src/api/HistoryApi.ts#L64">api/HistoryApi.ts:64</a></li>
+									<li>Defined in <a href="https://github.com/DECENTfoundation/DCoreJS-SDK/blob/2e010f9/src/api/HistoryApi.ts#L68">api/HistoryApi.ts:68</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -398,7 +457,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_api_baseapi_.baseapi.html">BaseApi</a>.<a href="_api_baseapi_.baseapi.html#request">request</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/DECENTfoundation/DCoreJS-SDK/blob/dd68fea/src/api/BaseApi.ts#L12">api/BaseApi.ts:12</a></li>
+									<li>Defined in <a href="https://github.com/DECENTfoundation/DCoreJS-SDK/blob/2e010f9/src/api/BaseApi.ts#L12">api/BaseApi.ts:12</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -445,6 +504,9 @@
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="_api_historyapi_.historyapi.html#findalloperations" class="tsd-kind-icon">find<wbr>All<wbr>Operations</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="_api_historyapi_.historyapi.html#findalltransfers" class="tsd-kind-icon">find<wbr>All<wbr>Transfers</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="_api_historyapi_.historyapi.html#getoperation" class="tsd-kind-icon">get<wbr>Operation</a>
