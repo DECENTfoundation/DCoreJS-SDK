@@ -5,9 +5,11 @@ import "mocha";
 import "reflect-metadata";
 import { create } from "rxjs-spy";
 import { Spy } from "rxjs-spy/spy-interface";
+import { tap } from "rxjs/operators";
 import { DCoreApi } from "../../src/DCoreApi";
 import { DCoreSdk } from "../../src/DCoreSdk";
 import { BalanceChange, ChainObject, OperationHistory } from "../../src/models";
+import { TransferComposite } from "../../src/models/TransferComposite";
 import { Helpers } from "../Helpers";
 
 chai.should();
@@ -59,6 +61,12 @@ chai.use(chaiThings);
         it("should pass confirm operation", (done: (arg?: any) => void) => {
             api.isConfirmed(ChainObject.parse("1.7.20"))
                 .subscribe((value) => value.should.be.true, (error) => done(error), () => done());
+        });
+
+        it.only("should find transfer history", (done: (arg?: any) => void) => {
+            api.findAllTransfers(Helpers.ACCOUNT, undefined, undefined, undefined, 20)
+                .pipe(tap((ops) => new Set(ops.map((op) => op.id.objectId)).size.should.be.eq(20)))
+                .subscribe((value) => value.should.all.be.instanceOf(TransferComposite), (error) => done(error), () => done());
         });
 
     });
