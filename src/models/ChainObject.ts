@@ -1,5 +1,6 @@
 import * as ByteBuffer from "bytebuffer";
 import * as _ from "lodash";
+import { Comparator } from "lodash";
 import * as Long from "long";
 import { ObjectType } from "./ObjectType";
 
@@ -15,6 +16,8 @@ export class ChainObject {
     public static isValid(id: string): boolean {
         return ChainObject.regexp.test(id);
     }
+
+    public static comparator: Comparator<ChainObject> = (some: ChainObject, other: ChainObject) => some.eq(other);
 
     private static regexp: RegExp = /^([0-9]+)\.([0-9]+)\.([0-9]+)(\.([0-9]+))?$/;
 

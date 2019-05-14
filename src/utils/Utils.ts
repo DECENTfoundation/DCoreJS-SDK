@@ -10,6 +10,10 @@ export function assertThrow(value: boolean, lazyMessage: () => string = () => "a
     }
 }
 
+export function toMap<K, V>(values: V[], selector: (value: V) => K): Map<K, V> {
+    return new Map<K, V>(values.map((val) => [selector(val), val]));
+}
+
 export class Utils {
 
     public static Base58 = BaseX("123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz");

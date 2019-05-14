@@ -1,5 +1,4 @@
 import { plainToClass } from "class-transformer";
-import * as Long from "long";
 import { BalanceChange } from "../../../models/BalanceChange";
 import { ChainObject } from "../../../models/ChainObject";
 import { ObjectType } from "../../../models/ObjectType";
@@ -12,9 +11,9 @@ export class SearchAccountBalanceHistory extends BaseRequest<BalanceChange[]> {
         accountId: ChainObject,
         assets: ChainObject[] = [],
         recipientAccount?: ChainObject,
-        fromBlock: Long = Long.ZERO,
-        toBlock: Long = Long.ZERO,
-        startOffset: Long = Long.ZERO,
+        fromBlock: number = 0,
+        toBlock: number = 0,
+        startOffset: number = 0,
         limit: number = 100,
     ) {
         super(

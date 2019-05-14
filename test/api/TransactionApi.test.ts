@@ -29,7 +29,7 @@ chai.use(chaiThings);
 
         before(() => {
             spy = create();
-            spy.log(/^API\w+/);
+            // spy.log(/^API\w+/);
         });
 
         after(() => {
@@ -58,6 +58,11 @@ chai.use(chaiThings);
         it("should return transaction by id", (done: (arg?: any) => void) => {
             api.getById("abb2c83679c2217bd20bed723f3a9ffa8653a953")
                 .subscribe((value) => value.should.be.instanceOf(ProcessedTransaction), (error) => done(error), () => done());
+        });
+
+        it("should compute same transaction id", (done: (arg?: any) => void) => {
+            api.getById("abb2c83679c2217bd20bed723f3a9ffa8653a953")
+                .subscribe((value) => value.id.should.be.equal("abb2c83679c2217bd20bed723f3a9ffa8653a953"), (error) => done(error), () => done());
         });
 
         it("should return transaction", (done: (arg?: any) => void) => {
