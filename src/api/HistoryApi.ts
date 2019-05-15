@@ -136,6 +136,9 @@ export class HistoryApi extends BaseApi {
         const onePage = (off: number) => this.findAllOperations(accountId, assets, recipientAccount, 1, off, 0, 100);
         const paged = (off: number, lim: number): Observable<BalanceChange[]> => onePage(off).pipe(
             flatMap((ops) => {
+                if (ops.length === 0) {
+                    return of([]);
+                }
                 const trfs = ops.filter((op) => isTransfer(op.operation.op.type));
                 if (trfs.length >= lim) {
                     return of(trfs.slice(0, lim));

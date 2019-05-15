@@ -330,7 +330,7 @@ class Scratchpad {
             ChainObject.parse("1.2.34"),
             [],
             "https://staging-resources.alax.io/apps/mobi.minicraft.three.mini.craft.building.games14",
-            new RegionalPrice(new AssetAmount(0)),
+            [new RegionalPrice(new AssetAmount(0))],
             moment(now).add(7, "days"),
             new Synopsis("nbnbj", "ádááá", "1.5.5"),
         );

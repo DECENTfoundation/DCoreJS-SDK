@@ -326,8 +326,6 @@ export class Serializer {
             buffer.writeByte(1);
             // struct fixed_max_supply_struct { bool is_fixed_max_supply ; }
             this.append(buffer, obj.isFixedMaxSupply);
-        } else {
-            buffer.writeByte(0);
         }
     }
 

@@ -290,7 +290,7 @@ export class AccountApi extends BaseApi {
      * @param registrar credentials used to register the new account
      * @param name new account name
      * @param address new account public key address
-     * @param feeAssetId fee asset id for the operation, if left undefined the fee will be computed in DCT asset.
+     * @param fee {@link AssetAmount} fee for the operation or asset id, if left undefined the fee will be computed in DCT asset.
      * When set, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough
      *
      * @return a transaction confirmation
@@ -299,9 +299,9 @@ export class AccountApi extends BaseApi {
         registrar: ChainObject,
         name: string,
         address: Address,
-        feeAssetId?: ChainObject,
+        fee?: Fee,
     ): Observable<AccountCreateOperation> {
-        return of(AccountCreateOperation.create(registrar, name, address, feeAssetId));
+        return of(AccountCreateOperation.create(registrar, name, address, fee));
     }
 
     /**
