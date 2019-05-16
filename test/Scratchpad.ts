@@ -1,7 +1,7 @@
 /* tslint:disable */
 import * as ByteBuffer from "bytebuffer";
 import * as chai from "chai";
-import { classToPlain, plainToClass } from "class-transformer";
+import { classToPlain, plainToClass, serialize, deserialize } from "class-transformer";
 import { createHash } from "crypto";
 import Decimal from "decimal.js";
 import * as _ from "lodash";
@@ -15,7 +15,7 @@ import { ecdhUnsafe, publicKeyTweakMul } from "secp256k1";
 import { Address } from "../src/crypto/Address";
 import { ECKeyPair } from "../src/crypto/ECKeyPair";
 import { DCoreSdk } from "../src/DCoreSdk";
-import { RegionalPrice, Synopsis } from "../src/models";
+import { RegionalPrice, Synopsis, Transaction } from "../src/models";
 import { Account } from "../src/models/Account";
 import { AssetAmount } from "../src/models/AssetAmount";
 import { Authority } from "../src/models/Authority";
@@ -330,7 +330,7 @@ class Scratchpad {
             ChainObject.parse("1.2.34"),
             [],
             "https://staging-resources.alax.io/apps/mobi.minicraft.three.mini.craft.building.games14",
-            new RegionalPrice(new AssetAmount(0)),
+            [new RegionalPrice(new AssetAmount(0))],
             moment(now).add(7, "days"),
             new Synopsis("nbnbj", "ádááá", "1.5.5"),
         );
@@ -415,5 +415,19 @@ class Scratchpad {
         b.BE().readUint32(0).should.equal(num);
         b.BE().readUint16(2).should.equal(refNum);
 
+    }
+
+    @test "serialize tx"() {
+        const pkey = "5JVHeRffGsKGyDf7T9i9dBbzVHQrYprYeaBQo2VCSytj7BxpMCq";
+        const kp = ECKeyPair.parseWif(pkey);
+        this.apiRpc.transactionApi.createTransaction([new TransferOperation(
+            ChainObject.parse("1.2.33"),
+            ChainObject.parse("1.2.33"),
+            new AssetAmount(1))]).toPromise().then(tran => {
+                const st = tran.withSignature(kp);
+                console.log(st);
+                console.log(serialize(st));
+                console.log(deserialize(Transaction, serialize(st)));
+            })
     }
 }

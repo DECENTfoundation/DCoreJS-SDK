@@ -63,7 +63,7 @@ chai.use(chaiThings);
                 .subscribe((value) => value.should.be.true, (error) => done(error), () => done());
         });
 
-        it.only("should find transfer history", (done: (arg?: any) => void) => {
+        it("should find transfer history", (done: (arg?: any) => void) => {
             api.findAllTransfers(Helpers.ACCOUNT, undefined, undefined, undefined, 20)
                 .pipe(tap((ops) => new Set(ops.map((op) => op.id.objectId)).size.should.be.eq(20)))
                 .subscribe((value) => value.should.all.be.instanceOf(TransferComposite), (error) => done(error), () => done());

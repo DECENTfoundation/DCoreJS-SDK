@@ -26,7 +26,7 @@ import { assertThrow } from "./utils/Utils";
 export type AccountRef = ChainObject | string;
 export type AssetRef = ChainObject | string;
 export type AssetWithAmount = [Asset, AssetAmount];
-export type AssetPrecision = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12;
+export type AssetPrecision = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12;
 export type Fee = ChainObject | AssetAmount;
 
 Decimal.set({
