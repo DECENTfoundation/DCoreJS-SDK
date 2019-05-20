@@ -430,4 +430,28 @@ class Scratchpad {
                 console.log(deserialize(Transaction, serialize(st)));
             })
     }
+
+    @test "account exist"() {
+        this.apiRpc.accountApi.exist("dw-crypto-api").toPromise().then(value => {
+                console.log(value);
+            })
+    }
+
+    @test "get account"() {
+    // this.apiWs.accountApi.create(new Credentials(ChainObject.parse("1.2.37"), "5KZhaAgHCiQbpkUYRMinCPDvaK2ft9TJ9CVN9FcA3nJfk9Ez6Qk"), "peterv2", Address.parse("DCT7uuRo1BW61ZdsPC3CwTmby6mMkz3VogCb4891vSawTwtWZXLwE")).toPromise().then(value => {
+        this.apiRpc.accountApi.getByName("peterv").toPromise().then(value => {
+                console.log(value);
+            })
+    }
+
+    @test.only() "should create an asset"() {
+        this.apiWs.assetApi.create(
+            Helpers.CREDENTIALS,
+            "SDK",
+            12,
+            "hello api",
+        ).toPromise().then(value => {
+            console.log(value);
+        })
+    };
 }

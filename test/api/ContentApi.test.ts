@@ -36,7 +36,7 @@ chai.use(chaiThings);
             spy.teardown();
         });
 
-        it("should generate content keys", (done: (arg?: any) => void) => {
+        it.skip("should generate content keys", (done: (arg?: any) => void) => {
             api.generateKeys([ChainObject.parse("1.2.17"), ChainObject.parse("1.2.18")])
                 .subscribe((value) => value.should.be.instanceOf(ContentKeys), (error) => done(error), () => done());
         });

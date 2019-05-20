@@ -78,7 +78,7 @@ chai.use(chaiThings);
 
         it("should return full account by id", (done: (arg?: any) => void) => {
             api.getFullAccounts([Helpers.ACCOUNT2.objectId], false)
-                .subscribe((value) => value.get("1.2.28")!.should.be.instanceof(FullAccount), (error) => done(error), () => done());
+                .subscribe((value) => value.get(Helpers.ACCOUNT2.objectId)!.should.be.instanceof(FullAccount), (error) => done(error), () => done());
         });
 
         it("should return accounts by lookup term", (done: (arg?: any) => void) => {
