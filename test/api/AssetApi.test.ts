@@ -85,13 +85,13 @@ chai.use(chaiThings);
             });
 
             it("should convert asset to DCT", (done: (arg?: any) => void) => {
-                api.convertToDCT(ChainObject.parse("1.3.33"), 3000000)
-                    .subscribe((value) => value.amount.toNumber().should.be.eq(3), (error) => done(error), () => done());
+                api.convertToDCT(ChainObject.parse("1.3.33"), 3)
+                    .subscribe((value) => value.amount.toNumber().should.be.eq(3000000), (error) => done(error), () => done());
             });
 
             it("should convert asset from DCT", (done: (arg?: any) => void) => {
-                api.convertFromDCT(ChainObject.parse("1.3.33"), 3)
-                    .subscribe((value) => value.amount.toNumber().should.be.eq(3000000), (error) => done(error), () => done());
+                api.convertFromDCT(ChainObject.parse("1.3.33"), 3000000)
+                    .subscribe((value) => value.amount.toNumber().should.be.eq(3), (error) => done(error), () => done());
             });
 
         });
