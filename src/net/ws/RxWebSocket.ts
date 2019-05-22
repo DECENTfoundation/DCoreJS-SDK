@@ -88,7 +88,7 @@ export class RxWebSocket {
             if (event.wasClean) {
                 emitter.complete();
             } else {
-                emitter.error(new Error(event.reason));
+                emitter.error(Error(event.reason));
             }
         };
         socket.onmessage = (message: MessageEvent) => emitter.next(message.data);
@@ -141,11 +141,15 @@ export class RxWebSocket {
                 map((value: string) => JSON.parse(value)),
                 tap((value: object) => this.messages.next(value)),
             ).subscribe({
-                complete: () => {
-                    this.subscriptions.unsubscribe();
-                    this.webSocketAsync = undefined;
-                },
+                complete: () => this.clearConnection(),
+                error: () => this.clearConnection(),
             });
+    }
+
+    private clearConnection() {
+        this.subscriptions.unsubscribe();
+        this.webSocketAsync = undefined;
+        this.callId = 0;
     }
 
     private makeStream<T>(request: BaseRequest<T>, callId: number, callbackId?: number): Observable<T> {

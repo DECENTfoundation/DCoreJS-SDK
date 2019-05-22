@@ -89,7 +89,7 @@ describe("blockchain based operations", () => {
         ).subscribe((value) => value.should.be.instanceOf(TransactionConfirmation), (error) => done(error), () => done());
     });
 
-    it.skip("should rate and comment a purchased content", (done: (arg?: any) => void) => {
+    it("should rate and comment a purchased content", (done: (arg?: any) => void) => {
         api.purchaseApi.rateAndComment(
             Helpers.CREDENTIALS,
             uri,
