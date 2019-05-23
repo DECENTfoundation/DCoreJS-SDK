@@ -102,6 +102,10 @@ export class RxWebSocket {
                     this.subscriptions.unsubscribe();
                     this.webSocketAsync = null;
                 },
+                error: () => {
+                    this.subscriptions.unsubscribe();
+                    this.webSocketAsync = null;
+                },
             });
         this.events.connect();
     }
