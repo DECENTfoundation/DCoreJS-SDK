@@ -22,19 +22,19 @@ const testAsset = getTestAsset("1.3.4", 1, "1.3.0", 10, "1.3.4");
 
 describe("conversions tests", () => {
     it("should successfully convert from DCT to asset", () => {
-        testAsset.convertFromDCT(40).amount.toNumber().should.be.eq(4);
+        testAsset.convertFromDCT(4).amount.toNumber().should.be.eq(40);
     });
 
     it("should successfully convert from asset to DCT", () => {
-        testAsset.convertToDCT(2).amount.toNumber().should.be.eq(20);
+        testAsset.convertToDCT(20).amount.toNumber().should.be.eq(2);
     });
 
     it("should successfully round ceil - default", () => {
-        testAsset.convertFromDCT(1).amount.toNumber().should.be.eq(1);
+        testAsset.convertToDCT(1).amount.toNumber().should.be.eq(1);
     });
 
     it("should successfully round floor", () => {
-        testAsset.convertFromDCT(1, Decimal.ROUND_FLOOR).amount.toNumber().should.be.eq(0);
+        testAsset.convertToDCT(1, Decimal.ROUND_FLOOR).amount.toNumber().should.be.eq(0);
     });
 
     it("should format raw value to string", () => {

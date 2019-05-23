@@ -84,12 +84,12 @@ export class Asset {
         assertThrow(base.greaterThan(0), () => "Base exchange amount must be greater then 0");
 
         if (this.options.exchangeRate.base.assetId.eq(toAssetId)) {
-            const result = quote.mul(amount.toString()).div(base);
+            const result = base.mul(amount.toString()).div(quote);
             return new AssetAmount(Long.fromString(result.toFixed(0, rounding)), toAssetId);
         }
 
         if (this.options.exchangeRate.quote.assetId.eq(toAssetId)) {
-            const result = base.mul(amount.toString()).div(quote);
+            const result = quote.mul(amount.toString()).div(base);
             return new AssetAmount(Long.fromString(result.toFixed(0, rounding)), toAssetId);
         }
 
