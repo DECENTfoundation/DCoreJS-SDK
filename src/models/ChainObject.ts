@@ -20,7 +20,7 @@ export class ChainObject {
     public constructor(objectId: string | ObjectType) {
         if (typeof objectId === "string") {
             const group = ChainObject.regexp.exec(objectId);
-            this.objectType = ObjectType.types[+group[1]][+group[2]];
+            this.objectType = ObjectType.getType(+group![1], +group![2]);
             this.instance = +group[3];
             this.objectId = objectId;
             this.fullBytes = new ByteBuffer(8, ByteBuffer.LITTLE_ENDIAN).writeUint64(this.instance).reset().skip(6)

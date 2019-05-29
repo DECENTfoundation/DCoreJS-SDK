@@ -45,4 +45,5 @@ export enum OperationType {
     PaySeeder, // VIRTUAL
     FinishBuying, // VIRTUAL
     RenewalOfSubscription, // VIRTUAL
+    Unknown,
 }
