@@ -20,3 +20,4 @@ export * from "./PurchaseContentOperation";
 export * from "./RemoveContentOperation";
 export * from "./SendMessageOperation";
 export * from "./TransferOperation";
+export * from "./UnknownOperation";
