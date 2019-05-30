@@ -1,0 +1,12 @@
+  DCore:
+    container_name: "DCore"
+    image: decentnetwork/dcore.ubuntu:dev
+    ports:
+      - "8090:8090"
+      - "40000:40000"
+    volumes:
+      - ./test-dcore-node/datadir:/home/dcore/.decent/data/decentd
+      - ./test-dcore-node/genesis-local.json:/home/dcore/.decent/genesis.json
+    expose:
+      - "8090"
+    

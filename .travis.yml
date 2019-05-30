@@ -1,20 +1,25 @@
 # Trigger travis
 language: node_js
 sudo: required
+env:
+  - DOCKER_COMPOSE_VERSION=1.5.2
+before_install:
+  - sudo rm /usr/local/bin/docker-compose
+  - curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > docker-compose
+  - chmod +x docker-compose
+  - sudo mv docker-compose /usr/local/bin
 node_js:
   - "node"
 services:
   - docker
 before_script:
-  - DATADIR=$(pwd)/test-dcore-node/datadir/
-  - GENESIS=$(pwd)/test-dcore-node/genesis-local.json
-  - echo ${DATADIR}
-  - echo ${GENESIS}
-  - docker pull decentnetwork/dcore.ubuntu:dev
-  - sudo docker run --rm --name DCore -p 8090:8090 -p 40000:40000 --mount type=bind,src=/home/travis/build/DECENTfoundation/DCoreJS-SDK/test-dcore-node/datadir/,dst=/home/dcore/.decent/data/decentd --mount type=bind,src=/home/travis/build/DECENTfoundation/DCoreJS-SDK/test-dcore-node/genesis-local.json,dst=/home/dcore/.decent/genesis.json,readonly decentnetwork/dcore.ubuntu:dev --genesis-json /home/dcore/.decent/genesis.json
+  - docker-compose up
   - docker ps -a
 script:
   - npm test
+after_script:
+  - docker-compose stop
+  - docker-compose rm -f
 deploy:
   - provider: pages
     skip_cleanup: true
