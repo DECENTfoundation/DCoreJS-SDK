@@ -1,5 +1,6 @@
 # Trigger travis
 language: node_js
+sudo: required
 node_js:
   - "node"
 services:
