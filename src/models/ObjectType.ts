@@ -1,7 +1,6 @@
 import { ChainObject } from "./ChainObject";
 
 export class ObjectType {
-    public static Unknown = new ObjectType(0, 0);
     public static Null = new ObjectType(1, 0);
     public static Base = new ObjectType(1, 1);
     public static Account = new ObjectType(1, 2);
@@ -70,7 +69,7 @@ export class ObjectType {
 
     public static getType(space: number, type: number): ObjectType {
         return space >= ObjectType.types.length || type >= ObjectType.types[space].length ?
-            ObjectType.Unknown : ObjectType.types[space][type];
+            new ObjectType(space, type) : ObjectType.types[space][type];
     }
 
     private constructor(public space: number, public type: number) {
