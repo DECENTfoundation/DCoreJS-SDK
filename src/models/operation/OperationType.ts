@@ -40,11 +40,5 @@ export enum OperationType {
     ReadyToPublishTwo,
     Transfer2,
     UpdateUserIssuedAssetAdvanced = 40,
-    DisallowAutomaticRenewalOfSubscription, // VIRTUAL
-    ReturnEscrowSubsmission, // VIRTUAL
-    ReturnEscrowBuying, // VIRTUAL
-    PaySeeder, // VIRTUAL
-    FinishBuying, // VIRTUAL
-    RenewalOfSubscription, // VIRTUAL
     Unknown,
 }
