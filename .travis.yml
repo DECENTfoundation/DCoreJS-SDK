@@ -5,6 +5,7 @@ node_js:
 services:
   - docker
 before_script:
+  - pwd
   - docker pull decentnetwork/dcore.ubuntu:dev
   - docker run --rm --name DCore -d -p 8090:8090 -p 40000:40000 --mount type=bind,src=test-dcore-node/datadir/,dst=/home/dcore/.decent/data/decentd --mount type=bind,src=test-dcore-node/genesis-local.json,dst=/home/dcore/.decent/genesis.json,readonly decentnetwork/dcore.ubuntu:dev --genesis-json /home/dcore/.decent/genesis.json
   - docker ps -a
