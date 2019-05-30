@@ -12,9 +12,9 @@ node_js:
   - "node"
 services:
   - docker
-before_script:
-  - sudo docker-compose up
-  - docker ps -a
+# before_script:
+#   - sudo docker-compose up
+#   - docker ps -a
 script:
   - npm test
 after_script:
