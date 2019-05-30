@@ -10,7 +10,7 @@ before_script:
   - echo ${DATADIR}
   - echo ${GENESIS}
   - docker pull decentnetwork/dcore.ubuntu:dev
-  - docker run --rm --name DCore -p 8090:8090 -p 40000:40000 --mount type=bind,src=${DATADIR},dst=/home/dcore/.decent/data/decentd --mount type=bind,src=${GENESIS},dst=/home/dcore/.decent/genesis.json,readonly decentnetwork/dcore.ubuntu:dev --genesis-json /home/dcore/.decent/genesis.json
+  - docker run --rm --name DCore -p 8090:8090 -p 40000:40000 --mount type=bind,src=/home/travis/build/DECENTfoundation/DCoreJS-SDK/test-dcore-node/datadir/,dst=/home/dcore/.decent/data/decentd --mount type=bind,src=/home/travis/build/DECENTfoundation/DCoreJS-SDK/test-dcore-node/genesis-local.json,dst=/home/dcore/.decent/genesis.json,readonly decentnetwork/dcore.ubuntu:dev --genesis-json /home/dcore/.decent/genesis.json
   - docker ps -a
 script:
   - npm test
