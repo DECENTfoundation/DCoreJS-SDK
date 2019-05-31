@@ -39,10 +39,5 @@ export enum OperationType {
     UpdateMonitoredAsset,
     ReadyToPublishTwo,
     Transfer2,
-    DisallowAutomaticRenewalOfSubscription, // VIRTUAL
-    ReturnEscrowSubsmission, // VIRTUAL
-    ReturnEscrowBuying, // VIRTUAL
-    PaySeeder, // VIRTUAL
-    FinishBuying, // VIRTUAL
-    RenewalOfSubscription, // VIRTUAL
+    Unknown,
 }
