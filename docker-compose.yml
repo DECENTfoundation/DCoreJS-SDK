@@ -1,12 +1,21 @@
+version: "3.2"
+services:
   DCore:
     container_name: "DCore"
     image: decentnetwork/dcore.ubuntu:dev
+#    entrypoint: ['/bin/sh', '-c', 'while true; do sleep 2; date; done']
     ports:
       - "8090:8090"
       - "40000:40000"
     volumes:
-      - './test-dcore-node/datadir:/home/dcore/.decent/data/decentd'
-      - './test-dcore-node/genesis-local.json:/home/dcore/.decent/genesis.json'
+#      - './test-dcore-node/datadir:/home/dcore/.decent/data/decentd'
+#      - './test-dcore-node/genesis-local.json:/home/dcore/.decent/genesis.json'
+      - type: bind
+        source: ./test-dcore-node/datadir
+        target: /home/dcore/.decent/data/decentd
+      - type: bind
+        source: ./test-dcore-node/genesis-local.json
+        target: /home/dcore/.decent/genesis.json
+
     expose:
       - "8090"
-    
