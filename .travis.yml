@@ -15,6 +15,7 @@ before_install:
 node_js:
   - "node"
 before_script:
+  - npm i
   - ls -al
   - sudo chown -R 1000 test-dcore-node
   - ls -al
