@@ -2,7 +2,7 @@ version: "3.2"
 services:
   DCore:
     container_name: "DCore"
-    image: decentnetwork/dcore.ubuntu:dev
+    image: decentnetwork/dcore.ubuntu:test
 #    entrypoint: ['/bin/sh', '-c', 'while true; do sleep 2; date; done']
     ports:
       - "8090:8090"
