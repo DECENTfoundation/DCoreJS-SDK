@@ -67,6 +67,11 @@ export class ObjectType {
             ObjectType.MessagingObject,
         ]];
 
+    public static getType(space: number, type: number): ObjectType {
+        return space >= ObjectType.types.length || type >= ObjectType.types[space].length ?
+            new ObjectType(space, type) : ObjectType.types[space][type];
+    }
+
     private constructor(public space: number, public type: number) {
     }
 

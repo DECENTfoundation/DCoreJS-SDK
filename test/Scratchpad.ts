@@ -1,7 +1,7 @@
 /* tslint:disable */
 import * as ByteBuffer from "bytebuffer";
 import * as chai from "chai";
-import { classToPlain, plainToClass, serialize, deserialize } from "class-transformer";
+import { classToPlain, deserialize, plainToClass, serialize } from "class-transformer";
 import { createHash } from "crypto";
 import Decimal from "decimal.js";
 import * as _ from "lodash";
@@ -15,7 +15,7 @@ import { ecdhUnsafe, publicKeyTweakMul } from "secp256k1";
 import { Address } from "../src/crypto/Address";
 import { ECKeyPair } from "../src/crypto/ECKeyPair";
 import { DCoreSdk } from "../src/DCoreSdk";
-import { RegionalPrice, Synopsis, Transaction } from "../src/models";
+import { ObjectType, RegionalPrice, Synopsis, Transaction } from "../src/models";
 import { Account } from "../src/models/Account";
 import { AssetAmount } from "../src/models/AssetAmount";
 import { Authority } from "../src/models/Authority";
@@ -403,7 +403,7 @@ class Scratchpad {
         console.log(d5.toDecimalPlaces(1));
     }
 
-    @test.only() "ref block"() {
+    @test "ref block"() {
         const id = "003482ff012880f806baa6f220538425804136be";
         const num = 3441407;
         const refId = 4169148417;
@@ -424,10 +424,16 @@ class Scratchpad {
             ChainObject.parse("1.2.33"),
             ChainObject.parse("1.2.33"),
             new AssetAmount(1))]).toPromise().then(tran => {
-                const st = tran.withSignature(kp);
-                console.log(st);
-                console.log(serialize(st));
-                console.log(deserialize(Transaction, serialize(st)));
-            })
+            const st = tran.withSignature(kp);
+            console.log(st);
+            console.log(serialize(st));
+            console.log(deserialize(Transaction, serialize(st)));
+        });
+    }
+
+    @test "parse chain object"() {
+        ChainObject.parse("3.15.20").objectType.should.equal(ObjectType.Unknown);
+        ChainObject.parse("1.9.20").objectType.should.equal(ObjectType.VestingBalance);
+        ChainObject.parse("2.18.20").objectType.should.equal(ObjectType.MessagingObject);
     }
 }

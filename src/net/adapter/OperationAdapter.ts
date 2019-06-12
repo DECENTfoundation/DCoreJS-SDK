@@ -11,20 +11,22 @@ import { AssetReserveOperation } from "../../models/operation/AssetReserveOperat
 import { AssetUpdateAdvancedOperation } from "../../models/operation/AssetUpdateAdvancedOperation";
 import { AssetUpdateMonitoredOperation } from "../../models/operation/AssetUpdateMonitoredOperation";
 import { AssetUpdateOperation } from "../../models/operation/AssetUpdateOperation";
+import { BaseOperation } from "../../models/operation/BaseOperation";
 import { CustomOperation } from "../../models/operation/CustomOperation";
 import { EmptyOperation } from "../../models/operation/EmptyOperation";
 import { LeaveRatingAndCommentOperation } from "../../models/operation/LeaveRatingAndCommentOperation";
 import { PurchaseContentOperation } from "../../models/operation/PurchaseContentOperation";
 import { RemoveContentOperation } from "../../models/operation/RemoveContentOperation";
 import { TransferOperation } from "../../models/operation/TransferOperation";
+import { UnknownOperation } from "../../models/operation/UnknownOperation";
 
 export function OperationsToClass(target: any, key: string): void {
     return Transform((value: Array<[number, object]>) =>
-        value.map(([id, op]) => plainToClass(OPERATIONS_CTOR[id], op)), { toClassOnly: true })(target, key);
+        value.map(([id, op]) => create(id, op)), { toClassOnly: true })(target, key);
 }
 
 export function OperationToClass(target: any, key: string): void {
-    return Transform(([id, op]: [number, object]) => plainToClass(OPERATIONS_CTOR[id], op), { toClassOnly: true })(target, key);
+    return Transform(([id, op]: [number, object]) => create(id, op), { toClassOnly: true })(target, key);
 }
 
 export const OPERATIONS_CTOR = [
@@ -70,3 +72,9 @@ export const OPERATIONS_CTOR = [
     TransferOperation,
     AssetUpdateAdvancedOperation, // 40
 ];
+
+const OPS_SIZE = OPERATIONS_CTOR.length;
+
+function create(idx: number, op: object): BaseOperation {
+    return idx < OPS_SIZE ? plainToClass(OPERATIONS_CTOR[idx], op) : new UnknownOperation(idx);
+}
