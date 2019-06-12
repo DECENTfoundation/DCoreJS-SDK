@@ -16,15 +16,15 @@ node_js:
   - "node"
 before_script:
   - npm i
-  - ls -al
-  - sudo chown -R 1000 test-dcore-node
-  - ls -al
+  # - ls -al
+  # - sudo chown -R 1000 test-dcore-node
+  # - ls -al
 #  - cd ./test-dcore-node
 #  - ls -al
 #  - cd ./datadir
 #  - ls -al
 #  - id travis
-  - docker-compose up -d
+  # - docker-compose up -d
 #  - docker-compose ps
 #  - docker-compose exec DCore ls -al
 #  - docker-compose exec DCore bash -c "cd ./.decent"
@@ -33,9 +33,6 @@ before_script:
 
 script:
   - npm test
-after_script:
-  - docker-compose stop
-  - docker-compose rm -f
 deploy:
   - provider: pages
     skip_cleanup: true
