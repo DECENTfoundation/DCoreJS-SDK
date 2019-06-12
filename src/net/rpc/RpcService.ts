@@ -20,7 +20,7 @@ export class RpcService {
     public request<T>(request: BaseRequest<T>): Observable<T> {
         return of(request.json()).pipe(
             tag(`API_send_${request.method}`),
-            flatMap((serialized) => this.baseRequest.post("rpc", { body: serialized })),
+            flatMap((serialized) => this.baseRequest.post("", { body: serialized })),
             filter((data) => data.response.statusCode === 200),
             map((data) => JSON.parse(data.response.body)),
             map((response) => {
