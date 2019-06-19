@@ -7,6 +7,12 @@ pids
 *.pid
 *.seed
 
+test-dcore-node/datadir/blockchain
+test-dcore-node/datadir/logs
+test-dcore-node/datadir/monitoring
+test-dcore-node/datadir/p2p
+test-dcore-node/datadir/db_version
+
 # Generated docs
 docs
 

@@ -97,7 +97,7 @@ chai.use(chaiThings);
         });
 
         it("should return account statistics by id", (done: (arg?: any) => void) => {
-            api.getStatistics([ChainObject.parse("2.5.35")])
+            api.getStatistics([ChainObject.parse("2.5.12")])
                 .subscribe((values) => values.should.include.one.instanceOf(AccountStatistics), (error) => done(error), () => done());
         });
 
