@@ -23,6 +23,18 @@ module.exports = function (config) {
             "**/*.ts": "karma-typescript"
         },
         reporters: ["mocha", "karma-typescript"],
+        karmaTypescriptConfig: {
+            reports:
+            {
+                "lcovonly": {
+                    "directory": "coverage",    // optional, defaults to 'coverage'
+                    "subdirectory": "lcov", // optional, defaults to the name of the browser running the tests
+                    "filename": "lcov.info", // optional, defaults to the report name
+                },
+                "html": "coverage",
+                "text-summary": ""
+            }
+        },
         singleRun: true
     });
 };
