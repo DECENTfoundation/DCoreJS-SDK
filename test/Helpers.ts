@@ -1,3 +1,4 @@
+import { Observable, PartialObserver } from "rxjs";
 import { Address } from "../src/crypto/Address";
 import { Credentials } from "../src/crypto/Credentials";
 import { ECKeyPair } from "../src/crypto/ECKeyPair";
@@ -19,4 +20,22 @@ export class Helpers {
     public static readonly KEY = ECKeyPair.parseWif(Helpers.PRIVATE);
     public static readonly CREDENTIALS = new Credentials(Helpers.ACCOUNT, Helpers.KEY);
 
+    public static readonly createAccount = "account-test";
+    public static readonly createAsset = "TEST";
+    public static readonly createAssetId = ChainObject.parse("1.3.33");
+    public static readonly createUri = "http://hello.world.io";
+    public static readonly createContentId = ChainObject.parse("2.13.0");
+    public static readonly createContentId2 = ChainObject.parse("2.13.1");
+    public static readonly createPurchaseId = ChainObject.parse("2.12.0");
+    public static readonly createNft = "APPLE";
+    public static readonly createNftNested = "$createNft.NESTED";
+
+}
+
+export function testCheck<T>(done: (arg?: any) => void, stream: Observable<T>) {
+    stream.subscribe({ error: (err) => done(err), complete: () => done() });
+}
+
+export function testCheckWith<T>(stream: Observable<T>, check: PartialObserver<T>) {
+    stream.subscribe(check);
 }

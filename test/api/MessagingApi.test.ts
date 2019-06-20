@@ -5,16 +5,48 @@ import "mocha";
 import "reflect-metadata";
 import { create } from "rxjs-spy";
 import { Spy } from "rxjs-spy/spy-interface";
+import { Credentials } from "../../src/crypto/Credentials";
 import { DCoreApi } from "../../src/DCoreApi";
 import { DCoreSdk } from "../../src/DCoreSdk";
-import { ChainObject } from "../../src/models/ChainObject";
 import { Message } from "../../src/models/Message";
 import { MessageResponse } from "../../src/models/MessageResponse";
 import { SendMessageOperation } from "../../src/models/operation/SendMessageOperation";
-import { Helpers } from "../Helpers";
+import { Helpers, testCheck } from "../Helpers";
 
 chai.should();
 chai.use(chaiThings);
+
+describe("asset API test suite for ops", () => {
+
+    let api: DCoreApi;
+    let spy: Spy;
+
+    before(() => {
+        spy = create();
+        // spy.log(/^API\w+/);
+        api = DCoreSdk.createForWebSocket(() => new WebSocket(Helpers.STAGE_WS));
+    });
+
+    after(() => {
+        api.disconnect();
+        spy.teardown();
+    });
+
+    it("should send a message", (done: (arg?: any) => void) => {
+        testCheck(done, api.messageApi.send(
+            Helpers.CREDENTIALS,
+            [[Helpers.ACCOUNT2, "test message encrypted"]],
+        ));
+    });
+
+    it("should send a message unencrypted", (done: (arg?: any) => void) => {
+        testCheck(done, api.messageApi.sendUnencrypted(
+            Helpers.CREDENTIALS,
+            [[Helpers.ACCOUNT2, "test message plain"]],
+        ));
+    });
+
+});
 
 ([
     ["RPC", DCoreSdk.createForHttp({ baseUrl: Helpers.STAGE_HTTPS, timeout: 15000, rejectUnauthorized: false })],
@@ -50,7 +82,7 @@ chai.use(chaiThings);
         });
 
         it("should return all decrypted messages", (done: (arg?: any) => void) => {
-            api.getAllDecrypted(Helpers.CREDENTIALS, ChainObject.parse("1.2.19"), Helpers.ACCOUNT)
+            api.getAllDecrypted(new Credentials(Helpers.ACCOUNT2, Helpers.PRIVATE2), Helpers.ACCOUNT, Helpers.ACCOUNT2)
                 .subscribe((value) => value.map((msg) => msg.encrypted).should.all.be.eq(false), (error) => done(error), () => done());
         });
 
