@@ -23,6 +23,7 @@ import { RxWebSocket, WebSocketFactory } from "./net/ws/RxWebSocket";
 import { ObjectCheckOf } from "./utils/ObjectCheckOf";
 import { assertThrow } from "./utils/Utils";
 
+export type NftRef = ChainObject | string;
 export type AccountRef = ChainObject | string;
 export type AssetRef = ChainObject | string;
 export type AssetWithAmount = [Asset, AssetAmount];

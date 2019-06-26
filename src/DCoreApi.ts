@@ -11,6 +11,7 @@ import { GeneralApi } from "./api/GeneralApi";
 import { HistoryApi } from "./api/HistoryApi";
 import { MessageApi } from "./api/MessageApi";
 import { MiningApi } from "./api/MiningApi";
+import { NftApi } from "./api/NftApi";
 import { PurchaseApi } from "./api/PurchaseApi";
 import { SeedersApi } from "./api/SeedersApi";
 import { SubscriptionApi } from "./api/SubscriptionApi";
@@ -25,22 +26,23 @@ export class DCoreApi {
 
     public transactionExpiration: Duration = DCoreConstants.EXPIRATION_DEFAULT;
 
-    public accountApi: AccountApi = new AccountApi(this);
-    public assetApi: AssetApi = new AssetApi(this);
-    public balanceApi: BalanceApi = new BalanceApi(this);
-    public blockApi: BlockApi = new BlockApi(this);
-    public broadcastApi: BroadcastApi = new BroadcastApi(this);
-    public callbackApi: CallbackApi = new CallbackApi(this);
-    public contentApi: ContentApi = new ContentApi(this);
-    public generalApi: GeneralApi = new GeneralApi(this);
-    public historyApi: HistoryApi = new HistoryApi(this);
-    public messageApi: MessageApi = new MessageApi(this);
-    public miningApi: MiningApi = new MiningApi(this);
-    public purchaseApi: PurchaseApi = new PurchaseApi(this);
-    public seedersApi: SeedersApi = new SeedersApi(this);
-    public subscriptionApi: SubscriptionApi = new SubscriptionApi(this);
-    public transactionApi: TransactionApi = new TransactionApi(this, this.core);
-    public validationApi: ValidationApi = new ValidationApi(this);
+    public readonly accountApi: AccountApi = new AccountApi(this);
+    public readonly assetApi: AssetApi = new AssetApi(this);
+    public readonly balanceApi: BalanceApi = new BalanceApi(this);
+    public readonly blockApi: BlockApi = new BlockApi(this);
+    public readonly broadcastApi: BroadcastApi = new BroadcastApi(this);
+    public readonly callbackApi: CallbackApi = new CallbackApi(this);
+    public readonly contentApi: ContentApi = new ContentApi(this);
+    public readonly generalApi: GeneralApi = new GeneralApi(this);
+    public readonly historyApi: HistoryApi = new HistoryApi(this);
+    public readonly messageApi: MessageApi = new MessageApi(this);
+    public readonly miningApi: MiningApi = new MiningApi(this);
+    public readonly purchaseApi: PurchaseApi = new PurchaseApi(this);
+    public readonly seedersApi: SeedersApi = new SeedersApi(this);
+    public readonly subscriptionApi: SubscriptionApi = new SubscriptionApi(this);
+    public readonly transactionApi: TransactionApi = new TransactionApi(this, this.core);
+    public readonly validationApi: ValidationApi = new ValidationApi(this);
+    public readonly nftApi: NftApi = new NftApi(this);
 
     constructor(private core: DCoreSdk) {
     }
