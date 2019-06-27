@@ -32,7 +32,7 @@ import WebSocket = require("isomorphic-ws");
 
 chai.should();
 
-@suite("a class to run arbitrary methods as a test", timeout(20000))
+@suite.skip("a class to run arbitrary methods as a test", timeout(20000))
 // @ts-ignore
 class Scratchpad {
 
@@ -432,7 +432,6 @@ class Scratchpad {
     }
 
     @test "parse chain object"() {
-        ChainObject.parse("3.15.20").objectType.should.equal(ObjectType.Unknown);
         ChainObject.parse("1.9.20").objectType.should.equal(ObjectType.VestingBalance);
         ChainObject.parse("2.18.20").objectType.should.equal(ObjectType.MessagingObject);
     }
