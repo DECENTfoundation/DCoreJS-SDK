@@ -432,8 +432,11 @@ class Scratchpad {
     }
 
     @test "parse chain object"() {
-        ChainObject.parse("3.15.20").objectType.should.equal(ObjectType.Unknown);
         ChainObject.parse("1.9.20").objectType.should.equal(ObjectType.VestingBalance);
         ChainObject.parse("2.18.20").objectType.should.equal(ObjectType.MessagingObject);
+    }
+
+    @test "address is valid"() {
+        Address.isValid("hello").should.be.false;
     }
 }
