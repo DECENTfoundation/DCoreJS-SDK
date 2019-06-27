@@ -22,7 +22,7 @@ import { Authority } from "../src/models/Authority";
 import { ChainObject } from "../src/models/ChainObject";
 import { AddOrUpdateContentOperation } from "../src/models/operation";
 import { TransferOperation } from "../src/models/operation/TransferOperation";
-import { API_GROUP_NAMES, ApiGroup } from "../src/net/models/ApiGroup";
+import { ApiGroup } from "../src/net/models/ApiGroup";
 import { GetAccountById } from "../src/net/models/request/GetAccountById";
 import { GetAccountByName } from "../src/net/models/request/GetAccountByName";
 import { RpcService } from "../src/net/rpc/RpcService";
@@ -357,7 +357,6 @@ class Scratchpad {
 
     @test "enum to string"() {
         console.log(ApiGroup.Broadcast.toString().toLowerCase());
-        console.log(API_GROUP_NAMES[ApiGroup.Broadcast]);
     }
 
     @test "long unsigned"() {
@@ -432,7 +431,6 @@ class Scratchpad {
     }
 
     @test "parse chain object"() {
-        ChainObject.parse("3.15.20").objectType.should.equal(ObjectType.Unknown);
         ChainObject.parse("1.9.20").objectType.should.equal(ObjectType.VestingBalance);
         ChainObject.parse("2.18.20").objectType.should.equal(ObjectType.MessagingObject);
     }

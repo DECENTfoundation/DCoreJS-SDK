@@ -6,19 +6,10 @@
 // 5 - messaging
 
 export enum ApiGroup {
-    Database = 0,
-    Login,
-    Broadcast,
-    History,
-    Cryto,
-    Messaging,
+    Database = "database_api",
+    Login = "login_api",
+    Broadcast = "network_broadcast_api",
+    History = "history_api",
+    Crypto = "crypto_api",
+    Messaging = "messaging_api",
 }
-
-export const API_GROUP_NAMES = [
-    "database",
-    "login",
-    "network_broadcast",
-    "history",
-    "crypto",
-    "messaging",
-];
