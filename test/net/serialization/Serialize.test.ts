@@ -16,6 +16,7 @@ import { Memo } from "../../../src/models/Memo";
 import { MessagePayload } from "../../../src/models/MessagePayload";
 import { MessagePayloadReceiver } from "../../../src/models/MessagePayloadReceiver";
 import { MonitoredAssetOpts } from "../../../src/models/MonitoredAssetOpts";
+import { NftOptions } from "../../../src/models/NftOptions";
 import { AccountCreateOperation } from "../../../src/models/operation/AccountCreateOperation";
 import { AccountUpdateOperation } from "../../../src/models/operation/AccountUpdateOperation";
 import { AddOrUpdateContentOperation } from "../../../src/models/operation/AddOrUpdateContentOperation";
@@ -25,6 +26,11 @@ import { AssetFundPoolsOperation } from "../../../src/models/operation/AssetFund
 import { AssetIssueOperation } from "../../../src/models/operation/AssetIssueOperation";
 import { AssetReserveOperation } from "../../../src/models/operation/AssetReserveOperation";
 import { LeaveRatingAndCommentOperation } from "../../../src/models/operation/LeaveRatingAndCommentOperation";
+import { NftCreateOperation } from "../../../src/models/operation/NftCreateOperation";
+import { NftIssueOperation } from "../../../src/models/operation/NftIssueOperation";
+import { NftTransferOperation } from "../../../src/models/operation/NftTransferOperation";
+import { NftUpdateDataOperation } from "../../../src/models/operation/NftUpdateDataOperation";
+import { NftUpdateOperation } from "../../../src/models/operation/NftUpdateOperation";
 import { PurchaseContentOperation } from "../../../src/models/operation/PurchaseContentOperation";
 import { RemoveContentOperation } from "../../../src/models/operation/RemoveContentOperation";
 import { SendMessageOperation } from "../../../src/models/operation/SendMessageOperation";
@@ -37,6 +43,7 @@ import { Synopsis } from "../../../src/models/Synopsis";
 import { Transaction } from "../../../src/models/Transaction";
 import { Serializer } from "../../../src/net/serialization/Serializer";
 import { Helpers } from "../../Helpers";
+import { NftApple } from "../../model/NftApple";
 
 chai.should();
 
@@ -262,6 +269,76 @@ describe("serialization test suite", () => {
         const expected = "230a00000000000000001b0a00000000000000240a000000000000000000";
 
         const op = new AssetClaimFeesOperation(Helpers.ACCOUNT, new AssetAmount(10, ChainObject.parse("1.3.36")), new AssetAmount(10), new AssetAmount(10));
+        serializer.serialize(op).toString("hex").should.be.eq(expected);
+    });
+
+    it("should serialize nft create operation", () => {
+        // tslint:disable-next-line:max-line-length
+        const expected = "2920a1070000000000000953444b2e4150504c451b640000000008616e206170706c65030000000000000000000100000000000000010473697a6501000000000000000000000000000000000105636f6c6f7200030000000000000002000000000000000105656174656e0100";
+
+        const op = new NftCreateOperation(
+            "SDK.APPLE",
+            new NftOptions(ChainObject.parse("1.2.27"), 100, false, "an apple"),
+            NftApple.DEFINITION,
+            true,
+            new AssetAmount(500000),
+        );
+
+        serializer.serialize(op).toString("hex").should.be.eq(expected);
+    });
+
+    it("should serialize nft update operation", () => {
+        const expected = "2a20a1070000000000001b011b6400000001046465736300";
+        const op = new NftUpdateOperation(
+            ChainObject.parse("1.2.27"),
+            ChainObject.parse("1.10.1"),
+            new NftOptions(ChainObject.parse("1.2.27"), 100, true, "desc"),
+            new AssetAmount(500000),
+        );
+
+        serializer.serialize(op).toString("hex").should.be.eq(expected);
+    });
+
+    it("should serialize nft issue operation", () => {
+        const expected = "2b20a1070000000000001b1c0103020700000000000000050372656404000000";
+        const op = new NftIssueOperation(
+            ChainObject.parse("1.2.27"),
+            ChainObject.parse("1.10.1"),
+            ChainObject.parse("1.2.28"),
+            [7, "red", false],
+            undefined,
+            new AssetAmount(500000),
+        );
+
+        serializer.serialize(op).toString("hex").should.be.eq(expected);
+    });
+
+    it("should serialize nft transfer operation", () => {
+        const expected = "2c20a1070000000000001b1c010000";
+        const op = new NftTransferOperation(
+            ChainObject.parse("1.2.27"),
+            ChainObject.parse("1.2.28"),
+            ChainObject.parse("1.11.1"),
+            undefined,
+            new AssetAmount(500000),
+        );
+
+        serializer.serialize(op).toString("hex").should.be.eq(expected);
+    });
+
+    it.skip("should serialize nft update data operation", () => {
+        const expected = "2d20a1070000000000001b010305656174656e040005636f6c6f7205037265640473697a6502010000000000000000";
+        const op = new NftUpdateDataOperation(
+            ChainObject.parse("1.2.27"),
+            ChainObject.parse("1.11.1"),
+            new Map<string, any>([
+                ["size", 1],
+                ["color", "red"],
+                ["eaten", false],
+            ]),
+            new AssetAmount(500000),
+        );
+
         serializer.serialize(op).toString("hex").should.be.eq(expected);
     });
 

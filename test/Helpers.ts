@@ -28,7 +28,8 @@ export class Helpers {
     public static readonly createContentId2 = ChainObject.parse("2.13.1");
     public static readonly createPurchaseId = ChainObject.parse("2.12.0");
     public static readonly createNft = "APPLE";
-    public static readonly createNftNested = `$createNft.NESTED`;
+    public static readonly createNft2 = "NOTAPPLE";
+    public static readonly createNftNested = `${Helpers.createNft}.NESTED`;
 
 }
 

@@ -1,4 +1,4 @@
-import { Expose } from "class-transformer";
+import { Expose, Type } from "class-transformer";
 import * as _ from "lodash";
 import { DCoreConstants } from "../../DCoreConstants";
 import { Fee } from "../../DCoreSdk";
@@ -16,8 +16,10 @@ export class NftCreateOperation extends BaseOperation {
     public readonly symbol: string;
 
     @Expose({ name: "options" })
+    @Type(() => NftOptions)
     public readonly options: NftOptions;
 
+    @Type(() => NftDataType)
     @Expose({ name: "definitions" })
     public readonly definitions: NftDataType[];
 

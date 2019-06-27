@@ -10,7 +10,7 @@ export class GetNftBalances extends BaseRequest<NftData[]> {
     constructor(account: ChainObject, ids: ChainObject[] = []) {
         super(
             ApiGroup.Database,
-            "get_non_fungible_tokens",
+            "get_non_fungible_token_balances",
             [account.objectId, ids.map((it) => it.objectId)],
             (value: object[]) => plainToClass(NftData, value),
         );
