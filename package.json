@@ -36,7 +36,9 @@
     "test:browser": "sh ./scripts/test:browser.sh",
     "coverage": "cat ./coverage/lcov/lcov.info | codacy-coverage",
     "test": "npm run test:node && npm run test:browser",
-    "doc": "typedoc --out docs ./src"
+    "doc": "typedoc --out docs ./src",
+    "compose:down": "docker-compose -f ./test-dcore-node/docker-compose.yml down",
+    "compose:up": "npm run compose:down && docker-compose -f ./test-dcore-node/docker-compose.yml up -d --build"
   },
   "devDependencies": {
     "@types/chai": "^4.1.7",

@@ -64,8 +64,8 @@ chai.use(chaiThings);
         });
 
         it("should find transfer history", (done: (arg?: any) => void) => {
-            api.findAllTransfers(Helpers.ACCOUNT, undefined, undefined, undefined, 20)
-                .pipe(tap((ops) => new Set(ops.map((op) => op.id.objectId)).size.should.be.eq(20)))
+            api.findAllTransfers(Helpers.ACCOUNT, undefined, undefined, undefined, 5)
+                .pipe(tap((ops) => new Set(ops.map((op) => op.id.objectId)).size.should.be.eq(5)))
                 .subscribe((value) => value.should.all.be.instanceOf(TransferComposite), (error) => done(error), () => done());
         });
 

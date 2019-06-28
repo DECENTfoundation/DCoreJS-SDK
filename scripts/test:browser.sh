@@ -1,3 +1,3 @@
-docker-compose -f ./test-dcore-node/docker-compose.yml up -d --build
+npm run compose:up
 karma start
-docker-compose -f ./test-dcore-node/docker-compose.yml down
+npm run compose:down

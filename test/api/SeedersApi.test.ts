@@ -20,7 +20,8 @@ chai.use(chaiThings);
 ] as Array<[string, DCoreApi]>).forEach(([name, sdk]) => {
     const api = sdk.seedersApi;
 
-    describe(`seeders API test suite for ${name}`, () => {
+    // todo
+    describe.skip(`seeders API test suite for ${name}`, () => {
         after(() => {
             // wtf.dump();
         });
