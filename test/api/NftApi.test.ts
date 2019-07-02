@@ -5,15 +5,13 @@ import "mocha";
 import "reflect-metadata";
 import { create } from "rxjs-spy";
 import { Spy } from "rxjs-spy/spy-interface";
-import { flatMap, map, tap } from "rxjs/operators";
+import { flatMap, tap } from "rxjs/operators";
 import { Credentials } from "../../src/crypto/Credentials";
 import { DCoreApi } from "../../src/DCoreApi";
 import { DCoreSdk } from "../../src/DCoreSdk";
 import { ChainObject } from "../../src/models/ChainObject";
 import { DCoreError } from "../../src/models/error/DCoreError";
 import { ObjectNotFoundError } from "../../src/models/error/ObjectNotFoundError";
-import { Nft } from "../../src/models/Nft";
-import { NftData } from "../../src/models/NftData";
 import { Helpers, testCheck, testCheckWith } from "../Helpers";
 import { NftApple } from "../model/NftApple";
 import { NftNotApple } from "../model/NftNotApple";
@@ -88,7 +86,7 @@ describe("NFT API test suite for ops", () => {
             Helpers.CREDENTIALS,
             Helpers.createNft,
             Helpers.ACCOUNT,
-            new NftApple(5, "red", false).values,
+            new NftApple(5, "red", false),
         ));
     });
 
@@ -97,12 +95,12 @@ describe("NFT API test suite for ops", () => {
             Helpers.CREDENTIALS,
             Helpers.createNft,
             Helpers.ACCOUNT,
-            new NftApple(5, "red", false).values,
+            new NftApple(5, "red", false),
         ), {
             error: (e) => {
                 e.should.be.instanceOf(DCoreError);
                 done();
-            }
+            },
         });
     });
 
@@ -111,7 +109,7 @@ describe("NFT API test suite for ops", () => {
             Helpers.CREDENTIALS,
             Helpers.createNft,
             Helpers.ACCOUNT,
-            new NftApple(5, "green", false).values,
+            new NftApple(5, "green", false),
         ));
     });
 
@@ -120,7 +118,7 @@ describe("NFT API test suite for ops", () => {
             Helpers.CREDENTIALS,
             Helpers.createNft2,
             Helpers.ACCOUNT,
-            new NftNotApple(true, -1, "this is not an apple").values,
+            new NftNotApple(true, -1, "this is not an apple"),
         ));
     });
 
@@ -133,22 +131,16 @@ describe("NFT API test suite for ops", () => {
     });
 
     it("should update transferred nft by issuer", (done: (arg?: any) => void) => {
-        testCheck(done, api.nftApi.getDataRaw(ChainObject.parse("1.11.2")).pipe(
-            map((it) => [it, NftNotApple.create(it.data)] as [NftData, NftApple]),
-            tap(([nft, data]) => data.eaten = !data.eaten),
-            map(([nft, data]) => [nft.id, Nft.createUpdate(NftNotApple.DEFINITION, data.values)] as [ChainObject, Map<string, any>]),
-            flatMap(([nft, data]) => api.nftApi.updateData(Helpers.CREDENTIALS, nft, data),
-            ),
+        testCheck(done, api.nftApi.getData(ChainObject.parse("1.11.2"), NftNotApple).pipe(
+            tap((nft) => nft.data.eaten = !nft.data.eaten),
+            flatMap((nft) => api.nftApi.updateData(Helpers.CREDENTIALS, nft)),
         ));
     });
 
     it("should update transferred nft by owner", (done: (arg?: any) => void) => {
-        testCheck(done, api.nftApi.getDataRaw(ChainObject.parse("1.11.2")).pipe(
-            map((it) => [it, NftNotApple.create(it.data)] as [NftData, NftApple]),
-            tap(([nft, data]) => data.eaten = !data.eaten),
-            map(([nft, data]) => [nft.id, Nft.createUpdate(NftNotApple.DEFINITION, data.values)] as [ChainObject, Map<string, any>]),
-            flatMap(([nft, data]) => api.nftApi.updateData(new Credentials(Helpers.ACCOUNT2, Helpers.PRIVATE2), nft, data),
-            ),
+        testCheck(done, api.nftApi.getData(ChainObject.parse("1.11.2"), NftNotApple).pipe(
+            tap((nft) => nft.data.eaten = !nft.data.eaten),
+            flatMap((nft) => api.nftApi.updateData(new Credentials(Helpers.ACCOUNT2, Helpers.PRIVATE2), nft)),
         ));
     });
 });
@@ -159,7 +151,7 @@ describe("NFT API test suite for ops", () => {
 ] as Array<[string, DCoreApi]>).forEach(([name, sdk]) => {
     const api = sdk.nftApi;
 
-    describe(`NFT API test suite for ${name}`, () => {
+    describe.only(`NFT API test suite for ${name}`, () => {
         let spy: Spy;
 
         before(() => {
@@ -170,6 +162,10 @@ describe("NFT API test suite for ops", () => {
         after(() => {
             sdk.disconnect();
             spy.teardown();
+        });
+
+        afterEach(() => {
+            sdk.registeredNfts = new Map();
         });
 
         it("should get NFT by symbol or id", (done: (arg?: any) => void) => {
@@ -205,8 +201,46 @@ describe("NFT API test suite for ops", () => {
             testCheck(done, api.getAllDataRaw([ChainObject.parse("1.11.0"), ChainObject.parse("1.11.1")]));
         });
 
+        it("should get NFTs data by id for model", (done: (arg?: any) => void) => {
+            testCheckWith(api.getAllData([ChainObject.parse("1.11.0")], NftApple), {
+                next: (value) => {
+                    value.map((it) => it.data).should.all.be.instanceOf(NftApple);
+                    done();
+                },
+            });
+        });
+
+        it("should get NFTs data by id for registered model", (done: (arg?: any) => void) => {
+            sdk.registerNfts([ChainObject.parse("1.10.0"), NftApple]);
+            testCheckWith(api.getAllData([ChainObject.parse("1.11.0")]), {
+                next: (value) => {
+                    value.map((it) => it.data).should.all.be.instanceOf(NftApple);
+                    done();
+                },
+            });
+        });
+
         it("should get NFT data by id raw", (done: (arg?: any) => void) => {
             testCheck(done, api.getDataRaw(ChainObject.parse("1.11.0")));
+        });
+
+        it("should get NFT data by id for model", (done: (arg?: any) => void) => {
+            testCheckWith(api.getData(ChainObject.parse("1.11.0"), NftApple), {
+                next: (value) => {
+                    value.data.should.be.instanceOf(NftApple);
+                    done();
+                },
+            });
+        });
+
+        it("should get NFT data by id for registered model", (done: (arg?: any) => void) => {
+            sdk.registerNfts([ChainObject.parse("1.10.0"), NftApple]);
+            testCheckWith(api.getData(ChainObject.parse("1.11.0")), {
+                next: (value) => {
+                    value.data.should.be.instanceOf(NftApple);
+                    done();
+                },
+            });
         });
 
         it("should get count of NFTs", (done: (arg?: any) => void) => {
@@ -228,15 +262,53 @@ describe("NFT API test suite for ops", () => {
         });
 
         it("should get NFT balances raw", (done: (arg?: any) => void) => {
-            testCheck(done, api.getNftBalancesRaw(Helpers.ACCOUNT));
+            testCheck(done, api.getNftBalances(Helpers.ACCOUNT));
+        });
+
+        it("should get NFT balances for model", (done: (arg?: any) => void) => {
+            testCheckWith(api.getNftBalances(Helpers.ACCOUNT, [], NftApple), {
+                next: (value) => {
+                    value.map((it) => it.data).should.all.be.instanceof(NftApple);
+                    done();
+                },
+            });
+        });
+
+        it("should get NFT balances for registered model", (done: (arg?: any) => void) => {
+            sdk.registerNfts([ChainObject.parse("1.10.0"), NftApple]);
+            testCheckWith(api.getNftBalances(Helpers.ACCOUNT), {
+                next: (value) => {
+                    value.map((it) => it.data).should.all.be.instanceof(NftApple);
+                    done();
+                },
+            });
         });
 
         it("should list all NFTs", (done: (arg?: any) => void) => {
             testCheck(done, api.listAllRelative());
         });
 
-        it("should get data for NFT raw", (done: (arg?: any) => void) => {
+        it("should list data for NFT raw", (done: (arg?: any) => void) => {
             testCheck(done, api.listDataByNftRaw(ChainObject.parse("1.10.0")));
+        });
+
+        it("should list data for NFT for model", (done: (arg?: any) => void) => {
+            testCheckWith(api.listDataByNft(ChainObject.parse("1.10.0"), NftApple), {
+                next: (value) => {
+                    value.map((it) => it.data).should.all.be.instanceof(NftApple);
+                    done();
+                },
+            });
+        });
+
+        it("should list data for NFT registered model", (done: (arg?: any) => void) => {
+            sdk.registerNfts([ChainObject.parse("1.10.0"), NftApple]);
+            testCheckWith(api.listDataByNft(ChainObject.parse("1.10.0")), {
+                next: (value) => {
+                    value.map((it) => it.data).should.all.be.instanceof(NftApple);
+                    done();
+                },
+            });
         });
 
     });

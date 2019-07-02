@@ -29,6 +29,7 @@ export type AssetRef = ChainObject | string;
 export type AssetWithAmount = [Asset, AssetAmount];
 export type AssetPrecision = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12;
 export type Fee = ChainObject | AssetAmount;
+export declare type Newable<T> = new (...args: any[]) => T;
 
 Decimal.set({
     // max amount have precision 16 (satoshi significant places) and we are doubling that for partial result from multiply/division operations

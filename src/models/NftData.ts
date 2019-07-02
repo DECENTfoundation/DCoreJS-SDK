@@ -2,7 +2,8 @@ import { Expose } from "class-transformer";
 import { ChainObjectToClass } from "../net/adapter/TypeAdapters";
 import { ChainObject } from "./ChainObject";
 
-export class NftData {
+export class NftData<T> {
+
     @ChainObjectToClass
     @Expose({ name: "id" })
     public readonly id: ChainObject;
@@ -16,5 +17,19 @@ export class NftData {
     public readonly owner: ChainObject;
 
     @Expose({ name: "data" })
-    public readonly data: any[];
+    public readonly data: T;
+
+    constructor(id: ChainObject, nftId: ChainObject, owner: ChainObject, data: T) {
+        this.id = id;
+        this.nftId = nftId;
+        this.owner = owner;
+        this.data = data;
+    }
+}
+
+export interface NftDataRaw {
+    id: string;
+    nft_id: string;
+    owner: string;
+    data: any[];
 }

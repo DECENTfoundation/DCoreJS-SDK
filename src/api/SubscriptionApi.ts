@@ -19,7 +19,7 @@ export class SubscriptionApi extends BaseApi {
      *
      * @param id subscription object id, 2.15.*
      *
-     * @return the subscription object corresponding to the provided ID, [ObjectNotFoundException] otherwise
+     * @return the subscription object corresponding to the provided ID, {@link ObjectNotFoundError} otherwise
      */
     public get(id: ChainObject): Observable<Subscription> {
         return this.request(new GetSubscription((id)));

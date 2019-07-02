@@ -18,13 +18,17 @@ import { SubscriptionApi } from "./api/SubscriptionApi";
 import { TransactionApi } from "./api/TransactionApi";
 import { ValidationApi } from "./api/ValidationApi";
 import { DCoreConstants } from "./DCoreConstants";
-import { DCoreSdk } from "./DCoreSdk";
+import { DCoreSdk, Newable } from "./DCoreSdk";
+import { ChainObject } from "./models/ChainObject";
+import { NftDefinition } from "./models/NftModel";
 import { BaseRequest } from "./net/models/request/BaseRequest";
 import { WithCallback } from "./net/models/request/WithCallback";
 
 export class DCoreApi {
 
     public transactionExpiration: Duration = DCoreConstants.EXPIRATION_DEFAULT;
+
+    public registeredNfts: Map<string, Newable<any>> = new Map<string, Newable<any>>();
 
     public readonly accountApi: AccountApi = new AccountApi(this);
     public readonly assetApi: AssetApi = new AssetApi(this);
@@ -62,4 +66,23 @@ export class DCoreApi {
     public set timeout(millis: number) {
         this.core.timeout = millis;
     }
+
+    /**
+     * Register NFT data model with object id, if no model is provided the [RawNft] will be used
+     *
+     * @param idToClass id to class pairs
+     */
+    public registerNfts<T extends NftDefinition>(...idToClass: Array<[ChainObject, Newable<T>]>) {
+        idToClass.forEach(([id, c]) => this.registeredNfts.set(id.objectId, c));
+    }
+
+    /**
+     * Remove registered NFT data model
+     *
+     * @param ids nft ids to remove
+     */
+    public unregisterNfts(...ids: [ChainObject]) {
+        ids.forEach((id) => this.registeredNfts.delete(id.objectId));
+    }
+
 }

@@ -1,19 +1,23 @@
+import { serialize } from "class-transformer";
+import * as _ from "lodash";
 import { Observable, of } from "rxjs";
 import { flatMap, map, tap } from "rxjs/operators";
 import { Credentials } from "../crypto/Credentials";
 import { DCoreApi } from "../DCoreApi";
-import { Fee, NftRef } from "../DCoreSdk";
+import { Fee, Newable, NftRef } from "../DCoreSdk";
 import { ChainObject } from "../models/ChainObject";
 import { Memo } from "../models/Memo";
 import { Nft } from "../models/Nft";
 import { NftData } from "../models/NftData";
 import { NftDataType } from "../models/NftDataType";
+import { NftDefinition } from "../models/NftModel";
 import { NftOptions } from "../models/NftOptions";
 import { NftCreateOperation } from "../models/operation/NftCreateOperation";
 import { NftIssueOperation } from "../models/operation/NftIssueOperation";
 import { NftTransferOperation } from "../models/operation/NftTransferOperation";
 import { NftUpdateDataOperation } from "../models/operation/NftUpdateDataOperation";
 import { NftUpdateOperation } from "../models/operation/NftUpdateOperation";
+import { RawNft } from "../models/RawNft";
 import { TransactionConfirmation } from "../models/TransactionConfirmation";
 import { GetNftBalances } from "../net/models/request/GetNftBalances";
 import { GetNftCount } from "../net/models/request/GetNftCount";
@@ -37,7 +41,7 @@ export class NftApi extends BaseApi {
      *
      * @param ids NFT object ids
      *
-     * @return NFT objects, or [ObjectNotFoundException] if none found
+     * @return NFT objects, or {@link ObjectNotFoundError} if none found
      */
     public getAll(ids: ChainObject[]): Observable<Nft[]> {
         return this.request(new GetNfts(ids));
@@ -48,7 +52,7 @@ export class NftApi extends BaseApi {
      *
      * @param symbols NFT symbols
      *
-     * @return NFT objects, or [ObjectNotFoundException] if none found
+     * @return NFT objects, or {@link ObjectNotFoundError} if none found
      */
     public getAllBySymbol(symbols: string[]): Observable<Nft[]> {
         return this.request(new GetNftsBySymbol(symbols));
@@ -59,7 +63,7 @@ export class NftApi extends BaseApi {
      *
      * @param nft NFT object id or symbol
      *
-     * @return NFT object, or [ObjectNotFoundException] if none found
+     * @return NFT object, or {@link ObjectNotFoundError} if none found
      */
     public get(nft: NftRef): Observable<Nft> {
         if (typeof nft === "string") {
@@ -74,10 +78,36 @@ export class NftApi extends BaseApi {
      *
      * @param ids NFT data object ids
      *
-     * @return NFT data objects, or [ObjectNotFoundException] if none found
+     * @return NFT data objects, or {@link ObjectNotFoundError} if none found
      */
-    public getAllDataRaw(ids: ChainObject[]): Observable<NftData[]> {
+    public getAllDataRaw(ids: ChainObject[]): Observable<Array<NftData<RawNft>>> {
         return this.request(new GetNftData(ids));
+    }
+
+    /**
+     * Get NFT data instances with registered model, use [DCoreApi.registerNft] to register nft model by object id,
+     * if the model is not registered, [RawNft] will be used
+     *
+     * @param ids NFT data object ids
+     *
+     * @return NFT data objects, or {@link ObjectNotFoundError} if none found
+     */
+    public getAllData<T>(ids: ChainObject[]): Observable<Array<NftData<T>>>;
+
+    /**
+     * Get NFT data instances with registered model, use [DCoreApi.registerNft] to register nft model by object id,
+     * if the model is not registered, [RawNft] will be used
+     *
+     * @param ids NFT data object ids
+     * @param model NFT data object model
+     *
+     * @return NFT data objects, or {@link ObjectNotFoundError} if none found
+     */
+    // tslint:disable-next-line:unified-signatures
+    public getAllData<T>(ids: ChainObject[], model: Newable<T>): Observable<Array<NftData<T>>>;
+
+    public getAllData<T>(ids: ChainObject[], model?: Newable<T>): Observable<Array<NftData<T>>> {
+        return this.getAllDataRaw(ids).pipe(map((list) => list.map((it) => this.make(it, model))));
     }
 
     /**
@@ -85,10 +115,35 @@ export class NftApi extends BaseApi {
      *
      * @param id NFT data object id
      *
-     * @return NFT data object, or [ObjectNotFoundException] if none found
+     * @return NFT data object, or {@link ObjectNotFoundError} if none found
      */
-    public getDataRaw(id: ChainObject): Observable<NftData> {
+    public getDataRaw(id: ChainObject): Observable<NftData<RawNft>> {
         return this.getAllDataRaw([id]).pipe(map((it) => it[0]));
+    }
+
+    /**
+     * Get NFT data instance with registered model, use [DCoreApi.registerNft] to register nft model by object id,
+     * if the model is not registered, [RawNft] will be used
+     *
+     * @param id NFT data object ids
+     *
+     * @return NFT data objects, or {@link ObjectNotFoundError} if none found
+     */
+    public getData<T>(id: ChainObject): Observable<NftData<T>>;
+
+    /**
+     * Get NFT data instances with parsed model
+     *
+     * @param id NFT data object ids
+     * @param model NFT data object model
+     *
+     * @return NFT data objects, or {@link ObjectNotFoundError} if none found
+     */
+    // tslint:disable-next-line:unified-signatures
+    public getData<T>(id: ChainObject, model: Newable<T>): Observable<NftData<T>>;
+
+    public getData<T>(id: ChainObject, model?: Newable<T>): Observable<NftData<T>> {
+        return this.getDataRaw(id).pipe(map((it) => this.make(it, model)));
     }
 
     /**
@@ -117,8 +172,35 @@ export class NftApi extends BaseApi {
      *
      * @return NFT data instances with raw model
      */
-    public getNftBalancesRaw(account: ChainObject, nftIds: ChainObject[] = []): Observable<NftData[]> {
+    public getNftBalancesRaw(account: ChainObject, nftIds: ChainObject[] = []): Observable<Array<NftData<RawNft>>> {
         return this.request(new GetNftBalances(account, nftIds));
+    }
+
+    /**
+     * Get NFT balances per account with registered model, use [DCoreApi.registerNfts] to register nft model by object id,
+     * if the model is not registered, [RawNft] will be used
+     *
+     * @param account account object id
+     * @param nftIds NFT object ids to filter, or empty list to fetch all
+     *
+     * @return NFT data instances
+     */
+    public getNftBalances<T>(account: ChainObject, nftIds?: ChainObject[]): Observable<Array<NftData<T>>>;
+
+    /**
+     * Get NFT balances per account with parsed model
+     *
+     * @param account account object id
+     * @param nftIds NFT object ids to filter, or empty list to fetch all
+     * @param model NFT data object model
+     *
+     * @return NFT data instances
+     */
+    // tslint:disable-next-line:unified-signatures
+    public getNftBalances<T>(account: ChainObject, nftIds?: ChainObject[], model?: Newable<T>): Observable<Array<NftData<T>>>;
+
+    public getNftBalances<T>(account: ChainObject, nftIds: ChainObject[] = [], model?: Newable<T>): Observable<Array<NftData<T>>> {
+        return this.getNftBalancesRaw(account, nftIds).pipe(map((list) => list.map((it) => this.make(it, model))));
     }
 
     /**
@@ -140,8 +222,33 @@ export class NftApi extends BaseApi {
      *
      * @return NFT data objects
      */
-    public listDataByNftRaw(nftId: ChainObject): Observable<NftData[]> {
+    public listDataByNftRaw(nftId: ChainObject): Observable<Array<NftData<RawNft>>> {
         return this.request(new ListNftData(nftId));
+    }
+
+    /**
+     * Get NFT data instances with registered model, use [DCoreApi.registerNfts] to register nft model by object id,
+     * if the model is not registered, [RawNft] will be used
+     *
+     * @param nftId NFT object id
+     *
+     * @return NFT data objects
+     */
+    public listDataByNft<T>(nftId: ChainObject): Observable<Array<NftData<T>>>;
+
+    /**
+     * Get NFT data instances with parsed model
+     *
+     * @param nftId NFT object id
+     * @param model NFT data object model
+     *
+     * @return NFT data objects
+     */
+    // tslint:disable-next-line:unified-signatures
+    public listDataByNft<T>(nftId: ChainObject, model: Newable<T>): Observable<Array<NftData<T>>>;
+
+    public listDataByNft<T>(nftId: ChainObject, model?: Newable<T>): Observable<Array<NftData<T>>> {
+        return this.listDataByNftRaw(nftId).pipe(map((list) => list.map((it) => this.make(it, model))));
     }
 
     /**
@@ -151,8 +258,10 @@ export class NftApi extends BaseApi {
      * @param options NFT options
      * @param definitions NFT model data definitions
      * @param transferable allow transfer of NFT data instances to other accounts
-     * @param fee [Fee] fee for the operation, by default the fee will be computed in DCT asset.
-     * When set to other then DCT, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough
+     * @param fee {@link AssetAmount} fee for the operation or asset id, if left undefined the fee will be computed in DCT asset.
+     * When set, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough
+     *
+     * @return nft create operation
      */
     public createNftCreateOperation(
         symbol: string,
@@ -174,8 +283,10 @@ export class NftApi extends BaseApi {
      * @param description text description
      * @param definitions NFT model data definitions
      * @param transferable allow transfer of NFT data instances to other accounts
-     * @param fee [Fee] fee for the operation, by default the fee will be computed in DCT asset.
-     * When set to other then DCT, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough
+     * @param fee {@link AssetAmount} fee for the operation or asset id, if left undefined the fee will be computed in DCT asset.
+     * When set, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough
+     *
+     * @return a transaction confirmation
      */
     public create(
         credentials: Credentials,
@@ -197,8 +308,10 @@ export class NftApi extends BaseApi {
      * Create NFT update operation. Fills model with actual values.
      *
      * @param nft NFT object id or symbol
-     * @param fee [Fee] fee for the operation, by default the fee will be computed in DCT asset.
-     * When set to other then DCT, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough
+     * @param fee {@link AssetAmount} fee for the operation or asset id, if left undefined the fee will be computed in DCT asset.
+     * When set, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough
+     *
+     * @return nft update operation
      */
     public createUpdateOperation(
         nft: NftRef,
@@ -215,8 +328,10 @@ export class NftApi extends BaseApi {
      * @param maxSupply update max supply
      * @param fixedMaxSupply update max supply is fixed
      * @param description update text description
-     * @param fee [Fee] fee for the operation, by default the fee will be computed in DCT asset.
-     * When set to other then DCT, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough
+     * @param fee {@link AssetAmount} fee for the operation or asset id, if left undefined the fee will be computed in DCT asset.
+     * When set, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough
+     *
+     * @return a transaction confirmation
      */
     public update(
         credentials: Credentials,
@@ -240,18 +355,20 @@ export class NftApi extends BaseApi {
      * @param to account object id receiving the NFT data instance
      * @param data data model with values
      * @param memo optional message
-     * @param fee [Fee] fee for the operation, by default the fee will be computed in DCT asset.
-     * When set to other then DCT, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough
+     * @param fee {@link AssetAmount} fee for the operation or asset id, if left undefined the fee will be computed in DCT asset.
+     * When set, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough
+     *
+     * @return nft issue operation
      */
-    public createIssueOperation(
+    public createIssueOperation<T extends NftDefinition>(
         issuer: ChainObject,
         nft: NftRef,
         to: ChainObject,
-        data: any[],
+        data: T,
         memo?: Memo,
         fee?: Fee,
     ): Observable<NftIssueOperation> {
-        return this.getId(nft).pipe(map((it) => new NftIssueOperation(issuer, it, to, data, memo, fee)));
+        return this.getId(nft).pipe(map((it) => new NftIssueOperation(issuer, it, to, data.values, memo, fee)));
     }
 
     /**
@@ -262,14 +379,16 @@ export class NftApi extends BaseApi {
      * @param to account object id receiving the NFT data instance
      * @param data data model with values
      * @param memo optional message
-     * @param fee [Fee] fee for the operation, by default the fee will be computed in DCT asset.
-     * When set to other then DCT, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough
+     * @param fee {@link AssetAmount} fee for the operation or asset id, if left undefined the fee will be computed in DCT asset.
+     * When set, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough
+     *
+     * @return a transaction confirmation
      */
-    public issue(
+    public issue<T extends NftDefinition>(
         credentials: Credentials,
         nft: NftRef,
         to: ChainObject,
-        data: any[],
+        data: T,
         memo?: Memo,
         fee?: Fee,
     ): Observable<TransactionConfirmation> {
@@ -285,8 +404,10 @@ export class NftApi extends BaseApi {
      * @param to receiver account object id
      * @param id NFT data instance object id
      * @param memo optional message
-     * @param fee [Fee] fee for the operation, by default the fee will be computed in DCT asset.
-     * When set to other then DCT, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough
+     * @param fee {@link AssetAmount} fee for the operation or asset id, if left undefined the fee will be computed in DCT asset.
+     * When set, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough
+     *
+     * @return nft transfer operation
      */
     public createTransferOperation(
         from: ChainObject,
@@ -305,8 +426,10 @@ export class NftApi extends BaseApi {
      * @param to receiver account object id
      * @param id NFT data instance object id
      * @param memo optional message
-     * @param fee [Fee] fee for the operation, by default the fee will be computed in DCT asset.
-     * When set to other then DCT, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough
+     * @param fee {@link AssetAmount} fee for the operation or asset id, if left undefined the fee will be computed in DCT asset.
+     * When set, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough
+     *
+     * @return a transaction confirmation
      */
     public transfer(
         credentials: Credentials,
@@ -325,10 +448,12 @@ export class NftApi extends BaseApi {
      *
      * @param modifier NFT data instance owner account object id, updatable values are set in [NftUpdateDataOperation.data] map
      * @param id NFT data instance object id
-     * @param fee [Fee] fee for the operation, by default the fee will be computed in DCT asset.
-     * When set to other then DCT, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough
+     * @param fee {@link AssetAmount} fee for the operation or asset id, if left undefined the fee will be computed in DCT asset.
+     * When set, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough
+     *
+     * @return nft update data operation
      */
-    public createUpdateDataOperation(
+    public createUpdateDataOperationRaw(
         modifier: ChainObject,
         id: ChainObject,
         fee?: Fee,
@@ -336,11 +461,30 @@ export class NftApi extends BaseApi {
         return this.getDataRaw(id).pipe(
             flatMap((nftData) => this.get(nftData.nftId).pipe(
                 map((nft) => {
-                    const update = nft.createUpdate(nftData.data);
+                    const update = NftDefinition.createUpdate(nft.definitions, nftData.data.values);
                     assertThrow(update.size > 0, () => "no values to update");
                     return new NftUpdateDataOperation(modifier, id, update, fee);
                 }))),
         );
+    }
+
+    /**
+     * Create NFT data instance update operation
+     *
+     * @param modifier NFT data instance owner account object id, updatable values are set in [NftUpdateDataOperation.data] map
+     * @param id NFT data instance object id
+     * @param data nft object model with data
+     * @param fee {@link AssetAmount} fee for the operation or asset id, if left undefined the fee will be computed in DCT asset.
+     * When set, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough
+     *
+     * @return nft update data operation
+     */
+    public createUpdateDataOperation<T extends NftDefinition>(
+        modifier: ChainObject,
+        data: NftData<T>,
+        fee?: Fee,
+    ): Observable<NftUpdateDataOperation> {
+        return of(new NftUpdateDataOperation(modifier, data.id, data.data.updates, fee));
     }
 
     /**
@@ -349,17 +493,40 @@ export class NftApi extends BaseApi {
      * @param credentials NFT data instance credentials
      * @param id NFT data instance object id
      * @param values map of field name to value which should be updated
-     * @param fee [Fee] fee for the operation, by default the fee will be computed in DCT asset.
-     * When set to other then DCT, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough
+     * @param fee {@link AssetAmount} fee for the operation or asset id, if left undefined the fee will be computed in DCT asset.
+     * When set, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough
+     *
+     * @return a transaction confirmation
      */
-    public updateData(
+    public updateDataRaw(
         credentials: Credentials,
         id: ChainObject,
         values: Map<string, any>,
         fee?: Fee,
     ): Observable<TransactionConfirmation> {
-        return this.createUpdateDataOperation(credentials.account, id, fee).pipe(
+        serialize({});
+        return this.createUpdateDataOperationRaw(credentials.account, id, fee).pipe(
             tap((it) => values.forEach((value, key) => it.data.set(key, value))),
+            flatMap((it) => this.api.broadcastApi.broadcastWithCallback(credentials.keyPair, [it])),
+        );
+    }
+
+    /**
+     * Update NFT data instance
+     *
+     * @param credentials NFT data instance credentials
+     * @param data nft data object with values to update
+     * @param fee {@link AssetAmount} fee for the operation or asset id, if left undefined the fee will be computed in DCT asset.
+     * When set, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough
+     *
+     * @return a transaction confirmation
+     */
+    public updateData<T extends NftDefinition>(
+        credentials: Credentials,
+        data: NftData<T>,
+        fee?: Fee,
+    ): Observable<TransactionConfirmation> {
+        return this.createUpdateDataOperation(credentials.account, data, fee).pipe(
             flatMap((it) => this.api.broadcastApi.broadcastWithCallback(credentials.keyPair, [it])),
         );
     }
@@ -370,5 +537,16 @@ export class NftApi extends BaseApi {
         } else {
             return of(nft);
         }
+    }
+
+    private make<T>(nftData: NftData<RawNft>, model?: Newable<T>): NftData<T> {
+        let data: T;
+        if (_.isNil(model)) {
+            const c = this.api.registeredNfts.get(nftData.nftId.objectId);
+            data = c ? Reflect.construct(c, nftData.data.values) : nftData.data;
+        } else {
+            data = Reflect.construct(model, nftData.data.values);
+        }
+        return new NftData(nftData.id, nftData.nftId, nftData.owner, data);
     }
 }
