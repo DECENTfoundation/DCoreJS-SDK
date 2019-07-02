@@ -151,7 +151,7 @@ describe("NFT API test suite for ops", () => {
 ] as Array<[string, DCoreApi]>).forEach(([name, sdk]) => {
     const api = sdk.nftApi;
 
-    describe.only(`NFT API test suite for ${name}`, () => {
+    describe(`NFT API test suite for ${name}`, () => {
         let spy: Spy;
 
         before(() => {
