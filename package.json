@@ -78,7 +78,7 @@
     "@types/lodash": "^4.14.123",
     "@types/long": "^4.0.0",
     "@types/secp256k1": "^3.5.0",
-    "base-x": "^3.0.5",
+    "base-x": "3.0.5",
     "big-integer": "^1.6.43",
     "bytebuffer": "^5.0.1",
     "class-transformer": "^0.1.10",
