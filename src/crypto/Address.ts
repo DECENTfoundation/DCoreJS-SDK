@@ -14,6 +14,15 @@ export class Address {
         return value === Address.NULL_ADDRESS ? undefined : new Address(this.decode(value), value);
     }
 
+    public static isValid(value: string): boolean {
+        try {
+           this.parse(value);
+           return true;
+        } catch (e) {
+            return false;
+        }
+    }
+
     private static PREFIX: string = "DCT";
 
     private static decode(address: string): Buffer {
