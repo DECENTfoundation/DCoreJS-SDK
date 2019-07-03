@@ -8,6 +8,6 @@ export class RequestJson {
 
     constructor(request: BaseRequest<any>, callId: number, callbackId?: number) {
         this.callId = callId;
-        this.params = [request.apiGroup.valueOf(), request.method, callbackId ? [callbackId].concat(request.params) : request.params];
+        this.params = [request.apiGroup, request.method, callbackId ? [callbackId].concat(request.params) : request.params];
     }
 }
