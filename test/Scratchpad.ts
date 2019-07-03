@@ -22,12 +22,13 @@ import { Authority } from "../src/models/Authority";
 import { ChainObject } from "../src/models/ChainObject";
 import { AddOrUpdateContentOperation } from "../src/models/operation";
 import { TransferOperation } from "../src/models/operation/TransferOperation";
-import { API_GROUP_NAMES, ApiGroup } from "../src/net/models/ApiGroup";
+import { ApiGroup } from "../src/net/models/ApiGroup";
 import { GetAccountById } from "../src/net/models/request/GetAccountById";
 import { GetAccountByName } from "../src/net/models/request/GetAccountByName";
 import { RpcService } from "../src/net/rpc/RpcService";
 import { RxWebSocket } from "../src/net/ws/RxWebSocket";
 import { Helpers } from "./Helpers";
+import { NftApple } from "./model/NftApple";
 import WebSocket = require("isomorphic-ws");
 
 chai.should();
@@ -357,7 +358,6 @@ class Scratchpad {
 
     @test "enum to string"() {
         console.log(ApiGroup.Broadcast.toString().toLowerCase());
-        console.log(API_GROUP_NAMES[ApiGroup.Broadcast]);
     }
 
     @test "long unsigned"() {
@@ -432,8 +432,20 @@ class Scratchpad {
     }
 
     @test "parse chain object"() {
-        ChainObject.parse("3.15.20").objectType.should.equal(ObjectType.Unknown);
         ChainObject.parse("1.9.20").objectType.should.equal(ObjectType.VestingBalance);
         ChainObject.parse("2.18.20").objectType.should.equal(ObjectType.MessagingObject);
+    }
+
+    @test.only() "constructors"() {
+        const vals: any[] = [1, "red", false];
+        const apple = Reflect.construct(NftApple, vals) as NftApple;
+        console.log(apple);
+        console.log(_.values(apple));
+        console.log(NftApple.DEFINITION);
+        console.log(apple.definition);
+    }
+
+    @test "address is valid"() {
+        Address.isValid("hello").should.be.false;
     }
 }

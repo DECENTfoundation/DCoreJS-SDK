@@ -11,6 +11,8 @@ export class ObjectType {
     public static OperationHistory = new ObjectType(1, 7);
     public static WithdrawPermission = new ObjectType(1, 8);
     public static VestingBalance = new ObjectType(1, 9);
+    public static Nft = new ObjectType(1, 10);
+    public static NftData = new ObjectType(1, 11);
 
     public static GlobalPropertyObject = new ObjectType(2, 0);
     public static DynamicGlobalPropertyObject = new ObjectType(2, 1);
@@ -45,6 +47,8 @@ export class ObjectType {
             ObjectType.OperationHistory,
             ObjectType.WithdrawPermission,
             ObjectType.VestingBalance,
+            ObjectType.Nft,
+            ObjectType.NftData,
         ], [
             ObjectType.GlobalPropertyObject,
             ObjectType.DynamicGlobalPropertyObject,

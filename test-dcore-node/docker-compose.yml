@@ -1,0 +1,43 @@
+version: "3.2"
+services:
+  dcore:
+    container_name: "dcore"
+    build: .
+    ports:
+      - "8090:8090"
+    expose:
+      - "8090"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8090"]
+      interval: 5s
+      timeout: 10s
+      retries: 10
+# used for debug
+#    entrypoint: ['/bin/sh', '-c', 'while true; do sleep 2; date; done']
+
+
+
+#version: "3.2"
+#services:
+#  DCore:
+#    container_name: "DCore"
+#    image: decentnetwork/dcore.ubuntu:latest
+##    pausing container for debug
+##    entrypoint: ['/bin/sh', '-c', 'while true; do sleep 2; date; done']
+#    ports:
+#      - "8090:8090"
+#      - "40000:40000"
+#    volumes:
+##      - './test-dcore-node/datadir:/root/.decent/data'
+##      - './test-dcore-node/genesis-local.json:/root/.decent/genesis.json'
+#      - type: bind
+#        source: ./test-dcore-node/datadir
+#        target: /root/.decent/data
+#      - type: bind
+#        source: ./test-dcore-node/genesis-local.json
+#        target: /root/.decent/genesis.json
+#    expose:
+#      - "8090"
+#    environment:
+#      - DCORE_EXTRA_ARGS="--genesis-json /root/.decent/genesis.json"
+#

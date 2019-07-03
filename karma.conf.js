@@ -14,15 +14,29 @@ module.exports = function (config) {
             }
         },
         files: [
-            "test/**/*test.ts",
-            "test/Helpers.ts",
+            "test/**/*.ts",
             "src/**/*.ts"
+        ],
+        exclude: [
+            "test/Scratchpad.ts"
         ],
         frameworks: ["mocha", "karma-typescript"],
         preprocessors: {
             "**/*.ts": "karma-typescript"
         },
         reporters: ["mocha", "karma-typescript"],
+        karmaTypescriptConfig: {
+            reports:
+            {
+                "lcovonly": {
+                    "directory": "coverage",    // optional, defaults to 'coverage'
+                    "subdirectory": "lcov", // optional, defaults to the name of the browser running the tests
+                    "filename": "lcov.info", // optional, defaults to the report name
+                },
+                "html": "coverage",
+                "text-summary": ""
+            }
+        },
         singleRun: true
     });
 };

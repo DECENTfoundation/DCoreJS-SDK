@@ -11,13 +11,16 @@ import { GeneralApi } from "./api/GeneralApi";
 import { HistoryApi } from "./api/HistoryApi";
 import { MessageApi } from "./api/MessageApi";
 import { MiningApi } from "./api/MiningApi";
+import { NftApi } from "./api/NftApi";
 import { PurchaseApi } from "./api/PurchaseApi";
 import { SeedersApi } from "./api/SeedersApi";
 import { SubscriptionApi } from "./api/SubscriptionApi";
 import { TransactionApi } from "./api/TransactionApi";
 import { ValidationApi } from "./api/ValidationApi";
 import { DCoreConstants } from "./DCoreConstants";
-import { DCoreSdk } from "./DCoreSdk";
+import { DCoreSdk, Newable } from "./DCoreSdk";
+import { ChainObject } from "./models/ChainObject";
+import { NftDefinition } from "./models/NftModel";
 import { BaseRequest } from "./net/models/request/BaseRequest";
 import { WithCallback } from "./net/models/request/WithCallback";
 
@@ -25,22 +28,25 @@ export class DCoreApi {
 
     public transactionExpiration: Duration = DCoreConstants.EXPIRATION_DEFAULT;
 
-    public accountApi: AccountApi = new AccountApi(this);
-    public assetApi: AssetApi = new AssetApi(this);
-    public balanceApi: BalanceApi = new BalanceApi(this);
-    public blockApi: BlockApi = new BlockApi(this);
-    public broadcastApi: BroadcastApi = new BroadcastApi(this);
-    public callbackApi: CallbackApi = new CallbackApi(this);
-    public contentApi: ContentApi = new ContentApi(this);
-    public generalApi: GeneralApi = new GeneralApi(this);
-    public historyApi: HistoryApi = new HistoryApi(this);
-    public messageApi: MessageApi = new MessageApi(this);
-    public miningApi: MiningApi = new MiningApi(this);
-    public purchaseApi: PurchaseApi = new PurchaseApi(this);
-    public seedersApi: SeedersApi = new SeedersApi(this);
-    public subscriptionApi: SubscriptionApi = new SubscriptionApi(this);
-    public transactionApi: TransactionApi = new TransactionApi(this, this.core);
-    public validationApi: ValidationApi = new ValidationApi(this);
+    public registeredNfts: Map<string, Newable<any>> = new Map<string, Newable<any>>();
+
+    public readonly accountApi: AccountApi = new AccountApi(this);
+    public readonly assetApi: AssetApi = new AssetApi(this);
+    public readonly balanceApi: BalanceApi = new BalanceApi(this);
+    public readonly blockApi: BlockApi = new BlockApi(this);
+    public readonly broadcastApi: BroadcastApi = new BroadcastApi(this);
+    public readonly callbackApi: CallbackApi = new CallbackApi(this);
+    public readonly contentApi: ContentApi = new ContentApi(this);
+    public readonly generalApi: GeneralApi = new GeneralApi(this);
+    public readonly historyApi: HistoryApi = new HistoryApi(this);
+    public readonly messageApi: MessageApi = new MessageApi(this);
+    public readonly miningApi: MiningApi = new MiningApi(this);
+    public readonly purchaseApi: PurchaseApi = new PurchaseApi(this);
+    public readonly seedersApi: SeedersApi = new SeedersApi(this);
+    public readonly subscriptionApi: SubscriptionApi = new SubscriptionApi(this);
+    public readonly transactionApi: TransactionApi = new TransactionApi(this, this.core);
+    public readonly validationApi: ValidationApi = new ValidationApi(this);
+    public readonly nftApi: NftApi = new NftApi(this);
 
     constructor(private core: DCoreSdk) {
     }
@@ -60,4 +66,23 @@ export class DCoreApi {
     public set timeout(millis: number) {
         this.core.timeout = millis;
     }
+
+    /**
+     * Register NFT data model with object id, if no model is provided the [RawNft] will be used
+     *
+     * @param idToClass id to class pairs
+     */
+    public registerNfts<T extends NftDefinition>(...idToClass: Array<[ChainObject, Newable<T>]>) {
+        idToClass.forEach(([id, c]) => this.registeredNfts.set(id.objectId, c));
+    }
+
+    /**
+     * Remove registered NFT data model
+     *
+     * @param ids nft ids to remove
+     */
+    public unregisterNfts(...ids: [ChainObject]) {
+        ids.forEach((id) => this.registeredNfts.delete(id.objectId));
+    }
+
 }

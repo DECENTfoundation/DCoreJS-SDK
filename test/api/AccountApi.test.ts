@@ -9,14 +9,52 @@ import { Spy } from "rxjs-spy/spy-interface";
 import { flatMap } from "rxjs/operators";
 import { DCoreApi } from "../../src/DCoreApi";
 import { DCoreSdk } from "../../src/DCoreSdk";
-import { AccountStatistics, ChainObject, FullAccount } from "../../src/models";
+import { AccountStatistics, Authority, ChainObject, FullAccount } from "../../src/models";
 import { Account } from "../../src/models/Account";
 import { AssetAmount } from "../../src/models/AssetAmount";
 import { TransferOperation } from "../../src/models/operation/TransferOperation";
-import { Helpers } from "../Helpers";
+import { Helpers, testCheck } from "../Helpers";
 
 chai.should();
 chai.use(chaiThings);
+
+describe("account API test suite for ops", () => {
+
+    let api: DCoreApi;
+    let spy: Spy;
+
+    before(() => {
+        spy = create();
+        // spy.log(/^API\w+/);
+        api = DCoreSdk.createForWebSocket(() => new WebSocket(Helpers.STAGE_WS));
+    });
+
+    after(() => {
+        api.disconnect();
+        spy.teardown();
+    });
+
+    it("should create account", (done: (arg?: any) => void) => {
+        testCheck(done, api.accountApi.create(Helpers.CREDENTIALS, Helpers.createAccount, Helpers.PUBLIC));
+    });
+
+    it("should make a transfer to new account", (done: (arg?: any) => void) => {
+        testCheck(done, api.accountApi.transfer(Helpers.CREDENTIALS, Helpers.createAccount, new AssetAmount(10000000)));
+    });
+
+    it("should update credentials on a new account", (done: (arg?: any) => void) => {
+        testCheck(done, api.accountApi.createCredentials(Helpers.createAccount, Helpers.PRIVATE).pipe(
+            flatMap((c) => api.accountApi.update(c, undefined, () => new Authority(Helpers.PUBLIC2))),
+        ));
+    });
+
+    it("should make a vote on a new account", (done: (arg?: any) => void) => {
+        testCheck(done, api.accountApi.createCredentials(Helpers.createAccount, Helpers.PRIVATE2).pipe(
+            flatMap((c) => api.miningApi.vote(c, [ChainObject.parse("1.4.4")])),
+        ));
+    });
+
+});
 
 ([
     ["RPC", DCoreSdk.createForHttp({ baseUrl: Helpers.STAGE_HTTPS, timeout: 15000, rejectUnauthorized: false })],
@@ -25,10 +63,6 @@ chai.use(chaiThings);
     const api = sdk.accountApi;
 
     describe(`account API test suite for ${name}`, () => {
-        after(() => {
-            // wtf.dump();
-        });
-
         let spy: Spy;
 
         before(() => {
@@ -97,7 +131,7 @@ chai.use(chaiThings);
         });
 
         it("should return account statistics by id", (done: (arg?: any) => void) => {
-            api.getStatistics([ChainObject.parse("2.5.35")])
+            api.getStatistics([ChainObject.parse("2.5.12")])
                 .subscribe((values) => values.should.include.one.instanceOf(AccountStatistics), (error) => done(error), () => done());
         });
 

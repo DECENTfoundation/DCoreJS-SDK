@@ -40,5 +40,10 @@ export enum OperationType {
     ReadyToPublishTwo,
     Transfer2,
     UpdateUserIssuedAssetAdvanced = 40,
+    NftCreateDefinition,
+    NftUpdateDefinition,
+    NftIssue,
+    NftTransfer,
+    NftUpdateData = 45,
     Unknown,
 }

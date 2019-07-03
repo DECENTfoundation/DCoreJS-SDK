@@ -2,6 +2,7 @@ import { Observable, of } from "rxjs";
 import { flatMap } from "rxjs/operators";
 import { Credentials } from "../crypto/Credentials";
 import { DCoreApi } from "../DCoreApi";
+import { Fee } from "../DCoreSdk";
 import { ChainObject } from "../models/ChainObject";
 import { ObjectType } from "../models/ObjectType";
 import { LeaveRatingAndCommentOperation } from "../models/operation/LeaveRatingAndCommentOperation";
@@ -139,7 +140,7 @@ export class PurchaseApi extends BaseApi {
      * @param consumer object id of the account, 1.2.*
      * @param rating 1-5 stars
      * @param comment max 100 chars
-     * @param feeAssetId fee asset id for the operation, if left undefined the fee will be computed in DCT asset.
+     * @param fee {@link AssetAmount} fee for the operation or asset id, if left undefined the fee will be computed in DCT asset.
      * When set, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough
      *
      * @return a rate and comment content operation
@@ -149,9 +150,9 @@ export class PurchaseApi extends BaseApi {
         consumer: ChainObject,
         rating: 1 | 2 | 3 | 4 | 5,
         comment: string,
-        feeAssetId?: ChainObject,
+        fee?: Fee,
     ): Observable<LeaveRatingAndCommentOperation> {
-        return of(new LeaveRatingAndCommentOperation(uri, consumer, rating, comment, feeAssetId));
+        return of(new LeaveRatingAndCommentOperation(uri, consumer, rating, comment, fee));
     }
 
     /**
@@ -161,7 +162,7 @@ export class PurchaseApi extends BaseApi {
      * @param uri a uri of the content
      * @param rating 1-5 stars
      * @param comment max 100 chars
-     * @param feeAssetId fee asset id for the operation, if left undefined the fee will be computed in DCT asset.
+     * @param fee {@link AssetAmount} fee for the operation or asset id, if left undefined the fee will be computed in DCT asset.
      * When set, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough
      *
      * @return a rate and comment content operation
@@ -171,9 +172,9 @@ export class PurchaseApi extends BaseApi {
         uri: string,
         rating: 1 | 2 | 3 | 4 | 5,
         comment: string,
-        feeAssetId?: ChainObject,
+        fee?: Fee,
     ): Observable<TransactionConfirmation> {
-        return this.createRateAndCommentOperation(uri, credentials.account, rating, comment, feeAssetId).pipe(
+        return this.createRateAndCommentOperation(uri, credentials.account, rating, comment, fee).pipe(
             flatMap((op) => this.api.broadcastApi.broadcastWithCallback(credentials.keyPair, [op])),
         );
     }

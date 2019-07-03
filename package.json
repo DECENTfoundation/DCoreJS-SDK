@@ -34,8 +34,11 @@
     "lint": "sh ./scripts/lint.sh",
     "test:node": "sh ./scripts/test:node.sh",
     "test:browser": "sh ./scripts/test:browser.sh",
+    "coverage": "cat ./coverage/lcov/lcov.info | codacy-coverage",
     "test": "npm run test:node && npm run test:browser",
-    "doc": "typedoc --out docs ./src"
+    "doc": "typedoc --out docs ./src",
+    "compose:down": "docker-compose -f ./test-dcore-node/docker-compose.yml down",
+    "compose:up": "npm run compose:down && docker-compose -f ./test-dcore-node/docker-compose.yml up -d --build"
   },
   "devDependencies": {
     "@types/chai": "^4.1.7",
@@ -46,6 +49,7 @@
     "@types/wtfnode": "^0.5.0",
     "chai": "^4.2.0",
     "chai-things": "^0.2.0",
+    "codacy-coverage": "^3.4.0",
     "create-ts-index": "^1.7.2",
     "isomorphic-ws": "^4.0.1",
     "karma": "^4.0.1",
@@ -74,7 +78,7 @@
     "@types/lodash": "^4.14.123",
     "@types/long": "^4.0.0",
     "@types/secp256k1": "^3.5.0",
-    "base-x": "^3.0.5",
+    "base-x": "3.0.5",
     "big-integer": "^1.6.43",
     "bytebuffer": "^5.0.1",
     "class-transformer": "^0.1.10",

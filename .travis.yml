@@ -1,9 +1,39 @@
 # Trigger travis
 language: node_js
+install: true
+sudo: required
+services: docker
+
+env:
+  - DOCKER_COMPOSE_VERSION=1.23.2
+
+before_install:
+  - sudo rm /usr/local/bin/docker-compose
+  - curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > docker-compose
+  - chmod +x docker-compose
+  - sudo mv docker-compose /usr/local/bin
 node_js:
   - "node"
+before_script:
+  - npm i
+  # - ls -al
+  # - sudo chown -R 1000 test-dcore-node
+  # - ls -al
+#  - cd ./test-dcore-node
+#  - ls -al
+#  - cd ./datadir
+#  - ls -al
+#  - id travis
+  # - docker-compose up -d
+#  - docker-compose ps
+#  - docker-compose exec DCore ls -al
+#  - docker-compose exec DCore bash -c "cd ./.decent"
+#  - docker-compose exec DCore ls -al
+#  - docker-compose exec DCore id dcore
+
 script:
   - npm test
+  - npm run coverage
 deploy:
   - provider: pages
     skip_cleanup: true
