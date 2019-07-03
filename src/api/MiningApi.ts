@@ -3,7 +3,7 @@ import { Observable } from "rxjs";
 import { flatMap, map } from "rxjs/operators";
 import { Credentials } from "../crypto/Credentials";
 import { DCoreApi } from "../DCoreApi";
-import { AccountRef } from "../DCoreSdk";
+import { AccountRef, Fee } from "../DCoreSdk";
 import { ChainObject } from "../models/ChainObject";
 import { Miner } from "../models/Miner";
 import { MinerId } from "../models/MinerId";
@@ -70,7 +70,7 @@ export class MiningApi extends BaseApi {
      *
      * @param account the account object id, 1.2.*, whose miner should be retrieved
      *
-     * @return the miner object, or [ObjectNotFoundException] if the account does not have a miner
+     * @return the miner object, or {@link ObjectNotFoundError} if the account does not have a miner
      */
     public getMinerByAccount(account: ChainObject): Observable<Miner> {
         return this.request(new GetMinerByAccount(account));
@@ -170,7 +170,7 @@ export class MiningApi extends BaseApi {
      *
      * @param account account name or object id, 1.2.*
      * @param minerIds list of miner account ids
-     * @param feeAssetId fee asset id for the operation, if left undefined the fee will be computed in DCT asset.
+     * @param fee {@link AssetAmount} fee for the operation or asset id, if left undefined the fee will be computed in DCT asset.
      * When set, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough
      *
      * @return a create vote operation
@@ -178,11 +178,11 @@ export class MiningApi extends BaseApi {
     public createVoteOperation(
         account: AccountRef,
         minerIds: ChainObject[],
-        feeAssetId?: ChainObject,
+        fee?: Fee,
     ): Observable<AccountUpdateOperation> {
         return this.getMiners(minerIds).pipe(
             flatMap((miners) => this.api.accountApi.get(account)
-                .pipe(map((acc) => AccountUpdateOperation.create(acc, miners.map((m) => m.voteId), feeAssetId))),
+                .pipe(map((acc) => AccountUpdateOperation.create(acc, miners.map((m) => m.voteId), fee))),
             ),
         );
     }
@@ -192,7 +192,7 @@ export class MiningApi extends BaseApi {
      *
      * @param credentials account credentials
      * @param minerIds list of miner account ids
-     * @param feeAssetId fee asset id for the operation, if left undefined the fee will be computed in DCT asset.
+     * @param fee {@link AssetAmount} fee for the operation or asset id, if left undefined the fee will be computed in DCT asset.
      * When set, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough
      *
      * @return a transaction confirmation
@@ -200,9 +200,9 @@ export class MiningApi extends BaseApi {
     public vote(
         credentials: Credentials,
         minerIds: ChainObject[],
-        feeAssetId?: ChainObject,
+        fee?: Fee,
     ): Observable<TransactionConfirmation> {
-        return this.createVoteOperation(credentials.account, minerIds, feeAssetId).pipe(
+        return this.createVoteOperation(credentials.account, minerIds, fee).pipe(
             flatMap((operation) => this.api.broadcastApi.broadcastWithCallback(credentials.keyPair, [operation])),
         );
     }

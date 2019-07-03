@@ -13,6 +13,10 @@ import { ExchangeRate } from "../../models/ExchangeRate";
 import { KeyPart } from "../../models/KeyPart";
 import { Memo } from "../../models/Memo";
 import { MonitoredAssetOpts } from "../../models/MonitoredAssetOpts";
+import { NftDataType } from "../../models/NftDataType";
+import { NFT_FIELD_IDX } from "../../models/NftFieldType";
+import { NFT_MOD_BY_IDX } from "../../models/NftModifiableBy";
+import { NftOptions } from "../../models/NftOptions";
 import { AccountCreateOperation } from "../../models/operation/AccountCreateOperation";
 import { AccountUpdateOperation } from "../../models/operation/AccountUpdateOperation";
 import { AddOrUpdateContentOperation } from "../../models/operation/AddOrUpdateContentOperation";
@@ -25,6 +29,11 @@ import { AssetUpdateAdvancedOperation } from "../../models/operation/AssetUpdate
 import { AssetUpdateOperation } from "../../models/operation/AssetUpdateOperation";
 import { CustomOperation } from "../../models/operation/CustomOperation";
 import { LeaveRatingAndCommentOperation } from "../../models/operation/LeaveRatingAndCommentOperation";
+import { NftCreateOperation } from "../../models/operation/NftCreateOperation";
+import { NftIssueOperation } from "../../models/operation/NftIssueOperation";
+import { NftTransferOperation } from "../../models/operation/NftTransferOperation";
+import { NftUpdateDataOperation } from "../../models/operation/NftUpdateDataOperation";
+import { NftUpdateOperation } from "../../models/operation/NftUpdateOperation";
 import { PurchaseContentOperation } from "../../models/operation/PurchaseContentOperation";
 import { RemoveContentOperation } from "../../models/operation/RemoveContentOperation";
 import { SendMessageOperation } from "../../models/operation/SendMessageOperation";
@@ -36,6 +45,7 @@ import { Publishing } from "../../models/Publishing";
 import { RegionalPrice } from "../../models/RegionalPrice";
 import { Transaction } from "../../models/Transaction";
 import { VoteId } from "../../models/VoteId";
+import { VariantTypeId } from "./VariantTypeId";
 
 type Adapter<T> = (buffer: ByteBuffer, obj: T) => void;
 
@@ -81,6 +91,13 @@ export class Serializer {
         this.adapters.set(AssetFundPoolsOperation.name, this.assetFundAdapter);
         this.adapters.set(AssetReserveOperation.name, this.assetReserveAdapter);
         this.adapters.set(AssetClaimFeesOperation.name, this.assetClaimAdapter);
+        this.adapters.set(NftOptions.name, this.nftOptionsAdapter);
+        this.adapters.set(NftDataType.name, this.nftDataAdapter);
+        this.adapters.set(NftCreateOperation.name, this.nftCreateAdapter);
+        this.adapters.set(NftUpdateOperation.name, this.nftUpdateAdapter);
+        this.adapters.set(NftIssueOperation.name, this.nftIssueAdapter);
+        this.adapters.set(NftTransferOperation.name, this.nftTransferAdapter);
+        this.adapters.set(NftUpdateDataOperation.name, this.nftUpdateDataAdapter);
     }
 
     public serialize(obj: any): Buffer {
@@ -407,5 +424,93 @@ export class Serializer {
         this.append(buffer, obj.uia);
         this.append(buffer, obj.dct);
         this.append(buffer, obj.extensions);
+    }
+
+    private nftOptionsAdapter = (buffer: ByteBuffer, obj: NftOptions) => {
+        this.append(buffer, obj.issuer);
+        buffer.writeInt(obj.maxSupply);
+        this.append(buffer, obj.fixedMaxSupply);
+        this.append(buffer, obj.description);
+    }
+
+    private nftDataAdapter = (buffer: ByteBuffer, obj: NftDataType) => {
+        this.append(buffer, obj.unique);
+        buffer.writeLong(NFT_MOD_BY_IDX.get(obj.modifiable)!);
+        buffer.writeLong(NFT_FIELD_IDX.get(obj.type)!);
+        this.appendOptional(buffer, obj.name);
+    }
+
+    private nftCreateAdapter = (buffer: ByteBuffer, obj: NftCreateOperation) => {
+        buffer.writeByte(obj.type);
+        this.append(buffer, obj.fee);
+        this.append(buffer, obj.symbol);
+        this.append(buffer, obj.options);
+        this.append(buffer, obj.definitions);
+        this.append(buffer, obj.transferable);
+        buffer.writeByte(0);
+    }
+
+    private nftUpdateAdapter = (buffer: ByteBuffer, obj: NftUpdateOperation) => {
+        buffer.writeByte(obj.type);
+        this.append(buffer, obj.fee);
+        this.append(buffer, obj.issuer);
+        this.append(buffer, obj.id);
+        this.append(buffer, obj.options);
+        buffer.writeByte(0);
+    }
+
+    private variantTypeAdapter = (buffer: ByteBuffer, obj: any) => {
+        if (typeof obj === "string") {
+            buffer.writeByte(VariantTypeId.StringType);
+            this.append(buffer, obj);
+        } else if (_.isNumber(obj)) {
+            if (obj >= 0) {
+                buffer.writeByte(VariantTypeId.Uint64Type);
+                buffer.writeUint64(obj);
+            } else {
+                buffer.writeByte(VariantTypeId.Int64Type);
+                buffer.writeInt64(obj);
+            }
+        } else if (_.isBoolean(obj)) {
+            buffer.writeByte(VariantTypeId.BoolType);
+            this.append(buffer, obj);
+        } else {
+            TypeError(`value not allowed ${typeof obj}`);
+        }
+    }
+
+    private nftIssueAdapter = (buffer: ByteBuffer, obj: NftIssueOperation) => {
+        buffer.writeByte(obj.type);
+        this.append(buffer, obj.fee);
+        this.append(buffer, obj.issuer);
+        this.append(buffer, obj.to);
+        this.append(buffer, obj.id);
+        buffer.writeVarint64(obj.data.length);
+        obj.data.forEach((it) => this.variantTypeAdapter(buffer, it));
+        this.appendOptional(buffer, obj.memo);
+        buffer.writeByte(0);
+    }
+
+    private nftTransferAdapter = (buffer: ByteBuffer, obj: NftTransferOperation) => {
+        buffer.writeByte(obj.type);
+        this.append(buffer, obj.fee);
+        this.append(buffer, obj.from);
+        this.append(buffer, obj.to);
+        this.append(buffer, obj.id);
+        this.appendOptional(buffer, obj.memo);
+        buffer.writeByte(0);
+    }
+
+    private nftUpdateDataAdapter = (buffer: ByteBuffer, obj: NftUpdateDataOperation) => {
+        buffer.writeByte(obj.type);
+        this.append(buffer, obj.fee);
+        this.append(buffer, obj.modifier);
+        this.append(buffer, obj.id);
+        buffer.writeVarint64(obj.data.size);
+        obj.data.forEach((value, key) => {
+            this.append(buffer, key);
+            this.variantTypeAdapter(buffer, value);
+        });
+        buffer.writeByte(0);
     }
 }

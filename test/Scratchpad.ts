@@ -28,6 +28,7 @@ import { GetAccountByName } from "../src/net/models/request/GetAccountByName";
 import { RpcService } from "../src/net/rpc/RpcService";
 import { RxWebSocket } from "../src/net/ws/RxWebSocket";
 import { Helpers } from "./Helpers";
+import { NftApple } from "./model/NftApple";
 import WebSocket = require("isomorphic-ws");
 
 chai.should();
@@ -433,6 +434,15 @@ class Scratchpad {
     @test "parse chain object"() {
         ChainObject.parse("1.9.20").objectType.should.equal(ObjectType.VestingBalance);
         ChainObject.parse("2.18.20").objectType.should.equal(ObjectType.MessagingObject);
+    }
+
+    @test.only() "constructors"() {
+        const vals: any[] = [1, "red", false];
+        const apple = Reflect.construct(NftApple, vals) as NftApple;
+        console.log(apple);
+        console.log(_.values(apple));
+        console.log(NftApple.DEFINITION);
+        console.log(apple.definition);
     }
 
     @test "address is valid"() {

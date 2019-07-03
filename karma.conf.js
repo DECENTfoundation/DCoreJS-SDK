@@ -14,9 +14,11 @@ module.exports = function (config) {
             }
         },
         files: [
-            "test/**/*test.ts",
-            "test/Helpers.ts",
+            "test/**/*.ts",
             "src/**/*.ts"
+        ],
+        exclude: [
+            "test/Scratchpad.ts"
         ],
         frameworks: ["mocha", "karma-typescript"],
         preprocessors: {

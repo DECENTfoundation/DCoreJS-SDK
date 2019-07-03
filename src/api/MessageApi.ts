@@ -4,6 +4,7 @@ import { Observable, of, zip } from "rxjs";
 import { flatMap, map } from "rxjs/operators";
 import { Credentials } from "../crypto/Credentials";
 import { DCoreApi } from "../DCoreApi";
+import { Fee } from "../DCoreSdk";
 import { ChainObject } from "../models/ChainObject";
 import { Memo } from "../models/Memo";
 import { Message } from "../models/Message";
@@ -100,7 +101,7 @@ export class MessageApi extends BaseApi {
      *
      * @param credentials sender account credentials
      * @param messages a list of pairs of receiver account id and message
-     * @param feeAssetId fee asset id for the operation, if left undefined the fee will be computed in DCT asset.
+     * @param fee {@link AssetAmount} fee for the operation or asset id, if left undefined the fee will be computed in DCT asset.
      * When set, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough
      *
      * @return send message operation
@@ -108,7 +109,7 @@ export class MessageApi extends BaseApi {
     public createMessageOperation(
         credentials: Credentials,
         messages: Array<[ChainObject, string]>,
-        feeAssetId?: ChainObject,
+        fee?: Fee,
     ): Observable<SendMessageOperation> {
         return zip(
             this.api.accountApi.get(credentials.account),
@@ -120,7 +121,7 @@ export class MessageApi extends BaseApi {
                     return new MessagePayloadReceiver(r.id, memo.message, memo.to, memo.nonce);
                 });
                 const data = new MessagePayload(sender.id, payloadRecipients, sender.options.memoKey);
-                return new SendMessageOperation(serialize(data), credentials.account, undefined, feeAssetId);
+                return new SendMessageOperation(serialize(data), credentials.account, undefined, fee);
             }),
         );
     }
@@ -130,7 +131,7 @@ export class MessageApi extends BaseApi {
      *
      * @param credentials sender account credentials
      * @param messages a list of pairs of receiver account id and message
-     * @param feeAssetId fee asset id for the operation, if left undefined the fee will be computed in DCT asset.
+     * @param fee {@link AssetAmount} fee for the operation or asset id, if left undefined the fee will be computed in DCT asset.
      * When set, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough
      *
      * @return send message operation
@@ -138,9 +139,9 @@ export class MessageApi extends BaseApi {
     public createMessageOperationUnencrypted(
         credentials: Credentials,
         messages: Array<[ChainObject, string]>,
-        feeAssetId?: ChainObject,
+        fee?: Fee,
     ): Observable<SendMessageOperation> {
-        return of(new SendMessageOperation(serialize(MessagePayload.createUnencrypted(credentials.account, messages)), credentials.account, undefined, feeAssetId));
+        return of(new SendMessageOperation(serialize(MessagePayload.createUnencrypted(credentials.account, messages)), credentials.account, undefined, fee));
     }
 
     /**
@@ -148,7 +149,7 @@ export class MessageApi extends BaseApi {
      *
      * @param credentials sender account credentials
      * @param messages a list of pairs of receiver account id and message
-     * @param feeAssetId fee asset id for the operation, if left undefined the fee will be computed in DCT asset.
+     * @param fee {@link AssetAmount} fee for the operation or asset id, if left undefined the fee will be computed in DCT asset.
      * When set, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough
      *
      * @return a transaction confirmation
@@ -156,9 +157,9 @@ export class MessageApi extends BaseApi {
     public send(
         credentials: Credentials,
         messages: Array<[ChainObject, string]>,
-        feeAssetId?: ChainObject,
+        fee?: Fee,
     ): Observable<TransactionConfirmation> {
-        return this.createMessageOperation(credentials, messages, feeAssetId).pipe(
+        return this.createMessageOperation(credentials, messages, fee).pipe(
             flatMap((operation) => this.api.broadcastApi.broadcastWithCallback(credentials.keyPair, [operation])),
         );
     }
@@ -168,7 +169,7 @@ export class MessageApi extends BaseApi {
      *
      * @param credentials sender account credentials
      * @param messages a list of pairs of receiver account id and message
-     * @param feeAssetId fee asset id for the operation, if left undefined the fee will be computed in DCT asset.
+     * @param fee {@link AssetAmount} fee for the operation or asset id, if left undefined the fee will be computed in DCT asset.
      * When set, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough
      *
      * @return a transaction confirmation
@@ -176,9 +177,9 @@ export class MessageApi extends BaseApi {
     public sendUnencrypted(
         credentials: Credentials,
         messages: Array<[ChainObject, string]>,
-        feeAssetId?: ChainObject,
+        fee?: Fee,
     ): Observable<TransactionConfirmation> {
-        return this.createMessageOperationUnencrypted(credentials, messages, feeAssetId).pipe(
+        return this.createMessageOperationUnencrypted(credentials, messages, fee).pipe(
             flatMap((operation) => this.api.broadcastApi.broadcastWithCallback(credentials.keyPair, [operation])),
         );
     }
