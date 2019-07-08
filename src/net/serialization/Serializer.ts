@@ -1,4 +1,5 @@
 import * as ByteBuffer from "bytebuffer";
+import { ClassTransformer } from "class-transformer";
 import * as _ from "lodash";
 import * as Long from "long";
 import { Moment } from "moment";
@@ -50,6 +51,8 @@ import { VariantTypeId } from "./VariantTypeId";
 type Adapter<T> = (buffer: ByteBuffer, obj: T) => void;
 
 export class Serializer {
+
+    public classTransformer: ClassTransformer = new ClassTransformer();
 
     private adapters: Map<string, Adapter<any>> = new Map();
 
