@@ -19,7 +19,7 @@ import { NftNotApple } from "../model/NftNotApple";
 chai.should();
 chai.use(chaiThings);
 
-describe("NFT API test suite for ops", () => {
+describe.skip("NFT API test suite for ops", () => {
 
     let api: DCoreApi;
     let spy: Spy;
@@ -151,7 +151,7 @@ describe("NFT API test suite for ops", () => {
 ] as Array<[string, DCoreApi]>).forEach(([name, sdk]) => {
     const api = sdk.nftApi;
 
-    describe(`NFT API test suite for ${name}`, () => {
+    describe.skip(`NFT API test suite for ${name}`, () => {
         let spy: Spy;
 
         before(() => {
@@ -235,7 +235,7 @@ describe("NFT API test suite for ops", () => {
 
         it("should get NFT data by id for registered model", (done: (arg?: any) => void) => {
             sdk.registerNfts([ChainObject.parse("1.10.0"), NftApple]);
-            testCheckWith(api.getData(ChainObject.parse("1.11.0")), {
+            testCheckWith(api.getData<NftApple>(ChainObject.parse("1.11.0")), {
                 next: (value) => {
                     value.data.should.be.instanceOf(NftApple);
                     done();
