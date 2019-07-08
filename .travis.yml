@@ -32,8 +32,7 @@ before_script:
 #  - docker-compose exec DCore id dcore
 
 script:
-  - npm test
-  - npm run coverage
+  - npm test && npm run coverage
 deploy:
   - provider: pages
     skip_cleanup: true
