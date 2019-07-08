@@ -3,3 +3,4 @@
 export * from "./Definitions";
 export * from "./ObjectCheckOf";
 export * from "./Utils";
+export * from "./Serializer";
