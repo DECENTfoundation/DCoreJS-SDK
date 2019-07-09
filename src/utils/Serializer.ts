@@ -52,6 +52,11 @@ type Adapter<T> = (buffer: ByteBuffer, obj: T) => void;
 
 export class Serializer {
 
+    /**
+     * Class-transformer allows you to transform plain object to some instance of class and versa.
+     * Also it allows to serialize / deserialize object based on criteria.
+     * See {@link https://github.com/typestack/class-transformer/blob/master/README.md class-transformer library} for more details.
+     */
     public classTransformer: ClassTransformer = new ClassTransformer();
 
     private adapters: Map<string, Adapter<any>> = new Map();
@@ -103,6 +108,13 @@ export class Serializer {
         this.adapters.set(NftUpdateDataOperation.name, this.nftUpdateDataAdapter);
     }
 
+    /**
+     * Serialize object to binary data, used for creating a signature for transactions.
+     *
+     * @param obj some object
+     *
+     * @return Buffer filled with binary data
+     */
     public serialize(obj: any): Buffer {
         const buffer = new ByteBuffer(1024, true);
         this.append(buffer, obj);
