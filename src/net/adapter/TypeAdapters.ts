@@ -1,3 +1,4 @@
+import * as bigInt from "big-integer";
 import { Transform } from "class-transformer";
 import * as _ from "lodash";
 import * as Long from "long";
@@ -20,6 +21,14 @@ export function ChainObjectArrayToClass(target: any, key: string): void {
 
 export function ChainObjectArrayToPlain(target: any, key: string): void {
     return Transform((value: ChainObject[]) => value.map((id) => id.objectId), { toPlainOnly: true })(target, key);
+}
+
+export function BigIntToClass(target: any, key: string): void {
+    return Transform((value: string) => bigInt(value), { toClassOnly: true })(target, key);
+}
+
+export function LongToClassSigned(target: any, key: string): void {
+    return Transform((value: number | string) => Long.fromValue(value), { toClassOnly: true })(target, key);
 }
 
 export function LongToClass(target: any, key: string): void {

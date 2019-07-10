@@ -1,7 +1,8 @@
 import { Expose, Type } from "class-transformer";
+import * as Long from "long";
 import { DCoreConstants } from "../../DCoreConstants";
 import { Fee } from "../../DCoreSdk";
-import { ChainObjectToClass, ChainObjectToPlain } from "../../net/adapter/TypeAdapters";
+import { ChainObjectToClass, ChainObjectToPlain, LongToClass, LongToPlain } from "../../net/adapter/TypeAdapters";
 import { assertThrow } from "../../utils/Utils";
 import { ChainObject } from "../ChainObject";
 import { ExchangeRate } from "../ExchangeRate";
@@ -28,8 +29,11 @@ export class AssetUpdateOperation extends BaseOperation {
     @Expose({ name: "new_issuer" })
     public newIssuer?: ChainObject;
 
+    // UInt64
+    @LongToClass
+    @LongToPlain
     @Expose({ name: "max_supply" })
-    public maxSupply: number;
+    public maxSupply: Long;
 
     @Type(() => ExchangeRate)
     @Expose({ name: "core_exchange_rate" })
@@ -57,7 +61,7 @@ export class AssetUpdateOperation extends BaseOperation {
         coreExchangeRate: ExchangeRate,
         newDescription: string,
         exchangeable: boolean,
-        maxSupply: number,
+        maxSupply: Long,
         newIssuer?: ChainObject,
         fee?: Fee,
     ) {

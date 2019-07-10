@@ -8,6 +8,7 @@ export class RegionalPrice {
     @Expose({ name: "price" })
     public price: AssetAmount;
 
+    // UInt32
     @Expose({ name: "region" })
     public region: number;
 

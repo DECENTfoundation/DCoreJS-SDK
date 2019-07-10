@@ -6,7 +6,7 @@ import { AssetAmount } from "./AssetAmount";
 import { ChainObject } from "./ChainObject";
 import { VoteId } from "./VoteId";
 
-export class Options {
+export class AccountOptions {
 
     @AddressToClass
     @AddressToPlain
@@ -18,6 +18,7 @@ export class Options {
     @Expose({ name: "voting_account" })
     public votingAccount: ChainObject;
 
+    // UInt16
     @Expose({ name: "num_miner" })
     public numMiner: number;
 
@@ -36,6 +37,7 @@ export class Options {
     @Expose({ name: "price_per_subscribe" })
     public pricePerSubscribe: AssetAmount;
 
+    // UInt32
     @Expose({ name: "subscription_period" })
     public subscriptionPeriod: number;
 

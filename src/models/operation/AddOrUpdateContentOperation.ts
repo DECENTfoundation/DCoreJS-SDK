@@ -39,6 +39,7 @@ export class AddOrUpdateContentOperation extends BaseOperation {
             Utils.ripemd160(Buffer.from(uri)).toString("hex"), [], [], expiration, new AssetAmount(), serialize(synopsis), undefined, fee);
     }
 
+    // UInt64
     @LongToClass
     @LongToPlain
     @Expose({ name: "size" })
@@ -49,6 +50,7 @@ export class AddOrUpdateContentOperation extends BaseOperation {
     @Expose({ name: "author" })
     public author: ChainObject;
 
+    // UInt32
     @CoAuthorsToClass
     @CoAuthorsToPlain
     @Expose({ name: "co_authors" })
@@ -57,6 +59,7 @@ export class AddOrUpdateContentOperation extends BaseOperation {
     @Expose({ name: "URI" })
     public uri: string;
 
+    // UInt32
     @Expose({ name: "quorum" })
     public quorum: number;
 

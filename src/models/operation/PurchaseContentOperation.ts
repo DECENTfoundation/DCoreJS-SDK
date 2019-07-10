@@ -39,6 +39,7 @@ export class PurchaseContentOperation extends BaseOperation {
     @Expose({ name: "pubKey" })
     public publicElGamal: PubKey;
 
+    // UInt32
     @Expose({ name: "region_code_from" })
     public regionCode: number;
 

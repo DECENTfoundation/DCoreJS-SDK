@@ -2,6 +2,7 @@ import * as chai from "chai";
 import * as chaiThings from "chai-things";
 import * as WebSocket from "isomorphic-ws";
 import * as _ from "lodash";
+import * as Long from "long";
 import "mocha";
 import "reflect-metadata";
 import { create } from "rxjs-spy";
@@ -9,7 +10,7 @@ import { Spy } from "rxjs-spy/spy-interface";
 import { ECKeyPair } from "../../src/crypto/ECKeyPair";
 import { DCoreApi } from "../../src/DCoreApi";
 import { DCoreSdk } from "../../src/DCoreSdk";
-import { Asset, AssetAmount, AssetClaimFeesOperation, AssetFundPoolsOperation, ChainObject, DCoreError, ExchangeRate, RealSupply } from "../../src/models";
+import { Asset, AssetAmount, AssetClaimFeesOperation, AssetFundPoolsOperation, ChainObject, DCoreError, RealSupply } from "../../src/models";
 import { AssetData } from "../../src/models/AssetData";
 import { Helpers, testCheck, testCheckWith } from "../Helpers";
 
@@ -57,10 +58,10 @@ describe("asset API test suite for ops", () => {
         testCheck(done, api.assetApi.update(
             Helpers.CREDENTIALS,
             Helpers.createAsset,
-            () => new ExchangeRate(new AssetAmount(1), new AssetAmount(50, Helpers.createAssetId)),
-            () => "some nested asset",
-            () => true,
-            () => Date.now() / 1000,
+            [1, 50],
+            "some nested asset",
+            true,
+            Long.fromValue(Date.now() / 1000),
         ));
     });
 

@@ -16,6 +16,7 @@ export class LeaveRatingAndCommentOperation extends BaseOperation {
     @Expose({ name: "consumer" })
     public consumer: ChainObject;
 
+    // UInt64 number is safe for 1-5
     @Expose({ name: "rating" })
     public rating: number;
 

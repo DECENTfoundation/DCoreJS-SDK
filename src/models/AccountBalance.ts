@@ -17,6 +17,7 @@ export class AccountBalance {
     @Expose({ name: "asset_type" })
     public assetType: ChainObject;
 
+    // Int64
     @LongToClass
     @Expose({ name: "balance" })
     public balance: Long;

@@ -20,9 +20,11 @@ export class ProcessedTransaction {
     @Expose({ name: "expiration" })
     public expiration: Moment;
 
+    // UInt16
     @Expose({ name: "ref_block_num" })
     public refBlockNum: number;
 
+    // UInt32
     @Expose({ name: "ref_block_prefix" })
     public refBlockPrefix: number;
 

@@ -1,5 +1,7 @@
 import { Expose, Transform, Type } from "class-transformer";
+import * as Long from "long";
 import { DCoreConstants } from "../DCoreConstants";
+import { LongToClassSigned, LongToPlain } from "../net/adapter/TypeAdapters";
 import { ObjectCheckOf } from "../utils/ObjectCheckOf";
 import { assertThrow } from "../utils/Utils";
 import { ExchangeRate } from "./ExchangeRate";
@@ -10,8 +12,11 @@ interface FixedMaxSupply {
 
 export class AssetOptions {
 
+    // Int64
+    @LongToClassSigned
+    @LongToPlain
     @Expose({ name: "max_supply" })
-    public maxSupply: number;
+    public maxSupply: Long;
 
     @Type(() => ExchangeRate)
     @Expose({ name: "core_exchange_rate" })
@@ -27,7 +32,7 @@ export class AssetOptions {
     @Expose({ name: "extensions" })
     public extensions: object[];
 
-    constructor(exchangeRate: ExchangeRate, maxSupply: number = DCoreConstants.MAX_SHARE_SUPPLY, fixedMaxSupply: boolean = false, exchangeable: boolean = true) {
+    constructor(exchangeRate: ExchangeRate, maxSupply: Long = DCoreConstants.MAX_SHARE_SUPPLY, fixedMaxSupply: boolean = false, exchangeable: boolean = true) {
         assertThrow(maxSupply <= DCoreConstants.MAX_SHARE_SUPPLY, () => "max supply max value overflow");
         this.maxSupply = maxSupply;
         this.exchangeRate = exchangeRate;

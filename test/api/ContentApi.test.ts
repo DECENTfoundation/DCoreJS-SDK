@@ -60,7 +60,7 @@ describe("content API test suite for ops", () => {
         testCheck(done, api.contentApi.update(
             Helpers.CREDENTIALS,
             Helpers.createUri,
-            () => new Synopsis("hello", "update"),
+            new Synopsis("hello", "update"),
         ));
     });
 

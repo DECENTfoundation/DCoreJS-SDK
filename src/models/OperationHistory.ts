@@ -17,15 +17,19 @@ export class OperationHistory {
     @Expose({ name: "result" })
     public result: any;
 
+    // UInt32
     @Expose({ name: "block_num" })
     public blockNum: number;
 
+    // UInt16
     @Expose({ name: "trx_in_block" })
     public trxInBlock: number;
 
+    // UInt16
     @Expose({ name: "op_in_trx" })
     public opNum: number;
 
+    // UInt16
     @Expose({ name: "virtual_op" })
     public virtualOp: number;
 }

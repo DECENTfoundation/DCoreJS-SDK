@@ -15,6 +15,7 @@ export class MinerVotingInfo {
     @Expose({ name: "url" })
     public url: string;
 
+    // UInt64
     @LongToClass
     @Expose({ name: "total_votes" })
     public votes: Long;

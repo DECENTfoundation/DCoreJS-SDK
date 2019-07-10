@@ -19,6 +19,7 @@ export class AssetCreateOperation extends BaseOperation {
     @Expose({ name: "symbol" })
     public symbol: string;
 
+    // UInt8
     @Expose({ name: "precision" })
     public precision: number;
 

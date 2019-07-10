@@ -4,9 +4,9 @@ import { Fee } from "../../DCoreSdk";
 import { ChainObjectToClass, ChainObjectToPlain } from "../../net/adapter/TypeAdapters";
 import { assertThrow } from "../../utils/Utils";
 import { Account } from "../Account";
+import { AccountOptions } from "../AccountOptions";
 import { Authority } from "../Authority";
 import { ChainObject } from "../ChainObject";
-import { Options } from "../Options";
 import { BaseOperation } from "./BaseOperation";
 import { OperationType } from "./OperationType";
 
@@ -24,7 +24,7 @@ export class AccountCreateOperation extends BaseOperation {
      * @return a transaction confirmation
      */
     public static create(registrar: ChainObject, name: string, address: Address, fee?: Fee) {
-        return new this(registrar, name, new Authority(address), new Authority(address), new Options(address), fee);
+        return new this(registrar, name, new Authority(address), new Authority(address), new AccountOptions(address), fee);
     }
 
     @ChainObjectToClass
@@ -43,9 +43,9 @@ export class AccountCreateOperation extends BaseOperation {
     @Expose({ name: "active" })
     public active: Authority;
 
-    @Type(() => Options)
+    @Type(() => AccountOptions)
     @Expose({ name: "options" })
-    public options: Options;
+    public options: AccountOptions;
 
     /**
      * Request to create account operation constructor
@@ -58,7 +58,7 @@ export class AccountCreateOperation extends BaseOperation {
      * @param fee {@link AssetAmount} fee for the operation or asset id, if left undefined the fee will be computed in DCT asset.
      * When set, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough
      */
-    constructor(registrar: ChainObject, name: string, owner: Authority, active: Authority, options: Options, fee?: Fee) {
+    constructor(registrar: ChainObject, name: string, owner: Authority, active: Authority, options: AccountOptions, fee?: Fee) {
         super(OperationType.AccountCreate, fee);
         this.registrar = registrar;
         this.name = name;

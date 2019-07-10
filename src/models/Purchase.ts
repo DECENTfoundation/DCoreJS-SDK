@@ -41,12 +41,15 @@ export class Purchase {
     @Expose({ name: "seeders_answered" })
     public seedersAnswered: ChainObject[];
 
+    // UInt64
     @LongToClass
     @Expose({ name: "size" })
     public size: Long;
 
+    // UInt64
+    @LongToClass
     @Expose({ name: "rating" })
-    public rating: number;
+    public rating: Long;
 
     @Expose({ name: "comment" })
     public comment: string;
@@ -80,6 +83,7 @@ export class Purchase {
     @Expose({ name: "created" })
     public created: Moment;
 
+    // UInt32
     @Expose({ name: "region_code_from" })
     public regionFrom: number;
 }

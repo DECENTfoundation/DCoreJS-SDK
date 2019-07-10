@@ -14,6 +14,10 @@ export class ExchangeRate {
         return new ExchangeRate(new AssetAmount(base), new AssetAmount(quote, ChainObject.parse("1.3.1")));
     }
 
+    public static forUpdateOp(base: Long | number, quote: Long | number, assetToUpdate: ChainObject): ExchangeRate {
+        return new ExchangeRate(new AssetAmount(base), new AssetAmount(quote, assetToUpdate));
+    }
+
     @Type(() => AssetAmount)
     @Expose({ name: "base" })
     public base: AssetAmount;

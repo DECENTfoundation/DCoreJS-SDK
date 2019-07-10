@@ -32,6 +32,7 @@ export class Memo {
     @Expose({ name: "message" })
     public message: string;
 
+    // UInt64
     @LongToClass
     @LongToPlain
     @Expose({ name: "nonce" })

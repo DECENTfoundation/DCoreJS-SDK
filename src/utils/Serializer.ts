@@ -4,6 +4,7 @@ import * as _ from "lodash";
 import * as Long from "long";
 import { Moment } from "moment";
 import { Address } from "../crypto/Address";
+import { AccountOptions } from "../models/AccountOptions";
 import { AssetAmount } from "../models/AssetAmount";
 import { AssetOptions } from "../models/AssetOptions";
 import { Authority } from "../models/Authority";
@@ -39,7 +40,6 @@ import { PurchaseContentOperation } from "../models/operation/PurchaseContentOpe
 import { RemoveContentOperation } from "../models/operation/RemoveContentOperation";
 import { SendMessageOperation } from "../models/operation/SendMessageOperation";
 import { TransferOperation } from "../models/operation/TransferOperation";
-import { Options } from "../models/Options";
 import { ProcessedTransaction } from "../models/ProcessedTransaction";
 import { PubKey } from "../models/PubKey";
 import { Publishing } from "../models/Publishing";
@@ -73,7 +73,7 @@ export class Serializer {
         this.adapters.set(Memo.name, this.memoAdapter);
         this.adapters.set(VoteId.name, this.voteAdapter);
         this.adapters.set("boolean", this.booleanAdapter);
-        this.adapters.set(Options.name, this.optionsAdapter);
+        this.adapters.set(AccountOptions.name, this.optionsAdapter);
         this.adapters.set(PubKey.name, this.pubKeyAdapter);
         this.adapters.set(Publishing.name, this.publishingAdapter);
         this.adapters.set(Transaction.name, this.transactionAdapter);
@@ -203,7 +203,7 @@ export class Serializer {
 
     private booleanAdapter = (buffer: ByteBuffer, obj: boolean) => buffer.writeByte(obj ? 1 : 0);
 
-    private optionsAdapter = (buffer: ByteBuffer, obj: Options) => {
+    private optionsAdapter = (buffer: ByteBuffer, obj: AccountOptions) => {
         this.append(buffer, obj.memoKey);
         this.append(buffer, obj.votingAccount);
         buffer.writeUint16(obj.numMiner);
@@ -348,7 +348,7 @@ export class Serializer {
     }
 
     private assetOptionsAdapter = (buffer: ByteBuffer, obj: AssetOptions) => {
-        buffer.writeUint64(obj.maxSupply);
+        this.append(buffer, obj.maxSupply);
         this.append(buffer, obj.exchangeRate);
         this.append(buffer, obj.exchangeable);
         buffer.writeByte(obj.extensions.length);
@@ -389,7 +389,7 @@ export class Serializer {
         this.append(buffer, obj.assetToUpdate);
         this.append(buffer, obj.newDescription);
         this.appendOptional(buffer, obj.newIssuer);
-        buffer.writeUint64(obj.maxSupply);
+        this.append(buffer, obj.maxSupply);
         this.append(buffer, obj.coreExchangeRate);
         this.append(buffer, obj.exchangeable);
         this.append(buffer, obj.extensions);

@@ -1,7 +1,5 @@
 import { Expose, Transform } from "class-transformer";
 import * as _ from "lodash";
-import * as Long from "long";
-import { LongToClass } from "../net/adapter/TypeAdapters";
 import { AssetAmount } from "./AssetAmount";
 import { FeeParameter } from "./FeeParameter";
 import { OperationType } from "./operation/OperationType";
@@ -22,7 +20,7 @@ export class FeeSchedule {
     @Expose({ name: "parameters" })
     public parameters: Map<OperationType, FeeParameter>;
 
-    @LongToClass
+    // UInt32
     @Expose({ name: "scale" })
-    public scale: Long;
+    public scale: number;
 }

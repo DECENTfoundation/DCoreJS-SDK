@@ -25,9 +25,11 @@ export class AssetUpdateMonitoredOperation extends BaseOperation {
     @Expose({ name: "new_description" })
     public description: string;
 
+    // UInt32
     @Expose({ name: "new_feed_lifetime_sec" })
     public newFeedLifetime: number;
 
+    // UInt8
     @Expose({ name: "new_minimum_feeds" })
     public newMinimumFeeds: number;
 

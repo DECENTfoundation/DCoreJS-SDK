@@ -27,6 +27,7 @@ export class Asset {
     @Expose({ name: "symbol" })
     public symbol: string;
 
+    // UInt8
     @Expose({ name: "precision" })
     public precision: AssetPrecision;
 

@@ -7,6 +7,7 @@ export class MinerVotes {
     @Expose({ name: "account_name" })
     public account: string;
 
+    // UInt64
     @LongToClass
     @Expose({ name: "votes" })
     public votes: Long;
