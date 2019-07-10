@@ -41,7 +41,7 @@ import { RegionalPrice } from "../../../src/models/RegionalPrice";
 import { Regions } from "../../../src/models/Regions";
 import { Synopsis } from "../../../src/models/Synopsis";
 import { Transaction } from "../../../src/models/Transaction";
-import { Serializer } from "../../../src/net/serialization/Serializer";
+import { Serializer } from "../../../src/utils/Serializer";
 import { Helpers } from "../../Helpers";
 import { NftApple } from "../../model/NftApple";
 
