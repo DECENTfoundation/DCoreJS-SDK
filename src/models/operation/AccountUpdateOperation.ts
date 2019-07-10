@@ -2,9 +2,9 @@ import { Expose, Type } from "class-transformer";
 import { Fee } from "../../DCoreSdk";
 import { ChainObjectToClass, ChainObjectToPlain } from "../../net/adapter/TypeAdapters";
 import { Account } from "../Account";
+import { AccountOptions } from "../AccountOptions";
 import { Authority } from "../Authority";
 import { ChainObject } from "../ChainObject";
-import { Options } from "../Options";
 import { VoteId } from "../VoteId";
 import { BaseOperation } from "./BaseOperation";
 import { OperationType } from "./OperationType";
@@ -30,9 +30,9 @@ export class AccountUpdateOperation extends BaseOperation {
     @Expose({ name: "active" })
     public active?: Authority;
 
-    @Type(() => Options)
+    @Type(() => AccountOptions)
     @Expose({ name: "new_options" })
-    public options?: Options;
+    public options?: AccountOptions;
 
     /**
      * Request to account update operation constructor
@@ -44,7 +44,7 @@ export class AccountUpdateOperation extends BaseOperation {
      * @param fee {@link AssetAmount} fee for the operation or asset id, if left undefined the fee will be computed in DCT asset.
      * When set, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough
      */
-    constructor(accountId: ChainObject, owner?: Authority, active?: Authority, options?: Options, fee?: Fee) {
+    constructor(accountId: ChainObject, owner?: Authority, active?: Authority, options?: AccountOptions, fee?: Fee) {
         super(OperationType.AccountUpdate, fee);
         this.accountId = accountId;
         this.owner = owner;

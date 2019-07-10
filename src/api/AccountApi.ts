@@ -8,6 +8,7 @@ import { ECKeyPair } from "../crypto/ECKeyPair";
 import { DCoreApi } from "../DCoreApi";
 import { AccountRef, Fee } from "../DCoreSdk";
 import { Account } from "../models/Account";
+import { AccountOptions } from "../models/AccountOptions";
 import { AccountStatistics } from "../models/AccountStatistics";
 import { AssetAmount } from "../models/AssetAmount";
 import { Authority } from "../models/Authority";
@@ -20,7 +21,6 @@ import { ObjectType } from "../models/ObjectType";
 import { AccountCreateOperation } from "../models/operation/AccountCreateOperation";
 import { AccountUpdateOperation } from "../models/operation/AccountUpdateOperation";
 import { TransferOperation } from "../models/operation/TransferOperation";
-import { Options } from "../models/Options";
 import { SearchAccountsOrder } from "../models/order/SearchAccountsOrder";
 import { TransactionConfirmation } from "../models/TransactionConfirmation";
 import { GetAccountById } from "../net/models/request/GetAccountById";
@@ -338,7 +338,7 @@ export class AccountApi extends BaseApi {
      */
     public createUpdateOperation(
         account: AccountRef,
-        options?: (old: Options) => Options,
+        options?: (old: AccountOptions) => AccountOptions,
         active?: (old: Authority) => Authority,
         owner?: (old: Authority) => Authority,
         fee?: Fee,
@@ -365,7 +365,7 @@ export class AccountApi extends BaseApi {
      */
     public update(
         credentials: Credentials,
-        options?: (old: Options) => Options,
+        options?: (old: AccountOptions) => AccountOptions,
         active?: (old: Authority) => Authority,
         owner?: (old: Authority) => Authority,
         fee?: Fee,

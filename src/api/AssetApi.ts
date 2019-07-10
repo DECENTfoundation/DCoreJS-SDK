@@ -218,7 +218,7 @@ export class AssetApi extends BaseApi {
         fee?: Fee,
     ): Observable<TransactionConfirmation> {
         return this.createAssetCreateOperation(
-            credentials.account, symbol, precision, description, new AssetOptions(ExchangeRate.empty(), 0), options, fee,
+            credentials.account, symbol, precision, description, new AssetOptions(ExchangeRate.empty(), Long.fromValue(0)), options, fee,
         ).pipe(flatMap((op) => this.api.broadcastApi.broadcastWithCallback(credentials.keyPair, [op])));
     }
 
@@ -239,7 +239,7 @@ export class AssetApi extends BaseApi {
         exchangeRate: (old: Asset) => ExchangeRate = (old) => old.options.exchangeRate,
         description: (old: Asset) => string = (old) => old.description,
         exchangeable: (old: Asset) => boolean = (old) => old.options.exchangeable,
-        maxSupply: (old: Asset) => number = (old) => old.options.maxSupply,
+        maxSupply: (old: Asset) => Long = (old) => old.options.maxSupply,
         newIssuer?: ChainObject,
         fee?: Fee,
     ): Observable<AssetUpdateOperation> {
@@ -276,7 +276,7 @@ export class AssetApi extends BaseApi {
         exchangeRate: (old: Asset) => ExchangeRate = (old) => old.options.exchangeRate,
         description: (old: Asset) => string = (old) => old.description,
         exchangeable: (old: Asset) => boolean = (old) => old.options.exchangeable,
-        maxSupply: (old: Asset) => number = (old) => old.options.maxSupply,
+        maxSupply: (old: Asset) => Long = (old) => old.options.maxSupply,
         newIssuer?: ChainObject,
         fee?: Fee,
     ): Observable<TransactionConfirmation> {

@@ -13,6 +13,7 @@ export class Seeder {
     @Expose({ name: "id" })
     public id: ChainObject;
 
+    // UInt64
     @LongToClass
     @Expose({ name: "free_space" })
     public freeSpace: Long;
@@ -36,6 +37,7 @@ export class Seeder {
     @Expose({ name: "stats" })
     public stats: ChainObject;
 
+    // UInt32
     @Expose({ name: "rating" })
     public rating: number;
 

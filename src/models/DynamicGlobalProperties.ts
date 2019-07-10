@@ -1,7 +1,8 @@
+import { BigInteger } from "big-integer";
 import { Expose } from "class-transformer";
 import * as Long from "long";
 import { Moment } from "moment";
-import { ChainObjectToClass, LongToClass, MomentToClass } from "../net/adapter/TypeAdapters";
+import { BigIntToClass, ChainObjectToClass, LongToClass, LongToClassSigned, MomentToClass } from "../net/adapter/TypeAdapters";
 import { ChainObject } from "./ChainObject";
 
 export class DynamicGlobalProperties {
@@ -10,6 +11,7 @@ export class DynamicGlobalProperties {
     @Expose({ name: "id" })
     public id: ChainObject;
 
+    // UInt32
     @Expose({ name: "head_block_number" })
     public headBlockNumber: number;
 
@@ -32,38 +34,49 @@ export class DynamicGlobalProperties {
     @Expose({ name: "last_budget_time" })
     public lastBudgetTime: Moment;
 
-    @LongToClass
+    // Int64
+    @LongToClassSigned
     @Expose({ name: "unspent_fee_budget" })
     public unspentFeeBudget: Long;
 
-    @LongToClass
+    // Int64
+    @LongToClassSigned
     @Expose({ name: "mined_rewards" })
     public minedRewards: Long;
 
-    @LongToClass
+    // Int64
+    @LongToClassSigned
     @Expose({ name: "miner_budget_from_fees" })
     public minerBudgetFromFees: Long;
 
-    @LongToClass
+    // Int64
+    @LongToClassSigned
     @Expose({ name: "miner_budget_from_rewards" })
     public minerBudgetFromRewards: Long;
 
+    // UInt32
     @Expose({ name: "accounts_registered_this_interval" })
     public accountsRegisteredThisInterval: number;
 
+    // Int64
+    @LongToClassSigned
     @Expose({ name: "recently_missed_count" })
-    public recentlyMissedCount: number;
+    public recentlyMissedCount: Long;
 
+    // UInt64
     @LongToClass
     @Expose({ name: "current_aslot" })
     public currentAslot: Long;
 
+    @BigIntToClass
     @Expose({ name: "recent_slots_filled" })
-    public recentSlotsFilled: string;
+    public recentSlotsFilled: BigInteger;
 
+    // UInt32
     @Expose({ name: "dynamic_flags" })
     public dynamicFlags: number;
 
+    // UInt32
     @Expose({ name: "last_irreversible_block_num" })
     public lastIrreversibleBlockNum: number;
 }

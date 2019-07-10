@@ -5,9 +5,11 @@ export class TransactionConfirmation {
     @Expose({ name: "id" })
     public id: string;
 
+    // UInt32
     @Expose({ name: "block_num" })
     public blockNum: number;
 
+    // UInt32
     @Expose({ name: "trx_num" })
     public trxNum: number;
 

@@ -4,6 +4,7 @@ import * as WebSocket from "isomorphic-ws";
 import * as _ from "lodash";
 import "mocha";
 import "reflect-metadata";
+import * as Long from "long";
 import { create } from "rxjs-spy";
 import { Spy } from "rxjs-spy/spy-interface";
 import { ECKeyPair } from "../../src/crypto/ECKeyPair";
@@ -60,7 +61,7 @@ describe("asset API test suite for ops", () => {
             () => new ExchangeRate(new AssetAmount(1), new AssetAmount(50, Helpers.createAssetId)),
             () => "some nested asset",
             () => true,
-            () => Date.now() / 1000,
+            () => Long.fromValue(Date.now() / 1000),
         ));
     });
 

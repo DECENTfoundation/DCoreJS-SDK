@@ -10,6 +10,7 @@ import { AssetAmount } from "../models/AssetAmount";
 import { ChainObject } from "../models/ChainObject";
 import { Content } from "../models/Content";
 import { ContentKeys } from "../models/ContentKeys";
+import { ContentSummary } from "../models/ContentSummary";
 import { ApplicationType, CategoryType, contentType } from "../models/ContentTypes";
 import { Memo } from "../models/Memo";
 import { ObjectType } from "../models/ObjectType";
@@ -107,7 +108,7 @@ export class ContentApi extends BaseApi {
         startId: ChainObject = ObjectType.Null.genericId(),
         order: SearchContentOrder = SearchContentOrder.CreatedDesc,
         limit: number = 100,
-    ): Observable<Content[]> {
+    ): Observable<ContentSummary[]> {
         return this.request(new SearchContent(term, order, user, regionCode, type, startId, limit));
     }
 

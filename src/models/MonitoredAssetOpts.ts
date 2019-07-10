@@ -18,9 +18,11 @@ export class MonitoredAssetOpts {
     @Expose({ name: "current_feed_publication_time" })
     public currentFeedPublicationTime: Moment;
 
+    // UInt32
     @Expose({ name: "feed_lifetime_sec" })
     public feedLifetimeSec: number;
 
+    // UInt8
     @Expose({ name: "minimum_feeds" })
     public minimumFeeds: number;
 

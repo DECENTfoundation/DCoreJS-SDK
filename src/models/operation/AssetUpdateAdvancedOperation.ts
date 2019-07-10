@@ -22,6 +22,7 @@ export class AssetUpdateAdvancedOperation extends BaseOperation {
     @Expose({ name: "asset_to_update" })
     public assetToUpdate: ChainObject;
 
+    // UInt8
     @Expose({ name: "new_precision" })
     public precision: number;
 

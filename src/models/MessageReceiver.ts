@@ -14,6 +14,7 @@ export class MessageReceiver {
     @Expose({ name: "receiver_pubkey" })
     public receiverAddress?: Address;
 
+    // UInt64
     @LongToClass
     @Expose({ name: "nonce" })
     public nonce: Long;

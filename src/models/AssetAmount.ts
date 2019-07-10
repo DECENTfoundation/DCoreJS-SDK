@@ -1,14 +1,15 @@
 import { Expose } from "class-transformer";
 import * as Long from "long";
 import { DCoreConstants } from "../DCoreConstants";
-import { ChainObjectToClass, ChainObjectToPlain, LongToClass, LongToPlain } from "../net/adapter/TypeAdapters";
+import { ChainObjectToClass, ChainObjectToPlain, LongToClassSigned, LongToPlain } from "../net/adapter/TypeAdapters";
 import { assertThrow } from "../utils/Utils";
 import { ChainObject } from "./ChainObject";
 import { ObjectType } from "./ObjectType";
 
 export class AssetAmount {
 
-    @LongToClass
+    // Int64
+    @LongToClassSigned
     @LongToPlain
     @Expose({ name: "amount" })
     public amount: Long;

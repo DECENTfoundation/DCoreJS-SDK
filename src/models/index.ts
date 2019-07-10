@@ -44,7 +44,7 @@ export * from "./MinerVotingInfo";
 export * from "./MonitoredAssetOpts";
 export * from "./ObjectType";
 export * from "./OperationHistory";
-export * from "./Options";
+export * from "./AccountOptions";
 export * from "./PriceFeed";
 export * from "./PricePerRegion";
 export * from "./ProcessedTransaction";
