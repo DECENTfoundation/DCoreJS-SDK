@@ -271,34 +271,27 @@ export class ContentApi extends BaseApi {
      * Create request to update content operation. Update parameters are functions that have current values as arguments.
      *
      * @param content content id or uri
-     * @param coAuthors if map is not empty, payout will be split - the parameter maps co-authors
-     * to basis points split, e.g. author1:9000 (bp), author2:1000 (bp)
-     * @param price list of regional prices
-     * @param synopsis JSON formatted structure containing content information
      * @param fee {@link AssetAmount} fee for the operation or asset id, if left undefined the fee will be computed in DCT asset.
      * When set, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough
      */
     public createUpdateContentOperation(
         content: ChainObject | string,
-        coAuthors?: (old: Array<[ChainObject, number]>) => Array<[ChainObject, number]>,
-        price?: (old: RegionalPrice[]) => RegionalPrice[],
-        synopsis?: (old: Synopsis) => Synopsis,
         fee?: Fee,
     ): Observable<AddOrUpdateContentOperation> {
         return this.get(content).pipe(
             map((c) => new AddOrUpdateContentOperation(
                 c.size,
                 c.author,
-                coAuthors ? coAuthors(c.coAuthors) : c.coAuthors,
+                c.coAuthors,
                 c.uri,
                 c.quorum,
-                price ? price(c.price.regionalPrices) : c.price.regionalPrices,
+                c.price.regionalPrices,
                 c.hash,
                 Array.from(c.seederPrice.keys()),
                 Array.from(c.keyParts.values()),
                 c.expiration,
                 c.publishingFeeEscrow,
-                serialize(synopsis ? synopsis(c.synopsis) : c.synopsis),
+                serialize(c.synopsis),
                 c.custodyData,
                 fee,
             )));
@@ -319,12 +312,18 @@ export class ContentApi extends BaseApi {
     public update(
         credentials: Credentials,
         content: ChainObject | string,
-        synopsis?: (old: Synopsis) => Synopsis,
-        price?: (old: RegionalPrice[]) => RegionalPrice[],
-        coAuthors?: (old: Array<[ChainObject, number]>) => Array<[ChainObject, number]>,
+        synopsis?: Synopsis,
+        price?: RegionalPrice[],
+        coAuthors?: Array<[ChainObject, number]>,
         fee?: Fee,
     ): Observable<TransactionConfirmation> {
-        return this.createUpdateContentOperation(content, coAuthors, price, synopsis, fee).pipe(
+        return this.createUpdateContentOperation(content, fee).pipe(
+            map((it) => {
+                it.synopsis = synopsis ? serialize(synopsis) : it.synopsis;
+                it.price = price ? price : it.price;
+                it.coAuthors = coAuthors ? coAuthors : it.coAuthors;
+                return it;
+            }),
             flatMap((op) => this.api.broadcastApi.broadcastWithCallback(credentials.keyPair, [op])),
         );
     }

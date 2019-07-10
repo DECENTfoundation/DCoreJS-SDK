@@ -44,7 +44,7 @@ describe("account API test suite for ops", () => {
 
     it("should update credentials on a new account", (done: (arg?: any) => void) => {
         testCheck(done, api.accountApi.createCredentials(Helpers.createAccount, Helpers.PRIVATE).pipe(
-            flatMap((c) => api.accountApi.update(c, undefined, () => new Authority(Helpers.PUBLIC2))),
+            flatMap((c) => api.accountApi.update(c, undefined, new Authority(Helpers.PUBLIC2))),
         ));
     });
 

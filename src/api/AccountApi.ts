@@ -327,34 +327,28 @@ export class AccountApi extends BaseApi {
     }
 
     /**
-     * Create update account operation
+     * Create update account operation. Fills model with actual account values.
      *
      * @param account account id or name
-     * @param options new account options
-     * @param active new active authority
-     * @param owner new owner authority
      * @param fee {@link AssetAmount} fee for the operation or asset id, if left undefined the fee will be computed in DCT asset.
      * When set, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough
      */
     public createUpdateOperation(
         account: AccountRef,
-        options?: (old: AccountOptions) => AccountOptions,
-        active?: (old: Authority) => Authority,
-        owner?: (old: Authority) => Authority,
         fee?: Fee,
     ): Observable<AccountUpdateOperation> {
         return this.get(account).pipe(
             map((acc) => new AccountUpdateOperation(
                 acc.id,
-                owner ? owner(acc.owner) : undefined,
-                active ? active(acc.active) : undefined,
-                options ? options(acc.options) : undefined,
+                acc.owner,
+                acc.active,
+                acc.options,
                 fee)),
         );
     }
 
     /**
-     * Update account
+     * Update account.
      *
      * @param credentials account credentials
      * @param options new account options
@@ -365,12 +359,18 @@ export class AccountApi extends BaseApi {
      */
     public update(
         credentials: Credentials,
-        options?: (old: AccountOptions) => AccountOptions,
-        active?: (old: Authority) => Authority,
-        owner?: (old: Authority) => Authority,
+        options?: AccountOptions,
+        active?: Authority,
+        owner?: Authority,
         fee?: Fee,
     ): Observable<TransactionConfirmation> {
-        return this.createUpdateOperation(credentials.account, options, active, owner, fee).pipe(
+        return this.createUpdateOperation(credentials.account, fee).pipe(
+            map((it) => {
+                it.options = options;
+                it.active = active;
+                it.owner = owner;
+                return it;
+            }),
             flatMap((op) => this.api.broadcastApi.broadcastWithCallback(credentials.keyPair, [op])),
         );
     }
