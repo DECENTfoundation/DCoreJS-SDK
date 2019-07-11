@@ -8,13 +8,13 @@ import { VoteId } from "./VoteId";
 
 export class AccountOptions {
 
-    @AddressToClass
     @AddressToPlain
+    @AddressToClass
     @Expose({ name: "memo_key" })
     public memoKey: Address;
 
-    @ChainObjectToClass
     @ChainObjectToPlain
+    @ChainObjectToClass
     @Expose({ name: "voting_account" })
     public votingAccount: ChainObject;
 
@@ -22,8 +22,8 @@ export class AccountOptions {
     @Expose({ name: "num_miner" })
     public numMiner: number;
 
-    @Transform((values: string[]) => values.map((vote) => VoteId.parse(vote)), { toClassOnly: true })
     @Transform((values: VoteId[]) => values.map((vote) => `${vote.type}:${vote.id}`), { toPlainOnly: true })
+    @Transform((values: string[]) => values.map((vote) => VoteId.parse(vote)), { toClassOnly: true })
     @Expose({ name: "votes" })
     public votes: VoteId[];
 

@@ -1,4 +1,5 @@
 import Decimal from "decimal.js";
+import { ILogger } from "js-logger/src/types";
 import * as _ from "lodash";
 import { Duration } from "moment";
 import { CoreOptions } from "request";
@@ -21,7 +22,7 @@ import { WithCallback } from "./net/models/request/WithCallback";
 import { RpcService } from "./net/rpc/RpcService";
 import { RxWebSocket, WebSocketFactory } from "./net/ws/RxWebSocket";
 import { ObjectCheckOf } from "./utils/ObjectCheckOf";
-import { assertThrow } from "./utils/Utils";
+import { assertThrow, log } from "./utils/Utils";
 
 export type NftRef = ChainObject | string;
 export type AccountRef = ChainObject | string;
@@ -38,27 +39,30 @@ Decimal.set({
 
 export class DCoreSdk {
 
-    public static createForHttp(options: CoreOptions): DCoreApi {
-        return new DCoreApi(new DCoreSdk(new RpcService(options)));
+    public static createForHttp(options: CoreOptions, logger?: ILogger): DCoreApi {
+        return new DCoreApi(new DCoreSdk(new RpcService(options, logger), undefined, logger));
     }
 
-    public static createForWebSocket(factory: WebSocketFactory): DCoreApi {
-        return new DCoreApi(new DCoreSdk(undefined, new RxWebSocket(factory)));
+    public static createForWebSocket(factory: WebSocketFactory, logger?: ILogger): DCoreApi {
+        return new DCoreApi(new DCoreSdk(undefined, new RxWebSocket(factory, logger), logger));
     }
 
-    public static create(options: CoreOptions, factory: WebSocketFactory): DCoreApi {
-        return new DCoreApi(new DCoreSdk(new RpcService(options), new RxWebSocket(factory)));
+    public static create(options: CoreOptions, factory: WebSocketFactory, logger?: ILogger): DCoreApi {
+        return new DCoreApi(new DCoreSdk(new RpcService(options, logger), new RxWebSocket(factory, logger), logger));
     }
 
     private chainId?: string;
 
-    constructor(private rpc?: RpcService, private ws?: RxWebSocket) {
+    constructor(private rpc?: RpcService, private ws?: RxWebSocket, private logger?: ILogger) {
         assertThrow(rpc != null || ws != null, () => "rpc or webSocket must be set");
     }
 
     public requestStream<T>(request: BaseRequest<T> & WithCallback): Observable<T> {
         if (this.ws) {
-            return this.ws.requestStream(request).pipe(tag("API_request_callback_" + request.method));
+            return this.ws.requestStream(request).pipe(
+                log("API_request_callback_" + request.method, this.logger),
+                tag("API_request_callback_" + request.method),
+            );
         } else {
             return throwError(new IllegalArgumentError("callbacks not available through HTTP API"));
         }
@@ -75,7 +79,10 @@ export class DCoreSdk {
             }
             result = this.rpc.request(request);
         }
-        return result.pipe(tag("API_request_" + request.method));
+        return result.pipe(
+            log("API_request_" + request.method, this.logger),
+            tag("API_request_" + request.method),
+        );
     }
 
     public set timeout(millis: number) {

@@ -1,3 +1,4 @@
+import { ILogger } from "js-logger/src/types";
 import * as _ from "lodash";
 import { AsyncSubject, defer, merge, NEVER, Observable, of, Subject, Subscriber, Subscription, throwError, zip } from "rxjs";
 import { tag } from "rxjs-spy/operators";
@@ -5,6 +6,7 @@ import { filter, first, flatMap, map, tap, timeout } from "rxjs/operators";
 import { DCoreError } from "../../models/error/DCoreError";
 import { ObjectNotFoundError } from "../../models/error/ObjectNotFoundError";
 import { ObjectCheckOf } from "../../utils/ObjectCheckOf";
+import { log } from "../../utils/Utils";
 import { BaseRequest } from "../models/request/BaseRequest";
 import { WithCallback } from "../models/request/WithCallback";
 import { CallbackResponse } from "../models/response/CallbackResponse";
@@ -95,7 +97,7 @@ export class RxWebSocket {
         socket.onerror = (error: ErrorEvent) => emitter.error(Error(error.message));
     }).pipe(tag("RxWebSocket_events"));
 
-    constructor(private webSocketFactory: WebSocketFactory) {
+    constructor(private webSocketFactory: WebSocketFactory, private logger?: ILogger) {
     }
 
     public isConnected(): boolean {
@@ -119,6 +121,9 @@ export class RxWebSocket {
             socket.close(1000, "closing");
             socket.onclose!({ wasClean: true, code: 1000, reason: "self disconnect", target: socket });
             socket.onclose = undefined;
+            if (this.logger) {
+                this.logger.info("clearing connection state");
+            }
         });
     }
 
@@ -157,7 +162,10 @@ export class RxWebSocket {
             this.messages,
             zip(
                 defer(() => this.webSocket()),
-                of(request.json(callId, callbackId)).pipe(tag((`API_send_${request.method}`))),
+                of(request.json(callId, callbackId)).pipe(
+                    log(`API_send_${request.method}`, this.logger),
+                    tag(`API_send_${request.method}`),
+                ),
             ).pipe(
                 tap(([socket, serialized]) => RxWebSocket.send(socket, serialized)),
                 flatMap(() => NEVER),

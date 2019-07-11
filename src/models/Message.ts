@@ -1,9 +1,11 @@
+import { Expose } from "class-transformer";
 import * as _ from "lodash";
 import * as Long from "long";
 import { Moment } from "moment";
 import { Address } from "../crypto/Address";
 import { Credentials } from "../crypto/Credentials";
 import { ECKeyPair } from "../crypto/ECKeyPair";
+import { AddressToClass, AddressToPlain, ChainObjectToClass, ChainObjectToPlain, LongToClass, LongToPlain, MomentToClass, MomentToPlain } from "../net/adapter/TypeAdapters";
 import { assertThrow, Utils } from "../utils/Utils";
 import { ChainObject } from "./ChainObject";
 import { MessageResponse } from "./MessageResponse";
@@ -22,18 +24,57 @@ export class Message {
         ));
     }
 
+    @Expose()
     public encrypted: boolean;
 
-    constructor(
-        public operationId: ChainObject,
-        public timestamp: Moment,
-        public message: string,
-        public sender: ChainObject,
-        public receiver: ChainObject,
-        public senderAddress?: Address,
-        public receiverAddress?: Address,
-        public nonce: Long = Long.ZERO,
-    ) {
+    @Expose()
+    @ChainObjectToPlain
+    @ChainObjectToClass
+    public operationId: ChainObject;
+
+    @Expose()
+    @MomentToPlain
+    @MomentToClass
+    public timestamp: Moment;
+
+    @Expose()
+    public message: string;
+
+    @Expose()
+    @ChainObjectToPlain
+    @ChainObjectToClass
+    public sender: ChainObject;
+
+    @Expose()
+    @ChainObjectToPlain
+    @ChainObjectToClass
+    public receiver: ChainObject;
+
+    @Expose()
+    @AddressToPlain
+    @AddressToClass
+    public senderAddress?: Address;
+
+    @Expose()
+    @AddressToPlain
+    @AddressToClass
+    public receiverAddress?: Address;
+
+    @Expose()
+    @LongToPlain
+    @LongToClass
+    public nonce: Long = Long.ZERO;
+
+    constructor(operationId: ChainObject, timestamp: Moment, message: string, sender: ChainObject,
+                receiver: ChainObject, senderAddress?: Address, receiverAddress?: Address, nonce: Long = Long.ZERO) {
+        this.operationId = operationId;
+        this.timestamp = timestamp;
+        this.message = message;
+        this.sender = sender;
+        this.receiver = receiver;
+        this.senderAddress = senderAddress;
+        this.receiverAddress = receiverAddress;
+        this.nonce = nonce;
         this.encrypted = !!(this.senderAddress && this.receiverAddress);
     }
 

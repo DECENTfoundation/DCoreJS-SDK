@@ -9,7 +9,7 @@ export class BalanceChange {
     @Expose({ name: "hist_object" })
     public operation: OperationHistory;
 
-    @Transform((value: object) => [_.get(value, "asset0"), _.get(value, "asset1")])
+    @Transform((value: object) => [_.get(value, "asset0"), _.get(value, "asset1")], { toClassOnly: true })
     @Expose({ name: "balance" })
     public balance: Array<[AssetAmount, AssetAmount]>;
 

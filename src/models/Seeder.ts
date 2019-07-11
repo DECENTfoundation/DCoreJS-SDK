@@ -2,18 +2,20 @@
 import { Expose, Type } from "class-transformer";
 import * as Long from "long";
 import { Moment } from "moment";
-import { ChainObjectToClass, LongToClass, MomentToClass } from "../net/adapter/TypeAdapters";
+import { ChainObjectToClass, ChainObjectToPlain, LongToClass, LongToPlain, MomentToClass, MomentToPlain } from "../net/adapter/TypeAdapters";
 import { AssetAmount } from "./AssetAmount";
 import { ChainObject } from "./ChainObject";
 import { PubKey } from "./PubKey";
 
 export class Seeder {
 
+    @ChainObjectToPlain
     @ChainObjectToClass
     @Expose({ name: "id" })
     public id: ChainObject;
 
     // UInt64
+    @LongToPlain
     @LongToClass
     @Expose({ name: "free_space" })
     public freeSpace: Long;
@@ -22,6 +24,7 @@ export class Seeder {
     @Expose({ name: "price" })
     public price: AssetAmount;
 
+    @MomentToPlain
     @MomentToClass
     @Expose({ name: "expiration" })
     public expiration: Moment;
@@ -33,6 +36,7 @@ export class Seeder {
     @Expose({ name: "ipfs_ID" })
     public ipfsId: string;
 
+    @ChainObjectToPlain
     @ChainObjectToClass
     @Expose({ name: "stats" })
     public stats: ChainObject;

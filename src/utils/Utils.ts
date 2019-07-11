@@ -1,8 +1,12 @@
 import * as BaseX from "base-x";
+import { serialize } from "class-transformer";
 import * as Crypto from "crypto";
 import { createHash } from "crypto";
+import { ILogger } from "js-logger/src/types";
 import * as Long from "long";
 import * as moment from "moment";
+import { MonoTypeOperatorFunction } from "rxjs";
+import { tap } from "rxjs/operators";
 
 export function assertThrow(value: boolean, lazyMessage: () => string = () => "assert error") {
     if (!value) {
@@ -12,6 +16,14 @@ export function assertThrow(value: boolean, lazyMessage: () => string = () => "a
 
 export function toMap<K, V>(values: V[], selector: (value: V) => K): Map<K, V> {
     return new Map<K, V>(values.map((val) => [selector(val), val]));
+}
+
+export function log<T>(tag: string, logger?: ILogger): MonoTypeOperatorFunction<T> {
+    return logger ? tap({
+        complete: () => logger!.info(`${tag}: #complete`),
+        error: (err) => logger!.error(`${tag}: #error ${err}`),
+        next: (value) => logger!.info(`${tag}: #next ${typeof value === "string" ? value : serialize(value)}`),
+    }) : (it: any) => it;
 }
 
 export class Utils {

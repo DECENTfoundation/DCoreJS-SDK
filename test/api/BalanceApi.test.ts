@@ -1,6 +1,7 @@
 import * as chai from "chai";
 import * as chaiThings from "chai-things";
 import * as WebSocket from "isomorphic-ws";
+import * as Logger from "js-logger";
 import "mocha";
 import "reflect-metadata";
 import { create } from "rxjs-spy";
@@ -16,9 +17,11 @@ import { Helpers } from "../Helpers";
 chai.should();
 chai.use(chaiThings);
 
+Logger.useDefaults();
+
 ([
-    ["RPC", DCoreSdk.createForHttp({ baseUrl: Helpers.STAGE_HTTPS, timeout: 15000, rejectUnauthorized: false })],
-    ["WebSocket", DCoreSdk.createForWebSocket(() => new WebSocket(Helpers.STAGE_WS))],
+    ["RPC", DCoreSdk.createForHttp({ baseUrl: Helpers.STAGE_HTTPS, timeout: 15000, rejectUnauthorized: false }, Helpers.LOGGER)],
+    ["WebSocket", DCoreSdk.createForWebSocket(() => new WebSocket(Helpers.STAGE_WS), Helpers.LOGGER)],
 ] as Array<[string, DCoreApi]>).forEach(([name, sdk]) => {
     const api = sdk.balanceApi;
 
@@ -31,7 +34,7 @@ chai.use(chaiThings);
 
         before(() => {
             spy = create();
-            // this.spy.log(/^API\w+/);
+            // spy.log(/^API\w+/);
         });
 
         after(() => {

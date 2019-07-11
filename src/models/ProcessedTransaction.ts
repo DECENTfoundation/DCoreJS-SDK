@@ -1,7 +1,7 @@
-import { Expose } from "class-transformer";
+import { classToPlain, Expose, Transform } from "class-transformer";
 import { Moment } from "moment";
 import { OperationsToClass } from "../net/adapter/OperationAdapter";
-import { MomentToClass } from "../net/adapter/TypeAdapters";
+import { MomentToClass, MomentToPlain } from "../net/adapter/TypeAdapters";
 import { BaseOperation } from "./operation/BaseOperation";
 import { Transaction } from "./Transaction";
 
@@ -12,10 +12,12 @@ export class ProcessedTransaction {
     @Expose({ name: "extensions" })
     public extensions: any[];
 
+    @Transform((values: any[], obj: ProcessedTransaction) => obj.operations.map((op) => [op.type, classToPlain(op)]), { toPlainOnly: true })
     @OperationsToClass
     @Expose({ name: "operations" })
     public operations: BaseOperation[];
 
+    @MomentToPlain
     @MomentToClass
     @Expose({ name: "expiration" })
     public expiration: Moment;

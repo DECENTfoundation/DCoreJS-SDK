@@ -1,10 +1,11 @@
 import { Expose, Type } from "class-transformer";
-import { ChainObjectToClass } from "../net/adapter/TypeAdapters";
+import { ChainObjectToClass, ChainObjectToPlain } from "../net/adapter/TypeAdapters";
 import { ChainObject } from "./ChainObject";
 import { ChainParameters } from "./ChainParameters";
 
 export class ChainProperties {
 
+    @ChainObjectToPlain
     @ChainObjectToClass
     @Expose({ name: "id" })
     public id: ChainObject;

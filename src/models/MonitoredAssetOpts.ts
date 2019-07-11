@@ -13,8 +13,8 @@ export class MonitoredAssetOpts {
     @Expose({ name: "current_feed" })
     public currentFeed: PriceFeed;
 
-    @MomentToClass
     @MomentToPlain
+    @MomentToClass
     @Expose({ name: "current_feed_publication_time" })
     public currentFeedPublicationTime: Moment;
 

@@ -1,22 +1,30 @@
-import { Expose, Transform } from "class-transformer";
+import { Expose } from "class-transformer";
 import * as Long from "long";
+import { ChainObjectToClass, ChainObjectToPlain, LongToClass, LongToPlain } from "../net/adapter/TypeAdapters";
 import { ChainObject } from "./ChainObject";
 
 export class AssetData {
 
-    @Transform((value: string) => ChainObject.parse(value), { toClassOnly: true })
+    @ChainObjectToPlain
+    @ChainObjectToClass
     @Expose({ name: "id" })
     public id: ChainObject;
 
-    @Transform((value: string | number) => Long.fromValue(value), { toClassOnly: true })
+    // Int64
+    @LongToPlain
+    @LongToClass
     @Expose({ name: "current_supply" })
     public currentSupply: Long;
 
-    @Transform((value: string | number) => Long.fromValue(value), { toClassOnly: true })
+    // Int64
+    @LongToPlain
+    @LongToClass
     @Expose({ name: "asset_pool" })
     public assetPool: Long;
 
-    @Transform((value: string | number) => Long.fromValue(value), { toClassOnly: true })
+    // Int64
+    @LongToPlain
+    @LongToClass
     @Expose({ name: "core_pool" })
     public corePool: Long;
 

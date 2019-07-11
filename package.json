@@ -83,6 +83,7 @@
     "bytebuffer": "^5.0.1",
     "class-transformer": "^0.1.10",
     "decimal.js": "^10.1.1",
+    "js-logger": "^1.6.0",
     "lodash": "^4.17.11",
     "long": "^4.0.0",
     "moment": "^2.24.0",
