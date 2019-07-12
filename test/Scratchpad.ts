@@ -5,6 +5,7 @@ import { classToPlain, deserialize, plainToClass, serialize } from "class-transf
 import { createHash } from "crypto";
 import Decimal from "decimal.js";
 import * as _ from "lodash";
+import { getLogger } from "log4js";
 import * as Long from "long";
 import { suite, test, timeout } from "mocha-typescript";
 import * as moment from "moment";
@@ -142,7 +143,7 @@ class Scratchpad {
     }
 
     @test accountByName() {
-        const api = new RpcService({ baseUrl: "https://stagesocket.decentgo.com:8090/rpc", timeout: 15000, rejectUnauthorized: false });
+        const api = new RpcService({ baseUrl: "https://stagesocket.decentgo.com:8090/rpc", timeout: 15000, rejectUnauthorized: false }, getLogger("logger"));
         api.request(new GetAccountByName("u961279ec8b7ae7bd62f304f7c1c3d345")).subscribe(
             (account) => console.log(account),
             (err) => console.error(err)
@@ -150,7 +151,7 @@ class Scratchpad {
     }
 
     @test accountById() {
-        const api = new RpcService({ baseUrl: "https://stagesocket.decentgo.com:8090/rpc", timeout: 15000, rejectUnauthorized: false });
+        const api = new RpcService({ baseUrl: "https://stagesocket.decentgo.com:8090/rpc", timeout: 15000, rejectUnauthorized: false }, getLogger("logger"));
         return api.request(new GetAccountById([ChainObject.parse("1.2.15")])).subscribe(
             (account) => console.log(account),
             (err) => console.error(err)
@@ -201,7 +202,7 @@ class Scratchpad {
     }
 
     @test websocket() {
-        const rxWs = new RxWebSocket(() => new WebSocket("wss://stagesocket.decentgo.com:8090", { rejectUnauthorized: false }));
+        const rxWs = new RxWebSocket(() => new WebSocket("wss://stagesocket.decentgo.com:8090", { rejectUnauthorized: false }), getLogger("logger"));
         const spy = create();
         spy.log(/^RxWebSocket_make_\w+/);
 

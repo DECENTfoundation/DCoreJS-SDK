@@ -22,7 +22,7 @@ export class AccountOptions {
     @Expose({ name: "num_miner" })
     public numMiner: number;
 
-    @Transform((values: VoteId[]) => values.map((vote) => `${vote.type}:${vote.id}`), { toPlainOnly: true })
+    @Transform((values: VoteId[], obj: AccountOptions) => obj.votes.map((vote) => vote.toString()), { toPlainOnly: true })
     @Transform((values: string[]) => values.map((vote) => VoteId.parse(vote)), { toClassOnly: true })
     @Expose({ name: "votes" })
     public votes: VoteId[];

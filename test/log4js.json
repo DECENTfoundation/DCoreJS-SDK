@@ -1,0 +1,19 @@
+{
+  "appenders": {
+    "console": {
+      "type": "console"
+    },
+    "out": {
+      "type": "stdout"
+    }
+  },
+  "categories": {
+    "default": {
+      "appenders": [
+        "console",
+        "out"
+      ],
+      "level": "DEBUG"
+    }
+  }
+}

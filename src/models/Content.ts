@@ -1,4 +1,4 @@
-import { deserialize, Expose, plainToClass, serialize, Transform, Type } from "class-transformer";
+import { classToPlain, deserialize, Expose, plainToClass, serialize, Transform, Type } from "class-transformer";
 import * as Long from "long";
 import * as moment from "moment";
 import { Moment } from "moment";
@@ -71,6 +71,8 @@ export class Content {
     @Expose({ name: "URI" })
     public uri: string;
 
+    @Transform((val: any, obj: Content) =>
+        Array.from(obj.keyParts).map((it) => [it[0].objectId, classToPlain(it[1])]), { toPlainOnly: true })
     @Transform((values: Array<[string, object]>) =>
         new Map(values.map(([id, keyPart]) => [ChainObject.parse(id), plainToClass(KeyPart, keyPart)])), { toClassOnly: true })
     @Expose({ name: "key_parts" })

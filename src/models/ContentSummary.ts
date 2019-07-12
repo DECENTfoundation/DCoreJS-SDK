@@ -1,4 +1,4 @@
-import { deserialize, Expose, Transform, Type } from "class-transformer";
+import { deserialize, Expose, serialize, Transform, Type } from "class-transformer";
 import * as Long from "long";
 import { Moment } from "moment";
 import { ChainObjectToClass, ChainObjectToPlain, CoAuthorsToClass, CoAuthorsToPlain, LongToClass, LongToPlain, MomentToClass, MomentToPlain } from "../net/adapter/TypeAdapters";
@@ -20,6 +20,7 @@ export class ContentSummary {
     @Expose({ name: "price" })
     public price: AssetAmount;
 
+    @Transform((value: Synopsis) => serialize(value), { toPlainOnly: true })
     @Transform((value: string) => deserialize(Synopsis, value), { toClassOnly: true })
     @Expose({ name: "synopsis" })
     public synopsis: Synopsis;

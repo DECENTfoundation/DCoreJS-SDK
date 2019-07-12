@@ -1,8 +1,8 @@
+import { Logger } from "@log4js-node/log4js-api";
 import * as BaseX from "base-x";
 import { serialize } from "class-transformer";
 import * as Crypto from "crypto";
 import { createHash } from "crypto";
-import { ILogger } from "js-logger/src/types";
 import * as Long from "long";
 import * as moment from "moment";
 import { MonoTypeOperatorFunction } from "rxjs";
@@ -18,12 +18,20 @@ export function toMap<K, V>(values: V[], selector: (value: V) => K): Map<K, V> {
     return new Map<K, V>(values.map((val) => [selector(val), val]));
 }
 
-export function log<T>(tag: string, logger?: ILogger): MonoTypeOperatorFunction<T> {
-    return logger ? tap({
-        complete: () => logger!.info(`${tag}: #complete`),
-        error: (err) => logger!.error(`${tag}: #error ${err}`),
-        next: (value) => logger!.info(`${tag}: #next ${typeof value === "string" ? value : serialize(value)}`),
-    }) : (it: any) => it;
+export function info<T>(tag: string, logger: Logger): MonoTypeOperatorFunction<T> {
+    return tap({
+        complete: () => logger.info(`${tag}: #complete`),
+        error: (err) => logger.error(`${tag}: #error ${err}`),
+        next: (value) => logger.info(`${tag}: #next ${typeof value === "string" ? value : serialize(value)}`),
+    });
+}
+
+export function debug<T>(tag: string, logger: Logger): MonoTypeOperatorFunction<T> {
+    return tap({
+        complete: () => logger.debug(`${tag}: #complete`),
+        error: (err) => logger.error(`${tag}: #error ${err}`),
+        next: (value) => logger.debug(`${tag}: #next ${typeof value === "string" ? value : serialize(value)}`),
+    });
 }
 
 export class Utils {

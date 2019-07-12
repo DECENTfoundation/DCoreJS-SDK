@@ -137,10 +137,7 @@ describe("asset API test suite for ops", () => {
 });
 
 {
-    ([
-        ["RPC", DCoreSdk.createForHttp({ baseUrl: Helpers.STAGE_HTTPS, timeout: 15000, rejectUnauthorized: false })],
-        ["WebSocket", DCoreSdk.createForWebSocket(() => new WebSocket(Helpers.STAGE_WS))],
-    ] as Array<[string, DCoreApi]>).forEach(([name, sdk]) => {
+    Helpers.APIS.forEach(([name, sdk]) => {
         const api = sdk.assetApi;
 
         describe(`asset API test suite for ${name}`, () => {
