@@ -1,6 +1,6 @@
 import { RxHR, RxHttpRequest } from "@akanass/rx-http-request";
-import { Logger } from "@log4js-node/log4js-api";
 import * as _ from "lodash";
+import { Logger } from "pino";
 import { CoreOptions } from "request";
 import { Observable } from "rxjs";
 import { filter, map } from "rxjs/operators";

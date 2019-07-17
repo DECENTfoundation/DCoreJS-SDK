@@ -1,7 +1,8 @@
-import { getLogger, Logger } from "@log4js-node/log4js-api";
 import Decimal from "decimal.js";
 import * as _ from "lodash";
 import { Duration } from "moment";
+import * as P from "pino";
+import { Logger } from "pino";
 import { CoreOptions } from "request";
 import { Observable, of, throwError, zip } from "rxjs";
 import { flatMap, map, tap } from "rxjs/operators";
@@ -50,7 +51,7 @@ export class DCoreSdk {
     }
 
     private static get DEFAULT_LOGGER() {
-        return getLogger("DCORE");
+        return P({ name: "DCORE", base: undefined, enabled: false });
     }
 
     private chainId?: string;

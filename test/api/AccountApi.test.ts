@@ -18,7 +18,7 @@ import { Helpers, testCheck } from "../Helpers";
 chai.should();
 chai.use(chaiThings);
 
-describe.only("account API test suite for ops", () => {
+describe("account API test suite for ops", () => {
 
     let api: DCoreApi;
     let spy: Spy;
@@ -26,7 +26,7 @@ describe.only("account API test suite for ops", () => {
     before(() => {
         spy = create();
         // spy.log(/^API\w+/);
-        api = DCoreSdk.createForWebSocket(() => new WebSocket(Helpers.STAGE_WS));
+        api = DCoreSdk.createForWebSocket(() => new WebSocket(Helpers.STAGE_WS), Helpers.LOGGER);
     });
 
     after(() => {

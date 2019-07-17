@@ -1,4 +1,3 @@
-import { getLogger } from "@log4js-node/log4js-api";
 import * as chai from "chai";
 import * as chaiThings from "chai-things";
 import * as WebSocket from "isomorphic-ws";
@@ -39,8 +38,8 @@ describe("web socket connections", () => {
     before(() => {
         spy = create();
         // spy.log();
-        realRxWs = new RxWebSocket(() => new WebSocket(Helpers.STAGE_WS), getLogger("logger"));
-        mockRxWs = new RxWebSocket(() => mockWs, getLogger("logger"));
+        realRxWs = new RxWebSocket(() => new WebSocket(Helpers.STAGE_WS), Helpers.LOGGER);
+        mockRxWs = new RxWebSocket(() => mockWs, Helpers.LOGGER);
     });
 
     after(() => {

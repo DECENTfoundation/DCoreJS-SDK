@@ -1,5 +1,5 @@
-import { Logger } from "@log4js-node/log4js-api";
 import * as _ from "lodash";
+import { Logger } from "pino";
 import { AsyncSubject, defer, merge, NEVER, Observable, of, Subject, Subscriber, Subscription, throwError } from "rxjs";
 import { filter, first, flatMap, map, tap, timeout } from "rxjs/operators";
 import { DCoreError } from "../../models/error/DCoreError";
@@ -78,19 +78,26 @@ export class RxWebSocket {
     private events: Observable<any> = new Observable((emitter: Subscriber<string>) => {
         const socket = this.webSocketFactory();
         socket.onopen = () => {
+            this.logger.debug("RxWebSocket_socket: #onopen");
             this.webSocketAsync!.next(socket);
             this.webSocketAsync!.complete();
-            this.logger.info("RxWebSocket_connect: open");
         };
         socket.onclose = (event: CloseEvent) => {
+            this.logger.debug(`RxWebSocket_socket: #onclose {wasClean:${event.wasClean}, code: ${event.code}, reason: ${event.reason}}`);
             if (event.wasClean) {
                 emitter.complete();
             } else {
                 emitter.error(Error(event.reason));
             }
         };
-        socket.onmessage = (message: MessageEvent) => emitter.next(message.data);
-        socket.onerror = (error: ErrorEvent) => emitter.error(Error(error.message));
+        socket.onmessage = (message: MessageEvent) => {
+            this.logger.debug(`RxWebSocket_socket: #onmessage ${message}`);
+            emitter.next(message.data);
+        };
+        socket.onerror = (error: ErrorEvent) => {
+            this.logger.debug(`RxWebSocket_socket: #onerror ${error}`);
+            emitter.error(Error(error.message));
+        };
     }).pipe(debug("RxWebSocket_events", this.logger));
 
     constructor(private webSocketFactory: WebSocketFactory, private logger: Logger) {
@@ -117,7 +124,6 @@ export class RxWebSocket {
             socket.close(1000, "closing");
             socket.onclose!({ wasClean: true, code: 1000, reason: "self disconnect", target: socket });
             socket.onclose = undefined;
-            this.logger.info("RxWebSocket_disconnect: clearing connection state");
         });
     }
 
@@ -150,6 +156,7 @@ export class RxWebSocket {
         this.subscriptions.unsubscribe();
         this.webSocketAsync = undefined;
         this.callId = 0;
+        this.logger.info("RxWebSocket_disconnect: clearing connection state");
     }
 
     private makeStream<T>(request: BaseRequest<T>, callId: number, callbackId?: number): Observable<T> {
