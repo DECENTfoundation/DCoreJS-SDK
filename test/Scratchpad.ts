@@ -9,7 +9,6 @@ import * as Long from "long";
 import { suite, test, timeout } from "mocha-typescript";
 import * as moment from "moment";
 import "reflect-metadata";
-import * as P from "pino";
 import { of, zip } from "rxjs";
 import { create } from "rxjs-spy";
 import { ecdhUnsafe, publicKeyTweakMul } from "secp256k1";
