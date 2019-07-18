@@ -19,7 +19,7 @@ import { NftNotApple } from "../model/NftNotApple";
 chai.should();
 chai.use(chaiThings);
 
-describe.skip("NFT API test suite for ops", () => {
+describe("NFT API test suite for ops", () => {
 
     let api: DCoreApi;
     let spy: Spy;
