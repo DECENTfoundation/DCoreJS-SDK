@@ -1,6 +1,6 @@
 import { Expose } from "class-transformer";
 import * as Long from "long";
-import { LongToClass } from "../net/adapter/TypeAdapters";
+import { LongToClass, LongToPlain } from "../net/adapter/TypeAdapters";
 
 export class MinerVotes {
 
@@ -8,6 +8,7 @@ export class MinerVotes {
     public account: string;
 
     // UInt64
+    @LongToPlain
     @LongToClass
     @Expose({ name: "votes" })
     public votes: Long;

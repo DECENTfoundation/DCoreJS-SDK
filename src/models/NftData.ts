@@ -1,18 +1,21 @@
 import { Expose } from "class-transformer";
-import { ChainObjectToClass } from "../net/adapter/TypeAdapters";
+import { ChainObjectToClass, ChainObjectToPlain } from "../net/adapter/TypeAdapters";
 import { ChainObject } from "./ChainObject";
 
 export class NftData<T> {
 
+    @ChainObjectToPlain
     @ChainObjectToClass
     @Expose({ name: "id" })
     public readonly id: ChainObject;
 
     @ChainObjectToClass
+    @ChainObjectToPlain
     @Expose({ name: "nft_id" })
     public readonly nftId: ChainObject;
 
     @ChainObjectToClass
+    @ChainObjectToPlain
     @Expose({ name: "owner" })
     public readonly owner: ChainObject;
 

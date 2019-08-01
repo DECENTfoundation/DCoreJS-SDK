@@ -1,17 +1,19 @@
 import * as ByteBuffer from "bytebuffer";
 import { Expose } from "class-transformer";
 import { Moment } from "moment";
-import { ChainObjectToClass, MomentToClass } from "../net/adapter/TypeAdapters";
+import { ChainObjectToClass, ChainObjectToPlain, MomentToClass, MomentToPlain } from "../net/adapter/TypeAdapters";
 import { ChainObject } from "./ChainObject";
 
 export class BlockHeader {
     @Expose({ name: "previous" })
     public previous: string;
 
+    @MomentToPlain
     @MomentToClass
     @Expose({ name: "timestamp" })
     public timestamp: Moment;
 
+    @ChainObjectToPlain
     @ChainObjectToClass
     @Expose({ name: "miner" })
     public miner: ChainObject;

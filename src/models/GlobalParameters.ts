@@ -1,6 +1,6 @@
 import { Expose, Type } from "class-transformer";
 import * as Long from "long";
-import { LongToClassSigned } from "../net/adapter/TypeAdapters";
+import { LongToClassSigned, LongToPlain } from "../net/adapter/TypeAdapters";
 import { FeeSchedule } from "./FeeSchedule";
 
 export class GlobalParameters {
@@ -58,6 +58,7 @@ export class GlobalParameters {
     public cashbackVestingPeriodSeconds: number;
 
     // Int64
+    @LongToPlain
     @LongToClassSigned
     @Expose({ name: "cashback_vesting_threshold" })
     public cashbackVestingThreshold: Long;

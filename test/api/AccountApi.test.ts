@@ -26,7 +26,7 @@ describe("account API test suite for ops", () => {
     before(() => {
         spy = create();
         // spy.log(/^API\w+/);
-        api = DCoreSdk.createForWebSocket(() => new WebSocket(Helpers.STAGE_WS));
+        api = DCoreSdk.createForWebSocket(() => new WebSocket(Helpers.STAGE_WS), Helpers.LOGGER);
     });
 
     after(() => {
@@ -56,10 +56,7 @@ describe("account API test suite for ops", () => {
 
 });
 
-([
-    ["RPC", DCoreSdk.createForHttp({ baseUrl: Helpers.STAGE_HTTPS, timeout: 15000, rejectUnauthorized: false })],
-    ["WebSocket", DCoreSdk.createForWebSocket(() => new WebSocket(Helpers.STAGE_WS))],
-] as Array<[string, DCoreApi]>).forEach(([name, sdk]) => {
+Helpers.APIS.forEach(([name, sdk]) => {
     const api = sdk.accountApi;
 
     describe(`account API test suite for ${name}`, () => {

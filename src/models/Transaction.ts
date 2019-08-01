@@ -21,8 +21,8 @@ export class Transaction {
         return new Transaction(ops, props.time.add(transactionExpiration), refBlockNum, refBlockPrefix, chainId, [], []);
     }
 
-    @OperationsToClass
     @Transform((values: any[], obj: Transaction) => obj.operations.map((op) => [op.type, classToPlain(op)]), { toPlainOnly: true })
+    @OperationsToClass
     @Expose({ name: "operations" })
     public operations: BaseOperation[];
 

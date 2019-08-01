@@ -1,10 +1,11 @@
 import { Expose } from "class-transformer";
 import * as Long from "long";
-import { ChainObjectToClass, LongToClass } from "../net/adapter/TypeAdapters";
+import { ChainObjectToClass, ChainObjectToPlain, LongToClass, LongToPlain } from "../net/adapter/TypeAdapters";
 import { ChainObject } from "./ChainObject";
 
 export class MinerVotingInfo {
 
+    @ChainObjectToPlain
     @ChainObjectToClass
     @Expose({ name: "id" })
     public id: ChainObject;
@@ -16,6 +17,7 @@ export class MinerVotingInfo {
     public url: string;
 
     // UInt64
+    @LongToPlain
     @LongToClass
     @Expose({ name: "total_votes" })
     public votes: Long;

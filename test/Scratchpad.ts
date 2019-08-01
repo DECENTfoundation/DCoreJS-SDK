@@ -142,7 +142,7 @@ class Scratchpad {
     }
 
     @test accountByName() {
-        const api = new RpcService({ baseUrl: "https://stagesocket.decentgo.com:8090/rpc", timeout: 15000, rejectUnauthorized: false });
+        const api = new RpcService({ baseUrl: "https://stagesocket.decentgo.com:8090/rpc", timeout: 15000, rejectUnauthorized: false }, Helpers.LOGGER);
         api.request(new GetAccountByName("u961279ec8b7ae7bd62f304f7c1c3d345")).subscribe(
             (account) => console.log(account),
             (err) => console.error(err)
@@ -150,7 +150,7 @@ class Scratchpad {
     }
 
     @test accountById() {
-        const api = new RpcService({ baseUrl: "https://stagesocket.decentgo.com:8090/rpc", timeout: 15000, rejectUnauthorized: false });
+        const api = new RpcService({ baseUrl: "https://stagesocket.decentgo.com:8090/rpc", timeout: 15000, rejectUnauthorized: false }, Helpers.LOGGER);
         return api.request(new GetAccountById([ChainObject.parse("1.2.15")])).subscribe(
             (account) => console.log(account),
             (err) => console.error(err)
@@ -201,7 +201,7 @@ class Scratchpad {
     }
 
     @test websocket() {
-        const rxWs = new RxWebSocket(() => new WebSocket("wss://stagesocket.decentgo.com:8090", { rejectUnauthorized: false }));
+        const rxWs = new RxWebSocket(() => new WebSocket("wss://stagesocket.decentgo.com:8090", { rejectUnauthorized: false }), Helpers.LOGGER);
         const spy = create();
         spy.log(/^RxWebSocket_make_\w+/);
 

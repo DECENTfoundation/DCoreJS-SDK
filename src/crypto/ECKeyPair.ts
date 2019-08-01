@@ -1,5 +1,5 @@
 import * as Crypto from "crypto";
-import * as _ from "lodash/fp";
+import * as _ from "lodash";
 import * as Long from "long";
 import { privateKeyVerify, publicKeyCreate, publicKeyTweakMul, sign } from "secp256k1";
 import { assertThrow, Utils } from "../utils/Utils";

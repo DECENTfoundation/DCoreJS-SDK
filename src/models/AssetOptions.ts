@@ -13,8 +13,8 @@ interface FixedMaxSupply {
 export class AssetOptions {
 
     // Int64
-    @LongToClassSigned
     @LongToPlain
+    @LongToClassSigned
     @Expose({ name: "max_supply" })
     public maxSupply: Long;
 
@@ -27,8 +27,8 @@ export class AssetOptions {
 
     // typedef static_variant<void_t, fixed_max_supply_struct>     asset_options_extensions;
     // fixed_max_supply_struct has index 1 therefore we write '1'
-    @Transform((values: Array<[number, object]>) => values.map(([one, obj]) => obj), { toClassOnly: true })
     @Transform((values: object[]) => values.map((obj) => [1, obj]), { toPlainOnly: true })
+    @Transform((values: Array<[number, object]>) => values.map(([one, obj]) => obj), { toClassOnly: true })
     @Expose({ name: "extensions" })
     public extensions: object[];
 

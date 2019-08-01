@@ -18,8 +18,8 @@ export class NftUpdateDataOperation extends BaseOperation {
     @Expose({ name: "nft_data_id" })
     public readonly id: ChainObject;
 
-    @Transform((value: Array<[string, any]>) => new Map(value), { toClassOnly: true })
     @Transform((value: any, obj: NftUpdateDataOperation) => Array.from(obj.data), { toPlainOnly: true })
+    @Transform((value: Array<[string, any]>) => new Map(value), { toClassOnly: true })
     @Expose({ name: "data" })
     public data: Map<string, any>;
 

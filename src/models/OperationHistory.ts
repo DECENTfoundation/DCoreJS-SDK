@@ -1,15 +1,17 @@
-import { Expose } from "class-transformer";
+import { classToPlain, Expose, Transform } from "class-transformer";
 import { OperationToClass } from "../net/adapter/OperationAdapter";
-import { ChainObjectToClass } from "../net/adapter/TypeAdapters";
+import { ChainObjectToClass, ChainObjectToPlain } from "../net/adapter/TypeAdapters";
 import { ChainObject } from "./ChainObject";
 import { BaseOperation } from "./operation/BaseOperation";
 
 export class OperationHistory {
 
+    @ChainObjectToPlain
     @ChainObjectToClass
     @Expose({ name: "id" })
     public id: ChainObject;
 
+    @Transform((values: any[], obj: OperationHistory) => [obj.op.type, classToPlain(obj.op)], { toPlainOnly: true })
     @OperationToClass
     @Expose({ name: "op" })
     public op: BaseOperation;
