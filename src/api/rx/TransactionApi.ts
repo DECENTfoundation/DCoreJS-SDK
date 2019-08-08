@@ -1,23 +1,23 @@
 import * as Long from "long";
 import { Duration } from "moment";
 import { Observable } from "rxjs";
-import { DCoreApi } from "../DCoreApi";
-import { DCoreSdk } from "../DCoreSdk";
-import { ChainObject } from "../models/ChainObject";
-import { BaseOperation } from "../models/operation/BaseOperation";
-import { ProcessedTransaction } from "../models/ProcessedTransaction";
-import { Transaction } from "../models/Transaction";
-import { TransactionConfirmation } from "../models/TransactionConfirmation";
-import { GetProposedTransactions } from "../net/models/request/GetProposedTransactions";
-import { GetRecentTransactionById } from "../net/models/request/GetRecentTransactionById";
-import { GetTransaction } from "../net/models/request/GetTransaction";
-import { GetTransactionById } from "../net/models/request/GetTransactionById";
-import { GetTransactionHex } from "../net/models/request/GetTransactionHex";
+import { DCoreClient } from "../../DCoreClient";
+import { ChainObject } from "../../models/ChainObject";
+import { BaseOperation } from "../../models/operation/BaseOperation";
+import { ProcessedTransaction } from "../../models/ProcessedTransaction";
+import { Transaction } from "../../models/Transaction";
+import { TransactionConfirmation } from "../../models/TransactionConfirmation";
+import { GetProposedTransactions } from "../../net/models/request/GetProposedTransactions";
+import { GetRecentTransactionById } from "../../net/models/request/GetRecentTransactionById";
+import { GetTransaction } from "../../net/models/request/GetTransaction";
+import { GetTransactionById } from "../../net/models/request/GetTransactionById";
+import { GetTransactionHex } from "../../net/models/request/GetTransactionHex";
 import { BaseApi } from "./BaseApi";
+import { DCoreApi } from "./DCoreApi";
 
 export class TransactionApi extends BaseApi {
 
-    constructor(api: DCoreApi, private core: DCoreSdk) {
+    constructor(api: DCoreApi, private core: DCoreClient) {
         super(api);
     }
 

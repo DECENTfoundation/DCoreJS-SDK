@@ -13,7 +13,7 @@ export * from "./HistoryApi";
 export * from "./MessageApi";
 export * from "./MiningApi";
 export * from "./PurchaseApi";
-export * from "./SeedersApi";
+export * from "./SeederApi";
 export * from "./SubscriptionApi";
 export * from "./TransactionApi";
 export * from "./ValidationApi";

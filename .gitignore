@@ -121,6 +121,7 @@ lib/
 libs/
 build
 dist
+/gen
 
 # node-lambda
 .env

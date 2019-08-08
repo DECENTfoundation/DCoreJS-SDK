@@ -1,24 +1,24 @@
 import { Observable, of } from "rxjs";
 import { flatMap } from "rxjs/operators";
-import { Credentials } from "../crypto/Credentials";
-import { DCoreApi } from "../DCoreApi";
-import { Fee } from "../DCoreSdk";
-import { ChainObject } from "../models/ChainObject";
-import { ObjectType } from "../models/ObjectType";
-import { LeaveRatingAndCommentOperation } from "../models/operation/LeaveRatingAndCommentOperation";
-import { SearchPurchasesOrder } from "../models/order/SearchPurchasesOrder";
-import { PubKey } from "../models/PubKey";
-import { Purchase } from "../models/Purchase";
-import { TransactionConfirmation } from "../models/TransactionConfirmation";
-import { GetBuyingByUri } from "../net/models/request/GetBuyingByUri";
-import { GetHistoryBuyingsByConsumer } from "../net/models/request/GetHistoryBuyingsByConsumer";
-import { GetOpenBuyings } from "../net/models/request/GetOpenBuyings";
-import { GetOpenBuyingsByConsumer } from "../net/models/request/GetOpenBuyingsByConsumer";
-import { GetOpenBuyingsByUri } from "../net/models/request/GetOpenBuyingsByUri";
-import { RestoreEncryptionKey } from "../net/models/request/RestoreEncryptionKey";
-import { SearchBuyings } from "../net/models/request/SearchBuyings";
-import { SearchFeedback } from "../net/models/request/SearchFeedback";
+import { Credentials } from "../../crypto/Credentials";
+import { Fee } from "../../DCoreClient";
+import { ChainObject } from "../../models/ChainObject";
+import { ObjectType } from "../../models/ObjectType";
+import { LeaveRatingAndCommentOperation } from "../../models/operation/LeaveRatingAndCommentOperation";
+import { SearchPurchasesOrder } from "../../models/order/SearchPurchasesOrder";
+import { PubKey } from "../../models/PubKey";
+import { Purchase } from "../../models/Purchase";
+import { TransactionConfirmation } from "../../models/TransactionConfirmation";
+import { GetBuyingByUri } from "../../net/models/request/GetBuyingByUri";
+import { GetHistoryBuyingsByConsumer } from "../../net/models/request/GetHistoryBuyingsByConsumer";
+import { GetOpenBuyings } from "../../net/models/request/GetOpenBuyings";
+import { GetOpenBuyingsByConsumer } from "../../net/models/request/GetOpenBuyingsByConsumer";
+import { GetOpenBuyingsByUri } from "../../net/models/request/GetOpenBuyingsByUri";
+import { RestoreEncryptionKey } from "../../net/models/request/RestoreEncryptionKey";
+import { SearchBuyings } from "../../net/models/request/SearchBuyings";
+import { SearchFeedback } from "../../net/models/request/SearchFeedback";
 import { BaseApi } from "./BaseApi";
+import { DCoreApi } from "./DCoreApi";
 
 export class PurchaseApi extends BaseApi {
 

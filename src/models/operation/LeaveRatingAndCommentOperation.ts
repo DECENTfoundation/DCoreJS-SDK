@@ -1,5 +1,5 @@
 import { Expose } from "class-transformer";
-import { Fee } from "../../DCoreSdk";
+import { Fee } from "../../DCoreClient";
 import { ChainObjectToClass, ChainObjectToPlain } from "../../net/adapter/TypeAdapters";
 import { assertThrow } from "../../utils/Utils";
 import { ChainObject } from "../ChainObject";

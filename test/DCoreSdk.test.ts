@@ -6,7 +6,7 @@ import { duration } from "moment";
 import "reflect-metadata";
 import { create } from "rxjs-spy";
 import { Spy } from "rxjs-spy/spy-interface";
-import { DCoreSdk } from "../src/DCoreSdk";
+import { DCoreClient } from "../src/DCoreClient";
 import { AssetAmount } from "../src/models/AssetAmount";
 import { ChainObject } from "../src/models/ChainObject";
 import { TransferOperation } from "../src/models/operation/TransferOperation";
@@ -16,7 +16,7 @@ chai.should();
 chai.use(chaiThings);
 
 Helpers.APIS.forEach(([name, api]) => {
-    const sdk = _.get(api, "core") as DCoreSdk;
+    const sdk = _.get(api, "core") as DCoreClient;
 
     describe(`dcore SDK test suite for ${name}`, () => {
         after(() => {

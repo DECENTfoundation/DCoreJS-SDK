@@ -4,8 +4,8 @@ import { Observable, PartialObserver } from "rxjs";
 import { Address } from "../src/crypto/Address";
 import { Credentials } from "../src/crypto/Credentials";
 import { ECKeyPair } from "../src/crypto/ECKeyPair";
-import { DCoreApi } from "../src/DCoreApi";
-import { DCoreSdk } from "../src/DCoreSdk";
+import { DCoreApi } from "../src/api/rx/DCoreApi";
+import { DCoreClient } from "../src/DCoreClient";
 import { ChainObject } from "../src/models/ChainObject";
 
 export class Helpers {
@@ -15,8 +15,8 @@ export class Helpers {
     public static LOGGER = P({ name: "TEST", base: undefined, prettyPrint: true, level: "debug" });
 
     public static APIS = [
-        ["RPC", DCoreSdk.createForHttp({ baseUrl: Helpers.STAGE_HTTPS, timeout: 15000, rejectUnauthorized: false }, Helpers.LOGGER)],
-        ["WebSocket", DCoreSdk.createForWebSocket(() => new WebSocket(Helpers.STAGE_WS), Helpers.LOGGER)],
+        ["RPC", DCoreClient.createForHttp({ baseUrl: Helpers.STAGE_HTTPS, timeout: 15000, rejectUnauthorized: false }, Helpers.LOGGER)],
+        ["WebSocket", DCoreClient.createForWebSocket(() => new WebSocket(Helpers.STAGE_WS), Helpers.LOGGER)],
     ] as Array<[string, DCoreApi]>;
 
     public static readonly ACCOUNT = ChainObject.parse("1.2.27");

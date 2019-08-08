@@ -1,6 +1,6 @@
 import { Expose, Type } from "class-transformer";
 import { Address } from "../../crypto/Address";
-import { Fee } from "../../DCoreSdk";
+import { Fee } from "../../DCoreClient";
 import { ChainObjectToClass, ChainObjectToPlain } from "../../net/adapter/TypeAdapters";
 import { assertThrow } from "../../utils/Utils";
 import { Account } from "../Account";

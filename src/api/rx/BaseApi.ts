@@ -1,8 +1,8 @@
 import { Observable } from "rxjs";
-import { DCoreApi } from "../DCoreApi";
-import { BaseRequest } from "../net/models/request/BaseRequest";
-import { WithCallback } from "../net/models/request/WithCallback";
-import { ObjectCheckOf } from "../utils/ObjectCheckOf";
+import { BaseRequest } from "../../net/models/request/BaseRequest";
+import { WithCallback } from "../../net/models/request/WithCallback";
+import { ObjectCheckOf } from "../../utils/ObjectCheckOf";
+import { DCoreApi } from "./DCoreApi";
 
 export abstract class BaseApi {
     protected constructor(protected api: DCoreApi) {

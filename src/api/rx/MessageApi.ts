@@ -2,20 +2,20 @@ import { serialize } from "class-transformer";
 import * as _ from "lodash";
 import { Observable, of, zip } from "rxjs";
 import { flatMap, map } from "rxjs/operators";
-import { Credentials } from "../crypto/Credentials";
-import { DCoreApi } from "../DCoreApi";
-import { Fee } from "../DCoreSdk";
-import { ChainObject } from "../models/ChainObject";
-import { Memo } from "../models/Memo";
-import { Message } from "../models/Message";
-import { MessagePayload } from "../models/MessagePayload";
-import { MessagePayloadReceiver } from "../models/MessagePayloadReceiver";
-import { MessageResponse } from "../models/MessageResponse";
-import { SendMessageOperation } from "../models/operation/SendMessageOperation";
-import { TransactionConfirmation } from "../models/TransactionConfirmation";
-import { GetMessagesObjects } from "../net/models/request/GetMessagesObjects";
-import { assertThrow } from "../utils/Utils";
+import { Credentials } from "../../crypto/Credentials";
+import { Fee } from "../../DCoreClient";
+import { ChainObject } from "../../models/ChainObject";
+import { Memo } from "../../models/Memo";
+import { Message } from "../../models/Message";
+import { MessagePayload } from "../../models/MessagePayload";
+import { MessagePayloadReceiver } from "../../models/MessagePayloadReceiver";
+import { MessageResponse } from "../../models/MessageResponse";
+import { SendMessageOperation } from "../../models/operation/SendMessageOperation";
+import { TransactionConfirmation } from "../../models/TransactionConfirmation";
+import { GetMessagesObjects } from "../../net/models/request/GetMessagesObjects";
+import { assertThrow } from "../../utils/Utils";
 import { BaseApi } from "./BaseApi";
+import { DCoreApi } from "./DCoreApi";
 
 export class MessageApi extends BaseApi {
     constructor(api: DCoreApi) {

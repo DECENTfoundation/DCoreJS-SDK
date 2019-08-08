@@ -1,11 +1,11 @@
 import { Observable } from "rxjs";
-import { DCoreApi } from "../DCoreApi";
-import { CancelAllSubscriptions } from "../net/models/request/CancelAllSubscriptions";
-import { SetBlockAppliedCallback } from "../net/models/request/SetBlockAppliedCallback";
-import { SetContentUpdateCallback } from "../net/models/request/SetContentUpdateCallback";
-import { SetPendingTransactionCallback } from "../net/models/request/SetPendingTransactionCallback";
-import { SetSubscribeCallback } from "../net/models/request/SetSubscribeCallback";
+import { CancelAllSubscriptions } from "../../net/models/request/CancelAllSubscriptions";
+import { SetBlockAppliedCallback } from "../../net/models/request/SetBlockAppliedCallback";
+import { SetContentUpdateCallback } from "../../net/models/request/SetContentUpdateCallback";
+import { SetPendingTransactionCallback } from "../../net/models/request/SetPendingTransactionCallback";
+import { SetSubscribeCallback } from "../../net/models/request/SetSubscribeCallback";
 import { BaseApi } from "./BaseApi";
+import { DCoreApi } from "./DCoreApi";
 
 export class CallbackApi extends BaseApi {
     constructor(api: DCoreApi) {

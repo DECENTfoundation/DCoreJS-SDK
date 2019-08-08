@@ -28,6 +28,7 @@
   ],
   "include": [
     "src/**/*",
+    "gen/**/*",
     "dom.workaround.d.ts"
   ]
 }

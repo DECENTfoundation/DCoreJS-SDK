@@ -1,8 +1,8 @@
 import { Expose, Type } from "class-transformer";
 import { Decimal } from "decimal.js";
 import * as Long from "long";
+import { AssetPrecision } from "../DCoreClient";
 import { DCoreConstants } from "../DCoreConstants";
-import { AssetPrecision } from "../DCoreSdk";
 import { ChainObjectToClass, ChainObjectToPlain } from "../net/adapter/TypeAdapters";
 import { assertThrow } from "../utils/Utils";
 import { AssetAmount } from "./AssetAmount";

@@ -8,8 +8,8 @@ import "reflect-metadata";
 import { create } from "rxjs-spy";
 import { Spy } from "rxjs-spy/spy-interface";
 import { ECKeyPair } from "../../src/crypto/ECKeyPair";
-import { DCoreApi } from "../../src/DCoreApi";
-import { DCoreSdk } from "../../src/DCoreSdk";
+import { DCoreApi } from "../../src/api/rx/DCoreApi";
+import { DCoreClient } from "../../src/DCoreClient";
 import { Asset, AssetAmount, AssetClaimFeesOperation, AssetFundPoolsOperation, ChainObject, DCoreError, RealSupply } from "../../src/models";
 import { AssetData } from "../../src/models/AssetData";
 import { Helpers, testCheck, testCheckWith } from "../Helpers";
@@ -25,7 +25,7 @@ describe("asset API test suite for ops", () => {
     before(() => {
         spy = create();
         // spy.log(/^API\w+/);
-        api = DCoreSdk.createForWebSocket(() => new WebSocket(Helpers.STAGE_WS), Helpers.LOGGER);
+        api = DCoreClient.createForWebSocket(() => new WebSocket(Helpers.STAGE_WS), Helpers.LOGGER);
     });
 
     after(() => {

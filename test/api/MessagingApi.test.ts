@@ -6,8 +6,8 @@ import "reflect-metadata";
 import { create } from "rxjs-spy";
 import { Spy } from "rxjs-spy/spy-interface";
 import { Credentials } from "../../src/crypto/Credentials";
-import { DCoreApi } from "../../src/DCoreApi";
-import { DCoreSdk } from "../../src/DCoreSdk";
+import { DCoreApi } from "../../src/api/rx/DCoreApi";
+import { DCoreClient } from "../../src/DCoreClient";
 import { Message } from "../../src/models/Message";
 import { MessageResponse } from "../../src/models/MessageResponse";
 import { SendMessageOperation } from "../../src/models/operation/SendMessageOperation";
@@ -24,7 +24,7 @@ describe("asset API test suite for ops", () => {
     before(() => {
         spy = create();
         // spy.log(/^API\w+/);
-        api = DCoreSdk.createForWebSocket(() => new WebSocket(Helpers.STAGE_WS), Helpers.LOGGER);
+        api = DCoreClient.createForWebSocket(() => new WebSocket(Helpers.STAGE_WS), Helpers.LOGGER);
     });
 
     after(() => {
