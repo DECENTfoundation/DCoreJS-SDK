@@ -11,7 +11,7 @@
     "experimentalDecorators": true,
     "sourceMap": true,
     "noImplicitAny": true,
-    "noUnusedLocals": true,
+//    "noUnusedLocals": true,
     "baseUrl": ".",
     "outDir": "./dist",
     "strict": true,
@@ -28,7 +28,6 @@
   ],
   "include": [
     "src/**/*",
-    "gen/**/*",
     "dom.workaround.d.ts"
   ]
 }

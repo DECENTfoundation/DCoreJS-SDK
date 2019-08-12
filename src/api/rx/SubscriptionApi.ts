@@ -6,8 +6,11 @@ import { ListActiveSubscriptionsByAuthor } from "../../net/models/request/ListAc
 import { ListActiveSubscriptionsByConsumer } from "../../net/models/request/ListActiveSubscriptionsByConsumer";
 import { ListSubscriptionsByAuthor } from "../../net/models/request/ListSubscriptionsByAuthor";
 import { ListSubscriptionsByConsumer } from "../../net/models/request/ListSubscriptionsByConsumer";
+import { AssetApi } from "./AssetApi";
 import { BaseApi } from "./BaseApi";
 import { DCoreApi } from "./DCoreApi";
+
+export type SubscriptionApiRx = SubscriptionApi;
 
 export class SubscriptionApi extends BaseApi {
     constructor(api: DCoreApi) {

@@ -30,6 +30,8 @@ import { assertThrow } from "../../utils/Utils";
 import { BaseApi } from "./BaseApi";
 import { DCoreApi } from "./DCoreApi";
 
+export type NftApiRx = NftApi;
+
 export class NftApi extends BaseApi {
 
     constructor(api: DCoreApi) {
@@ -106,6 +108,7 @@ export class NftApi extends BaseApi {
     // tslint:disable-next-line:unified-signatures
     public getAllData<T>(ids: ChainObject[], model: Newable<T>): Observable<Array<NftData<T>>>;
 
+    public getAllData<T>(ids: ChainObject[], model?: Newable<T>): Observable<Array<NftData<T>>>;
     public getAllData<T>(ids: ChainObject[], model?: Newable<T>): Observable<Array<NftData<T>>> {
         return this.getAllDataRaw(ids).pipe(map((list) => list.map((it) => this.make(it, model))));
     }
@@ -142,6 +145,7 @@ export class NftApi extends BaseApi {
     // tslint:disable-next-line:unified-signatures
     public getData<T>(id: ChainObject, model: Newable<T>): Observable<NftData<T>>;
 
+    public getData<T>(id: ChainObject, model?: Newable<T>): Observable<NftData<T>>;
     public getData<T>(id: ChainObject, model?: Newable<T>): Observable<NftData<T>> {
         return this.getDataRaw(id).pipe(map((it) => this.make(it, model)));
     }
@@ -247,6 +251,7 @@ export class NftApi extends BaseApi {
     // tslint:disable-next-line:unified-signatures
     public listDataByNft<T>(nftId: ChainObject, model: Newable<T>): Observable<Array<NftData<T>>>;
 
+    public listDataByNft<T>(nftId: ChainObject, model?: Newable<T>): Observable<Array<NftData<T>>>;
     public listDataByNft<T>(nftId: ChainObject, model?: Newable<T>): Observable<Array<NftData<T>>> {
         return this.listDataByNftRaw(nftId).pipe(map((list) => list.map((it) => this.make(it, model))));
     }

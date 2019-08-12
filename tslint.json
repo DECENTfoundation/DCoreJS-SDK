@@ -11,5 +11,10 @@
       true,
       180
     ]
+  },
+  "linterOptions": {
+    "exclude": [
+      "src/api/**"
+    ]
   }
 }

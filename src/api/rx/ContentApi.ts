@@ -27,8 +27,11 @@ import { GetContentById } from "../../net/models/request/GetContentById";
 import { GetContentByUri } from "../../net/models/request/GetContentByUri";
 import { ListPublishingManagers } from "../../net/models/request/ListPublishingManagers";
 import { SearchContent } from "../../net/models/request/SearchContent";
+import { AssetApi } from "./AssetApi";
 import { BaseApi } from "./BaseApi";
 import { DCoreApi } from "./DCoreApi";
+
+export type ContentApiRx = ContentApi;
 
 export class ContentApi extends BaseApi {
 

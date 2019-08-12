@@ -17,8 +17,11 @@ import { GetOpenBuyingsByUri } from "../../net/models/request/GetOpenBuyingsByUr
 import { RestoreEncryptionKey } from "../../net/models/request/RestoreEncryptionKey";
 import { SearchBuyings } from "../../net/models/request/SearchBuyings";
 import { SearchFeedback } from "../../net/models/request/SearchFeedback";
+import { AssetApi } from "./AssetApi";
 import { BaseApi } from "./BaseApi";
 import { DCoreApi } from "./DCoreApi";
+
+export type PurchaseApiRx = PurchaseApi;
 
 export class PurchaseApi extends BaseApi {
 

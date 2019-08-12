@@ -10,8 +10,11 @@ import { GetConfig } from "../../net/models/request/GetConfig";
 import { GetDynamicGlobalProps } from "../../net/models/request/GetDynamicGlobalProps";
 import { GetGlobalProperties } from "../../net/models/request/GetGlobalProperties";
 import { GetTimeToMaintenance } from "../../net/models/request/GetTimeToMaintenance";
+import { AssetApi } from "./AssetApi";
 import { BaseApi } from "./BaseApi";
 import { DCoreApi } from "./DCoreApi";
+
+export type GeneralApiRx = GeneralApi;
 
 export class GeneralApi extends BaseApi {
     constructor(api: DCoreApi) {

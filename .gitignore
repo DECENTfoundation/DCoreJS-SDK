@@ -138,3 +138,5 @@ db/
 *.key
 *.ca-bundle
 package-lock.json
+
+/src/api/promise/

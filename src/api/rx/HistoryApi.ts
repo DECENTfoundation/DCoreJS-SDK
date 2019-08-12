@@ -14,8 +14,11 @@ import { GetObjects } from "../../net/models/request/GetObjects";
 import { GetRelativeAccountHistory } from "../../net/models/request/GetRelativeAccountHistory";
 import { SearchAccountBalanceHistory } from "../../net/models/request/SearchAccountBalanceHistory";
 import { toMap } from "../../utils/Utils";
+import { AssetApi } from "./AssetApi";
 import { BaseApi } from "./BaseApi";
 import { DCoreApi } from "./DCoreApi";
+
+export type HistoryApiRx = HistoryApi;
 
 export class HistoryApi extends BaseApi {
     constructor(api: DCoreApi) {

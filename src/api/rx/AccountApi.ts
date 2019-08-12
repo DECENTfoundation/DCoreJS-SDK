@@ -214,7 +214,7 @@ export class AccountApi extends BaseApi {
      * @param recipient account name or id, mandatory for encrypted message
      * @param keyPair sender's key pair, mandatory for encrypted message
      */
-    public createMemo(message: string, recipient?: AccountRef, keyPair?: ECKeyPair) {
+    public createMemo(message: string, recipient?: AccountRef, keyPair?: ECKeyPair): Observable<Memo> {
         if (keyPair && recipient) {
             return this.get(recipient).pipe(map((acc) => Memo.createEncrypted(message, keyPair, acc.primaryAddress)));
         } else {

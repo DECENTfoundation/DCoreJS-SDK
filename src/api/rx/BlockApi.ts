@@ -5,8 +5,11 @@ import { SignedBlock } from "../../models/SignedBlock";
 import { GetBlock } from "../../net/models/request/GetBlock";
 import { GetBlockHeader } from "../../net/models/request/GetBlockHeader";
 import { HeadBlockTime } from "../../net/models/request/HeadBlockTime";
+import { AssetApi } from "./AssetApi";
 import { BaseApi } from "./BaseApi";
 import { DCoreApi } from "./DCoreApi";
+
+export type BlockApiRx = BlockApi;
 
 export class BlockApi extends BaseApi {
 

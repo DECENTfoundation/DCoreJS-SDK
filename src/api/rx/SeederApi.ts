@@ -7,8 +7,11 @@ import { ListSeedersByPrice } from "../../net/models/request/ListSeedersByPrice"
 import { ListSeedersByRating } from "../../net/models/request/ListSeedersByRating";
 import { ListSeedersByRegion } from "../../net/models/request/ListSeedersByRegion";
 import { ListSeedersByUpload } from "../../net/models/request/ListSeedersByUpload";
+import { AssetApi } from "./AssetApi";
 import { BaseApi } from "./BaseApi";
 import { DCoreApi } from "./DCoreApi";
+
+export type SeederApiRx = SeederApi;
 
 export class SeederApi extends BaseApi {
     constructor(api: DCoreApi) {
