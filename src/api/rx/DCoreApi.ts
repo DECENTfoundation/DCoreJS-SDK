@@ -18,8 +18,6 @@ import { SubscriptionApi } from "./SubscriptionApi";
 import { TransactionApi } from "./TransactionApi";
 import { ValidationApi } from "./ValidationApi";
 
-export type DCoreApiRx = DCoreApi;
-
 export class DCoreApi extends BaseCoreApi {
 
     public readonly accountApi: AccountApi = new AccountApi(this);

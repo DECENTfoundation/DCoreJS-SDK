@@ -1,4 +1,4 @@
-import { MethodDeclarationStructure, StructureKind } from "ts-morph";
+import { MethodDeclarationStructure, OptionalKind, ParameterDeclarationStructure, StructureKind } from "ts-morph";
 import { ApiDescriptor } from "./ApiDescriptor";
 
 export function decapitalize(value: string) {
@@ -6,8 +6,12 @@ export function decapitalize(value: string) {
     return first.concat(value.substring(1));
 }
 
+export function paramNames(params: Array<OptionalKind<ParameterDeclarationStructure>>): string {
+    return params.map((it) => it.name).join(", ");
+}
+
 export function makeReturnCall(method: MethodDeclarationStructure, api: ApiDescriptor) {
-    return `return this.rx.${method.name}(${method.parameters ? method.parameters.map((it) => it.name).join(", ") : ""})${api.returnMethod};`;
+    return `return this.rx.${method.name}(${method.parameters ? paramNames(method.parameters) : ""})${api.returnMethod};`;
 }
 
 export function makeMethod(struct: MethodDeclarationStructure, api: ApiDescriptor)

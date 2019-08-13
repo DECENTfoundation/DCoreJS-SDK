@@ -2,6 +2,7 @@ import {
     ConstructorDeclarationStructure,
     ImportDeclarationStructure,
     MethodDeclarationStructure,
+    ParameterDeclarationStructure,
     Project,
     PropertyDeclarationStructure,
     Scope,
@@ -9,7 +10,7 @@ import {
     StructureKind,
 } from "ts-morph";
 import { ApiDescriptor } from "./ApiDescriptor";
-import { decapitalize, makeMethod } from "./Utils";
+import { decapitalize, makeMethod, paramNames } from "./Utils";
 
 class Generator {
     public project = new Project({
@@ -25,7 +26,8 @@ class Generator {
     private outApi = `${this.out}api/`;
 
     private apis = [
-        new ApiDescriptor("promise", ".toPromise()", (type) => type.replace("Observable", "Promise")),
+        new ApiDescriptor("promise", "createApiPromise", ".toPromise()",
+            (type) => type.replace("Observable", "Promise")),
     ];
 
     private apiFiles: SourceFile[];
@@ -39,13 +41,63 @@ class Generator {
     }
 
     public createFactory() {
+        const out = this.project.getDirectory(this.out)!;
+        const apiRx = this.project.getSourceFile(`${this.sourceApiRx}DCoreApi.ts`)!;
+        const importRx: ImportDeclarationStructure = {
+            kind: StructureKind.ImportDeclaration,
+            moduleSpecifier: out.getRelativePathAsModuleSpecifierTo(apiRx),
+            namespaceImport: "rx",
+        };
+        const apiImports: ImportDeclarationStructure[] = this.apis.map((it) => {
+            return {
+                kind: StructureKind.ImportDeclaration,
+                moduleSpecifier: `${out.getRelativePathAsModuleSpecifierTo(this.outPath(it))}/DCoreApi`,
+                namespaceImport: it.packageSuffix,
+            };
+        });
+        const parameters: ParameterDeclarationStructure[] = [{
+            kind: StructureKind.Parameter,
+            name: "httpOptions",
+            type: "CoreOptions",
+        }, {
+            kind: StructureKind.Parameter,
+            name: "webSocketFactory",
+            type: "WebSocketFactory",
+        }, {
+            hasQuestionToken: true,
+            kind: StructureKind.Parameter,
+            name: "logger",
+            type: "Logger",
+        }];
+        const methods: MethodDeclarationStructure[] = this.apis.map((it) => {
+            return {
+                isStatic: true,
+                kind: StructureKind.Method,
+                name: it.createMethodName,
+                parameters,
+                returnType: `${it.packageSuffix}.DCoreApi`,
+                scope: Scope.Public,
+                statements: [`return new ${it.packageSuffix}.DCoreApi(DCoreClient.create(${paramNames(parameters)}));`],
+            };
+        });
         this.project.createSourceFile(`${this.out}DCoreSdk.ts`, {
-            statements: [{
+            statements: [importRx, ...apiImports, {
                 isExported: true,
                 kind: StructureKind.Class,
+                methods: [...methods, {
+                    isStatic: true,
+                    kind: StructureKind.Method,
+                    name: "createApiRx",
+                    parameters,
+                    returnType: "rx.DCoreApi",
+                    scope: Scope.Public,
+                    statements: [`return DCoreClient.create(${paramNames(parameters)});`],
+                }],
                 name: "DCoreSdk",
             }],
-        }, { overwrite: true });
+        }, { overwrite: true })
+            .fixMissingImports()
+            .organizeImports();
     }
 
     public createCoreApi(api: ApiDescriptor, apiFiles: SourceFile[]) {
