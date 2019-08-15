@@ -6,9 +6,9 @@ import "reflect-metadata";
 import { create } from "rxjs-spy";
 import { Spy } from "rxjs-spy/spy-interface";
 import { flatMap, tap } from "rxjs/operators";
-import { Credentials } from "../../src/crypto/Credentials";
 import { DCoreApi } from "../../src/api/rx/DCoreApi";
-import { DCoreClient } from "../../src/DCoreClient";
+import { Credentials } from "../../src/crypto/Credentials";
+import { DCoreSdk } from "../../src/DCoreSdk";
 import { ChainObject } from "../../src/models/ChainObject";
 import { DCoreError } from "../../src/models/error/DCoreError";
 import { ObjectNotFoundError } from "../../src/models/error/ObjectNotFoundError";
@@ -27,7 +27,7 @@ describe("NFT API test suite for ops", () => {
     before(() => {
         spy = create();
         // spy.log(/^API\w+/);
-        api = DCoreClient.create(undefined, () => new WebSocket(Helpers.STAGE_WS), Helpers.LOGGER);
+        api = DCoreSdk.createApiRx(undefined, () => new WebSocket(Helpers.STAGE_WS), Helpers.LOGGER);
     });
 
     after(() => {

@@ -31,6 +31,7 @@
   "scripts": {
     "build": "sh ./scripts/build.sh",
     "clean": "sh ./scripts/clean.sh",
+    "generate": "sh ./scripts/generate.sh",
     "lint": "sh ./scripts/lint.sh",
     "test:node": "sh ./scripts/test:node.sh",
     "test:browser": "sh ./scripts/test:browser.sh",

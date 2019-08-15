@@ -7,7 +7,7 @@ import "reflect-metadata";
 import { create } from "rxjs-spy";
 import { Spy } from "rxjs-spy/spy-interface";
 import { DCoreApi } from "../../src/api/rx/DCoreApi";
-import { DCoreClient } from "../../src/DCoreClient";
+import { DCoreSdk } from "../../src/DCoreSdk";
 import { AssetAmount, ChainObject, Content, ContentKeys, PurchaseContentOperation, RegionalPrice, Synopsis, TransferOperation } from "../../src/models";
 import { Helpers, testCheck } from "../Helpers";
 
@@ -22,7 +22,7 @@ describe("content API test suite for ops", () => {
     before(() => {
         spy = create();
         // spy.log(/^API\w+/);
-        api = DCoreClient.create(undefined, () => new WebSocket(Helpers.STAGE_WS), Helpers.LOGGER);
+        api = DCoreSdk.createApiRx(undefined, () => new WebSocket(Helpers.STAGE_WS), Helpers.LOGGER);
     });
 
     after(() => {

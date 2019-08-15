@@ -56,10 +56,12 @@ class Generator {
             };
         });
         const parameters: ParameterDeclarationStructure[] = [{
+            hasQuestionToken: true,
             kind: StructureKind.Parameter,
             name: "httpOptions",
             type: "CoreOptions",
         }, {
+            hasQuestionToken: true,
             kind: StructureKind.Parameter,
             name: "webSocketFactory",
             type: "WebSocketFactory",

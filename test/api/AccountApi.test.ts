@@ -8,7 +8,7 @@ import { create } from "rxjs-spy";
 import { Spy } from "rxjs-spy/spy-interface";
 import { flatMap } from "rxjs/operators";
 import { DCoreApi } from "../../src/api/rx/DCoreApi";
-import { DCoreClient } from "../../src/DCoreClient";
+import { DCoreSdk } from "../../src/DCoreSdk";
 import { AccountStatistics, Authority, ChainObject, FullAccount } from "../../src/models";
 import { Account } from "../../src/models/Account";
 import { AssetAmount } from "../../src/models/AssetAmount";
@@ -26,7 +26,7 @@ describe("account API test suite for ops", () => {
     before(() => {
         spy = create();
         // spy.log(/^API\w+/);
-        api = DCoreClient.create(undefined, () => new WebSocket(Helpers.STAGE_WS), Helpers.LOGGER);
+        api = DCoreSdk.createApiRx(undefined, () => new WebSocket(Helpers.STAGE_WS), Helpers.LOGGER);
     });
 
     after(() => {
