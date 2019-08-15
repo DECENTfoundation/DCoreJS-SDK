@@ -38,16 +38,12 @@ Decimal.set({
 });
 
 export class DCoreClient {
-    public static createForHttp(options: CoreOptions, logger: Logger = DCoreClient.DEFAULT_LOGGER): DCoreApi {
-        return new DCoreApi(new DCoreClient(logger, new RpcService(options, logger)));
-    }
-
-    public static createForWebSocket(factory: WebSocketFactory, logger: Logger = DCoreClient.DEFAULT_LOGGER): DCoreApi {
-        return new DCoreApi(new DCoreClient(logger, undefined, new RxWebSocket(factory, logger)));
-    }
-
-    public static create(options: CoreOptions, factory: WebSocketFactory, logger: Logger = DCoreClient.DEFAULT_LOGGER): DCoreApi {
-        return new DCoreApi(new DCoreClient(logger, new RpcService(options, logger), new RxWebSocket(factory, logger)));
+    public static create(options?: CoreOptions, factory?: WebSocketFactory, logger: Logger = DCoreClient.DEFAULT_LOGGER): DCoreApi {
+        return new DCoreApi(new DCoreClient(
+            logger,
+            options ? new RpcService(options, logger) : undefined,
+            factory ? new RxWebSocket(factory, logger) : undefined,
+        ));
     }
 
     private static get DEFAULT_LOGGER() {

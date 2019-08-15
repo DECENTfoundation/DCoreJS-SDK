@@ -209,8 +209,9 @@ class Generator {
 
     public createIndex(api: ApiDescriptor, apis: SourceFile[]) {
         const out = this.outPath(api);
+        const sources = out.getSourceFiles();
         return this.project.createSourceFile(`${out.getPath()}/index.ts`, {
-            statements: apis.map((it) => {
+            statements: sources.map((it) => {
                 return {
                     kind: StructureKind.ExportDeclaration,
                     moduleSpecifier: out.getRelativePathAsModuleSpecifierTo(it),
@@ -230,34 +231,12 @@ class Generator {
             this.createIndex(api, apis);
         });
         this.createFactory();
-        // this.createBaseIndex();
         this.save();
     }
-
-//    already exported... todo add suffixes to api classes ??
-    /*
-        private createBaseIndex() {
-            const out = this.project.getDirectory(this.sourceApi)!;
-            const apis = this.apis.map((it) => it.packageSuffix).concat("rx").sort();
-            const source = this.project.createSourceFile(`${out.getPath()}/index.ts`, {
-                statements: apis.map((it) => {
-                    return {
-                        kind: StructureKind.ExportDeclaration,
-                        moduleSpecifier: out.getRelativePathAsModuleSpecifierTo(this.project.getDirectory(`${this.outApi}${it}`)!),
-                    };
-                }),
-            }, { overwrite: true });
-        }
-    */
 
     private outPath(api: ApiDescriptor) {
         return this.project.createDirectory(`${this.outApi}${api.packageSuffix}`)!;
     }
 }
 
-const generator = new Generator();
-
-// const f = generator.project.getSourceFiles("src/api/*.ts")!;
-// console.log(generator.apiFiles);
-// generator.createFactory();
-generator.generate();
+new Generator().generate();
