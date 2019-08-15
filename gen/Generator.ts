@@ -55,6 +55,11 @@ class Generator {
                 namespaceImport: it.packageSuffix,
             };
         });
+        const importCore: ImportDeclarationStructure = {
+            kind: StructureKind.ImportDeclaration,
+            moduleSpecifier: "./DCoreClient",
+            namedImports: ["DCoreClient"],
+        };
         const parameters: ParameterDeclarationStructure[] = [{
             hasQuestionToken: true,
             kind: StructureKind.Parameter,
@@ -83,7 +88,7 @@ class Generator {
             };
         });
         this.project.createSourceFile(`${this.out}DCoreSdk.ts`, {
-            statements: [importRx, ...apiImports, {
+            statements: [importCore, importRx, ...apiImports, {
                 isExported: true,
                 kind: StructureKind.Class,
                 methods: [...methods, {
