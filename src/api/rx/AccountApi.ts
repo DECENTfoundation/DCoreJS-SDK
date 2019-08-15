@@ -36,8 +36,6 @@ import { ObjectCheckOf } from "../../utils/ObjectCheckOf";
 import { BaseApi } from "./BaseApi";
 import { DCoreApi } from "./DCoreApi";
 
-export type AccountApiRx = AccountApi;
-
 export class AccountApi extends BaseApi {
 
     constructor(api: DCoreApi) {

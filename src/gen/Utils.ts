@@ -10,11 +10,11 @@ export function paramNames(params: Array<OptionalKind<ParameterDeclarationStruct
     return params.map((it) => it.name).join(", ");
 }
 
-export function makeReturnCall(method: MethodDeclarationStructure, api: ApiDescriptor) {
-    return `return this.rx.${method.name}(${method.parameters ? paramNames(method.parameters) : ""})${api.returnMethod};`;
+export function makeReturnCall(group: string, method: MethodDeclarationStructure, api: ApiDescriptor) {
+    return `return this.api.${group}.${method.name}(${method.parameters ? paramNames(method.parameters) : ""})${api.returnMethod};`;
 }
 
-export function makeMethod(struct: MethodDeclarationStructure, api: ApiDescriptor)
+export function makeMethod(group: string, struct: MethodDeclarationStructure, api: ApiDescriptor)
     : MethodDeclarationStructure {
     if (struct.overloads) {
         struct.overloads.forEach((it) => it.returnType = api.returnTypeBuilder(it.returnType as string));
@@ -27,7 +27,7 @@ export function makeMethod(struct: MethodDeclarationStructure, api: ApiDescripto
         parameters: struct.parameters,
         returnType: api.returnTypeBuilder(struct.returnType as string),
         scope: struct.scope,
-        statements: [makeReturnCall(struct, api)],
+        statements: [makeReturnCall(group, struct, api)],
         typeParameters: struct.typeParameters,
     };
 }

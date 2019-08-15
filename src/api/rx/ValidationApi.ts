@@ -16,11 +16,8 @@ import { ValidateTransaction } from "../../net/models/request/ValidateTransactio
 import { VerifyAccountAuthority } from "../../net/models/request/VerifyAccountAuthority";
 import { VerifyAuthority } from "../../net/models/request/VerifyAuthority";
 import { assertThrow } from "../../utils/Utils";
-import { AssetApi } from "./AssetApi";
 import { BaseApi } from "./BaseApi";
 import { DCoreApi } from "./DCoreApi";
-
-export type ValidationApiRx = ValidationApi;
 
 export class ValidationApi extends BaseApi {
 

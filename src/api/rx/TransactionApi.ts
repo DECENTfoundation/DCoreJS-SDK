@@ -12,11 +12,8 @@ import { GetRecentTransactionById } from "../../net/models/request/GetRecentTran
 import { GetTransaction } from "../../net/models/request/GetTransaction";
 import { GetTransactionById } from "../../net/models/request/GetTransactionById";
 import { GetTransactionHex } from "../../net/models/request/GetTransactionHex";
-import { AssetApi } from "./AssetApi";
 import { BaseApi } from "./BaseApi";
 import { DCoreApi } from "./DCoreApi";
-
-export type TransactionApiRx = TransactionApi;
 
 export class TransactionApi extends BaseApi {
 

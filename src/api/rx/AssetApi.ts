@@ -29,11 +29,8 @@ import { GetRealSupply } from "../../net/models/request/GetRealSupply";
 import { ListAssets } from "../../net/models/request/ListAssets";
 import { LookupAssetSymbols } from "../../net/models/request/LookupAssetSymbols";
 import { ObjectCheckOf } from "../../utils/ObjectCheckOf";
-import { AccountApi } from "./AccountApi";
 import { BaseApi } from "./BaseApi";
 import { DCoreApi } from "./DCoreApi";
-
-export type AssetApiRx = AssetApi;
 
 export class AssetApi extends BaseApi {
 

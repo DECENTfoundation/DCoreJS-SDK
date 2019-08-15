@@ -9,11 +9,8 @@ import { VestingBalance } from "../../models/VestingBalance";
 import { GetAccountBalances } from "../../net/models/request/GetAccountBalances";
 import { GetNamedAccountBalances } from "../../net/models/request/GetNamedAccountBalances";
 import { GetVestingBalances } from "../../net/models/request/GetVestingBalances";
-import { AssetApi } from "./AssetApi";
 import { BaseApi } from "./BaseApi";
 import { DCoreApi } from "./DCoreApi";
-
-export type BalanceApiRx = BalanceApi;
 
 export class BalanceApi extends BaseApi {
 

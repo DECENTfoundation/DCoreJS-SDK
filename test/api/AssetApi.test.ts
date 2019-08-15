@@ -25,7 +25,7 @@ describe("asset API test suite for ops", () => {
     before(() => {
         spy = create();
         // spy.log(/^API\w+/);
-        api = DCoreClient.createForWebSocket(() => new WebSocket(Helpers.STAGE_WS), Helpers.LOGGER);
+        api = DCoreClient.create(undefined, () => new WebSocket(Helpers.STAGE_WS), Helpers.LOGGER);
     });
 
     after(() => {

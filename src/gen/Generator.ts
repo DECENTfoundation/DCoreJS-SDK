@@ -103,7 +103,7 @@ class Generator {
     public createCoreApi(api: ApiDescriptor, apiFiles: SourceFile[]) {
         const sourceBase = this.project.getSourceFile(`${this.sourceApi}BaseCoreApi.ts`)!;
         const sourceApi = this.project.getSourceFile(`${this.sourceApiRx}DCoreApi.ts`)!;
-        const sourceApiName = `${sourceApi.getBaseNameWithoutExtension()}Rx`;
+        const sourceApiName = `rx.${sourceApi.getBaseNameWithoutExtension()}`;
         const out = this.outPath(api);
         const imports: ImportDeclarationStructure[] = apiFiles.map((it) => {
             return {
@@ -120,12 +120,12 @@ class Generator {
         const importApi: ImportDeclarationStructure = {
             kind: StructureKind.ImportDeclaration,
             moduleSpecifier: out.getRelativePathAsModuleSpecifierTo(sourceApi),
-            namedImports: [sourceApiName],
+            namespaceImport: "rx",
         };
         const props: PropertyDeclarationStructure[] = apiFiles.map((file) => {
             const name = decapitalize(file.getBaseNameWithoutExtension());
             return {
-                initializer: `new ${file.getBaseNameWithoutExtension()}(this, this.api.${name})`,
+                initializer: `new ${file.getBaseNameWithoutExtension()}(this.api)`,
                 isReadonly: true,
                 kind: StructureKind.Property,
                 name,
@@ -161,11 +161,11 @@ class Generator {
 
     public createApi(api: ApiDescriptor, source: SourceFile) {
         const out = this.outPath(api);
-        const apiRx = `${source.getBaseNameWithoutExtension()}Rx`;
+        const apiRx = this.project.getSourceFile(`${this.sourceApiRx}DCoreApi.ts`)!;
         const importRx: ImportDeclarationStructure = {
             kind: StructureKind.ImportDeclaration,
-            moduleSpecifier: out.getRelativePathAsModuleSpecifierTo(source),
-            namedImports: [apiRx],
+            moduleSpecifier: out.getRelativePathAsModuleSpecifierTo(apiRx),
+            namedImports: ["DCoreApi"],
         };
 
         const imports: ImportDeclarationStructure[] = source.getImportDeclarations().map((it) => {
@@ -182,18 +182,13 @@ class Generator {
                 name: "api",
                 scope: Scope.Private,
                 type: "DCoreApi",
-            }, {
-                kind: StructureKind.Parameter,
-                name: "rx",
-                scope: Scope.Private,
-                type: apiRx,
             }],
         };
 
         const methods: MethodDeclarationStructure[] = source.getClass(source.getBaseNameWithoutExtension())!.getInstanceMethods()!
             .filter((it) => it.getStructure().scope === Scope.Public)
             .map((it) => it.getStructure() as MethodDeclarationStructure)
-            .map((it) => makeMethod(it, api));
+            .map((it) => makeMethod(decapitalize(source.getBaseNameWithoutExtension()), it, api));
 
         return this.project.createSourceFile(`${out.getPath()}/${source.getBaseName()}`, {
             statements: [importRx, ...imports, {

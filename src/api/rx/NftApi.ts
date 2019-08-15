@@ -30,8 +30,6 @@ import { assertThrow } from "../../utils/Utils";
 import { BaseApi } from "./BaseApi";
 import { DCoreApi } from "./DCoreApi";
 
-export type NftApiRx = NftApi;
-
 export class NftApi extends BaseApi {
 
     constructor(api: DCoreApi) {

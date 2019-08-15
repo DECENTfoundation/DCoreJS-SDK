@@ -11,7 +11,7 @@
     "experimentalDecorators": true,
     "sourceMap": true,
     "noImplicitAny": true,
-//    "noUnusedLocals": true,
+    "noUnusedLocals": true,
     "baseUrl": ".",
     "outDir": "./dist",
     "strict": true,

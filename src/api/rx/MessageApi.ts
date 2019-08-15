@@ -14,11 +14,8 @@ import { SendMessageOperation } from "../../models/operation/SendMessageOperatio
 import { TransactionConfirmation } from "../../models/TransactionConfirmation";
 import { GetMessagesObjects } from "../../net/models/request/GetMessagesObjects";
 import { assertThrow } from "../../utils/Utils";
-import { AssetApi } from "./AssetApi";
 import { BaseApi } from "./BaseApi";
 import { DCoreApi } from "./DCoreApi";
-
-export type MessageApiRx = MessageApi;
 
 export class MessageApi extends BaseApi {
     constructor(api: DCoreApi) {

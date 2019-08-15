@@ -22,11 +22,8 @@ import { GetNewAssetPerBlock } from "../../net/models/request/GetNewAssetPerBloc
 import { LookupMinerAccounts } from "../../net/models/request/LookupMinerAccounts";
 import { LookupVoteIds } from "../../net/models/request/LookupVoteIds";
 import { SearchMinerVoting } from "../../net/models/request/SearchMinerVoting";
-import { AssetApi } from "./AssetApi";
 import { BaseApi } from "./BaseApi";
 import { DCoreApi } from "./DCoreApi";
-
-export type MiningApiRx = MiningApi;
 
 export class MiningApi extends BaseApi {
 

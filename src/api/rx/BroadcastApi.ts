@@ -8,11 +8,8 @@ import { TransactionConfirmation } from "../../models/TransactionConfirmation";
 import { BroadcastTransaction } from "../../net/models/request/BroadcastTransaction";
 import { BroadcastTransactionSynchronous } from "../../net/models/request/BroadcastTransactionSynchronous";
 import { BroadcastTransactionWithCallback } from "../../net/models/request/BroadcastTransactionWithCallback";
-import { AssetApi } from "./AssetApi";
 import { BaseApi } from "./BaseApi";
 import { DCoreApi } from "./DCoreApi";
-
-export type BroadcastApiRx = BroadcastApi;
 
 export class BroadcastApi extends BaseApi {
 
