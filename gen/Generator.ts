@@ -41,6 +41,14 @@ class Generator {
     }
 
     public createFactory() {
+        const doc = `Create Api. At least one of HTTP core options or WebSocket factory must be set.
+
+@param httpOptions http options with url set, eg. \`{ baseUrl: https://testnet.dcore.io/ }\`
+@param webSocketFactory web socket factory with url set, eg. \`() => new WebSocket(wss://testnet-socket.dcore.io/)\` using the "isomorphic-ws" lib
+@param logger an optional pino logger, see {@link https://github.com/pinojs/pino pino library} for more details
+
+@return DCore API for making requests`;
+
         const out = this.project.getDirectory(this.out)!;
         const apiRx = this.project.getSourceFile(`${this.sourceApiRx}DCoreApi.ts`)!;
         const importRx: ImportDeclarationStructure = {
@@ -78,6 +86,7 @@ class Generator {
         }];
         const methods: MethodDeclarationStructure[] = this.apis.map((it) => {
             return {
+                docs: [doc],
                 isStatic: true,
                 kind: StructureKind.Method,
                 name: it.createMethodName,
@@ -92,6 +101,7 @@ class Generator {
                 isExported: true,
                 kind: StructureKind.Class,
                 methods: [...methods, {
+                    docs: [doc],
                     isStatic: true,
                     kind: StructureKind.Method,
                     name: "createApiRx",
