@@ -13,6 +13,7 @@ import { MessagePayloadReceiver } from "../models/MessagePayloadReceiver";
 import { MessageResponse } from "../models/MessageResponse";
 import { SendMessageOperation } from "../models/operation/SendMessageOperation";
 import { TransactionConfirmation } from "../models/TransactionConfirmation";
+import { GetMessages } from "../net/models/request/GetMessages";
 import { GetMessagesObjects } from "../net/models/request/GetMessagesObjects";
 import { assertThrow } from "../utils/Utils";
 import { BaseApi } from "./BaseApi";
@@ -23,7 +24,29 @@ export class MessageApi extends BaseApi {
     }
 
     /**
-     * Get all message operations
+     * Get messages by ids
+     *
+     * @param ids a list of messages ids
+     *
+     * @return list of messages
+     */
+    public getAll(ids: ChainObject[]): Observable<Message[]> {
+        return this.request(new GetMessages(ids));
+    }
+
+    /**
+     * Get message by id
+     *
+     * @param id message id
+     *
+     * @return message
+     */
+    public get(id: ChainObject): Observable<Message> {
+        return this.getAll([id]).pipe(map((list) => list[0]));
+    }
+
+    /**
+     * Find all message operations
      *
      * @param sender filter by sender account id
      * @param receiver filter by receiver account id
@@ -31,12 +54,12 @@ export class MessageApi extends BaseApi {
      *
      * @return list of message operation responses
      */
-    public getAllOperations(sender?: ChainObject, receiver?: ChainObject, maxCount: number = 1000): Observable<MessageResponse[]> {
+    public findAllOperations(sender?: ChainObject, receiver?: ChainObject, maxCount: number = 1000): Observable<MessageResponse[]> {
         return this.request(new GetMessagesObjects(sender, receiver, maxCount));
     }
 
     /**
-     * Get all messages
+     * Find all messages
      *
      * @param sender filter by sender account id
      * @param receiver filter by receiver account id
@@ -44,14 +67,14 @@ export class MessageApi extends BaseApi {
      *
      * @return list of messages
      */
-    public getAll(sender?: ChainObject, receiver?: ChainObject, maxCount: number = 1000): Observable<Message[]> {
-        return this.getAllOperations(sender, receiver, maxCount).pipe(
+    public findAll(sender?: ChainObject, receiver?: ChainObject, maxCount: number = 1000): Observable<Message[]> {
+        return this.findAllOperations(sender, receiver, maxCount).pipe(
             map((list) => _.flatten(list.map((r) => Message.create(r)))),
         );
     }
 
     /**
-     * Get all messages and decrypt
+     * Find all messages and decrypt
      *
      * @param credentials account credentials used for decryption, must be either sender's or receiver's
      * @param sender filter by sender account id
@@ -60,40 +83,40 @@ export class MessageApi extends BaseApi {
      *
      * @return list of messages
      */
-    public getAllDecrypted(
+    public findAllDecrypted(
         credentials: Credentials,
         sender?: ChainObject,
         receiver?: ChainObject,
         maxCount: number = 1000,
     ): Observable<Message[]> {
         assertThrow(credentials.account.eq(sender) || credentials.account.eq(receiver), () => "credentials account id must match either sender id or receiver id ");
-        return this.getAll(sender, receiver, maxCount).pipe(
+        return this.findAll(sender, receiver, maxCount).pipe(
             map((list) => list.map((msg) => msg.decrypt(credentials))),
         );
     }
 
     /**
-     * Get all messages for sender and decrypt
+     * Find all messages for sender and decrypt
      *
      * @param credentials sender account credentials with decryption keys
      * @param maxCount max items to return
      *
      * @return list of messages
      */
-    public getAllDecryptedForSender(credentials: Credentials, maxCount: number = 1000): Observable<Message[]> {
-        return this.getAllDecrypted(credentials, credentials.account, undefined, maxCount);
+    public findAllDecryptedForSender(credentials: Credentials, maxCount: number = 1000): Observable<Message[]> {
+        return this.findAllDecrypted(credentials, credentials.account, undefined, maxCount);
     }
 
     /**
-     * Get all messages for receiver and decrypt
+     * Find all messages for receiver and decrypt
      *
      * @param credentials receiver account credentials with decryption keys
      * @param maxCount max items to return
      *
      * @return list of messages
      */
-    public getAllDecryptedForReceiver(credentials: Credentials, maxCount: number = 1000): Observable<Message[]> {
-        return this.getAllDecrypted(credentials, undefined, credentials.account, maxCount);
+    public findAllDecryptedForReceiver(credentials: Credentials, maxCount: number = 1000): Observable<Message[]> {
+        return this.findAllDecrypted(credentials, undefined, credentials.account, maxCount);
     }
 
     /**
