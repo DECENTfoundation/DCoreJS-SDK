@@ -8,6 +8,7 @@ import { Spy } from "rxjs-spy/spy-interface";
 import { Credentials } from "../../src/crypto/Credentials";
 import { DCoreApi } from "../../src/DCoreApi";
 import { DCoreSdk } from "../../src/DCoreSdk";
+import { ChainObject } from "../../src/models/ChainObject";
 import { Message } from "../../src/models/Message";
 import { MessageResponse } from "../../src/models/MessageResponse";
 import { SendMessageOperation } from "../../src/models/operation/SendMessageOperation";
@@ -16,7 +17,7 @@ import { Helpers, testCheck } from "../Helpers";
 chai.should();
 chai.use(chaiThings);
 
-describe("asset API test suite for ops", () => {
+describe.only("asset API test suite for ops", () => {
 
     let api: DCoreApi;
     let spy: Spy;
@@ -51,7 +52,7 @@ describe("asset API test suite for ops", () => {
 Helpers.APIS.forEach(([name, sdk]) => {
     const api = sdk.messageApi;
 
-    describe(`messaging API test suite for ${name}`, () => {
+    describe.only(`messaging API test suite for ${name}`, () => {
         after(() => {
             // wtf.dump();
         });
@@ -68,28 +69,38 @@ Helpers.APIS.forEach(([name, sdk]) => {
             spy.teardown();
         });
 
+        it("should get all messages", (done: (arg?: any) => void) => {
+            api.getAll([ChainObject.parse("2.18.0"), ChainObject.parse("2.18.1")])
+                .subscribe((value) => value.should.all.be.instanceOf(Message), (error) => done(error), () => done());
+        });
+
+        it("should get message", (done: (arg?: any) => void) => {
+            api.get(ChainObject.parse("2.18.0"))
+                .subscribe((value) => value.should.be.instanceOf(Message), (error) => done(error), () => done());
+        });
+
         it("should return all message operation objects", (done: (arg?: any) => void) => {
-            api.getAllOperations(Helpers.ACCOUNT)
+            api.findAllOperations(Helpers.ACCOUNT)
                 .subscribe((value) => value.should.all.be.instanceOf(MessageResponse), (error) => done(error), () => done());
         });
 
         it("should return all messages", (done: (arg?: any) => void) => {
-            api.getAll(Helpers.ACCOUNT)
+            api.findAll(Helpers.ACCOUNT)
                 .subscribe((value) => value.should.all.be.instanceOf(Message), (error) => done(error), () => done());
         });
 
         it("should return all decrypted messages", (done: (arg?: any) => void) => {
-            api.getAllDecrypted(new Credentials(Helpers.ACCOUNT2, Helpers.PRIVATE2), Helpers.ACCOUNT, Helpers.ACCOUNT2)
+            api.findAllDecrypted(new Credentials(Helpers.ACCOUNT2, Helpers.PRIVATE2), Helpers.ACCOUNT, Helpers.ACCOUNT2)
                 .subscribe((value) => value.map((msg) => msg.encrypted).should.all.be.eq(false), (error) => done(error), () => done());
         });
 
         it("should return all decrypted messages for sender", (done: (arg?: any) => void) => {
-            api.getAllDecryptedForSender(Helpers.CREDENTIALS)
+            api.findAllDecryptedForSender(Helpers.CREDENTIALS)
                 .subscribe((value) => value.map((msg) => msg.encrypted).should.all.be.eq(false), (error) => done(error), () => done());
         });
 
         it("should return all decrypted messages for receiver", (done: (arg?: any) => void) => {
-            api.getAllDecryptedForReceiver(Helpers.CREDENTIALS)
+            api.findAllDecryptedForReceiver(Helpers.CREDENTIALS)
                 .subscribe((value) => value.map((msg) => msg.encrypted).should.all.be.eq(false), (error) => done(error), () => done());
         });
 
