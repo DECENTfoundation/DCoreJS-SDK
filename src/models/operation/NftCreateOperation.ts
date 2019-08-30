@@ -1,7 +1,7 @@
 import { Expose, Type } from "class-transformer";
 import * as _ from "lodash";
+import { Fee } from "../../DCoreClient";
 import { DCoreConstants } from "../../DCoreConstants";
-import { Fee } from "../../DCoreSdk";
 import { assertThrow } from "../../utils/Utils";
 import { Asset } from "../Asset";
 import { NftDataType } from "../NftDataType";

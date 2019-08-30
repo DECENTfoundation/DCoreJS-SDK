@@ -1,21 +1,21 @@
 import * as _ from "lodash";
 import { forkJoin, Observable, of, zip } from "rxjs";
 import { flatMap, map } from "rxjs/operators";
-import { DCoreApi } from "../DCoreApi";
-import { BalanceChange } from "../models/BalanceChange";
-import { ChainObject } from "../models/ChainObject";
-import { ObjectType } from "../models/ObjectType";
-import { OperationType } from "../models/operation/OperationType";
-import { TransferOperation } from "../models/operation/TransferOperation";
-import { OperationHistory } from "../models/OperationHistory";
-import { TransferComposite } from "../models/TransferComposite";
-import { GetAccountBalanceForTransaction } from "../net/models/request/GetAccountBalanceForTransaction";
-import { GetAccountHistory } from "../net/models/request/GetAccountHistory";
-import { GetObjects } from "../net/models/request/GetObjects";
-import { GetRelativeAccountHistory } from "../net/models/request/GetRelativeAccountHistory";
-import { SearchAccountBalanceHistory } from "../net/models/request/SearchAccountBalanceHistory";
-import { toMap } from "../utils/Utils";
+import { BalanceChange } from "../../models/BalanceChange";
+import { ChainObject } from "../../models/ChainObject";
+import { ObjectType } from "../../models/ObjectType";
+import { OperationType } from "../../models/operation/OperationType";
+import { TransferOperation } from "../../models/operation/TransferOperation";
+import { OperationHistory } from "../../models/OperationHistory";
+import { TransferComposite } from "../../models/TransferComposite";
+import { GetAccountBalanceForTransaction } from "../../net/models/request/GetAccountBalanceForTransaction";
+import { GetAccountHistory } from "../../net/models/request/GetAccountHistory";
+import { GetObjects } from "../../net/models/request/GetObjects";
+import { GetRelativeAccountHistory } from "../../net/models/request/GetRelativeAccountHistory";
+import { SearchAccountBalanceHistory } from "../../net/models/request/SearchAccountBalanceHistory";
+import { toMap } from "../../utils/Utils";
 import { BaseApi } from "./BaseApi";
+import { DCoreApi } from "./DCoreApi";
 
 export class HistoryApi extends BaseApi {
     constructor(api: DCoreApi) {

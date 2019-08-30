@@ -1,5 +1,5 @@
 import { Exclude, Expose, Type } from "class-transformer";
-import { Fee } from "../../DCoreSdk";
+import { Fee } from "../../DCoreClient";
 import { AssetAmount } from "../AssetAmount";
 import { ChainObject } from "../ChainObject";
 import { OperationType } from "./OperationType";

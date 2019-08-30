@@ -14,7 +14,7 @@ import { create } from "rxjs-spy";
 import { ecdhUnsafe, publicKeyTweakMul } from "secp256k1";
 import { Address } from "../src/crypto/Address";
 import { ECKeyPair } from "../src/crypto/ECKeyPair";
-import { DCoreSdk } from "../src/DCoreSdk";
+import { DCoreClient } from "../src/DCoreClient";
 import { ObjectType, RegionalPrice, Synopsis, Transaction } from "../src/models";
 import { Account } from "../src/models/Account";
 import { AssetAmount } from "../src/models/AssetAmount";
@@ -37,15 +37,15 @@ chai.should();
 // @ts-ignore
 class Scratchpad {
 
-    private apiWs = DCoreSdk.createForWebSocket(
+    private apiWs = DCoreClient.createForWebSocket(
         () => new WebSocket(Helpers.STAGE_WS, { rejectUnauthorized: false })
     );
 
-    private apiRpc = DCoreSdk.createForHttp(
+    private apiRpc = DCoreClient.createForHttp(
         { baseUrl: Helpers.STAGE_HTTPS, timeout: 15000, rejectUnauthorized: false }
     );
 
-    private api = DCoreSdk.create(
+    private api = DCoreClient.create(
         { baseUrl: Helpers.STAGE_HTTPS, timeout: 15000, rejectUnauthorized: false },
         () => new WebSocket(Helpers.STAGE_WS, { rejectUnauthorized: false }),
     );

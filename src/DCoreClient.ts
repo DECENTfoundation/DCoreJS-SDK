@@ -6,7 +6,7 @@ import { Logger } from "pino";
 import { CoreOptions } from "request";
 import { Observable, of, throwError, zip } from "rxjs";
 import { flatMap, map, tap } from "rxjs/operators";
-import { DCoreApi } from "./DCoreApi";
+import { DCoreApi } from "./api/rx/DCoreApi";
 import { DCoreConstants } from "./DCoreConstants";
 import { Asset } from "./models/Asset";
 import { AssetAmount } from "./models/AssetAmount";
@@ -37,17 +37,13 @@ Decimal.set({
     precision: 32,
 });
 
-export class DCoreSdk {
-    public static createForHttp(options: CoreOptions, logger: Logger = DCoreSdk.DEFAULT_LOGGER): DCoreApi {
-        return new DCoreApi(new DCoreSdk(logger, new RpcService(options, logger)));
-    }
-
-    public static createForWebSocket(factory: WebSocketFactory, logger: Logger = DCoreSdk.DEFAULT_LOGGER): DCoreApi {
-        return new DCoreApi(new DCoreSdk(logger, undefined, new RxWebSocket(factory, logger)));
-    }
-
-    public static create(options: CoreOptions, factory: WebSocketFactory, logger: Logger = DCoreSdk.DEFAULT_LOGGER): DCoreApi {
-        return new DCoreApi(new DCoreSdk(logger, new RpcService(options, logger), new RxWebSocket(factory, logger)));
+export class DCoreClient {
+    public static create(options?: CoreOptions, factory?: WebSocketFactory, logger: Logger = DCoreClient.DEFAULT_LOGGER): DCoreApi {
+        return new DCoreApi(new DCoreClient(
+            logger,
+            options ? new RpcService(options, logger) : undefined,
+            factory ? new RxWebSocket(factory, logger) : undefined,
+        ));
     }
 
     private static get DEFAULT_LOGGER() {

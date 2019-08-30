@@ -1,16 +1,16 @@
 import { Observable } from "rxjs";
-import { DCoreApi } from "../DCoreApi";
-import { ChainObject } from "../models/ChainObject";
-import { Regions } from "../models/Regions";
-import { Seeder } from "../models/Seeder";
-import { GetSeeder } from "../net/models/request/GetSeeder";
-import { ListSeedersByPrice } from "../net/models/request/ListSeedersByPrice";
-import { ListSeedersByRating } from "../net/models/request/ListSeedersByRating";
-import { ListSeedersByRegion } from "../net/models/request/ListSeedersByRegion";
-import { ListSeedersByUpload } from "../net/models/request/ListSeedersByUpload";
+import { ChainObject } from "../../models/ChainObject";
+import { Regions } from "../../models/Regions";
+import { Seeder } from "../../models/Seeder";
+import { GetSeeder } from "../../net/models/request/GetSeeder";
+import { ListSeedersByPrice } from "../../net/models/request/ListSeedersByPrice";
+import { ListSeedersByRating } from "../../net/models/request/ListSeedersByRating";
+import { ListSeedersByRegion } from "../../net/models/request/ListSeedersByRegion";
+import { ListSeedersByUpload } from "../../net/models/request/ListSeedersByUpload";
 import { BaseApi } from "./BaseApi";
+import { DCoreApi } from "./DCoreApi";
 
-export class SeedersApi extends BaseApi {
+export class SeederApi extends BaseApi {
     constructor(api: DCoreApi) {
         super(api);
     }

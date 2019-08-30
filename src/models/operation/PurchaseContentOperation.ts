@@ -1,7 +1,7 @@
 import { Expose, Type } from "class-transformer";
 import { Credentials } from "../../crypto/Credentials";
 import { ElGamal } from "../../crypto/ElGamal";
-import { Fee } from "../../DCoreSdk";
+import { Fee } from "../../DCoreClient";
 import { ChainObjectToClass, ChainObjectToPlain } from "../../net/adapter/TypeAdapters";
 import { AssetAmount } from "../AssetAmount";
 import { ChainObject } from "../ChainObject";

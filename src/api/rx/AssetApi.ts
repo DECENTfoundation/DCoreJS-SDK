@@ -3,34 +3,34 @@ import * as _ from "lodash";
 import * as Long from "long";
 import { Observable, of, throwError } from "rxjs";
 import { flatMap, map } from "rxjs/operators";
-import { Credentials } from "../crypto/Credentials";
-import { DCoreApi } from "../DCoreApi";
-import { AssetPrecision, AssetRef, Fee } from "../DCoreSdk";
-import { Asset } from "../models/Asset";
-import { AssetAmount } from "../models/AssetAmount";
-import { AssetData } from "../models/AssetData";
-import { AssetOptions } from "../models/AssetOptions";
-import { ChainObject } from "../models/ChainObject";
-import { IllegalArgumentError } from "../models/error/IllegalArgumentError";
-import { ExchangeRate } from "../models/ExchangeRate";
-import { Memo } from "../models/Memo";
-import { MonitoredAssetOpts } from "../models/MonitoredAssetOpts";
-import { AssetClaimFeesOperation } from "../models/operation/AssetClaimFeesOperation";
-import { AssetCreateOperation } from "../models/operation/AssetCreateOperation";
-import { AssetFundPoolsOperation } from "../models/operation/AssetFundPoolsOperation";
-import { AssetIssueOperation } from "../models/operation/AssetIssueOperation";
-import { AssetReserveOperation } from "../models/operation/AssetReserveOperation";
-import { AssetUpdateAdvancedOperation } from "../models/operation/AssetUpdateAdvancedOperation";
-import { AssetUpdateOperation } from "../models/operation/AssetUpdateOperation";
-import { RealSupply } from "../models/RealSupply";
-import { TransactionConfirmation } from "../models/TransactionConfirmation";
-import { GetAssetData } from "../net/models/request/GetAssetData";
-import { GetAssets } from "../net/models/request/GetAssets";
-import { GetRealSupply } from "../net/models/request/GetRealSupply";
-import { ListAssets } from "../net/models/request/ListAssets";
-import { LookupAssetSymbols } from "../net/models/request/LookupAssetSymbols";
-import { ObjectCheckOf } from "../utils/ObjectCheckOf";
+import { Credentials } from "../../crypto/Credentials";
+import { AssetPrecision, AssetRef, Fee } from "../../DCoreClient";
+import { Asset } from "../../models/Asset";
+import { AssetAmount } from "../../models/AssetAmount";
+import { AssetData } from "../../models/AssetData";
+import { AssetOptions } from "../../models/AssetOptions";
+import { ChainObject } from "../../models/ChainObject";
+import { IllegalArgumentError } from "../../models/error/IllegalArgumentError";
+import { ExchangeRate } from "../../models/ExchangeRate";
+import { Memo } from "../../models/Memo";
+import { MonitoredAssetOpts } from "../../models/MonitoredAssetOpts";
+import { AssetClaimFeesOperation } from "../../models/operation/AssetClaimFeesOperation";
+import { AssetCreateOperation } from "../../models/operation/AssetCreateOperation";
+import { AssetFundPoolsOperation } from "../../models/operation/AssetFundPoolsOperation";
+import { AssetIssueOperation } from "../../models/operation/AssetIssueOperation";
+import { AssetReserveOperation } from "../../models/operation/AssetReserveOperation";
+import { AssetUpdateAdvancedOperation } from "../../models/operation/AssetUpdateAdvancedOperation";
+import { AssetUpdateOperation } from "../../models/operation/AssetUpdateOperation";
+import { RealSupply } from "../../models/RealSupply";
+import { TransactionConfirmation } from "../../models/TransactionConfirmation";
+import { GetAssetData } from "../../net/models/request/GetAssetData";
+import { GetAssets } from "../../net/models/request/GetAssets";
+import { GetRealSupply } from "../../net/models/request/GetRealSupply";
+import { ListAssets } from "../../net/models/request/ListAssets";
+import { LookupAssetSymbols } from "../../net/models/request/LookupAssetSymbols";
+import { ObjectCheckOf } from "../../utils/ObjectCheckOf";
 import { BaseApi } from "./BaseApi";
+import { DCoreApi } from "./DCoreApi";
 
 export class AssetApi extends BaseApi {
 
@@ -226,10 +226,6 @@ export class AssetApi extends BaseApi {
      * Create update asset operation.
      *
      * @param asset asset to update
-     * @param exchangeRate new exchange rate
-     * @param description new description
-     * @param exchangeable enable converting the asset to DCT, so it can be used to pay for fees
-     * @param maxSupply new max supply
      * @param newIssuer a new issuer account id
      * @param fee {@link AssetAmount} fee for the operation or asset id, if left undefined the fee will be computed in DCT asset.
      * When set, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough

@@ -7,8 +7,8 @@ import "mocha";
 import "reflect-metadata";
 import { create } from "rxjs-spy";
 import { Spy } from "rxjs-spy/spy-interface";
+import { DCoreApi } from "../../src/api/rx/DCoreApi";
 import { ECKeyPair } from "../../src/crypto/ECKeyPair";
-import { DCoreApi } from "../../src/DCoreApi";
 import { DCoreSdk } from "../../src/DCoreSdk";
 import { Asset, AssetAmount, AssetClaimFeesOperation, AssetFundPoolsOperation, ChainObject, DCoreError, RealSupply } from "../../src/models";
 import { AssetData } from "../../src/models/AssetData";
@@ -25,7 +25,7 @@ describe("asset API test suite for ops", () => {
     before(() => {
         spy = create();
         // spy.log(/^API\w+/);
-        api = DCoreSdk.createForWebSocket(() => new WebSocket(Helpers.STAGE_WS), Helpers.LOGGER);
+        api = DCoreSdk.createApiRx(undefined, () => new WebSocket(Helpers.STAGE_WS), Helpers.LOGGER);
     });
 
     after(() => {

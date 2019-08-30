@@ -1,5 +1,5 @@
 import { Expose } from "class-transformer";
-import { AssetPrecision, Fee } from "../../DCoreSdk";
+import { AssetPrecision, Fee } from "../../DCoreClient";
 import { ChainObjectToClass, ChainObjectToPlain } from "../../net/adapter/TypeAdapters";
 import { Asset } from "../Asset";
 import { ChainObject } from "../ChainObject";

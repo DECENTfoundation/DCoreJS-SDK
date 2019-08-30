@@ -12,7 +12,7 @@ chai.should();
 chai.use(chaiThings);
 
 Helpers.APIS.forEach(([name, sdk]) => {
-    const api = sdk.seedersApi;
+    const api = sdk.seederApi;
 
     // todo
     describe.skip(`seeders API test suite for ${name}`, () => {

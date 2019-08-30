@@ -137,3 +137,6 @@ db/
 *.key
 *.ca-bundle
 package-lock.json
+
+/src/api/promise/
+/src/DCoreSdk.ts

@@ -1,7 +1,7 @@
 import { Expose, serialize, Type } from "class-transformer";
 import * as Long from "long";
 import { Moment } from "moment";
-import { Fee } from "../../DCoreSdk";
+import { Fee } from "../../DCoreClient";
 import {
     ChainObjectArrayToClass,
     ChainObjectArrayToPlain,

@@ -1,13 +1,13 @@
 import { Observable } from "rxjs";
-import { DCoreApi } from "../DCoreApi";
-import { ChainObject } from "../models/ChainObject";
-import { Subscription } from "../models/Subscription";
-import { GetSubscription } from "../net/models/request/GetSubscription";
-import { ListActiveSubscriptionsByAuthor } from "../net/models/request/ListActiveSubscriptionsByAuthor";
-import { ListActiveSubscriptionsByConsumer } from "../net/models/request/ListActiveSubscriptionsByConsumer";
-import { ListSubscriptionsByAuthor } from "../net/models/request/ListSubscriptionsByAuthor";
-import { ListSubscriptionsByConsumer } from "../net/models/request/ListSubscriptionsByConsumer";
+import { ChainObject } from "../../models/ChainObject";
+import { Subscription } from "../../models/Subscription";
+import { GetSubscription } from "../../net/models/request/GetSubscription";
+import { ListActiveSubscriptionsByAuthor } from "../../net/models/request/ListActiveSubscriptionsByAuthor";
+import { ListActiveSubscriptionsByConsumer } from "../../net/models/request/ListActiveSubscriptionsByConsumer";
+import { ListSubscriptionsByAuthor } from "../../net/models/request/ListSubscriptionsByAuthor";
+import { ListSubscriptionsByConsumer } from "../../net/models/request/ListSubscriptionsByConsumer";
 import { BaseApi } from "./BaseApi";
+import { DCoreApi } from "./DCoreApi";
 
 export class SubscriptionApi extends BaseApi {
     constructor(api: DCoreApi) {

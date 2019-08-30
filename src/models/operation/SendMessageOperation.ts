@@ -1,4 +1,4 @@
-import { Fee } from "../../DCoreSdk";
+import { Fee } from "../../DCoreClient";
 import { ChainObject } from "../ChainObject";
 import { CustomOperation } from "./CustomOperation";
 import { CustomOperationType } from "./CustomOperationType";
