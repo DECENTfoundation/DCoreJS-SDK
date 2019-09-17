@@ -63,7 +63,7 @@ Helpers.APIS.forEach(([name, sdk]) => {
                 978,
                 Helpers.ACCOUNT,
                 [],
-                Buffer.from("Any data you need here").toString("hex"),
+                Buffer.from("Any data you need here" + name).toString("hex"),
             );
             sdk.broadcastApi.broadcast(Helpers.KEY, [customOperation])
                 .subscribe((value: void) => undefined, (error) => done(error), () => done());
