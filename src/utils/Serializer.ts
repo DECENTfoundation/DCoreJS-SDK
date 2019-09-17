@@ -88,6 +88,7 @@ export class Serializer {
         this.adapters.set(AddOrUpdateContentOperation.name, this.addOrUpdateContentOperationAdapter);
         this.adapters.set(RemoveContentOperation.name, this.removeContentOperationAdapter);
         this.adapters.set(SendMessageOperation.name, this.customOperationAdapter);
+        this.adapters.set(CustomOperation.name, this.customOperationAdapter);
         this.adapters.set(LeaveRatingAndCommentOperation.name, this.rateAndCommentOperationAdapter);
         this.adapters.set(ExchangeRate.name, this.exchangeRateAdapter);
         this.adapters.set(AssetOptions.name, this.assetOptionsAdapter);

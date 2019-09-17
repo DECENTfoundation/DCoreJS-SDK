@@ -1,3 +1,4 @@
+import { CustomOperation } from "./../../src/models/operation/CustomOperation";
 import * as chai from "chai";
 import * as chaiThings from "chai-things";
 import "mocha";
@@ -55,6 +56,17 @@ Helpers.APIS.forEach(([name, sdk]) => {
                 map((trx) => trx.withSignature(Helpers.KEY)),
                 flatMap((trx) => sdk.broadcastApi.broadcastTrx(trx)),
             ).subscribe((value: void) => undefined, (error) => done(error), () => done());
+        });
+
+        it("should make a broadcast for custom operation", (done: (arg?: any) => void) => {
+            const customOperation = new CustomOperation(
+                978,
+                Helpers.ACCOUNT,
+                [],
+                Buffer.from("Any data you need here" + name).toString("hex"),
+            );
+            sdk.broadcastApi.broadcast(Helpers.KEY, [customOperation])
+                .subscribe((value: void) => undefined, (error) => done(error), () => done());
         });
 
         it.skip("should make a transfer broadcast sync", (done: (arg?: any) => void) => {

@@ -17,7 +17,7 @@ import { Helpers, testCheck } from "../Helpers";
 chai.should();
 chai.use(chaiThings);
 
-describe.only("asset API test suite for ops", () => {
+describe("messaging API test suite for ops", () => {
 
     let api: DCoreApi;
     let spy: Spy;
@@ -52,7 +52,7 @@ describe.only("asset API test suite for ops", () => {
 Helpers.APIS.forEach(([name, sdk]) => {
     const api = sdk.messageApi;
 
-    describe.only(`messaging API test suite for ${name}`, () => {
+    describe(`messaging API test suite for ${name}`, () => {
         after(() => {
             // wtf.dump();
         });
