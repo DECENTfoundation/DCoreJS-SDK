@@ -1,4 +1,4 @@
-import { CustomOperation } from './../../src/models/operation/CustomOperation';
+import { CustomOperation } from "./../../src/models/operation/CustomOperation";
 import * as chai from "chai";
 import * as chaiThings from "chai-things";
 import "mocha";
