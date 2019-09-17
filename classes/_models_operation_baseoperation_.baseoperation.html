@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>BaseOperation | DCore SDK for JS - API documentation - version 2.6.0</title>
+	<title>BaseOperation | DCore SDK for JS - API documentation - version 3.0.0</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -22,7 +22,7 @@
 						<li class="state loading">Preparing search index...</li>
 						<li class="state failure">The search index is not available</li>
 					</ul>
-					<a href="../index.html" class="title">DCore SDK for JS - API documentation - version 2.6.0</a>
+					<a href="../index.html" class="title">DCore SDK for JS - API documentation - version 3.0.0</a>
 				</div>
 				<div class="table-cell" id="tsd-widgets">
 					<div id="tsd-filter">
@@ -82,6 +82,9 @@
 								<a href="_models_operation_accountupdateoperation_.accountupdateoperation.html" class="tsd-signature-type">AccountUpdateOperation</a>
 							</li>
 							<li>
+								<a href="_models_operation_transferoperation_.transferoperation.html" class="tsd-signature-type">TransferOperation</a>
+							</li>
+							<li>
 								<a href="_models_operation_addorupdatecontentoperation_.addorupdatecontentoperation.html" class="tsd-signature-type">AddOrUpdateContentOperation</a>
 							</li>
 							<li>
@@ -125,9 +128,6 @@
 							</li>
 							<li>
 								<a href="_models_operation_removecontentoperation_.removecontentoperation.html" class="tsd-signature-type">RemoveContentOperation</a>
-							</li>
-							<li>
-								<a href="_models_operation_transferoperation_.transferoperation.html" class="tsd-signature-type">TransferOperation</a>
 							</li>
 							<li>
 								<a href="_models_operation_unknownoperation_.unknownoperation.html" class="tsd-signature-type">UnknownOperation</a>
@@ -185,13 +185,13 @@
 					<a name="constructor" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagProtected">Protected</span> constructor</h3>
 					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class tsd-is-protected">
-						<li class="tsd-signature tsd-kind-icon">new <wbr>Base<wbr>Operation<span class="tsd-signature-symbol">(</span>type<span class="tsd-signature-symbol">: </span><a href="../enums/_models_operation_operationtype_.operationtype.html" class="tsd-signature-type">OperationType</a>, fee<span class="tsd-signature-symbol">?: </span><a href="../modules/_dcoresdk_.html#fee" class="tsd-signature-type">Fee</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_models_operation_baseoperation_.baseoperation.html" class="tsd-signature-type">BaseOperation</a></li>
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Base<wbr>Operation<span class="tsd-signature-symbol">(</span>type<span class="tsd-signature-symbol">: </span><a href="../enums/_models_operation_operationtype_.operationtype.html" class="tsd-signature-type">OperationType</a>, fee<span class="tsd-signature-symbol">?: </span><a href="../modules/_dcoreclient_.html#fee" class="tsd-signature-type">Fee</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_models_operation_baseoperation_.baseoperation.html" class="tsd-signature-type">BaseOperation</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/DECENTfoundation/DCoreJS-SDK/blob/985790d/src/models/operation/BaseOperation.ts#L19">models/operation/BaseOperation.ts:19</a></li>
+									<li>Defined in <a href="https://github.com/DECENTfoundation/DCoreJS-SDK/blob/cf9f43e/src/models/operation/BaseOperation.ts#L19">models/operation/BaseOperation.ts:19</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -200,7 +200,7 @@
 									<h5>type: <a href="../enums/_models_operation_operationtype_.operationtype.html" class="tsd-signature-type">OperationType</a></h5>
 								</li>
 								<li>
-									<h5><span class="tsd-flag ts-flagOptional">Optional</span> fee: <a href="../modules/_dcoresdk_.html#fee" class="tsd-signature-type">Fee</a></h5>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> fee: <a href="../modules/_dcoreclient_.html#fee" class="tsd-signature-type">Fee</a></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <a href="_models_operation_baseoperation_.baseoperation.html" class="tsd-signature-type">BaseOperation</a></h4>
@@ -216,7 +216,7 @@
 					<div class="tsd-signature tsd-kind-icon">extensions<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> =&nbsp;[]</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/DECENTfoundation/DCoreJS-SDK/blob/985790d/src/models/operation/BaseOperation.ts#L9">models/operation/BaseOperation.ts:9</a></li>
+							<li>Defined in <a href="https://github.com/DECENTfoundation/DCoreJS-SDK/blob/cf9f43e/src/models/operation/BaseOperation.ts#L9">models/operation/BaseOperation.ts:9</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -226,7 +226,7 @@
 					<div class="tsd-signature tsd-kind-icon">fee<span class="tsd-signature-symbol">:</span> <a href="_models_assetamount_.assetamount.html" class="tsd-signature-type">AssetAmount</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/DECENTfoundation/DCoreJS-SDK/blob/985790d/src/models/operation/BaseOperation.ts#L13">models/operation/BaseOperation.ts:13</a></li>
+							<li>Defined in <a href="https://github.com/DECENTfoundation/DCoreJS-SDK/blob/cf9f43e/src/models/operation/BaseOperation.ts#L13">models/operation/BaseOperation.ts:13</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -236,7 +236,7 @@
 					<div class="tsd-signature tsd-kind-icon">fee<wbr>Asset<wbr>Id<span class="tsd-signature-symbol">:</span> <a href="_models_chainobject_.chainobject.html" class="tsd-signature-type">ChainObject</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/DECENTfoundation/DCoreJS-SDK/blob/985790d/src/models/operation/BaseOperation.ts#L19">models/operation/BaseOperation.ts:19</a></li>
+							<li>Defined in <a href="https://github.com/DECENTfoundation/DCoreJS-SDK/blob/cf9f43e/src/models/operation/BaseOperation.ts#L19">models/operation/BaseOperation.ts:19</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -246,7 +246,7 @@
 					<div class="tsd-signature tsd-kind-icon">type<span class="tsd-signature-symbol">:</span> <a href="../enums/_models_operation_operationtype_.operationtype.html" class="tsd-signature-type">OperationType</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/DECENTfoundation/DCoreJS-SDK/blob/985790d/src/models/operation/BaseOperation.ts#L16">models/operation/BaseOperation.ts:16</a></li>
+							<li>Defined in <a href="https://github.com/DECENTfoundation/DCoreJS-SDK/blob/cf9f43e/src/models/operation/BaseOperation.ts#L16">models/operation/BaseOperation.ts:16</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -257,19 +257,19 @@
 					<a name="setfee" class="tsd-anchor"></a>
 					<h3>set<wbr>Fee</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">set<wbr>Fee<span class="tsd-signature-symbol">(</span>fee<span class="tsd-signature-symbol">?: </span><a href="../modules/_dcoresdk_.html#fee" class="tsd-signature-type">Fee</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+						<li class="tsd-signature tsd-kind-icon">set<wbr>Fee<span class="tsd-signature-symbol">(</span>fee<span class="tsd-signature-symbol">?: </span><a href="../modules/_dcoreclient_.html#fee" class="tsd-signature-type">Fee</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/DECENTfoundation/DCoreJS-SDK/blob/985790d/src/models/operation/BaseOperation.ts#L26">models/operation/BaseOperation.ts:26</a></li>
+									<li>Defined in <a href="https://github.com/DECENTfoundation/DCoreJS-SDK/blob/cf9f43e/src/models/operation/BaseOperation.ts#L26">models/operation/BaseOperation.ts:26</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5><span class="tsd-flag ts-flagOptional">Optional</span> fee: <a href="../modules/_dcoresdk_.html#fee" class="tsd-signature-type">Fee</a></h5>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> fee: <a href="../modules/_dcoreclient_.html#fee" class="tsd-signature-type">Fee</a></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>

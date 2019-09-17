@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>DCoreSdk | DCore SDK for JS - API documentation - version 2.6.0</title>
+	<title>DCoreSdk | DCore SDK for JS - API documentation - version 3.0.0</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -22,7 +22,7 @@
 						<li class="state loading">Preparing search index...</li>
 						<li class="state failure">The search index is not available</li>
 					</ul>
-					<a href="../index.html" class="title">DCore SDK for JS - API documentation - version 2.6.0</a>
+					<a href="../index.html" class="title">DCore SDK for JS - API documentation - version 3.0.0</a>
 				</div>
 				<div class="table-cell" id="tsd-widgets">
 					<div id="tsd-filter">
@@ -82,300 +82,102 @@
 				<section class="tsd-panel tsd-index-panel">
 					<div class="tsd-index-content">
 						<section class="tsd-index-section ">
-							<h3>Constructors</h3>
-							<ul class="tsd-index-list">
-								<li class="tsd-kind-constructor tsd-parent-kind-class"><a href="_dcoresdk_.dcoresdk.html#constructor" class="tsd-kind-icon">constructor</a></li>
-							</ul>
-						</section>
-						<section class="tsd-index-section tsd-is-private tsd-is-private-protected">
-							<h3>Properties</h3>
-							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="_dcoresdk_.dcoresdk.html#chainid" class="tsd-kind-icon">chain<wbr>Id</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="_dcoresdk_.dcoresdk.html#rpc" class="tsd-kind-icon">rpc</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="_dcoresdk_.dcoresdk.html#ws" class="tsd-kind-icon">ws</a></li>
-							</ul>
-						</section>
-						<section class="tsd-index-section ">
-							<h3>Accessors</h3>
-							<ul class="tsd-index-list">
-								<li class="tsd-kind-set-signature tsd-parent-kind-class"><a href="_dcoresdk_.dcoresdk.html#timeout" class="tsd-kind-icon">timeout</a></li>
-							</ul>
-						</section>
-						<section class="tsd-index-section ">
 							<h3>Methods</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_dcoresdk_.dcoresdk.html#disconnect" class="tsd-kind-icon">disconnect</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_dcoresdk_.dcoresdk.html#preparetransaction" class="tsd-kind-icon">prepare<wbr>Transaction</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter"><a href="_dcoresdk_.dcoresdk.html#request" class="tsd-kind-icon">request</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter"><a href="_dcoresdk_.dcoresdk.html#requeststream" class="tsd-kind-icon">request<wbr>Stream</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-static"><a href="_dcoresdk_.dcoresdk.html#create" class="tsd-kind-icon">create</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-static"><a href="_dcoresdk_.dcoresdk.html#createforhttp" class="tsd-kind-icon">create<wbr>For<wbr>Http</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-static"><a href="_dcoresdk_.dcoresdk.html#createforwebsocket" class="tsd-kind-icon">create<wbr>For<wbr>Web<wbr>Socket</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-static"><a href="_dcoresdk_.dcoresdk.html#createapipromise" class="tsd-kind-icon">create<wbr>Api<wbr>Promise</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-static"><a href="_dcoresdk_.dcoresdk.html#createapirx" class="tsd-kind-icon">create<wbr>Api<wbr>Rx</a></li>
 							</ul>
 						</section>
 					</div>
 				</section>
 			</section>
 			<section class="tsd-panel-group tsd-member-group ">
-				<h2>Constructors</h2>
-				<section class="tsd-panel tsd-member tsd-kind-constructor tsd-parent-kind-class">
-					<a name="constructor" class="tsd-anchor"></a>
-					<h3>constructor</h3>
-					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">new DCore<wbr>Sdk<span class="tsd-signature-symbol">(</span>rpc<span class="tsd-signature-symbol">?: </span><a href="_net_rpc_rpcservice_.rpcservice.html" class="tsd-signature-type">RpcService</a>, ws<span class="tsd-signature-symbol">?: </span><a href="_net_ws_rxwebsocket_.rxwebsocket.html" class="tsd-signature-type">RxWebSocket</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_dcoresdk_.dcoresdk.html" class="tsd-signature-type">DCoreSdk</a></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in <a href="https://github.com/DECENTfoundation/DCoreJS-SDK/blob/985790d/src/DCoreSdk.ts#L53">DCoreSdk.ts:53</a></li>
-								</ul>
-							</aside>
-							<h4 class="tsd-parameters-title">Parameters</h4>
-							<ul class="tsd-parameters">
-								<li>
-									<h5><span class="tsd-flag ts-flagOptional">Optional</span> rpc: <a href="_net_rpc_rpcservice_.rpcservice.html" class="tsd-signature-type">RpcService</a></h5>
-								</li>
-								<li>
-									<h5><span class="tsd-flag ts-flagOptional">Optional</span> ws: <a href="_net_ws_rxwebsocket_.rxwebsocket.html" class="tsd-signature-type">RxWebSocket</a></h5>
-								</li>
-							</ul>
-							<h4 class="tsd-returns-title">Returns <a href="_dcoresdk_.dcoresdk.html" class="tsd-signature-type">DCoreSdk</a></h4>
-						</li>
-					</ul>
-				</section>
-			</section>
-			<section class="tsd-panel-group tsd-member-group tsd-is-private tsd-is-private-protected">
-				<h2>Properties</h2>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
-					<a name="chainid" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagPrivate">Private</span> <span class="tsd-flag ts-flagOptional">Optional</span> chain<wbr>Id</h3>
-					<div class="tsd-signature tsd-kind-icon">chain<wbr>Id<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/DECENTfoundation/DCoreJS-SDK/blob/985790d/src/DCoreSdk.ts#L53">DCoreSdk.ts:53</a></li>
-						</ul>
-					</aside>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
-					<a name="rpc" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagPrivate">Private</span> <span class="tsd-flag ts-flagOptional">Optional</span> rpc</h3>
-					<div class="tsd-signature tsd-kind-icon">rpc<span class="tsd-signature-symbol">:</span> <a href="_net_rpc_rpcservice_.rpcservice.html" class="tsd-signature-type">RpcService</a></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/DECENTfoundation/DCoreJS-SDK/blob/985790d/src/DCoreSdk.ts#L55">DCoreSdk.ts:55</a></li>
-						</ul>
-					</aside>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
-					<a name="ws" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagPrivate">Private</span> <span class="tsd-flag ts-flagOptional">Optional</span> ws</h3>
-					<div class="tsd-signature tsd-kind-icon">ws<span class="tsd-signature-symbol">:</span> <a href="_net_ws_rxwebsocket_.rxwebsocket.html" class="tsd-signature-type">RxWebSocket</a></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/DECENTfoundation/DCoreJS-SDK/blob/985790d/src/DCoreSdk.ts#L55">DCoreSdk.ts:55</a></li>
-						</ul>
-					</aside>
-				</section>
-			</section>
-			<section class="tsd-panel-group tsd-member-group ">
-				<h2>Accessors</h2>
-				<section class="tsd-panel tsd-member tsd-kind-set-signature tsd-parent-kind-class">
-					<a name="timeout" class="tsd-anchor"></a>
-					<h3>timeout</h3>
-					<ul class="tsd-signatures tsd-kind-set-signature tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">set</span> timeout<span class="tsd-signature-symbol">(</span>millis<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in <a href="https://github.com/DECENTfoundation/DCoreJS-SDK/blob/985790d/src/DCoreSdk.ts#L81">DCoreSdk.ts:81</a></li>
-								</ul>
-							</aside>
-							<h4 class="tsd-parameters-title">Parameters</h4>
-							<ul class="tsd-parameters">
-								<li>
-									<h5>millis: <span class="tsd-signature-type">number</span></h5>
-								</li>
-							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
-						</li>
-					</ul>
-				</section>
-			</section>
-			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Methods</h2>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
-					<a name="disconnect" class="tsd-anchor"></a>
-					<h3>disconnect</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">disconnect<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-static">
+					<a name="createapipromise" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagStatic">Static</span> create<wbr>Api<wbr>Promise</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-static">
+						<li class="tsd-signature tsd-kind-icon">create<wbr>Api<wbr>Promise<span class="tsd-signature-symbol">(</span>httpOptions<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">CoreOptions</span>, webSocketFactory<span class="tsd-signature-symbol">?: </span><a href="../modules/_net_ws_rxwebsocket_.html#websocketfactory" class="tsd-signature-type">WebSocketFactory</a>, logger<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">Logger</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_api_promise_dcoreapi_.dcoreapi.html" class="tsd-signature-type">DCoreApi</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/DECENTfoundation/DCoreJS-SDK/blob/985790d/src/DCoreSdk.ts#L87">DCoreSdk.ts:87</a></li>
+									<li>Defined in DCoreSdk.ts:18</li>
 								</ul>
 							</aside>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
-						</li>
-					</ul>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
-					<a name="preparetransaction" class="tsd-anchor"></a>
-					<h3>prepare<wbr>Transaction</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">prepare<wbr>Transaction<span class="tsd-signature-symbol">(</span>operations<span class="tsd-signature-symbol">: </span><a href="_models_operation_baseoperation_.baseoperation.html" class="tsd-signature-type">BaseOperation</a><span class="tsd-signature-symbol">[]</span>, transactionExpiration<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Duration</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Observable</span><span class="tsd-signature-symbol">&lt;</span><a href="_models_transaction_.transaction.html" class="tsd-signature-type">Transaction</a><span class="tsd-signature-symbol">&gt;</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in <a href="https://github.com/DECENTfoundation/DCoreJS-SDK/blob/985790d/src/DCoreSdk.ts#L93">DCoreSdk.ts:93</a></li>
-								</ul>
-							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Create Api. At least one of HTTP core options or WebSocket factory must be set.</p>
+								</div>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>operations: <a href="_models_operation_baseoperation_.baseoperation.html" class="tsd-signature-type">BaseOperation</a><span class="tsd-signature-symbol">[]</span></h5>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> httpOptions: <span class="tsd-signature-type">CoreOptions</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>http options with url set, eg. <code>{ baseUrl: https://testnet.dcore.io/ }</code></p>
+									</div>
 								</li>
 								<li>
-									<h5>transactionExpiration: <span class="tsd-signature-type">Duration</span></h5>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> webSocketFactory: <a href="../modules/_net_ws_rxwebsocket_.html#websocketfactory" class="tsd-signature-type">WebSocketFactory</a></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>web socket factory with url set, eg. <code>() =&gt; new WebSocket(wss://testnet-socket.dcore.io/)</code> using the &quot;isomorphic-ws&quot; lib</p>
+									</div>
 								</li>
-							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Observable</span><span class="tsd-signature-symbol">&lt;</span><a href="_models_transaction_.transaction.html" class="tsd-signature-type">Transaction</a><span class="tsd-signature-symbol">&gt;</span></h4>
-						</li>
-					</ul>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter">
-					<a name="request" class="tsd-anchor"></a>
-					<h3>request</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter">
-						<li class="tsd-signature tsd-kind-icon">request&lt;T&gt;<span class="tsd-signature-symbol">(</span>request<span class="tsd-signature-symbol">: </span><a href="_net_models_request_baserequest_.baserequest.html" class="tsd-signature-type">BaseRequest</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Observable</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in <a href="https://github.com/DECENTfoundation/DCoreJS-SDK/blob/985790d/src/DCoreSdk.ts#L67">DCoreSdk.ts:67</a></li>
-								</ul>
-							</aside>
-							<h4 class="tsd-type-parameters-title">Type parameters</h4>
-							<ul class="tsd-type-parameters">
 								<li>
-									<h4>T</h4>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> logger: <span class="tsd-signature-type">Logger</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>an optional pino logger, see <a href="https://github.com/pinojs/pino" class="external">pino library</a> for more details</p>
+									</div>
 								</li>
 							</ul>
-							<h4 class="tsd-parameters-title">Parameters</h4>
-							<ul class="tsd-parameters">
-								<li>
-									<h5>request: <a href="_net_models_request_baserequest_.baserequest.html" class="tsd-signature-type">BaseRequest</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h5>
-								</li>
-							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Observable</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h4>
-						</li>
-					</ul>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter">
-					<a name="requeststream" class="tsd-anchor"></a>
-					<h3>request<wbr>Stream</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter">
-						<li class="tsd-signature tsd-kind-icon">request<wbr>Stream&lt;T&gt;<span class="tsd-signature-symbol">(</span>request<span class="tsd-signature-symbol">: </span><a href="_net_models_request_baserequest_.baserequest.html" class="tsd-signature-type">BaseRequest</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> &amp; </span><a href="../interfaces/_net_models_request_withcallback_.withcallback.html" class="tsd-signature-type">WithCallback</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Observable</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in <a href="https://github.com/DECENTfoundation/DCoreJS-SDK/blob/985790d/src/DCoreSdk.ts#L59">DCoreSdk.ts:59</a></li>
-								</ul>
-							</aside>
-							<h4 class="tsd-type-parameters-title">Type parameters</h4>
-							<ul class="tsd-type-parameters">
-								<li>
-									<h4>T</h4>
-								</li>
-							</ul>
-							<h4 class="tsd-parameters-title">Parameters</h4>
-							<ul class="tsd-parameters">
-								<li>
-									<h5>request: <a href="_net_models_request_baserequest_.baserequest.html" class="tsd-signature-type">BaseRequest</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> &amp; </span><a href="../interfaces/_net_models_request_withcallback_.withcallback.html" class="tsd-signature-type">WithCallback</a></h5>
-								</li>
-							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Observable</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h4>
+							<h4 class="tsd-returns-title">Returns <a href="_api_promise_dcoreapi_.dcoreapi.html" class="tsd-signature-type">DCoreApi</a></h4>
+							<p>DCore API for making requests</p>
 						</li>
 					</ul>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-static">
-					<a name="create" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagStatic">Static</span> create</h3>
+					<a name="createapirx" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagStatic">Static</span> create<wbr>Api<wbr>Rx</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-static">
-						<li class="tsd-signature tsd-kind-icon">create<span class="tsd-signature-symbol">(</span>options<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">CoreOptions</span>, factory<span class="tsd-signature-symbol">: </span><a href="../modules/_net_ws_rxwebsocket_.html#websocketfactory" class="tsd-signature-type">WebSocketFactory</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_dcoreapi_.dcoreapi.html" class="tsd-signature-type">DCoreApi</a></li>
+						<li class="tsd-signature tsd-kind-icon">create<wbr>Api<wbr>Rx<span class="tsd-signature-symbol">(</span>httpOptions<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">CoreOptions</span>, webSocketFactory<span class="tsd-signature-symbol">?: </span><a href="../modules/_net_ws_rxwebsocket_.html#websocketfactory" class="tsd-signature-type">WebSocketFactory</a>, logger<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">Logger</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_api_rx_dcoreapi_.dcoreapi.html" class="tsd-signature-type">DCoreApi</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/DECENTfoundation/DCoreJS-SDK/blob/985790d/src/DCoreSdk.ts#L49">DCoreSdk.ts:49</a></li>
+									<li>Defined in DCoreSdk.ts:31</li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Create Api. At least one of HTTP core options or WebSocket factory must be set.</p>
+								</div>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>options: <span class="tsd-signature-type">CoreOptions</span></h5>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> httpOptions: <span class="tsd-signature-type">CoreOptions</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>http options with url set, eg. <code>{ baseUrl: https://testnet.dcore.io/ }</code></p>
+									</div>
 								</li>
 								<li>
-									<h5>factory: <a href="../modules/_net_ws_rxwebsocket_.html#websocketfactory" class="tsd-signature-type">WebSocketFactory</a></h5>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> webSocketFactory: <a href="../modules/_net_ws_rxwebsocket_.html#websocketfactory" class="tsd-signature-type">WebSocketFactory</a></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>web socket factory with url set, eg. <code>() =&gt; new WebSocket(wss://testnet-socket.dcore.io/)</code> using the &quot;isomorphic-ws&quot; lib</p>
+									</div>
 								</li>
-							</ul>
-							<h4 class="tsd-returns-title">Returns <a href="_dcoreapi_.dcoreapi.html" class="tsd-signature-type">DCoreApi</a></h4>
-						</li>
-					</ul>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-static">
-					<a name="createforhttp" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagStatic">Static</span> create<wbr>For<wbr>Http</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-static">
-						<li class="tsd-signature tsd-kind-icon">create<wbr>For<wbr>Http<span class="tsd-signature-symbol">(</span>options<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">CoreOptions</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_dcoreapi_.dcoreapi.html" class="tsd-signature-type">DCoreApi</a></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in <a href="https://github.com/DECENTfoundation/DCoreJS-SDK/blob/985790d/src/DCoreSdk.ts#L41">DCoreSdk.ts:41</a></li>
-								</ul>
-							</aside>
-							<h4 class="tsd-parameters-title">Parameters</h4>
-							<ul class="tsd-parameters">
 								<li>
-									<h5>options: <span class="tsd-signature-type">CoreOptions</span></h5>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> logger: <span class="tsd-signature-type">Logger</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>an optional pino logger, see <a href="https://github.com/pinojs/pino" class="external">pino library</a> for more details</p>
+									</div>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <a href="_dcoreapi_.dcoreapi.html" class="tsd-signature-type">DCoreApi</a></h4>
-						</li>
-					</ul>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-static">
-					<a name="createforwebsocket" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagStatic">Static</span> create<wbr>For<wbr>Web<wbr>Socket</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-static">
-						<li class="tsd-signature tsd-kind-icon">create<wbr>For<wbr>Web<wbr>Socket<span class="tsd-signature-symbol">(</span>factory<span class="tsd-signature-symbol">: </span><a href="../modules/_net_ws_rxwebsocket_.html#websocketfactory" class="tsd-signature-type">WebSocketFactory</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_dcoreapi_.dcoreapi.html" class="tsd-signature-type">DCoreApi</a></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in <a href="https://github.com/DECENTfoundation/DCoreJS-SDK/blob/985790d/src/DCoreSdk.ts#L45">DCoreSdk.ts:45</a></li>
-								</ul>
-							</aside>
-							<h4 class="tsd-parameters-title">Parameters</h4>
-							<ul class="tsd-parameters">
-								<li>
-									<h5>factory: <a href="../modules/_net_ws_rxwebsocket_.html#websocketfactory" class="tsd-signature-type">WebSocketFactory</a></h5>
-								</li>
-							</ul>
-							<h4 class="tsd-returns-title">Returns <a href="_dcoreapi_.dcoreapi.html" class="tsd-signature-type">DCoreApi</a></h4>
+							<h4 class="tsd-returns-title">Returns <a href="_api_rx_dcoreapi_.dcoreapi.html" class="tsd-signature-type">DCoreApi</a></h4>
+							<p>DCore API for making requests</p>
 						</li>
 					</ul>
 				</section>
@@ -399,67 +201,16 @@
 					<li class="current tsd-kind-class tsd-parent-kind-external-module">
 						<a href="_dcoresdk_.dcoresdk.html" class="tsd-kind-icon">DCore<wbr>Sdk</a>
 						<ul>
-							<li class=" tsd-kind-constructor tsd-parent-kind-class">
-								<a href="_dcoresdk_.dcoresdk.html#constructor" class="tsd-kind-icon">constructor</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
-								<a href="_dcoresdk_.dcoresdk.html#chainid" class="tsd-kind-icon">chain<wbr>Id</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
-								<a href="_dcoresdk_.dcoresdk.html#rpc" class="tsd-kind-icon">rpc</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
-								<a href="_dcoresdk_.dcoresdk.html#ws" class="tsd-kind-icon">ws</a>
-							</li>
-							<li class=" tsd-kind-set-signature tsd-parent-kind-class">
-								<a href="_dcoresdk_.dcoresdk.html#timeout" class="tsd-kind-icon">timeout</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="_dcoresdk_.dcoresdk.html#disconnect" class="tsd-kind-icon">disconnect</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="_dcoresdk_.dcoresdk.html#preparetransaction" class="tsd-kind-icon">prepare<wbr>Transaction</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter">
-								<a href="_dcoresdk_.dcoresdk.html#request" class="tsd-kind-icon">request</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter">
-								<a href="_dcoresdk_.dcoresdk.html#requeststream" class="tsd-kind-icon">request<wbr>Stream</a>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-static">
+								<a href="_dcoresdk_.dcoresdk.html#createapipromise" class="tsd-kind-icon">create<wbr>Api<wbr>Promise</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-static">
-								<a href="_dcoresdk_.dcoresdk.html#create" class="tsd-kind-icon">create</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-static">
-								<a href="_dcoresdk_.dcoresdk.html#createforhttp" class="tsd-kind-icon">create<wbr>For<wbr>Http</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-static">
-								<a href="_dcoresdk_.dcoresdk.html#createforwebsocket" class="tsd-kind-icon">create<wbr>For<wbr>Web<wbr>Socket</a>
+								<a href="_dcoresdk_.dcoresdk.html#createapirx" class="tsd-kind-icon">create<wbr>Api<wbr>Rx</a>
 							</li>
 						</ul>
 					</li>
 				</ul>
 				<ul class="after-current">
-					<li class=" tsd-kind-type-alias tsd-parent-kind-external-module">
-						<a href="../modules/_dcoresdk_.html#accountref" class="tsd-kind-icon">Account<wbr>Ref</a>
-					</li>
-					<li class=" tsd-kind-type-alias tsd-parent-kind-external-module">
-						<a href="../modules/_dcoresdk_.html#assetprecision" class="tsd-kind-icon">Asset<wbr>Precision</a>
-					</li>
-					<li class=" tsd-kind-type-alias tsd-parent-kind-external-module">
-						<a href="../modules/_dcoresdk_.html#assetref" class="tsd-kind-icon">Asset<wbr>Ref</a>
-					</li>
-					<li class=" tsd-kind-type-alias tsd-parent-kind-external-module">
-						<a href="../modules/_dcoresdk_.html#assetwithamount" class="tsd-kind-icon">Asset<wbr>With<wbr>Amount</a>
-					</li>
-					<li class=" tsd-kind-type-alias tsd-parent-kind-external-module">
-						<a href="../modules/_dcoresdk_.html#fee" class="tsd-kind-icon">Fee</a>
-					</li>
-					<li class=" tsd-kind-type-alias tsd-parent-kind-external-module tsd-has-type-parameter">
-						<a href="../modules/_dcoresdk_.html#newable" class="tsd-kind-icon">Newable</a>
-					</li>
-					<li class=" tsd-kind-type-alias tsd-parent-kind-external-module">
-						<a href="../modules/_dcoresdk_.html#nftref" class="tsd-kind-icon">Nft<wbr>Ref</a>
-					</li>
 				</ul>
 			</nav>
 		</div>

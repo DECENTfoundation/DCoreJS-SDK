@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>DCore SDK for JS - API documentation - version 2.6.0</title>
+	<title>DCore SDK for JS - API documentation - version 3.0.0</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="assets/css/main.css">
@@ -22,7 +22,7 @@
 						<li class="state loading">Preparing search index...</li>
 						<li class="state failure">The search index is not available</li>
 					</ul>
-					<a href="index.html" class="title">DCore SDK for JS - API documentation - version 2.6.0</a>
+					<a href="index.html" class="title">DCore SDK for JS - API documentation - version 3.0.0</a>
 				</div>
 				<div class="table-cell" id="tsd-widgets">
 					<div id="tsd-filter">
@@ -56,7 +56,7 @@
 					<a href="globals.html">Globals</a>
 				</li>
 			</ul>
-			<h1> DCore SDK for JS - API documentation - version 2.6.0</h1>
+			<h1> DCore SDK for JS - API documentation - version 3.0.0</h1>
 		</div>
 	</div>
 </header>
@@ -90,7 +90,7 @@
 <span class="hljs-keyword">import</span> { DCoreSdk } <span class="hljs-keyword">from</span> <span class="hljs-string">"dcorejs-sdk"</span>;
 
 <span class="hljs-comment">// create the API</span>
-<span class="hljs-keyword">const</span> api = DCoreSdk.createForHttp({ baseUrl: <span class="hljs-string">"https://testnet-api.dcore.io/"</span> })
+<span class="hljs-keyword">const</span> api = DCoreSdk.createForHttp({ baseUrl: <span class="hljs-string">"https://testnet.dcore.io/"</span> })
 <span class="hljs-comment">// get account by name, resolves to account id '1.2.27'</span>
 <span class="hljs-keyword">const</span> disposable = api.accountApi.get(<span class="hljs-string">"public-account-9"</span>)
     .subscribe(<span class="hljs-function">(<span class="hljs-params">account</span>) =&gt;</span> <span class="hljs-built_in">console</span>.log(account.id));</code></pre>
@@ -107,7 +107,7 @@
 spy.log();
 
 <span class="hljs-comment">// create api for websocket</span>
-<span class="hljs-keyword">const</span> api = DCoreSdk.createForWebSocket(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> <span class="hljs-keyword">new</span> WebSocket(<span class="hljs-string">"wss://testnet-api.dcore.io/"</span>));
+<span class="hljs-keyword">const</span> api = DCoreSdk.createForWebSocket(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> <span class="hljs-keyword">new</span> WebSocket(<span class="hljs-string">"wss://testnet-socket.dcore.io/"</span>));
 <span class="hljs-comment">// create account credentials</span>
 <span class="hljs-keyword">const</span> credentials = <span class="hljs-keyword">new</span> Credentials(ChainObject.parse(<span class="hljs-string">"1.2.27"</span>), <span class="hljs-string">"5Hxwqx6JJUBYWjQNt8DomTNJ6r6YK8wDJym4CMAH1zGctFyQtzt"</span>);
 <span class="hljs-comment">// send 1DCT to account id '1.2.28 (public-account-10)' with encrypted 'hello memo' memo</span>
@@ -128,7 +128,7 @@ spy.log();
 						<a href="globals.html"><em>Globals</em></a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_dcoreapi_.html">"DCore<wbr>Api"</a>
+						<a href="modules/_dcoreclient_.html">"DCore<wbr>Client"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
 						<a href="modules/_dcoreconstants_.html">"DCore<wbr>Constants"</a>
@@ -137,61 +137,121 @@ spy.log();
 						<a href="modules/_dcoresdk_.html">"DCore<wbr>Sdk"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_api_accountapi_.html">"api/<wbr>Account<wbr>Api"</a>
+						<a href="modules/_api_basecoreapi_.html">"api/<wbr>Base<wbr>Core<wbr>Api"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_api_assetapi_.html">"api/<wbr>Asset<wbr>Api"</a>
+						<a href="modules/_api_promise_accountapi_.html">"api/promise/<wbr>Account<wbr>Api"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_api_balanceapi_.html">"api/<wbr>Balance<wbr>Api"</a>
+						<a href="modules/_api_promise_assetapi_.html">"api/promise/<wbr>Asset<wbr>Api"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_api_baseapi_.html">"api/<wbr>Base<wbr>Api"</a>
+						<a href="modules/_api_promise_balanceapi_.html">"api/promise/<wbr>Balance<wbr>Api"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_api_blockapi_.html">"api/<wbr>Block<wbr>Api"</a>
+						<a href="modules/_api_promise_blockapi_.html">"api/promise/<wbr>Block<wbr>Api"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_api_broadcastapi_.html">"api/<wbr>Broadcast<wbr>Api"</a>
+						<a href="modules/_api_promise_broadcastapi_.html">"api/promise/<wbr>Broadcast<wbr>Api"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_api_callbackapi_.html">"api/<wbr>Callback<wbr>Api"</a>
+						<a href="modules/_api_promise_contentapi_.html">"api/promise/<wbr>Content<wbr>Api"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_api_contentapi_.html">"api/<wbr>Content<wbr>Api"</a>
+						<a href="modules/_api_promise_dcoreapi_.html">"api/promise/DCore<wbr>Api"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_api_generalapi_.html">"api/<wbr>General<wbr>Api"</a>
+						<a href="modules/_api_promise_generalapi_.html">"api/promise/<wbr>General<wbr>Api"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_api_historyapi_.html">"api/<wbr>History<wbr>Api"</a>
+						<a href="modules/_api_promise_historyapi_.html">"api/promise/<wbr>History<wbr>Api"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_api_messageapi_.html">"api/<wbr>Message<wbr>Api"</a>
+						<a href="modules/_api_promise_messageapi_.html">"api/promise/<wbr>Message<wbr>Api"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_api_miningapi_.html">"api/<wbr>Mining<wbr>Api"</a>
+						<a href="modules/_api_promise_miningapi_.html">"api/promise/<wbr>Mining<wbr>Api"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_api_nftapi_.html">"api/<wbr>Nft<wbr>Api"</a>
+						<a href="modules/_api_promise_nftapi_.html">"api/promise/<wbr>Nft<wbr>Api"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_api_purchaseapi_.html">"api/<wbr>Purchase<wbr>Api"</a>
+						<a href="modules/_api_promise_purchaseapi_.html">"api/promise/<wbr>Purchase<wbr>Api"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_api_seedersapi_.html">"api/<wbr>Seeders<wbr>Api"</a>
+						<a href="modules/_api_promise_seederapi_.html">"api/promise/<wbr>Seeder<wbr>Api"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_api_subscriptionapi_.html">"api/<wbr>Subscription<wbr>Api"</a>
+						<a href="modules/_api_promise_subscriptionapi_.html">"api/promise/<wbr>Subscription<wbr>Api"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_api_transactionapi_.html">"api/<wbr>Transaction<wbr>Api"</a>
+						<a href="modules/_api_promise_transactionapi_.html">"api/promise/<wbr>Transaction<wbr>Api"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_api_validationapi_.html">"api/<wbr>Validation<wbr>Api"</a>
+						<a href="modules/_api_promise_validationapi_.html">"api/promise/<wbr>Validation<wbr>Api"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_api_index_.html">"api/index"</a>
+						<a href="modules/_api_promise_index_.html">"api/promise/index"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_api_rx_accountapi_.html">"api/rx/<wbr>Account<wbr>Api"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_api_rx_assetapi_.html">"api/rx/<wbr>Asset<wbr>Api"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_api_rx_balanceapi_.html">"api/rx/<wbr>Balance<wbr>Api"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_api_rx_baseapi_.html">"api/rx/<wbr>Base<wbr>Api"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_api_rx_blockapi_.html">"api/rx/<wbr>Block<wbr>Api"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_api_rx_broadcastapi_.html">"api/rx/<wbr>Broadcast<wbr>Api"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_api_rx_callbackapi_.html">"api/rx/<wbr>Callback<wbr>Api"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_api_rx_contentapi_.html">"api/rx/<wbr>Content<wbr>Api"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_api_rx_dcoreapi_.html">"api/rx/DCore<wbr>Api"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_api_rx_generalapi_.html">"api/rx/<wbr>General<wbr>Api"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_api_rx_historyapi_.html">"api/rx/<wbr>History<wbr>Api"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_api_rx_messageapi_.html">"api/rx/<wbr>Message<wbr>Api"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_api_rx_miningapi_.html">"api/rx/<wbr>Mining<wbr>Api"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_api_rx_nftapi_.html">"api/rx/<wbr>Nft<wbr>Api"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_api_rx_purchaseapi_.html">"api/rx/<wbr>Purchase<wbr>Api"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_api_rx_seederapi_.html">"api/rx/<wbr>Seeder<wbr>Api"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_api_rx_subscriptionapi_.html">"api/rx/<wbr>Subscription<wbr>Api"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_api_rx_transactionapi_.html">"api/rx/<wbr>Transaction<wbr>Api"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_api_rx_validationapi_.html">"api/rx/<wbr>Validation<wbr>Api"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_api_rx_index_.html">"api/rx/index"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
 						<a href="modules/_crypto_address_.html">"crypto/<wbr>Address"</a>
@@ -228,6 +288,9 @@ spy.log();
 					</li>
 					<li class=" tsd-kind-external-module">
 						<a href="modules/_models_accountbalance_.html">"models/<wbr>Account<wbr>Balance"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_models_accountoptions_.html">"models/<wbr>Account<wbr>Options"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
 						<a href="modules/_models_accountstatistics_.html">"models/<wbr>Account<wbr>Statistics"</a>
@@ -273,6 +336,9 @@ spy.log();
 					</li>
 					<li class=" tsd-kind-external-module">
 						<a href="modules/_models_contentkeys_.html">"models/<wbr>Content<wbr>Keys"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_models_contentsummary_.html">"models/<wbr>Content<wbr>Summary"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
 						<a href="modules/_models_contenttypes_.html">"models/<wbr>Content<wbr>Types"</a>
@@ -366,9 +432,6 @@ spy.log();
 					</li>
 					<li class=" tsd-kind-external-module">
 						<a href="modules/_models_operationhistory_.html">"models/<wbr>Operation<wbr>History"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="modules/_models_options_.html">"models/<wbr>Options"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
 						<a href="modules/_models_pricefeed_.html">"models/<wbr>Price<wbr>Feed"</a>
@@ -662,6 +725,9 @@ spy.log();
 						<a href="modules/_net_models_request_getkeyreferences_.html">"net/models/request/<wbr>Get<wbr>Key<wbr>References"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
+						<a href="modules/_net_models_request_getmessages_.html">"net/models/request/<wbr>Get<wbr>Messages"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
 						<a href="modules/_net_models_request_getmessagesobjects_.html">"net/models/request/<wbr>Get<wbr>Messages<wbr>Objects"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
@@ -875,9 +941,6 @@ spy.log();
 						<a href="modules/_net_rpc_rpcservice_.html">"net/rpc/<wbr>Rpc<wbr>Service"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_net_serialization_serializer_.html">"net/serialization/<wbr>Serializer"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
 						<a href="modules/_net_serialization_varianttypeid_.html">"net/serialization/<wbr>Variant<wbr>Type<wbr>Id"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
@@ -888,6 +951,9 @@ spy.log();
 					</li>
 					<li class=" tsd-kind-external-module">
 						<a href="modules/_utils_objectcheckof_.html">"utils/<wbr>Object<wbr>Check<wbr>Of"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_utils_serializer_.html">"utils/<wbr>Serializer"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
 						<a href="modules/_utils_utils_.html">"utils/<wbr>Utils"</a>
