@@ -7,6 +7,7 @@ import "reflect-metadata";
 import { Address } from "../../../src/crypto/Address";
 import { ECKeyPair } from "../../../src/crypto/ECKeyPair";
 import { DCoreConstants } from "../../../src/DCoreConstants";
+import { AccountOptions } from "../../../src/models/AccountOptions";
 import { AssetAmount } from "../../../src/models/AssetAmount";
 import { AssetOptions } from "../../../src/models/AssetOptions";
 import { ChainObject } from "../../../src/models/ChainObject";
@@ -35,13 +36,12 @@ import { PurchaseContentOperation } from "../../../src/models/operation/Purchase
 import { RemoveContentOperation } from "../../../src/models/operation/RemoveContentOperation";
 import { SendMessageOperation } from "../../../src/models/operation/SendMessageOperation";
 import { TransferOperation } from "../../../src/models/operation/TransferOperation";
-import { Options } from "../../../src/models/Options";
 import { PubKey } from "../../../src/models/PubKey";
 import { RegionalPrice } from "../../../src/models/RegionalPrice";
 import { Regions } from "../../../src/models/Regions";
 import { Synopsis } from "../../../src/models/Synopsis";
 import { Transaction } from "../../../src/models/Transaction";
-import { Serializer } from "../../../src/net/serialization/Serializer";
+import { Serializer } from "../../../src/utils/Serializer";
 import { Helpers } from "../../Helpers";
 import { NftApple } from "../../model/NftApple";
 
@@ -119,7 +119,7 @@ describe("serialization test suite", () => {
             ],
             voting_account: "1.2.3",
         };
-        const options = plainToClass(Options, raw);
+        const options = plainToClass(AccountOptions, raw);
 
         const op = new AccountUpdateOperation(
             ChainObject.parse("1.2.34"),
@@ -235,7 +235,7 @@ describe("serialization test suite", () => {
 
         const opt = new MonitoredAssetOpts();
         opt.currentFeedPublicationTime = moment.utc("2019-04-16T17:22:16");
-        const op = new AssetCreateOperation(Helpers.ACCOUNT, "SDKM", 4, "hello api monitored", new AssetOptions(ExchangeRate.empty(), 0), opt);
+        const op = new AssetCreateOperation(Helpers.ACCOUNT, "SDKM", 4, "hello api monitored", new AssetOptions(ExchangeRate.empty(), Long.fromNumber(0)), opt);
         op.fee = new AssetAmount(100000);
         serializer.serialize(op).toString("hex").should.be.eq(expected);
     });

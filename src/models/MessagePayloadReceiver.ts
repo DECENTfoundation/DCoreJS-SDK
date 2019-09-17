@@ -19,6 +19,7 @@ export class MessagePayloadReceiver {
     @Expose({ name: "pub_to" })
     public toAddress?: Address;
 
+    // UInt64
     @LongToClass
     @LongToPlain
     @Expose({ name: "nonce" })

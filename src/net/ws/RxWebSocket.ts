@@ -1,10 +1,11 @@
 import * as _ from "lodash";
-import { AsyncSubject, defer, merge, NEVER, Observable, of, Subject, Subscriber, Subscription, throwError, zip } from "rxjs";
-import { tag } from "rxjs-spy/operators";
+import { Logger } from "pino";
+import { AsyncSubject, defer, merge, NEVER, Observable, of, Subject, Subscriber, Subscription, throwError } from "rxjs";
 import { filter, first, flatMap, map, tap, timeout } from "rxjs/operators";
 import { DCoreError } from "../../models/error/DCoreError";
 import { ObjectNotFoundError } from "../../models/error/ObjectNotFoundError";
 import { ObjectCheckOf } from "../../utils/ObjectCheckOf";
+import { debug } from "../../utils/Utils";
 import { BaseRequest } from "../models/request/BaseRequest";
 import { WithCallback } from "../models/request/WithCallback";
 import { CallbackResponse } from "../models/response/CallbackResponse";
@@ -67,35 +68,39 @@ export class RxWebSocket {
         }
     }
 
-    private static send(ws: WebSocketContract, request: string): void {
-        ws.send(request);
-    }
-
     public timeout = 60 * 1000;
 
     private callId = 0;
+
     private subscriptions: Subscription;
     private webSocketAsync?: AsyncSubject<WebSocketContract>;
     private messages: Subject<object | Error> = new Subject();
-
     private events: Observable<any> = new Observable((emitter: Subscriber<string>) => {
         const socket = this.webSocketFactory();
         socket.onopen = () => {
+            this.logger.debug("RxWebSocket_socket: #onopen");
             this.webSocketAsync!.next(socket);
             this.webSocketAsync!.complete();
         };
         socket.onclose = (event: CloseEvent) => {
+            this.logger.debug(`RxWebSocket_socket: #onclose {wasClean:${event.wasClean}, code: ${event.code}, reason: ${event.reason}}`);
             if (event.wasClean) {
                 emitter.complete();
             } else {
                 emitter.error(Error(event.reason));
             }
         };
-        socket.onmessage = (message: MessageEvent) => emitter.next(message.data);
-        socket.onerror = (error: ErrorEvent) => emitter.error(Error(error.message));
-    }).pipe(tag("RxWebSocket_events"));
+        socket.onmessage = (message: MessageEvent) => {
+            this.logger.debug(`RxWebSocket_socket: #onmessage ${message}`);
+            emitter.next(message.data);
+        };
+        socket.onerror = (error: ErrorEvent) => {
+            this.logger.debug(`RxWebSocket_socket: #onerror ${error}`);
+            emitter.error(Error(error.message));
+        };
+    }).pipe(debug("RxWebSocket_events", this.logger));
 
-    constructor(private webSocketFactory: WebSocketFactory) {
+    constructor(private webSocketFactory: WebSocketFactory, private logger: Logger) {
     }
 
     public isConnected(): boolean {
@@ -103,11 +108,11 @@ export class RxWebSocket {
     }
 
     public request<T>(request: BaseRequest<T>): Observable<T> {
-        return this.make(request, this.getCallId());
+        return this.make(request, this.getCallId()).pipe(debug(`RxWebSocket_request_${request.method}`, this.logger));
     }
 
     public requestStream<T>(request: BaseRequest<T> & WithCallback): Observable<T> {
-        return this.makeStream(request, this.getCallId(), this.getCallId());
+        return this.makeStream(request, this.getCallId(), this.getCallId()).pipe(debug(`RxWebSocket_requestStream_${request.method}`, this.logger));
     }
 
     public getCallId(): number {
@@ -131,6 +136,7 @@ export class RxWebSocket {
     }
 
     private connect() {
+        this.logger.info("RxWebSocket_connect");
         this.subscriptions =
             this.events.pipe(
                 tap({
@@ -150,21 +156,23 @@ export class RxWebSocket {
         this.subscriptions.unsubscribe();
         this.webSocketAsync = undefined;
         this.callId = 0;
+        this.logger.info("RxWebSocket_disconnect: clearing connection state");
     }
 
     private makeStream<T>(request: BaseRequest<T>, callId: number, callbackId?: number): Observable<T> {
         return merge(
             this.messages,
-            zip(
-                defer(() => this.webSocket()),
-                of(request.json(callId, callbackId)).pipe(tag((`API_send_${request.method}`))),
-            ).pipe(
-                tap(([socket, serialized]) => RxWebSocket.send(socket, serialized)),
+            defer(() => this.webSocket()).pipe(
+                tap((socket) => {
+                    const serialized = request.json(callId, callbackId);
+                    this.logger.info(`API_send_${request.method} #value: ${serialized}`);
+                    socket.send(serialized);
+                }),
                 flatMap(() => NEVER),
             ),
         )
             .pipe(
-                tag(`RxWebSocket_make_${request.method}_plain`),
+                debug(`RxWebSocket_request_${request.method}_plain`, this.logger),
                 flatMap((value) => value instanceof Error ? throwError(value) : of(value)),
                 tap((value: object) => RxWebSocket.checkError(value, callId)),
                 map((value) => RxWebSocket.getIdAndResult(value)),
@@ -173,7 +181,6 @@ export class RxWebSocket {
                 map(([id, obj]: [number, object]) => obj),
                 tap((obj: object) => RxWebSocket.checkEmpty(obj, request)),
                 map(request.transformer),
-                tag(`RxWebSocket_make_${request.method}`),
             );
     }
 

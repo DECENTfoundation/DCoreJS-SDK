@@ -1,5 +1,5 @@
 import { Expose } from "class-transformer";
-import { AssetPrecision, Fee } from "../../DCoreSdk";
+import { AssetPrecision, Fee } from "../../DCoreClient";
 import { ChainObjectToClass, ChainObjectToPlain } from "../../net/adapter/TypeAdapters";
 import { Asset } from "../Asset";
 import { ChainObject } from "../ChainObject";
@@ -22,6 +22,7 @@ export class AssetUpdateAdvancedOperation extends BaseOperation {
     @Expose({ name: "asset_to_update" })
     public assetToUpdate: ChainObject;
 
+    // UInt8
     @Expose({ name: "new_precision" })
     public precision: number;
 

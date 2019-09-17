@@ -1,7 +1,7 @@
 import { Expose, Type } from "class-transformer";
 import { Credentials } from "../../crypto/Credentials";
 import { ElGamal } from "../../crypto/ElGamal";
-import { Fee } from "../../DCoreSdk";
+import { Fee } from "../../DCoreClient";
 import { ChainObjectToClass, ChainObjectToPlain } from "../../net/adapter/TypeAdapters";
 import { AssetAmount } from "../AssetAmount";
 import { ChainObject } from "../ChainObject";
@@ -39,6 +39,7 @@ export class PurchaseContentOperation extends BaseOperation {
     @Expose({ name: "pubKey" })
     public publicElGamal: PubKey;
 
+    // UInt32
     @Expose({ name: "region_code_from" })
     public regionCode: number;
 

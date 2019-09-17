@@ -7,7 +7,7 @@ import "reflect-metadata";
 import { create } from "rxjs-spy";
 import { Spy } from "rxjs-spy/spy-interface";
 import { flatMap } from "rxjs/operators";
-import { DCoreApi } from "../../src/DCoreApi";
+import { DCoreApi } from "../../src/api/rx/DCoreApi";
 import { DCoreSdk } from "../../src/DCoreSdk";
 import { AccountStatistics, Authority, ChainObject, FullAccount } from "../../src/models";
 import { Account } from "../../src/models/Account";
@@ -26,7 +26,7 @@ describe("account API test suite for ops", () => {
     before(() => {
         spy = create();
         // spy.log(/^API\w+/);
-        api = DCoreSdk.createForWebSocket(() => new WebSocket(Helpers.STAGE_WS));
+        api = DCoreSdk.createApiRx(undefined, () => new WebSocket(Helpers.STAGE_WS), Helpers.LOGGER);
     });
 
     after(() => {
@@ -44,7 +44,7 @@ describe("account API test suite for ops", () => {
 
     it("should update credentials on a new account", (done: (arg?: any) => void) => {
         testCheck(done, api.accountApi.createCredentials(Helpers.createAccount, Helpers.PRIVATE).pipe(
-            flatMap((c) => api.accountApi.update(c, undefined, () => new Authority(Helpers.PUBLIC2))),
+            flatMap((c) => api.accountApi.update(c, undefined, new Authority(Helpers.PUBLIC2))),
         ));
     });
 
@@ -56,10 +56,7 @@ describe("account API test suite for ops", () => {
 
 });
 
-([
-    ["RPC", DCoreSdk.createForHttp({ baseUrl: Helpers.STAGE_HTTPS, timeout: 15000, rejectUnauthorized: false })],
-    ["WebSocket", DCoreSdk.createForWebSocket(() => new WebSocket(Helpers.STAGE_WS))],
-] as Array<[string, DCoreApi]>).forEach(([name, sdk]) => {
+Helpers.APIS.forEach(([name, sdk]) => {
     const api = sdk.accountApi;
 
     describe(`account API test suite for ${name}`, () => {

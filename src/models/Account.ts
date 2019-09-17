@@ -1,9 +1,9 @@
 import { Expose, Type } from "class-transformer";
 import { Address } from "../crypto/Address";
-import { ChainObjectToClass } from "../net/adapter/TypeAdapters";
+import { ChainObjectToClass, ChainObjectToPlain } from "../net/adapter/TypeAdapters";
+import { AccountOptions } from "./AccountOptions";
 import { Authority } from "./Authority";
 import { ChainObject } from "./ChainObject";
-import { Options } from "./Options";
 import { Publishing } from "./Publishing";
 
 export class Account {
@@ -14,10 +14,12 @@ export class Account {
 
     private static regexp: RegExp = /^(?=.{5,63}$)([a-z][a-z0-9-]+[a-z0-9])(\.[a-z][a-z0-9-]+[a-z0-9])*$/;
 
+    @ChainObjectToPlain
     @ChainObjectToClass
     @Expose({ name: "id" })
     public id: ChainObject;
 
+    @ChainObjectToPlain
     @ChainObjectToClass
     @Expose({ name: "registrar" })
     public registrar: ChainObject;
@@ -33,10 +35,11 @@ export class Account {
     @Expose({ name: "active" })
     public active: Authority;
 
-    @Type(() => Options)
+    @Type(() => AccountOptions)
     @Expose({ name: "options" })
-    public options: Options;
+    public options: AccountOptions;
 
+    @ChainObjectToPlain
     @ChainObjectToClass
     @Expose({ name: "statistics" })
     public statistics: ChainObject;
@@ -45,6 +48,7 @@ export class Account {
     @Expose({ name: "rights_to_publish" })
     public rightsToPublish: Publishing;
 
+    // UInt8
     @Expose({ name: "top_n_control_flags" })
     public topControlFlags: number;
 

@@ -1,5 +1,5 @@
 import { Expose } from "class-transformer";
-import * as _ from "lodash/fp";
+import * as _ from "lodash";
 import * as Long from "long";
 import { Address } from "../crypto/Address";
 import { ECKeyPair } from "../crypto/ECKeyPair";
@@ -32,6 +32,7 @@ export class Memo {
     @Expose({ name: "message" })
     public message: string;
 
+    // UInt64
     @LongToClass
     @LongToPlain
     @Expose({ name: "nonce" })

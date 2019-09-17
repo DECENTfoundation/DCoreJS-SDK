@@ -1,55 +1,63 @@
 import * as ByteBuffer from "bytebuffer";
+import { ClassTransformer } from "class-transformer";
 import * as _ from "lodash";
 import * as Long from "long";
 import { Moment } from "moment";
-import { Address } from "../../crypto/Address";
-import { AssetAmount } from "../../models/AssetAmount";
-import { AssetOptions } from "../../models/AssetOptions";
-import { Authority } from "../../models/Authority";
-import { AuthorityMap } from "../../models/AuthorityMap";
-import { ChainObject } from "../../models/ChainObject";
-import { CustodyData } from "../../models/CustodyData";
-import { ExchangeRate } from "../../models/ExchangeRate";
-import { KeyPart } from "../../models/KeyPart";
-import { Memo } from "../../models/Memo";
-import { MonitoredAssetOpts } from "../../models/MonitoredAssetOpts";
-import { NftDataType } from "../../models/NftDataType";
-import { NFT_FIELD_IDX } from "../../models/NftFieldType";
-import { NFT_MOD_BY_IDX } from "../../models/NftModifiableBy";
-import { NftOptions } from "../../models/NftOptions";
-import { AccountCreateOperation } from "../../models/operation/AccountCreateOperation";
-import { AccountUpdateOperation } from "../../models/operation/AccountUpdateOperation";
-import { AddOrUpdateContentOperation } from "../../models/operation/AddOrUpdateContentOperation";
-import { AssetClaimFeesOperation } from "../../models/operation/AssetClaimFeesOperation";
-import { AssetCreateOperation } from "../../models/operation/AssetCreateOperation";
-import { AssetFundPoolsOperation } from "../../models/operation/AssetFundPoolsOperation";
-import { AssetIssueOperation } from "../../models/operation/AssetIssueOperation";
-import { AssetReserveOperation } from "../../models/operation/AssetReserveOperation";
-import { AssetUpdateAdvancedOperation } from "../../models/operation/AssetUpdateAdvancedOperation";
-import { AssetUpdateOperation } from "../../models/operation/AssetUpdateOperation";
-import { CustomOperation } from "../../models/operation/CustomOperation";
-import { LeaveRatingAndCommentOperation } from "../../models/operation/LeaveRatingAndCommentOperation";
-import { NftCreateOperation } from "../../models/operation/NftCreateOperation";
-import { NftIssueOperation } from "../../models/operation/NftIssueOperation";
-import { NftTransferOperation } from "../../models/operation/NftTransferOperation";
-import { NftUpdateDataOperation } from "../../models/operation/NftUpdateDataOperation";
-import { NftUpdateOperation } from "../../models/operation/NftUpdateOperation";
-import { PurchaseContentOperation } from "../../models/operation/PurchaseContentOperation";
-import { RemoveContentOperation } from "../../models/operation/RemoveContentOperation";
-import { SendMessageOperation } from "../../models/operation/SendMessageOperation";
-import { TransferOperation } from "../../models/operation/TransferOperation";
-import { Options } from "../../models/Options";
-import { ProcessedTransaction } from "../../models/ProcessedTransaction";
-import { PubKey } from "../../models/PubKey";
-import { Publishing } from "../../models/Publishing";
-import { RegionalPrice } from "../../models/RegionalPrice";
-import { Transaction } from "../../models/Transaction";
-import { VoteId } from "../../models/VoteId";
-import { VariantTypeId } from "./VariantTypeId";
+import { Address } from "../crypto/Address";
+import { AccountOptions } from "../models/AccountOptions";
+import { AssetAmount } from "../models/AssetAmount";
+import { AssetOptions } from "../models/AssetOptions";
+import { Authority } from "../models/Authority";
+import { AuthorityMap } from "../models/AuthorityMap";
+import { ChainObject } from "../models/ChainObject";
+import { CustodyData } from "../models/CustodyData";
+import { ExchangeRate } from "../models/ExchangeRate";
+import { KeyPart } from "../models/KeyPart";
+import { Memo } from "../models/Memo";
+import { MonitoredAssetOpts } from "../models/MonitoredAssetOpts";
+import { NftDataType } from "../models/NftDataType";
+import { NFT_FIELD_IDX } from "../models/NftFieldType";
+import { NFT_MOD_BY_IDX } from "../models/NftModifiableBy";
+import { NftOptions } from "../models/NftOptions";
+import { AccountCreateOperation } from "../models/operation/AccountCreateOperation";
+import { AccountUpdateOperation } from "../models/operation/AccountUpdateOperation";
+import { AddOrUpdateContentOperation } from "../models/operation/AddOrUpdateContentOperation";
+import { AssetClaimFeesOperation } from "../models/operation/AssetClaimFeesOperation";
+import { AssetCreateOperation } from "../models/operation/AssetCreateOperation";
+import { AssetFundPoolsOperation } from "../models/operation/AssetFundPoolsOperation";
+import { AssetIssueOperation } from "../models/operation/AssetIssueOperation";
+import { AssetReserveOperation } from "../models/operation/AssetReserveOperation";
+import { AssetUpdateAdvancedOperation } from "../models/operation/AssetUpdateAdvancedOperation";
+import { AssetUpdateOperation } from "../models/operation/AssetUpdateOperation";
+import { CustomOperation } from "../models/operation/CustomOperation";
+import { LeaveRatingAndCommentOperation } from "../models/operation/LeaveRatingAndCommentOperation";
+import { NftCreateOperation } from "../models/operation/NftCreateOperation";
+import { NftIssueOperation } from "../models/operation/NftIssueOperation";
+import { NftTransferOperation } from "../models/operation/NftTransferOperation";
+import { NftUpdateDataOperation } from "../models/operation/NftUpdateDataOperation";
+import { NftUpdateOperation } from "../models/operation/NftUpdateOperation";
+import { PurchaseContentOperation } from "../models/operation/PurchaseContentOperation";
+import { RemoveContentOperation } from "../models/operation/RemoveContentOperation";
+import { SendMessageOperation } from "../models/operation/SendMessageOperation";
+import { TransferOperation } from "../models/operation/TransferOperation";
+import { ProcessedTransaction } from "../models/ProcessedTransaction";
+import { PubKey } from "../models/PubKey";
+import { Publishing } from "../models/Publishing";
+import { RegionalPrice } from "../models/RegionalPrice";
+import { Transaction } from "../models/Transaction";
+import { VoteId } from "../models/VoteId";
+import { VariantTypeId } from "../net/serialization/VariantTypeId";
 
 type Adapter<T> = (buffer: ByteBuffer, obj: T) => void;
 
 export class Serializer {
+
+    /**
+     * Class-transformer allows you to transform plain object to some instance of class and versa.
+     * Also it allows to serialize / deserialize object based on criteria.
+     * See {@link https://github.com/typestack/class-transformer/blob/master/README.md class-transformer library} for more details.
+     */
+    public classTransformer: ClassTransformer = new ClassTransformer();
 
     private adapters: Map<string, Adapter<any>> = new Map();
 
@@ -65,7 +73,7 @@ export class Serializer {
         this.adapters.set(Memo.name, this.memoAdapter);
         this.adapters.set(VoteId.name, this.voteAdapter);
         this.adapters.set("boolean", this.booleanAdapter);
-        this.adapters.set(Options.name, this.optionsAdapter);
+        this.adapters.set(AccountOptions.name, this.optionsAdapter);
         this.adapters.set(PubKey.name, this.pubKeyAdapter);
         this.adapters.set(Publishing.name, this.publishingAdapter);
         this.adapters.set(Transaction.name, this.transactionAdapter);
@@ -80,6 +88,7 @@ export class Serializer {
         this.adapters.set(AddOrUpdateContentOperation.name, this.addOrUpdateContentOperationAdapter);
         this.adapters.set(RemoveContentOperation.name, this.removeContentOperationAdapter);
         this.adapters.set(SendMessageOperation.name, this.customOperationAdapter);
+        this.adapters.set(CustomOperation.name, this.customOperationAdapter);
         this.adapters.set(LeaveRatingAndCommentOperation.name, this.rateAndCommentOperationAdapter);
         this.adapters.set(ExchangeRate.name, this.exchangeRateAdapter);
         this.adapters.set(AssetOptions.name, this.assetOptionsAdapter);
@@ -100,6 +109,13 @@ export class Serializer {
         this.adapters.set(NftUpdateDataOperation.name, this.nftUpdateDataAdapter);
     }
 
+    /**
+     * Serialize object to binary data, used for creating a signature for transactions.
+     *
+     * @param obj some object
+     *
+     * @return Buffer filled with binary data
+     */
     public serialize(obj: any): Buffer {
         const buffer = new ByteBuffer(1024, true);
         this.append(buffer, obj);
@@ -188,7 +204,7 @@ export class Serializer {
 
     private booleanAdapter = (buffer: ByteBuffer, obj: boolean) => buffer.writeByte(obj ? 1 : 0);
 
-    private optionsAdapter = (buffer: ByteBuffer, obj: Options) => {
+    private optionsAdapter = (buffer: ByteBuffer, obj: AccountOptions) => {
         this.append(buffer, obj.memoKey);
         this.append(buffer, obj.votingAccount);
         buffer.writeUint16(obj.numMiner);
@@ -333,7 +349,7 @@ export class Serializer {
     }
 
     private assetOptionsAdapter = (buffer: ByteBuffer, obj: AssetOptions) => {
-        buffer.writeUint64(obj.maxSupply);
+        this.append(buffer, obj.maxSupply);
         this.append(buffer, obj.exchangeRate);
         this.append(buffer, obj.exchangeable);
         buffer.writeByte(obj.extensions.length);
@@ -374,7 +390,7 @@ export class Serializer {
         this.append(buffer, obj.assetToUpdate);
         this.append(buffer, obj.newDescription);
         this.appendOptional(buffer, obj.newIssuer);
-        buffer.writeUint64(obj.maxSupply);
+        this.append(buffer, obj.maxSupply);
         this.append(buffer, obj.coreExchangeRate);
         this.append(buffer, obj.exchangeable);
         this.append(buffer, obj.extensions);

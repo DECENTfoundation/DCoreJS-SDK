@@ -2,14 +2,15 @@ import * as chai from "chai";
 import * as chaiThings from "chai-things";
 import * as WebSocket from "isomorphic-ws";
 import * as _ from "lodash";
+import * as Long from "long";
 import "mocha";
 import "reflect-metadata";
 import { create } from "rxjs-spy";
 import { Spy } from "rxjs-spy/spy-interface";
+import { DCoreApi } from "../../src/api/rx/DCoreApi";
 import { ECKeyPair } from "../../src/crypto/ECKeyPair";
-import { DCoreApi } from "../../src/DCoreApi";
 import { DCoreSdk } from "../../src/DCoreSdk";
-import { Asset, AssetAmount, AssetClaimFeesOperation, AssetFundPoolsOperation, ChainObject, DCoreError, ExchangeRate, RealSupply } from "../../src/models";
+import { Asset, AssetAmount, AssetClaimFeesOperation, AssetFundPoolsOperation, ChainObject, DCoreError, RealSupply } from "../../src/models";
 import { AssetData } from "../../src/models/AssetData";
 import { Helpers, testCheck, testCheckWith } from "../Helpers";
 
@@ -24,7 +25,7 @@ describe("asset API test suite for ops", () => {
     before(() => {
         spy = create();
         // spy.log(/^API\w+/);
-        api = DCoreSdk.createForWebSocket(() => new WebSocket(Helpers.STAGE_WS));
+        api = DCoreSdk.createApiRx(undefined, () => new WebSocket(Helpers.STAGE_WS), Helpers.LOGGER);
     });
 
     after(() => {
@@ -57,10 +58,10 @@ describe("asset API test suite for ops", () => {
         testCheck(done, api.assetApi.update(
             Helpers.CREDENTIALS,
             Helpers.createAsset,
-            () => new ExchangeRate(new AssetAmount(1), new AssetAmount(50, Helpers.createAssetId)),
-            () => "some nested asset",
-            () => true,
-            () => Date.now() / 1000,
+            [1, 50],
+            "some nested asset",
+            true,
+            Long.fromValue(Date.now() / 1000),
         ));
     });
 
@@ -136,10 +137,7 @@ describe("asset API test suite for ops", () => {
 });
 
 {
-    ([
-        ["RPC", DCoreSdk.createForHttp({ baseUrl: Helpers.STAGE_HTTPS, timeout: 15000, rejectUnauthorized: false })],
-        ["WebSocket", DCoreSdk.createForWebSocket(() => new WebSocket(Helpers.STAGE_WS))],
-    ] as Array<[string, DCoreApi]>).forEach(([name, sdk]) => {
+    Helpers.APIS.forEach(([name, sdk]) => {
         const api = sdk.assetApi;
 
         describe(`asset API test suite for ${name}`, () => {

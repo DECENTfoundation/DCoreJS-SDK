@@ -1,15 +1,15 @@
 import { Duration } from "moment";
 import { Observable } from "rxjs";
 import { first, flatMap, map } from "rxjs/operators";
-import { ECKeyPair } from "../crypto/ECKeyPair";
-import { DCoreApi } from "../DCoreApi";
-import { BaseOperation } from "../models/operation/BaseOperation";
-import { Transaction } from "../models/Transaction";
-import { TransactionConfirmation } from "../models/TransactionConfirmation";
-import { BroadcastTransaction } from "../net/models/request/BroadcastTransaction";
-import { BroadcastTransactionSynchronous } from "../net/models/request/BroadcastTransactionSynchronous";
-import { BroadcastTransactionWithCallback } from "../net/models/request/BroadcastTransactionWithCallback";
+import { ECKeyPair } from "../../crypto/ECKeyPair";
+import { BaseOperation } from "../../models/operation/BaseOperation";
+import { Transaction } from "../../models/Transaction";
+import { TransactionConfirmation } from "../../models/TransactionConfirmation";
+import { BroadcastTransaction } from "../../net/models/request/BroadcastTransaction";
+import { BroadcastTransactionSynchronous } from "../../net/models/request/BroadcastTransactionSynchronous";
+import { BroadcastTransactionWithCallback } from "../../net/models/request/BroadcastTransactionWithCallback";
 import { BaseApi } from "./BaseApi";
+import { DCoreApi } from "./DCoreApi";
 
 export class BroadcastApi extends BaseApi {
 

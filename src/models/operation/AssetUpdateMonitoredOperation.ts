@@ -1,5 +1,5 @@
 import { Expose } from "class-transformer";
-import { Fee } from "../../DCoreSdk";
+import { Fee } from "../../DCoreClient";
 import { ChainObjectToClass, ChainObjectToPlain } from "../../net/adapter/TypeAdapters";
 import { ChainObject } from "../ChainObject";
 import { BaseOperation } from "./BaseOperation";
@@ -25,9 +25,11 @@ export class AssetUpdateMonitoredOperation extends BaseOperation {
     @Expose({ name: "new_description" })
     public description: string;
 
+    // UInt32
     @Expose({ name: "new_feed_lifetime_sec" })
     public newFeedLifetime: number;
 
+    // UInt8
     @Expose({ name: "new_minimum_feeds" })
     public newMinimumFeeds: number;
 

@@ -1,9 +1,9 @@
 import { Expose, Type } from "class-transformer";
 import { Decimal } from "decimal.js";
 import * as Long from "long";
+import { AssetPrecision } from "../DCoreClient";
 import { DCoreConstants } from "../DCoreConstants";
-import { AssetPrecision } from "../DCoreSdk";
-import { ChainObjectToClass } from "../net/adapter/TypeAdapters";
+import { ChainObjectToClass, ChainObjectToPlain } from "../net/adapter/TypeAdapters";
 import { assertThrow } from "../utils/Utils";
 import { AssetAmount } from "./AssetAmount";
 import { AssetFormatter } from "./AssetFormatter";
@@ -20,6 +20,7 @@ export class Asset {
 
     private static regexp: RegExp = /(?=.{3,16}$)^[A-Z][A-Z0-9]+(\.[A-Z0-9]*)?[A-Z]$/;
 
+    @ChainObjectToPlain
     @ChainObjectToClass
     @Expose({ name: "id" })
     public id: ChainObject;
@@ -27,9 +28,11 @@ export class Asset {
     @Expose({ name: "symbol" })
     public symbol: string;
 
+    // UInt8
     @Expose({ name: "precision" })
     public precision: AssetPrecision;
 
+    @ChainObjectToPlain
     @ChainObjectToClass
     @Expose({ name: "issuer" })
     public issuer: ChainObject;
@@ -45,6 +48,7 @@ export class Asset {
     @Expose({ name: "options" })
     public options: AssetOptions;
 
+    @ChainObjectToPlain
     @ChainObjectToClass
     @Expose({ name: "dynamic_asset_data_id" })
     public dynamicAssetDataId: ChainObject;

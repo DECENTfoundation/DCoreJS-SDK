@@ -6,8 +6,8 @@ import "reflect-metadata";
 import { create } from "rxjs-spy";
 import { Spy } from "rxjs-spy/spy-interface";
 import { flatMap, tap } from "rxjs/operators";
+import { DCoreApi } from "../../src/api/rx/DCoreApi";
 import { Credentials } from "../../src/crypto/Credentials";
-import { DCoreApi } from "../../src/DCoreApi";
 import { DCoreSdk } from "../../src/DCoreSdk";
 import { ChainObject } from "../../src/models/ChainObject";
 import { DCoreError } from "../../src/models/error/DCoreError";
@@ -19,7 +19,7 @@ import { NftNotApple } from "../model/NftNotApple";
 chai.should();
 chai.use(chaiThings);
 
-describe.skip("NFT API test suite for ops", () => {
+describe("NFT API test suite for ops", () => {
 
     let api: DCoreApi;
     let spy: Spy;
@@ -27,7 +27,7 @@ describe.skip("NFT API test suite for ops", () => {
     before(() => {
         spy = create();
         // spy.log(/^API\w+/);
-        api = DCoreSdk.createForWebSocket(() => new WebSocket(Helpers.STAGE_WS));
+        api = DCoreSdk.createApiRx(undefined, () => new WebSocket(Helpers.STAGE_WS), Helpers.LOGGER);
     });
 
     after(() => {
@@ -145,10 +145,7 @@ describe.skip("NFT API test suite for ops", () => {
     });
 });
 
-([
-    ["RPC", DCoreSdk.createForHttp({ baseUrl: Helpers.STAGE_HTTPS, timeout: 15000, rejectUnauthorized: false })],
-    ["WebSocket", DCoreSdk.createForWebSocket(() => new WebSocket(Helpers.STAGE_WS))],
-] as Array<[string, DCoreApi]>).forEach(([name, sdk]) => {
+Helpers.APIS.forEach(([name, sdk]) => {
     const api = sdk.nftApi;
 
     describe.skip(`NFT API test suite for ${name}`, () => {

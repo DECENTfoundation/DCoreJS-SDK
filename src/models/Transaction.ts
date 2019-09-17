@@ -6,8 +6,8 @@ import { ECKeyPair } from "../crypto/ECKeyPair";
 import { DCoreConstants } from "../DCoreConstants";
 import { OperationsToClass } from "../net/adapter/OperationAdapter";
 import { MomentToClass, MomentToPlain } from "../net/adapter/TypeAdapters";
-import { Serializer } from "../net/serialization/Serializer";
 import { Definitions } from "../utils/Definitions";
+import { Serializer } from "../utils/Serializer";
 import { assertThrow, Utils } from "../utils/Utils";
 import { DynamicGlobalProperties } from "./DynamicGlobalProperties";
 import { BaseOperation } from "./operation/BaseOperation";
@@ -21,8 +21,8 @@ export class Transaction {
         return new Transaction(ops, props.time.add(transactionExpiration), refBlockNum, refBlockPrefix, chainId, [], []);
     }
 
-    @OperationsToClass
     @Transform((values: any[], obj: Transaction) => obj.operations.map((op) => [op.type, classToPlain(op)]), { toPlainOnly: true })
+    @OperationsToClass
     @Expose({ name: "operations" })
     public operations: BaseOperation[];
 
@@ -34,9 +34,11 @@ export class Transaction {
     @Expose({ name: "expiration" })
     public expiration: Moment;
 
+    // UInt16
     @Expose({ name: "ref_block_num" })
     public refBlockNum: number;
 
+    // UInt32
     @Expose({ name: "ref_block_prefix" })
     public refBlockPrefix: number;
 

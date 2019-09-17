@@ -1,5 +1,5 @@
 import { Expose } from "class-transformer";
-import { Fee } from "../../DCoreSdk";
+import { Fee } from "../../DCoreClient";
 import { ChainObjectToClass, ChainObjectToPlain } from "../../net/adapter/TypeAdapters";
 import { assertThrow } from "../../utils/Utils";
 import { ChainObject } from "../ChainObject";
@@ -16,6 +16,7 @@ export class LeaveRatingAndCommentOperation extends BaseOperation {
     @Expose({ name: "consumer" })
     public consumer: ChainObject;
 
+    // UInt64 number is safe for 1-5
     @Expose({ name: "rating" })
     public rating: number;
 

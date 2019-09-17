@@ -6,7 +6,7 @@ import * as moment from "moment";
 import "reflect-metadata";
 import { create } from "rxjs-spy";
 import { Spy } from "rxjs-spy/spy-interface";
-import { DCoreApi } from "../../src/DCoreApi";
+import { DCoreApi } from "../../src/api/rx/DCoreApi";
 import { DCoreSdk } from "../../src/DCoreSdk";
 import { AssetAmount, ChainObject, Content, ContentKeys, PurchaseContentOperation, RegionalPrice, Synopsis, TransferOperation } from "../../src/models";
 import { Helpers, testCheck } from "../Helpers";
@@ -22,7 +22,7 @@ describe("content API test suite for ops", () => {
     before(() => {
         spy = create();
         // spy.log(/^API\w+/);
-        api = DCoreSdk.createForWebSocket(() => new WebSocket(Helpers.STAGE_WS));
+        api = DCoreSdk.createApiRx(undefined, () => new WebSocket(Helpers.STAGE_WS), Helpers.LOGGER);
     });
 
     after(() => {
@@ -60,7 +60,7 @@ describe("content API test suite for ops", () => {
         testCheck(done, api.contentApi.update(
             Helpers.CREDENTIALS,
             Helpers.createUri,
-            () => new Synopsis("hello", "update"),
+            new Synopsis("hello", "update"),
         ));
     });
 
@@ -82,10 +82,7 @@ describe("content API test suite for ops", () => {
     });
 });
 
-([
-    ["RPC", DCoreSdk.createForHttp({ baseUrl: Helpers.STAGE_HTTPS, timeout: 15000, rejectUnauthorized: false })],
-    ["WebSocket", DCoreSdk.createForWebSocket(() => new WebSocket(Helpers.STAGE_WS))],
-] as Array<[string, DCoreApi]>).forEach(([name, sdk]) => {
+Helpers.APIS.forEach(([name, sdk]) => {
     const api = sdk.contentApi;
 
     describe(`content API test suite for ${name}`, () => {
@@ -97,7 +94,7 @@ describe("content API test suite for ops", () => {
 
         before(() => {
             spy = create();
-            // spy.log(/^API\w+/);
+            spy.log();
         });
 
         after(() => {

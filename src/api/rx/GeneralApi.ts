@@ -1,17 +1,17 @@
 import { Moment } from "moment";
 import { Observable } from "rxjs";
-import { DCoreApi } from "../DCoreApi";
-import { ChainProperties } from "../models/ChainProperties";
-import { DynamicGlobalProperties } from "../models/DynamicGlobalProperties";
-import { GlobalProperties } from "../models/GlobalProperties";
-import { MinerRewardInput } from "../models/MinerRewardInput";
-import { GetChainId } from "../net/models/request/GetChainId";
-import { GetChainProperties } from "../net/models/request/GetChainProperties";
-import { GetConfig } from "../net/models/request/GetConfig";
-import { GetDynamicGlobalProps } from "../net/models/request/GetDynamicGlobalProps";
-import { GetGlobalProperties } from "../net/models/request/GetGlobalProperties";
-import { GetTimeToMaintenance } from "../net/models/request/GetTimeToMaintenance";
+import { ChainProperties } from "../../models/ChainProperties";
+import { DynamicGlobalProperties } from "../../models/DynamicGlobalProperties";
+import { GlobalProperties } from "../../models/GlobalProperties";
+import { MinerRewardInput } from "../../models/MinerRewardInput";
+import { GetChainId } from "../../net/models/request/GetChainId";
+import { GetChainProperties } from "../../net/models/request/GetChainProperties";
+import { GetConfig } from "../../net/models/request/GetConfig";
+import { GetDynamicGlobalProps } from "../../net/models/request/GetDynamicGlobalProps";
+import { GetGlobalProperties } from "../../net/models/request/GetGlobalProperties";
+import { GetTimeToMaintenance } from "../../net/models/request/GetTimeToMaintenance";
 import { BaseApi } from "./BaseApi";
+import { DCoreApi } from "./DCoreApi";
 
 export class GeneralApi extends BaseApi {
     constructor(api: DCoreApi) {

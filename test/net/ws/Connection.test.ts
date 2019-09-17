@@ -2,6 +2,7 @@ import * as chai from "chai";
 import * as chaiThings from "chai-things";
 import * as WebSocket from "isomorphic-ws";
 import "mocha";
+import "reflect-metadata";
 import { defer } from "rxjs";
 import { create } from "rxjs-spy";
 import { Spy } from "rxjs-spy/spy-interface";
@@ -37,8 +38,8 @@ describe("web socket connections", () => {
     before(() => {
         spy = create();
         // spy.log();
-        realRxWs = new RxWebSocket(() => new WebSocket(Helpers.STAGE_WS));
-        mockRxWs = new RxWebSocket(() => mockWs);
+        realRxWs = new RxWebSocket(() => new WebSocket(Helpers.STAGE_WS), Helpers.LOGGER);
+        mockRxWs = new RxWebSocket(() => mockWs, Helpers.LOGGER);
     });
 
     after(() => {

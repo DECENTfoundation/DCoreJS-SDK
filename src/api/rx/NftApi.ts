@@ -2,33 +2,33 @@ import { serialize } from "class-transformer";
 import * as _ from "lodash";
 import { Observable, of } from "rxjs";
 import { flatMap, map, tap } from "rxjs/operators";
-import { Credentials } from "../crypto/Credentials";
-import { DCoreApi } from "../DCoreApi";
-import { Fee, Newable, NftRef } from "../DCoreSdk";
-import { ChainObject } from "../models/ChainObject";
-import { Memo } from "../models/Memo";
-import { Nft } from "../models/Nft";
-import { NftData } from "../models/NftData";
-import { NftDataType } from "../models/NftDataType";
-import { NftDefinition } from "../models/NftModel";
-import { NftOptions } from "../models/NftOptions";
-import { NftCreateOperation } from "../models/operation/NftCreateOperation";
-import { NftIssueOperation } from "../models/operation/NftIssueOperation";
-import { NftTransferOperation } from "../models/operation/NftTransferOperation";
-import { NftUpdateDataOperation } from "../models/operation/NftUpdateDataOperation";
-import { NftUpdateOperation } from "../models/operation/NftUpdateOperation";
-import { RawNft } from "../models/RawNft";
-import { TransactionConfirmation } from "../models/TransactionConfirmation";
-import { GetNftBalances } from "../net/models/request/GetNftBalances";
-import { GetNftCount } from "../net/models/request/GetNftCount";
-import { GetNftData } from "../net/models/request/GetNftData";
-import { GetNftDataCount } from "../net/models/request/GetNftDataCount";
-import { GetNfts } from "../net/models/request/GetNfts";
-import { GetNftsBySymbol } from "../net/models/request/GetNftsBySymbol";
-import { ListNftData } from "../net/models/request/ListNftData";
-import { ListNfts } from "../net/models/request/ListNfts";
-import { assertThrow } from "../utils/Utils";
+import { Credentials } from "../../crypto/Credentials";
+import { Fee, Newable, NftRef } from "../../DCoreClient";
+import { ChainObject } from "../../models/ChainObject";
+import { Memo } from "../../models/Memo";
+import { Nft } from "../../models/Nft";
+import { NftData } from "../../models/NftData";
+import { NftDataType } from "../../models/NftDataType";
+import { NftDefinition } from "../../models/NftModel";
+import { NftOptions } from "../../models/NftOptions";
+import { NftCreateOperation } from "../../models/operation/NftCreateOperation";
+import { NftIssueOperation } from "../../models/operation/NftIssueOperation";
+import { NftTransferOperation } from "../../models/operation/NftTransferOperation";
+import { NftUpdateDataOperation } from "../../models/operation/NftUpdateDataOperation";
+import { NftUpdateOperation } from "../../models/operation/NftUpdateOperation";
+import { RawNft } from "../../models/RawNft";
+import { TransactionConfirmation } from "../../models/TransactionConfirmation";
+import { GetNftBalances } from "../../net/models/request/GetNftBalances";
+import { GetNftCount } from "../../net/models/request/GetNftCount";
+import { GetNftData } from "../../net/models/request/GetNftData";
+import { GetNftDataCount } from "../../net/models/request/GetNftDataCount";
+import { GetNfts } from "../../net/models/request/GetNfts";
+import { GetNftsBySymbol } from "../../net/models/request/GetNftsBySymbol";
+import { ListNftData } from "../../net/models/request/ListNftData";
+import { ListNfts } from "../../net/models/request/ListNfts";
+import { assertThrow } from "../../utils/Utils";
 import { BaseApi } from "./BaseApi";
+import { DCoreApi } from "./DCoreApi";
 
 export class NftApi extends BaseApi {
 
@@ -106,6 +106,7 @@ export class NftApi extends BaseApi {
     // tslint:disable-next-line:unified-signatures
     public getAllData<T>(ids: ChainObject[], model: Newable<T>): Observable<Array<NftData<T>>>;
 
+    public getAllData<T>(ids: ChainObject[], model?: Newable<T>): Observable<Array<NftData<T>>>;
     public getAllData<T>(ids: ChainObject[], model?: Newable<T>): Observable<Array<NftData<T>>> {
         return this.getAllDataRaw(ids).pipe(map((list) => list.map((it) => this.make(it, model))));
     }
@@ -142,6 +143,7 @@ export class NftApi extends BaseApi {
     // tslint:disable-next-line:unified-signatures
     public getData<T>(id: ChainObject, model: Newable<T>): Observable<NftData<T>>;
 
+    public getData<T>(id: ChainObject, model?: Newable<T>): Observable<NftData<T>>;
     public getData<T>(id: ChainObject, model?: Newable<T>): Observable<NftData<T>> {
         return this.getDataRaw(id).pipe(map((it) => this.make(it, model)));
     }
@@ -247,6 +249,7 @@ export class NftApi extends BaseApi {
     // tslint:disable-next-line:unified-signatures
     public listDataByNft<T>(nftId: ChainObject, model: Newable<T>): Observable<Array<NftData<T>>>;
 
+    public listDataByNft<T>(nftId: ChainObject, model?: Newable<T>): Observable<Array<NftData<T>>>;
     public listDataByNft<T>(nftId: ChainObject, model?: Newable<T>): Observable<Array<NftData<T>>> {
         return this.listDataByNftRaw(nftId).pipe(map((list) => list.map((it) => this.make(it, model))));
     }

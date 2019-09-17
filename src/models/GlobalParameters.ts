@@ -1,6 +1,6 @@
 import { Expose, Type } from "class-transformer";
 import * as Long from "long";
-import { LongToClass } from "../net/adapter/TypeAdapters";
+import { LongToClassSigned, LongToPlain } from "../net/adapter/TypeAdapters";
 import { FeeSchedule } from "./FeeSchedule";
 
 export class GlobalParameters {
@@ -9,56 +9,65 @@ export class GlobalParameters {
     @Expose({ name: "current_fees" })
     public fees: FeeSchedule;
 
+    // UInt8
     @Expose({ name: "block_interval" })
     public blockInterval: number;
 
-    @LongToClass
+    // UInt32
     @Expose({ name: "maintenance_interval" })
-    public maintenanceInterval: Long;
+    public maintenanceInterval: number;
 
+    // UInt8
     @Expose({ name: "maintenance_skip_slots" })
     public maintenanceSkipSlots: number;
 
-    @LongToClass
+    // UInt32
     @Expose({ name: "miner_proposal_review_period" })
-    public minerProposalReviewPeriod: Long;
+    public minerProposalReviewPeriod: number;
 
-    @LongToClass
+    // UInt32
     @Expose({ name: "maximum_transaction_size" })
-    public maximumTransactionSize: Long;
+    public maximumTransactionSize: number;
 
-    @LongToClass
+    // UInt32
     @Expose({ name: "maximum_block_size" })
-    public maximumBlockSize: Long;
+    public maximumBlockSize: number;
 
-    @LongToClass
+    // UInt32
     @Expose({ name: "maximum_time_until_expiration" })
-    public maximumTimeUntilExpiration: Long;
+    public maximumTimeUntilExpiration: number;
 
-    @LongToClass
+    // UInt32
     @Expose({ name: "maximum_proposal_lifetime" })
-    public maximumProposalLifetime: Long;
+    public maximumProposalLifetime: number;
 
+    // UInt8
     @Expose({ name: "maximum_asset_feed_publishers" })
     public maximumAssetFeedPublishers: number;
 
+    // UInt16
     @Expose({ name: "maximum_miner_count" })
     public maximumMinerCount: number;
 
+    // UInt16
     @Expose({ name: "maximum_authority_membership" })
     public maximumAuthorityMembership: number;
 
-    @LongToClass
+    // UInt32
     @Expose({ name: "cashback_vesting_period_seconds" })
-    public cashbackVestingPeriodSeconds: Long;
+    public cashbackVestingPeriodSeconds: number;
 
-    @LongToClass
+    // Int64
+    @LongToPlain
+    @LongToClassSigned
     @Expose({ name: "cashback_vesting_threshold" })
     public cashbackVestingThreshold: Long;
 
+    // UInt16
     @Expose({ name: "max_predicate_opcode" })
     public maxPredicateOpcode: number;
 
+    // UInt8
     @Expose({ name: "max_authority_depth" })
     public maxAuthorityDepth: number;
 

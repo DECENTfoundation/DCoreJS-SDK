@@ -1,28 +1,22 @@
 import * as chai from "chai";
 import * as chaiThings from "chai-things";
-import * as WebSocket from "isomorphic-ws";
 import * as _ from "lodash";
 import "mocha";
 import { duration } from "moment";
 import "reflect-metadata";
 import { create } from "rxjs-spy";
 import { Spy } from "rxjs-spy/spy-interface";
-import { DCoreSdk } from "../src/DCoreSdk";
+import { DCoreClient } from "../src/DCoreClient";
 import { AssetAmount } from "../src/models/AssetAmount";
 import { ChainObject } from "../src/models/ChainObject";
 import { TransferOperation } from "../src/models/operation/TransferOperation";
-import { RpcService } from "../src/net/rpc/RpcService";
-import { RxWebSocket } from "../src/net/ws/RxWebSocket";
 import { Helpers } from "./Helpers";
 
 chai.should();
 chai.use(chaiThings);
 
-([
-    ["RPC", new DCoreSdk(new RpcService({ baseUrl: Helpers.STAGE_HTTPS, timeout: 15000, rejectUnauthorized: false }))],
-    ["WebSocket", new DCoreSdk(undefined, new RxWebSocket(() => new WebSocket(Helpers.STAGE_WS)))],
-] as Array<[string, DCoreSdk]>).forEach(([name, sdk]) => {
-    // const api = new DCoreApi(sdk);
+Helpers.APIS.forEach(([name, api]) => {
+    const sdk = _.get(api, "core") as DCoreClient;
 
     describe(`dcore SDK test suite for ${name}`, () => {
         after(() => {

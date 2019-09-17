@@ -14,13 +14,12 @@ import { create } from "rxjs-spy";
 import { ecdhUnsafe, publicKeyTweakMul } from "secp256k1";
 import { Address } from "../src/crypto/Address";
 import { ECKeyPair } from "../src/crypto/ECKeyPair";
-import { DCoreSdk } from "../src/DCoreSdk";
 import { ObjectType, RegionalPrice, Synopsis, Transaction } from "../src/models";
 import { Account } from "../src/models/Account";
 import { AssetAmount } from "../src/models/AssetAmount";
 import { Authority } from "../src/models/Authority";
 import { ChainObject } from "../src/models/ChainObject";
-import { AddOrUpdateContentOperation } from "../src/models/operation";
+import { AddOrUpdateContentOperation, CustomOperation } from "../src/models/operation";
 import { TransferOperation } from "../src/models/operation/TransferOperation";
 import { ApiGroup } from "../src/net/models/ApiGroup";
 import { GetAccountById } from "../src/net/models/request/GetAccountById";
@@ -30,6 +29,7 @@ import { RxWebSocket } from "../src/net/ws/RxWebSocket";
 import { Helpers } from "./Helpers";
 import { NftApple } from "./model/NftApple";
 import WebSocket = require("isomorphic-ws");
+import { DCoreSdk } from "../src/DCoreSdk";
 
 chai.should();
 
@@ -37,18 +37,11 @@ chai.should();
 // @ts-ignore
 class Scratchpad {
 
-    private apiWs = DCoreSdk.createForWebSocket(
-        () => new WebSocket(Helpers.STAGE_WS, { rejectUnauthorized: false })
-    );
+    private apiWs = DCoreSdk.createApiRx(undefined, () => new WebSocket(Helpers.STAGE_WS), Helpers.LOGGER);
 
-    private apiRpc = DCoreSdk.createForHttp(
-        { baseUrl: Helpers.STAGE_HTTPS, timeout: 15000, rejectUnauthorized: false }
-    );
+    private apiRpc = DCoreSdk.createApiRx({ baseUrl: Helpers.STAGE_HTTPS, timeout: 15000, rejectUnauthorized: false }, undefined, Helpers.LOGGER);
 
-    private api = DCoreSdk.create(
-        { baseUrl: Helpers.STAGE_HTTPS, timeout: 15000, rejectUnauthorized: false },
-        () => new WebSocket(Helpers.STAGE_WS, { rejectUnauthorized: false }),
-    );
+    private api = DCoreSdk.createApiRx(undefined, () => new WebSocket(Helpers.STAGE_WS), Helpers.LOGGER);
     private spy = create();
 
     @test "get account balance"() {
@@ -142,7 +135,7 @@ class Scratchpad {
     }
 
     @test accountByName() {
-        const api = new RpcService({ baseUrl: "https://stagesocket.decentgo.com:8090/rpc", timeout: 15000, rejectUnauthorized: false });
+        const api = new RpcService({ baseUrl: "https://stagesocket.decentgo.com:8090/rpc", timeout: 15000, rejectUnauthorized: false }, Helpers.LOGGER);
         api.request(new GetAccountByName("u961279ec8b7ae7bd62f304f7c1c3d345")).subscribe(
             (account) => console.log(account),
             (err) => console.error(err)
@@ -150,7 +143,7 @@ class Scratchpad {
     }
 
     @test accountById() {
-        const api = new RpcService({ baseUrl: "https://stagesocket.decentgo.com:8090/rpc", timeout: 15000, rejectUnauthorized: false });
+        const api = new RpcService({ baseUrl: "https://stagesocket.decentgo.com:8090/rpc", timeout: 15000, rejectUnauthorized: false }, Helpers.LOGGER);
         return api.request(new GetAccountById([ChainObject.parse("1.2.15")])).subscribe(
             (account) => console.log(account),
             (err) => console.error(err)
@@ -201,7 +194,7 @@ class Scratchpad {
     }
 
     @test websocket() {
-        const rxWs = new RxWebSocket(() => new WebSocket("wss://stagesocket.decentgo.com:8090", { rejectUnauthorized: false }));
+        const rxWs = new RxWebSocket(() => new WebSocket("wss://stagesocket.decentgo.com:8090", { rejectUnauthorized: false }), Helpers.LOGGER);
         const spy = create();
         spy.log(/^RxWebSocket_make_\w+/);
 
@@ -436,7 +429,7 @@ class Scratchpad {
         ChainObject.parse("2.18.20").objectType.should.equal(ObjectType.MessagingObject);
     }
 
-    @test.only() "constructors"() {
+    @test "constructors"() {
         const vals: any[] = [1, "red", false];
         const apple = Reflect.construct(NftApple, vals) as NftApple;
         console.log(apple);
@@ -447,5 +440,15 @@ class Scratchpad {
 
     @test "address is valid"() {
         Address.isValid("hello").should.be.false;
+    }
+
+    @test.only() "broadcast custom operation"() {
+        const customOperation = new CustomOperation(
+            978,
+            Helpers.ACCOUNT,
+            [],
+            Buffer.from("Any data you need here").toString("hex")
+        );
+        this.api.broadcastApi.broadcastWithCallback(Helpers.KEY, [customOperation]).subscribe();
     }
 }

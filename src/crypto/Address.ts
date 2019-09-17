@@ -1,4 +1,4 @@
-import * as _ from "lodash/fp";
+import * as _ from "lodash";
 import { assertThrow, Utils } from "../utils/Utils";
 
 export class Address {

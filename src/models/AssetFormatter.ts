@@ -1,7 +1,7 @@
 import Decimal from "decimal.js";
 import * as Long from "long";
+import { AssetPrecision } from "../DCoreClient";
 import { DCoreConstants } from "../DCoreConstants";
-import { AssetPrecision } from "../DCoreSdk";
 import { Asset } from "./Asset";
 import { AssetAmount } from "./AssetAmount";
 import { ChainObject } from "./ChainObject";

@@ -1,12 +1,12 @@
 import { Moment } from "moment";
 import { Observable } from "rxjs";
-import { DCoreApi } from "../DCoreApi";
-import { BlockHeader } from "../models/BlockHeader";
-import { SignedBlock } from "../models/SignedBlock";
-import { GetBlock } from "../net/models/request/GetBlock";
-import { GetBlockHeader } from "../net/models/request/GetBlockHeader";
-import { HeadBlockTime } from "../net/models/request/HeadBlockTime";
+import { BlockHeader } from "../../models/BlockHeader";
+import { SignedBlock } from "../../models/SignedBlock";
+import { GetBlock } from "../../net/models/request/GetBlock";
+import { GetBlockHeader } from "../../net/models/request/GetBlockHeader";
+import { HeadBlockTime } from "../../net/models/request/HeadBlockTime";
 import { BaseApi } from "./BaseApi";
+import { DCoreApi } from "./DCoreApi";
 
 export class BlockApi extends BaseApi {
 

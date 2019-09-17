@@ -3,34 +3,34 @@ import * as _ from "lodash";
 import * as Long from "long";
 import { Observable, of, throwError } from "rxjs";
 import { flatMap, map } from "rxjs/operators";
-import { Credentials } from "../crypto/Credentials";
-import { DCoreApi } from "../DCoreApi";
-import { AssetPrecision, AssetRef, Fee } from "../DCoreSdk";
-import { Asset } from "../models/Asset";
-import { AssetAmount } from "../models/AssetAmount";
-import { AssetData } from "../models/AssetData";
-import { AssetOptions } from "../models/AssetOptions";
-import { ChainObject } from "../models/ChainObject";
-import { IllegalArgumentError } from "../models/error/IllegalArgumentError";
-import { ExchangeRate } from "../models/ExchangeRate";
-import { Memo } from "../models/Memo";
-import { MonitoredAssetOpts } from "../models/MonitoredAssetOpts";
-import { AssetClaimFeesOperation } from "../models/operation/AssetClaimFeesOperation";
-import { AssetCreateOperation } from "../models/operation/AssetCreateOperation";
-import { AssetFundPoolsOperation } from "../models/operation/AssetFundPoolsOperation";
-import { AssetIssueOperation } from "../models/operation/AssetIssueOperation";
-import { AssetReserveOperation } from "../models/operation/AssetReserveOperation";
-import { AssetUpdateAdvancedOperation } from "../models/operation/AssetUpdateAdvancedOperation";
-import { AssetUpdateOperation } from "../models/operation/AssetUpdateOperation";
-import { RealSupply } from "../models/RealSupply";
-import { TransactionConfirmation } from "../models/TransactionConfirmation";
-import { GetAssetData } from "../net/models/request/GetAssetData";
-import { GetAssets } from "../net/models/request/GetAssets";
-import { GetRealSupply } from "../net/models/request/GetRealSupply";
-import { ListAssets } from "../net/models/request/ListAssets";
-import { LookupAssetSymbols } from "../net/models/request/LookupAssetSymbols";
-import { ObjectCheckOf } from "../utils/ObjectCheckOf";
+import { Credentials } from "../../crypto/Credentials";
+import { AssetPrecision, AssetRef, Fee } from "../../DCoreClient";
+import { Asset } from "../../models/Asset";
+import { AssetAmount } from "../../models/AssetAmount";
+import { AssetData } from "../../models/AssetData";
+import { AssetOptions } from "../../models/AssetOptions";
+import { ChainObject } from "../../models/ChainObject";
+import { IllegalArgumentError } from "../../models/error/IllegalArgumentError";
+import { ExchangeRate } from "../../models/ExchangeRate";
+import { Memo } from "../../models/Memo";
+import { MonitoredAssetOpts } from "../../models/MonitoredAssetOpts";
+import { AssetClaimFeesOperation } from "../../models/operation/AssetClaimFeesOperation";
+import { AssetCreateOperation } from "../../models/operation/AssetCreateOperation";
+import { AssetFundPoolsOperation } from "../../models/operation/AssetFundPoolsOperation";
+import { AssetIssueOperation } from "../../models/operation/AssetIssueOperation";
+import { AssetReserveOperation } from "../../models/operation/AssetReserveOperation";
+import { AssetUpdateAdvancedOperation } from "../../models/operation/AssetUpdateAdvancedOperation";
+import { AssetUpdateOperation } from "../../models/operation/AssetUpdateOperation";
+import { RealSupply } from "../../models/RealSupply";
+import { TransactionConfirmation } from "../../models/TransactionConfirmation";
+import { GetAssetData } from "../../net/models/request/GetAssetData";
+import { GetAssets } from "../../net/models/request/GetAssets";
+import { GetRealSupply } from "../../net/models/request/GetRealSupply";
+import { ListAssets } from "../../net/models/request/ListAssets";
+import { LookupAssetSymbols } from "../../net/models/request/LookupAssetSymbols";
+import { ObjectCheckOf } from "../../utils/ObjectCheckOf";
 import { BaseApi } from "./BaseApi";
+import { DCoreApi } from "./DCoreApi";
 
 export class AssetApi extends BaseApi {
 
@@ -218,7 +218,7 @@ export class AssetApi extends BaseApi {
         fee?: Fee,
     ): Observable<TransactionConfirmation> {
         return this.createAssetCreateOperation(
-            credentials.account, symbol, precision, description, new AssetOptions(ExchangeRate.empty(), 0), options, fee,
+            credentials.account, symbol, precision, description, new AssetOptions(ExchangeRate.empty(), Long.fromValue(0)), options, fee,
         ).pipe(flatMap((op) => this.api.broadcastApi.broadcastWithCallback(credentials.keyPair, [op])));
     }
 
@@ -226,20 +226,12 @@ export class AssetApi extends BaseApi {
      * Create update asset operation.
      *
      * @param asset asset to update
-     * @param exchangeRate new exchange rate
-     * @param description new description
-     * @param exchangeable enable converting the asset to DCT, so it can be used to pay for fees
-     * @param maxSupply new max supply
      * @param newIssuer a new issuer account id
      * @param fee {@link AssetAmount} fee for the operation or asset id, if left undefined the fee will be computed in DCT asset.
      * When set, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough
      */
     public createAssetUpdateOperation(
         asset: AssetRef,
-        exchangeRate: (old: Asset) => ExchangeRate = (old) => old.options.exchangeRate,
-        description: (old: Asset) => string = (old) => old.description,
-        exchangeable: (old: Asset) => boolean = (old) => old.options.exchangeable,
-        maxSupply: (old: Asset) => number = (old) => old.options.maxSupply,
         newIssuer?: ChainObject,
         fee?: Fee,
     ): Observable<AssetUpdateOperation> {
@@ -247,10 +239,10 @@ export class AssetApi extends BaseApi {
             map((obj) => new AssetUpdateOperation(
                 obj.issuer,
                 obj.id,
-                exchangeRate(obj),
-                description(obj),
-                exchangeable(obj),
-                maxSupply(obj),
+                obj.options.exchangeRate,
+                obj.description,
+                obj.options.exchangeable,
+                obj.options.maxSupply,
                 newIssuer,
                 fee,
             )),
@@ -262,7 +254,7 @@ export class AssetApi extends BaseApi {
      *
      * @param credentials account credentials issuing the asset
      * @param asset asset to update
-     * @param exchangeRate new exchange rate
+     * @param exchangeRate new exchange rate, DCT base amount to UIA quote amount pair
      * @param description new description
      * @param exchangeable enable converting the asset to DCT, so it can be used to pay for fees
      * @param maxSupply new max supply
@@ -273,14 +265,21 @@ export class AssetApi extends BaseApi {
     public update(
         credentials: Credentials,
         asset: AssetRef,
-        exchangeRate: (old: Asset) => ExchangeRate = (old) => old.options.exchangeRate,
-        description: (old: Asset) => string = (old) => old.description,
-        exchangeable: (old: Asset) => boolean = (old) => old.options.exchangeable,
-        maxSupply: (old: Asset) => number = (old) => old.options.maxSupply,
+        exchangeRate?: [Long | number, Long | number],
+        description?: string,
+        exchangeable?: boolean,
+        maxSupply?: Long,
         newIssuer?: ChainObject,
         fee?: Fee,
     ): Observable<TransactionConfirmation> {
-        return this.createAssetUpdateOperation(asset, exchangeRate, description, exchangeable, maxSupply, newIssuer, fee).pipe(
+        return this.createAssetUpdateOperation(asset, newIssuer, fee).pipe(
+            map((it) => {
+                it.coreExchangeRate = exchangeRate ? ExchangeRate.forUpdateOp(exchangeRate[0], exchangeRate[1], it.assetToUpdate) : it.coreExchangeRate;
+                it.newDescription = description ? description : it.newDescription;
+                it.exchangeable = exchangeable ? exchangeable : it.exchangeable;
+                it.maxSupply = maxSupply ? maxSupply : it.maxSupply;
+                return it;
+            }),
             flatMap((op) => this.api.broadcastApi.broadcastWithCallback(credentials.keyPair, [op])),
         );
     }
@@ -289,22 +288,16 @@ export class AssetApi extends BaseApi {
      * Create update advanced options operation for the asset.
      *
      * @param asset asset to update
-     * @param precision new precision
-     * @param fixedMaxSupply whether it should be allowed to change max supply, cannot be reverted once set to true
      * @param fee {@link AssetAmount} fee for the operation or asset id, if left undefined the fee will be computed in DCT asset.
      * When set, the request might fail if the asset is not convertible to DCT or conversion pool is not large enough
      */
     public createAssetUpdateAdvancedOperation(
         asset: AssetRef,
-        precision?: AssetPrecision,
-        fixedMaxSupply?: boolean,
         fee?: Fee,
     ): Observable<AssetUpdateAdvancedOperation> {
         return this.get(asset).pipe(
             map((obj) => AssetUpdateAdvancedOperation.create(obj)),
             map((op) => {
-                op.precision = precision ? precision : op.precision;
-                op.fixedMaxSupply = fixedMaxSupply ? fixedMaxSupply : op.fixedMaxSupply;
                 op.setFee(fee);
                 return op;
             }),
@@ -328,7 +321,12 @@ export class AssetApi extends BaseApi {
         fixedMaxSupply?: boolean,
         fee?: Fee,
     ): Observable<TransactionConfirmation> {
-        return this.createAssetUpdateAdvancedOperation(asset, precision, fixedMaxSupply, fee).pipe(
+        return this.createAssetUpdateAdvancedOperation(asset, fee).pipe(
+            map((it) => {
+                it.precision = precision ? precision : it.precision;
+                it.fixedMaxSupply = fixedMaxSupply ? fixedMaxSupply : it.fixedMaxSupply;
+                return it;
+            }),
             flatMap((op) => this.api.broadcastApi.broadcastWithCallback(credentials.keyPair, [op])),
         );
     }

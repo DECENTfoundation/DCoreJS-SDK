@@ -1,16 +1,16 @@
 import { Observable } from "rxjs";
 import { flatMap, map } from "rxjs/operators";
-import { DCoreApi } from "../DCoreApi";
-import { DCoreConstants } from "../DCoreConstants";
-import { AccountRef, AssetWithAmount } from "../DCoreSdk";
-import { Asset } from "../models/Asset";
-import { AssetAmount } from "../models/AssetAmount";
-import { ChainObject } from "../models/ChainObject";
-import { VestingBalance } from "../models/VestingBalance";
-import { GetAccountBalances } from "../net/models/request/GetAccountBalances";
-import { GetNamedAccountBalances } from "../net/models/request/GetNamedAccountBalances";
-import { GetVestingBalances } from "../net/models/request/GetVestingBalances";
+import { AccountRef, AssetWithAmount } from "../../DCoreClient";
+import { DCoreConstants } from "../../DCoreConstants";
+import { Asset } from "../../models/Asset";
+import { AssetAmount } from "../../models/AssetAmount";
+import { ChainObject } from "../../models/ChainObject";
+import { VestingBalance } from "../../models/VestingBalance";
+import { GetAccountBalances } from "../../net/models/request/GetAccountBalances";
+import { GetNamedAccountBalances } from "../../net/models/request/GetNamedAccountBalances";
+import { GetVestingBalances } from "../../net/models/request/GetVestingBalances";
 import { BaseApi } from "./BaseApi";
+import { DCoreApi } from "./DCoreApi";
 
 export class BalanceApi extends BaseApi {
 

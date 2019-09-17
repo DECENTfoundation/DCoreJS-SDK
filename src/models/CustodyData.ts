@@ -1,6 +1,7 @@
 import { Expose } from "class-transformer";
 
 export class CustodyData {
+    // UInt32
     @Expose({ name: "n" })
     public n: number;
 

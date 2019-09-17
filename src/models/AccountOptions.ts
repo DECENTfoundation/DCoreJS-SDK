@@ -6,23 +6,24 @@ import { AssetAmount } from "./AssetAmount";
 import { ChainObject } from "./ChainObject";
 import { VoteId } from "./VoteId";
 
-export class Options {
+export class AccountOptions {
 
-    @AddressToClass
     @AddressToPlain
+    @AddressToClass
     @Expose({ name: "memo_key" })
     public memoKey: Address;
 
-    @ChainObjectToClass
     @ChainObjectToPlain
+    @ChainObjectToClass
     @Expose({ name: "voting_account" })
     public votingAccount: ChainObject;
 
+    // UInt16
     @Expose({ name: "num_miner" })
     public numMiner: number;
 
+    @Transform((values: VoteId[], obj: AccountOptions) => obj.votes.map((vote) => vote.toString()), { toPlainOnly: true })
     @Transform((values: string[]) => values.map((vote) => VoteId.parse(vote)), { toClassOnly: true })
-    @Transform((values: VoteId[]) => values.map((vote) => `${vote.type}:${vote.id}`), { toPlainOnly: true })
     @Expose({ name: "votes" })
     public votes: VoteId[];
 
@@ -36,6 +37,7 @@ export class Options {
     @Expose({ name: "price_per_subscribe" })
     public pricePerSubscribe: AssetAmount;
 
+    // UInt32
     @Expose({ name: "subscription_period" })
     public subscriptionPeriod: number;
 

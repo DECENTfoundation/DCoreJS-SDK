@@ -1,13 +1,23 @@
+import * as WebSocket from "isomorphic-ws";
+import * as P from "pino";
 import { Observable, PartialObserver } from "rxjs";
+import { DCoreApi } from "../src/api/rx/DCoreApi";
 import { Address } from "../src/crypto/Address";
 import { Credentials } from "../src/crypto/Credentials";
 import { ECKeyPair } from "../src/crypto/ECKeyPair";
+import { DCoreSdk } from "../src/DCoreSdk";
 import { ChainObject } from "../src/models/ChainObject";
 
 export class Helpers {
     public static readonly DCT_CHAIN_ID_STAGE = "17401602b201b3c45a3ad98afc6fb458f91f519bd30d1058adf6f2bed66376bc";
     public static STAGE_WS = "ws://localhost:8090/";
     public static STAGE_HTTPS = "http://localhost:8090/";
+    public static LOGGER = P({ name: "TEST", base: undefined, prettyPrint: true, level: "debug" });
+
+    public static APIS = [
+        ["RPC", DCoreSdk.createApiRx({ baseUrl: Helpers.STAGE_HTTPS, timeout: 15000, rejectUnauthorized: false }, undefined, Helpers.LOGGER)],
+        ["WebSocket", DCoreSdk.createApiRx(undefined, () => new WebSocket(Helpers.STAGE_WS), Helpers.LOGGER)],
+    ] as Array<[string, DCoreApi]>;
 
     public static readonly ACCOUNT = ChainObject.parse("1.2.27");
     public static readonly ACCOUNT2 = ChainObject.parse("1.2.28");

@@ -1,17 +1,22 @@
 import { Expose } from "class-transformer";
 import * as Long from "long";
-import { LongToClass } from "../net/adapter/TypeAdapters";
+import { LongToClassSigned, LongToPlain } from "../net/adapter/TypeAdapters";
 
 export class MinerRewardInput {
 
-    @LongToClass
+    // Int64
+    @LongToPlain
+    @LongToClassSigned
     @Expose({ name: "time_to_maint" })
     public timeToMaintenance: Long;
 
-    @LongToClass
+    // Int64
+    @LongToPlain
+    @LongToClassSigned
     @Expose({ name: "from_accumulated_fees" })
     public fromAccumulatedFees: Long;
 
+    // Int8
     @Expose({ name: "block_interval" })
     public blockInterval: number;
 
