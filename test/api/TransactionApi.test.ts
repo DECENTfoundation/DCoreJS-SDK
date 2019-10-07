@@ -5,7 +5,7 @@ import "reflect-metadata";
 import { create } from "rxjs-spy";
 import { Spy } from "rxjs-spy/spy-interface";
 import { flatMap, map } from "rxjs/operators";
-import { AssetAmount, ChainObject, ObjectNotFoundError, ProcessedTransaction, Transaction, TransactionConfirmation, TransferOperation } from "../../src/models";
+import { AssetAmount, ChainObject, ProcessedTransaction, Transaction, TransactionConfirmation, TransferOperation } from "../../src/models";
 import { Helpers } from "../Helpers";
 
 chai.should();
@@ -43,15 +43,6 @@ Helpers.APIS.forEach(([name, sdk]) => {
         it("should return all proposed transaction", (done: (arg?: any) => void) => {
             api.getAllProposed(Helpers.ACCOUNT)
                 .subscribe((value) => value.should.all.be.a("object"), (error) => done(error), () => done());
-        });
-
-        // todo trx is found even after expiration for some time, we would need to wait for a while here  <1min
-        it.skip("should return recent transaction", (done: (arg?: any) => void) => {
-            api.getRecent("abb2c83679c2217bd20bed723f3a9ffa8653a953")
-                .subscribe(undefined, (error) => {
-                    error.should.be.instanceOf(ObjectNotFoundError);
-                    done();
-                }, () => done());
         });
 
         it("should return transaction by id", (done: (arg?: any) => void) => {

@@ -8,7 +8,6 @@ import { ProcessedTransaction } from "../../models/ProcessedTransaction";
 import { Transaction } from "../../models/Transaction";
 import { TransactionConfirmation } from "../../models/TransactionConfirmation";
 import { GetProposedTransactions } from "../../net/models/request/GetProposedTransactions";
-import { GetRecentTransactionById } from "../../net/models/request/GetRecentTransactionById";
 import { GetTransaction } from "../../net/models/request/GetTransaction";
 import { GetTransactionById } from "../../net/models/request/GetTransactionById";
 import { GetTransactionHex } from "../../net/models/request/GetTransactionHex";
@@ -42,19 +41,6 @@ export class TransactionApi extends BaseApi {
     // todo model
     public getAllProposed(accountId: ChainObject): Observable<object[]> {
         return this.request(new GetProposedTransactions(accountId));
-    }
-
-    /**
-     * If the transaction has not expired, this method will return the transaction for the given ID or it will return {@link ObjectNotFoundError}
-     * Just because it is not known does not mean it wasn't included in the DCore.
-     * The ID can be retrieved from [Transaction] or [TransactionConfirmation] objects.
-     *
-     * @param trxId transaction id
-     *
-     * @return a transaction if found, {@link ObjectNotFoundError} otherwise
-     */
-    public getRecent(trxId: string): Observable<ProcessedTransaction> {
-        return this.request(new GetRecentTransactionById(trxId));
     }
 
     /**
