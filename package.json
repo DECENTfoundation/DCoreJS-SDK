@@ -1,6 +1,6 @@
 {
   "name": "dcorejs-sdk",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "homepage": "https://decent.ch/",
   "description": "DcoreJS SDK.",
   "main": "./dist/index.js",
@@ -46,7 +46,6 @@
     "@types/chai-things": "0.0.33",
     "@types/mocha": "^5.2.6",
     "@types/node": "^10.14.4",
-    "@types/pino": "^5.8.8",
     "@types/ws": "^6.0.1",
     "@types/wtfnode": "^0.5.0",
     "chai": "^4.2.0",
@@ -81,6 +80,7 @@
     "@types/bytebuffer": "^5.0.40",
     "@types/lodash": "^4.14.123",
     "@types/long": "^4.0.0",
+    "@types/pino": "^5.8.13",
     "@types/secp256k1": "^3.5.0",
     "base-x": "3.0.5",
     "big-integer": "^1.6.43",
