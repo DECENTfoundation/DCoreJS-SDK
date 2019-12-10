@@ -1,3 +1,4 @@
+import * as rimraf from "rimraf";
 import {
     ConstructorDeclarationStructure,
     ImportDeclarationStructure,
@@ -12,7 +13,9 @@ import {
 import { ApiDescriptor } from "./ApiDescriptor";
 import { decapitalize, makeMethod, paramNames } from "./Utils";
 
-class Generator {
+// import * as rimraf from "rimraf";
+
+export class Generator {
     public project = new Project({
         addFilesFromTsConfig: false,
         skipFileDependencyResolution: true,
@@ -115,6 +118,14 @@ class Generator {
         }, { overwrite: true })
             .fixMissingImports()
             .organizeImports();
+
+        const index = this.project.getSourceFile(`${this.out}index.ts`)!;
+        if (!index.getExportDeclaration((dec) => dec.getModuleSpecifierValue()!.includes("DCoreSdk"))) {
+            index.addExportDeclaration({
+                kind: StructureKind.ExportDeclaration,
+                moduleSpecifier: "./DCoreSdk",
+            });
+        }
     }
 
     public createCoreApi(api: ApiDescriptor, apiFiles: SourceFile[]) {
@@ -246,9 +257,30 @@ class Generator {
         this.save();
     }
 
+    public clean() {
+
+        const entryPointExport = this.project.getSourceFile(`${this.out}index.ts`)!
+            .getExportDeclaration((dec) => dec.getModuleSpecifierValue()!.includes("DCoreSdk"));
+        if (entryPointExport) {
+            entryPointExport.remove();
+        }
+        this.save();
+
+        this.apis.every((api) => {
+            const path = this.project.getDirectory(`${this.outApi}${api.packageSuffix}`);
+            if (path) {
+                rimraf(path.getPath(), (error) => {
+                });
+            }
+        });
+        const entryPoint = this.project.getSourceFile(`${this.out}DCoreSdk.ts`);
+        if (entryPoint) {
+            rimraf(entryPoint.getFilePath(), (error) => {
+            });
+        }
+    }
+
     private outPath(api: ApiDescriptor) {
         return this.project.createDirectory(`${this.outApi}${api.packageSuffix}`)!;
     }
 }
-
-new Generator().generate();

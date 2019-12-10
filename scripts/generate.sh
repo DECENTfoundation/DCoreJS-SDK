@@ -1,1 +1,1 @@
-ts-node gen/Generator.ts
+ts-node gen/Generate.ts
