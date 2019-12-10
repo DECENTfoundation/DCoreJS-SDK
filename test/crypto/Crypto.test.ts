@@ -1,13 +1,20 @@
 import * as chai from "chai";
 import * as chaiThings from "chai-things";
+import { deserialize } from "class-transformer";
 import * as Long from "long";
 import "mocha";
+import * as moment from "moment";
 import "reflect-metadata";
 import { Address } from "../../src/crypto/Address";
 import { ECKeyPair } from "../../src/crypto/ECKeyPair";
 import { ElGamal } from "../../src/crypto/ElGamal";
 import { Passphrase } from "../../src/crypto/Passphrase";
+import { DCoreConstants } from "../../src/DCoreConstants";
+import { DynamicGlobalProperties } from "../../src/models/DynamicGlobalProperties";
 import { Memo } from "../../src/models/Memo";
+import { TransferOperation } from "../../src/models/operation/TransferOperation";
+import { Transaction } from "../../src/models/Transaction";
+import { Helpers } from "../Helpers";
 
 chai.should();
 chai.use(chaiThings);
@@ -88,5 +95,24 @@ describe("crypto tests", () => {
             "202c177696d954a03798d287cc9d4e48a95745d180db012394f39a42a32bf8e2947a434b7c53a619817d3b5c7c3285c6438c26e203ac16c2fd0c3c7de2300cd86c",
         ];
         sig.map((s) => ECKeyPair.checkCanonicalSignature(Buffer.from(s, "hex"))).should.all.be.equal(true);
+    });
+
+    it("should make canonical signature", () => {
+        // tslint:disable-next-line:max-line-length
+        const rawProps = '{"id":"2.1.0","head_block_number":1454654,"head_block_id":"0016323e2ef4e417c019adaef6ef45f910a3dd81","time":"2018-07-31T10:16:15","current_miner":"1.4.9","next_maintenance_time":"2018-08-01T00:00","last_budget_time":"2018-07-31T00:00","unspent_fee_budget":25299491,"mined_rewards":224368000000,"miner_budget_from_fees":38973811,"miner_budget_from_rewards":639249000000,"accounts_registered_this_interval":0,"recently_missed_count":6,"current_aslot":6842787,"recent_slots_filled":"255180578269179676182402108458748313515","dynamic_flags":0,"last_irreversible_block_num":1454654}';
+        // tslint:disable-next-line:max-line-length
+        const rawOp = '{"from":"1.2.34","to":"1.2.35","amount":{"amount":1500000,"asset_id":"1.3.0"},"memo":{"from":"DCT6MA5TQQ6UbMyMaLPmPXE2Syh5G3ZVhv5SbFedqLPqdFChSeqTz","to":"DCT6bVmimtYSvWQtwdrkVVQGHkVsTJZVKtBiUqf4YmJnrJPnk89QP","message":"4bc2a1ee670302ceddb897c2d351fa0496ff089c934e35e030f8ae4f3f9397a7","nonce":735604672334802432},"fee":{"amount":500000,"asset_id":"1.3.0"}}';
+        const props = deserialize(DynamicGlobalProperties, rawProps);
+        const op = deserialize(TransferOperation, rawOp);
+        op.extensions = [];
+        const trx = Transaction.create([op], Helpers.DCT_CHAIN_ID_STAGE, props, DCoreConstants.EXPIRATION_DEFAULT);
+        trx.expiration = moment.utc("2018-08-01T10:14:36");
+
+        trx.withSignature(Helpers.KEY).signatures!.should.all.be.equal(
+            "1f6ae2fb1377a7b5f3260ecb6133cf08c7c714e8df53e8912a5cb63da182e2e3a24f728eada828a1d369aa1d2ba474e11f0c99a20a6c2a548b8f7310cb6d6990bd");
+        trx.withSignature([Helpers.KEY, key]).signatures!.should.all.be.oneOf([
+            "1f0299575183ce2c5cdf6b4ab06fe2a8d2863ed6870335a346b44dcca24a8685e336ce9f16a1a18283ea5bdcdec0704179bf6e366074f1c21df31ddb3dca437c69",
+            "2043a819a4b8f1efd0720fe345ef31a1df1d1fa33a8bae52d5c3f3e54c4e3efcf91ed898d5fc9ecf83b41afba986477c62da2fc7d7dfbb7c7fd4c2624e0a4b5421",
+        ]);
     });
 });

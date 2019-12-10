@@ -22,6 +22,7 @@
     "/dist"
   ],
   "pre-commit": [
+    "clean",
     "lint"
   ],
   "repository": {
