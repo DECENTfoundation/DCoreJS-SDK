@@ -13,8 +13,6 @@ import {
 import { ApiDescriptor } from "./ApiDescriptor";
 import { decapitalize, makeMethod, paramNames } from "./Utils";
 
-// import * as rimraf from "rimraf";
-
 export class Generator {
     public project = new Project({
         addFilesFromTsConfig: false,
