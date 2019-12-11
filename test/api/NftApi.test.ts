@@ -140,7 +140,7 @@ describe("NFT API test suite for ops", () => {
     it("should update transferred nft by owner", (done: (arg?: any) => void) => {
         testCheck(done, api.nftApi.getData(ChainObject.parse("1.11.2"), NftNotApple).pipe(
             tap((nft) => nft.data.eaten = !nft.data.eaten),
-            flatMap((nft) => api.nftApi.updateData(new Credentials(Helpers.ACCOUNT2, Helpers.PRIVATE2), nft)),
+            flatMap((nft) => api.nftApi.updateData(new Credentials(Helpers.ACCOUNT2, Helpers.PRIVATE), nft)),
         ));
     });
 });

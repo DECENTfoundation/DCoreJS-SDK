@@ -87,18 +87,22 @@ export class Transaction {
      * @param key private key
      * @param chainId id of the DCore chain, different for live/testnet/custom net...
      */
-    public withSignature(key: ECKeyPair, chainId: string = this.chainId ? this.chainId : ""): Transaction {
+    public withSignature(key: ECKeyPair | ECKeyPair[], chainId: string = this.chainId ? this.chainId : ""): Transaction {
         assertThrow(!_.isNil(chainId), () => "chain id must be set on signing");
 
-        let sig: string | undefined;
+        if (!_.isArray(key)) {
+            key = [key];
+        }
+
+        let sig: Array<string | undefined>;
         do {
             // increment expiration until we get dcore valid signature
             this.expiration = this.expiration.add(1, "second");
-            sig = this.signature(key, chainId);
-        } while (!sig);
+            sig = key.map((k) => this.signature(k, chainId));
+        } while (sig.some((s) => !s));
 
         // console.log(serializer.serialize(this).toString("hex"));
-        this.signatures = [sig];
+        this.signatures = sig as string[];
         return this;
     }
 }

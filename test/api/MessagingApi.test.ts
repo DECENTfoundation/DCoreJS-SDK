@@ -90,7 +90,7 @@ Helpers.APIS.forEach(([name, sdk]) => {
         });
 
         it("should return all decrypted messages", (done: (arg?: any) => void) => {
-            api.findAllDecrypted(new Credentials(Helpers.ACCOUNT2, Helpers.PRIVATE2), Helpers.ACCOUNT, Helpers.ACCOUNT2)
+            api.findAllDecrypted(new Credentials(Helpers.ACCOUNT2, Helpers.PRIVATE), Helpers.ACCOUNT, Helpers.ACCOUNT2)
                 .subscribe((value) => value.map((msg) => msg.encrypted).should.all.be.eq(false), (error) => done(error), () => done());
         });
 

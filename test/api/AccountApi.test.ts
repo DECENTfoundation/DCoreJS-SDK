@@ -6,7 +6,7 @@ import "mocha";
 import "reflect-metadata";
 import { create } from "rxjs-spy";
 import { Spy } from "rxjs-spy/spy-interface";
-import { flatMap } from "rxjs/operators";
+import { flatMap, map } from "rxjs/operators";
 import { DCoreApi } from "../../src/api/rx/DCoreApi";
 import { DCoreSdk } from "../../src/DCoreSdk";
 import { AccountStatistics, Authority, ChainObject, FullAccount } from "../../src/models";
@@ -44,13 +44,26 @@ describe("account API test suite for ops", () => {
 
     it("should update credentials on a new account", (done: (arg?: any) => void) => {
         testCheck(done, api.accountApi.createCredentials(Helpers.createAccount, Helpers.PRIVATE).pipe(
-            flatMap((c) => api.accountApi.update(c, undefined, new Authority(Helpers.PUBLIC2))),
+            flatMap((c) => api.accountApi.update(c, undefined, new Authority(Helpers.PUBLIC_OTHER))),
         ));
     });
 
     it("should make a vote on a new account", (done: (arg?: any) => void) => {
-        testCheck(done, api.accountApi.createCredentials(Helpers.createAccount, Helpers.PRIVATE2).pipe(
+        testCheck(done, api.accountApi.createCredentials(Helpers.createAccount, Helpers.PRIVATE_OTHER).pipe(
             flatMap((c) => api.miningApi.vote(c, [ChainObject.parse("1.4.4")])),
+        ));
+    });
+
+    it("should make a 2 transfers with 2 different accounts", (done: (arg?: any) => void) => {
+        testCheck(done, api.accountApi.createCredentials(Helpers.createAccount, Helpers.PRIVATE_OTHER).pipe(
+            flatMap((c) => {
+                const ops = [
+                    new TransferOperation(Helpers.ACCOUNT, ChainObject.parse("1.2.10"), new AssetAmount(123)),
+                    new TransferOperation(c.account, ChainObject.parse("1.2.10"), new AssetAmount(321)),
+                ];
+                return api.transactionApi.createTransaction(ops).pipe(map((trx) => trx.withSignature([c.keyPair, Helpers.KEY])));
+            }),
+            flatMap((trx) => api.broadcastApi.broadcastTrx(trx)),
         ));
     });
 
