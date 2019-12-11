@@ -93,7 +93,7 @@ describe("asset API test suite for ops", () => {
 
     it("should fund an asset pool from non-issuer account", (done: (arg?: any) => void) => {
         const op = new AssetFundPoolsOperation(Helpers.ACCOUNT2, new AssetAmount(0, Helpers.createAssetId), new AssetAmount(1));
-        testCheck(done, api.broadcastApi.broadcastWithCallback(ECKeyPair.parseWif(Helpers.PRIVATE2), [op]));
+        testCheck(done, api.broadcastApi.broadcastWithCallback(ECKeyPair.parseWif(Helpers.PRIVATE), [op]));
     });
 
     it("should make a transfer with fee", (done: (arg?: any) => void) => {
@@ -118,7 +118,7 @@ describe("asset API test suite for ops", () => {
 
     it("should claim an asset pool from non-issuer account is not allowed", (done: (arg?: any) => void) => {
         const op = new AssetClaimFeesOperation(Helpers.ACCOUNT2, new AssetAmount(0, Helpers.createAssetId), new AssetAmount(1));
-        testCheckWith(api.broadcastApi.broadcastWithCallback(ECKeyPair.parseWif(Helpers.PRIVATE2), [op]), {
+        testCheckWith(api.broadcastApi.broadcastWithCallback(ECKeyPair.parseWif(Helpers.PRIVATE), [op]), {
             error: (e) => {
                 e.should.be.instanceOf(DCoreError);
                 done();

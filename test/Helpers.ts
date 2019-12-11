@@ -24,9 +24,9 @@ export class Helpers {
     public static readonly ACCOUNT_NAME = "public-account-9";
     public static readonly ACCOUNT_NAME2 = "public-account-10";
     public static readonly PRIVATE = "5JuJbrKZgAATcouJnwpaxPbHMAMDXSgUpQSfxTXzkSUufcnpTUa";
-    public static readonly PRIVATE2 = "5JuJbrKZgAATcouJnwpaxPbHMAMDXSgUpQSfxTXzkSUufcnpTUa";
+    public static readonly PRIVATE_OTHER = "5Hxwqx6JJUBYWjQNt8DomTNJ6r6YK8wDJym4CMAH1zGctFyQtzt";
     public static readonly PUBLIC = Address.parse("DCT82MTCQVa9TDFmz3ZwaLzsFAmCLoJzrtFugpF72vsbuE1CpCwKy");
-    public static readonly PUBLIC2 = Address.parse("DCT82MTCQVa9TDFmz3ZwaLzsFAmCLoJzrtFugpF72vsbuE1CpCwKy");
+    public static readonly PUBLIC_OTHER = Address.parse("DCT6TjLhr8uESvgtxrbWuXNAN3vcqzBMw5eyEup3PMiD2gnVxeuTb");
     public static readonly KEY = ECKeyPair.parseWif(Helpers.PRIVATE);
     public static readonly CREDENTIALS = new Credentials(Helpers.ACCOUNT, Helpers.KEY);
 
