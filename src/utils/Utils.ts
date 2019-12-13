@@ -22,7 +22,7 @@ export function info<T>(tag: string, logger: Logger): MonoTypeOperatorFunction<T
     return tap({
         complete: () => logger.info(`${tag}: #complete`),
         error: (err) => logger.error(`${tag}: #error ${err.toString()}`),
-        next: (value) => logger.info(`${tag}: #next ${str(value)}`),
+        next: (value) => logger.info(`${tag}: #next ${Utils.stringify(value)}`),
     });
 }
 
@@ -30,17 +30,17 @@ export function debug<T>(tag: string, logger: Logger): MonoTypeOperatorFunction<
     return tap({
         complete: () => logger.debug(`${tag}: #complete`),
         error: (err) => logger.error(`${tag}: #error ${err.toString()}`),
-        next: (value) => logger.debug(`${tag}: #next ${str(value)}`),
+        next: (value) => logger.debug(`${tag}: #next ${Utils.stringify(value)}`),
     });
-}
-
-function str(value: any): string {
-    return typeof value === "string" ? value : serialize(value);
 }
 
 export class Utils {
 
     public static Base58 = BaseX("123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz");
+
+    public static stringify(value: any): string {
+        return typeof value === "string" ? value : serialize(value);
+    }
 
     public static generateNonce(power: number = 250): Long {
         return Long.fromString(Utils.generateEntropy(power).toString("hex"), true, 16);
