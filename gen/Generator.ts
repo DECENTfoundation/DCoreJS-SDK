@@ -264,7 +264,7 @@ export class Generator {
         }
         this.save();
 
-        this.apis.every((api) => {
+        this.apis.forEach((api) => {
             const path = this.project.getDirectory(`${this.outApi}${api.packageSuffix}`);
             if (path) {
                 rimraf(path.getPath(), (error) => {
