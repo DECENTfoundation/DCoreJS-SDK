@@ -1,5 +1,5 @@
 import * as BaseX from "base-x";
-import { serialize } from "class-transformer";
+import { classToPlain, serialize } from "class-transformer";
 import * as Crypto from "crypto";
 import { createHash } from "crypto";
 import * as Long from "long";
@@ -40,6 +40,10 @@ export class Utils {
 
     public static stringify(value: any): string {
         return typeof value === "string" ? value : serialize(value);
+    }
+
+    public static toPlain(value: any): object {
+        return classToPlain(value);
     }
 
     public static generateNonce(power: number = 250): Long {
